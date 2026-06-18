@@ -1,0 +1,100 @@
+﻿<!-- ============================================================
+     PAGE 91 — CHANGEMENT DE LANGUE
+     ============================================================
+     <Contexte> Cette page permet à l’utilisateur de choisir la langue
+     d’affichage de l’application BatchStockRelease. </Contexte>
+
+     <Objectif> Présenter six langues au choix avec leur drapeau :
+       - Français, Anglais, Allemand, Espagnol, Italien, Portugais. </Objectif>
+
+     <Utilisateurs cibles> Tous les utilisateurs connectés. </Utilisateurs>
+
+     <Composants principaux>
+       - Six boutons illustrés (drapeau + nom).
+       - Un RadioButton par langue (sélection unique).
+       - Les actions de validation sont gérées via MH_Page91. 
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page91"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page91">
+
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="Col_0" Width="*"/>
+            <ColumnDefinition x:Name="Col_1" Width="Auto"/>
+            <ColumnDefinition x:Name="Col_2" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="PageTitleMain" Grid.Row="1" Grid.Column="1" Text="{DynamicResource P91_00}"/>
+
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="355" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Liste des langues disponibles -->
+            <Button x:Name="Language1Button" Grid.Row="0" Grid.Column="0" Command="{Binding ChangeLanguageCommand}" CommandParameter="FR">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="Language1Image"/>
+                    <RadioButton x:Name="Language1RadioButton" GroupName="LanguageSelection" IsChecked="{Binding IsLanguage1Selected}"/>
+                    <TextBlock x:Name="Language1Data" Text="{DynamicResource P91_01}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Language2Button" Grid.Row="1" Grid.Column="0" Command="{Binding ChangeLanguageCommand}" CommandParameter="EN">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="Language2Image"/>
+                    <RadioButton x:Name="Language2RadioButton" GroupName="LanguageSelection" IsChecked="{Binding IsLanguage2Selected}"/>
+                    <TextBlock x:Name="Language2Data" Text="{DynamicResource P91_02}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Language3Button" Grid.Row="2" Grid.Column="0" Command="{Binding ChangeLanguageCommand}" CommandParameter="DE">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="Language3Image"/>
+                    <RadioButton x:Name="Language3RadioButton" GroupName="LanguageSelection" IsChecked="{Binding IsLanguage3Selected}"/>
+                    <TextBlock x:Name="Language3Data" Text="{DynamicResource P91_03}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Language4Button" Grid.Row="3" Grid.Column="0" Command="{Binding ChangeLanguageCommand}" CommandParameter="ES">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="Language4Image"/>
+                    <RadioButton x:Name="Language4RadioButton" GroupName="LanguageSelection" IsChecked="{Binding IsLanguage4Selected}"/>
+                    <TextBlock x:Name="Language4Data" Text="{DynamicResource P91_04}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Language5Button" Grid.Row="4" Grid.Column="0" Command="{Binding ChangeLanguageCommand}" CommandParameter="IT">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="Language5Image"/>
+                    <RadioButton x:Name="Language5RadioButton" GroupName="LanguageSelection" IsChecked="{Binding IsLanguage5Selected}"/>
+                    <TextBlock x:Name="Language5Data" Text="{DynamicResource P91_05}"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="Language6Button" Grid.Row="5" Grid.Column="0" Command="{Binding ChangeLanguageCommand}" CommandParameter="PT">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="Language6Image"/>
+                    <RadioButton x:Name="Language6RadioButton" GroupName="LanguageSelection" IsChecked="{Binding IsLanguage6Selected}"/>
+                    <TextBlock x:Name="Language6Data" Text="{DynamicResource P91_06}"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</generic:Page_Generic>

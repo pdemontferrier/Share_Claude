@@ -1,0 +1,47 @@
+﻿<!-- ============================================================
+     PAGE 20 — AFFECTATION D’UN CHARIOT (BatchStockRelease)
+     ============================================================
+     <Contexte> Cette page est affichée lorsqu’un lot sélectionné
+     dans la Page10 n’a pas encore de chariot affecté. </Contexte>
+
+     <Objectif> Permettre à l’utilisateur de choisir un chariot
+     parmi la liste disponible et de l’affecter au lot en cours. </Objectif>
+
+     <Utilisateurs cibles> Magasiniers responsables de l’approvisionnement. </Utilisateurs>
+
+     <Composants principaux>
+       - ComboBox listant les chariots disponibles.
+       - Bouton de validation de l’affectation.
+       - Titre indiquant le lot concerné.
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page20"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d" 
+                      Title="Page20">
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+            <TextBlock x:Name="ChariotTitle" Text="{DynamicResource P20_00}"/>
+            <ComboBox x:Name="ChariotComboBox"
+                  ItemsSource="{Binding Chariots}"
+                  SelectedItem="{Binding SelectedChariot}"
+                  DisplayMemberPath="Nom"/>
+        </StackPanel>
+    </Grid>
+</generic:Page_Generic>

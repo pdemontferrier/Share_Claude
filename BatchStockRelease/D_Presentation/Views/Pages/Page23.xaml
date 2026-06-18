@@ -1,0 +1,85 @@
+﻿<!-- ============================================================
+     PAGE 23 — FORÇAGE DES RUPTURES D’APPROVISIONNEMENT
+     ============================================================
+     <Contexte> Cette page permet de forcer l’approvisionnement des
+     barres neuves en rupture de stock, ou de valider uniquement le
+     lot partiellement approvisionné. </Contexte>
+
+     <Objectif> Offrir à l’utilisateur deux niveaux de forçage :
+       - <b>Forçage du lot :</b> autorise la découpe avec les barres déjà disponibles.
+       - <b>Forçage complet :</b> valide également les barres en rupture de stock,
+         les rendant visibles au poste de découpe. </Objectif>
+
+     <Utilisateurs cibles> Magasiniers responsables de l’approvisionnement. </Utilisateurs>
+
+     <Composants principaux>
+       - ScrollViewer : liste des lots concernés.
+       - ScrollViewer : liste des barres neuves en rupture.
+       - ListView : affichage détaillé des éléments à forcer.
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page23"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page23">
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="43"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Première ligne -->
+        <TextBlock x:Name="BatchTitle" Grid.Row="0" Grid.Column="0" Text="{DynamicResource P23_00}"/>
+        <TextBlock x:Name="BarNewTitle" Grid.Row="0" Grid.Column="1" Text="{DynamicResource P23_01}"/>
+
+        <!-- Deuxième ligne -->
+        <Border x:Name="BatchBorder" Grid.Row="1" Grid.Column="0">
+            <TextBlock x:Name="BatchHeader" Text="{DynamicResource P23_02}"/>
+        </Border>
+        <Border x:Name="BarNewBorder" Grid.Row="1" Grid.Column="1">
+            <TextBlock x:Name="BarNewHeader" Text="{DynamicResource P23_03}"/>
+        </Border>
+
+        <!-- Troisième ligne -->
+        <!-- Colonne 1 -->
+        <ScrollViewer x:Name="BatchScrollViewer" Grid.Row="2" Grid.Column="0">
+            <ListView x:Name="BatchListView" ItemsSource="{Binding BatchOutOfStockList}" SelectedItem="{Binding SelectedBatch, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Designation}" Width="400"/>
+                            <TextBlock Text="{Binding NombreDecoupes}" Width="50"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+
+        <!-- Colonne 2 -->
+        <ScrollViewer x:Name="BarNewScrollViewer" Grid.Row="2" Grid.Column="1">
+            <ListView x:Name="BarNewListView" ItemsSource="{Binding BarNewOutOfStockList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Reference}" Width="120"/>
+                            <TextBlock Text="{Binding Designation}" Width="250"/>
+                            <TextBlock Text="{Binding Couleur}" Width="80"/>
+                            <TextBlock Text="{Binding LongueurBarre, StringFormat={}{0:N0}}" Width="80"/>
+                            <TextBlock Text="{Binding QuantiteASortir}" Width="20"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</generic:Page_Generic>

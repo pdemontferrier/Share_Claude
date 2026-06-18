@@ -1,0 +1,66 @@
+﻿<!--
+=====================================================================================
+Fenêtre principale : MainWindow.xaml
+=====================================================================================
+<b>Description :</b>
+    Fenêtre principale de l’application BatchStockRelease. Elle constitue le conteneur
+    visuel principal de l’interface utilisateur et orchestre l’ensemble des composants
+    visuels : fond commun, bannière supérieure et contenu dynamique.
+
+<b>Contexte :</b>
+    - Chargée après l’exécution du UseCase d’initialisation applicative (<c>UC_Application_OnStart</c>).
+    - Héberge dynamiquement la bannière (<c>BA_MainWindow</c>) après initialisation du
+      conteneur de dépendances (DI).
+    - Coordonne la navigation horizontale et verticale à travers les différents
+      <c>Frame</c> qui hébergent les menus et les pages actives.
+
+<b>Structure visuelle :</b>
+    - <c>CommonBackgroundPad</c> : fond commun de l’application (composant partagé).
+    - <c>ContentControl</c> : point d’ancrage (<c>BannerHost</c>) pour la bannière principale.
+    - <c>Frame ActiveHorizontalMenu</c> : zone du menu horizontal dynamique.
+    - <c>Frame ActivePage</c> : zone d’affichage du contenu principal (pages métiers).
+
+<b>Principales responsabilités :</b>
+    - Initialiser les composants de la fenêtre principale.
+    - Charger dynamiquement la bannière une fois le conteneur DI prêt.
+    - Gérer la navigation et la mise à jour des pages.
+    - Adapter automatiquement les dimensions et la disposition selon la résolution.
+
+<b>Remarques techniques :</b>
+    - La bannière est instanciée via le code-behind (Solution 1 — instanciation différée)
+      afin d’éviter les erreurs de chargement XAML avant initialisation du DI.
+    - Les dimensions minimales sont définies via le service <c>IS_Window</c>.
+=====================================================================================
+-->
+
+<Window x:Class="BatchStockRelease.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BatchStockRelease"
+        xmlns:views="clr-namespace:CommonResources.Views.Backgrounds;assembly=CommonResources"
+        xmlns:localBanner="clr-namespace:BatchStockRelease.D_Presentation.Views.Components.Banner"
+        xmlns:localViews="clr-namespace:BatchStockRelease.D_Presentation.Views.Components.MenuHorizontal"
+        x:Name="MainWindowWindow"
+        mc:Ignorable="d"
+        Title="ERP Le Vérandier"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent">
+
+    <Grid >
+        <!-- Fond commun -->
+        <views:CommonBackgroundPad x:Name="CommonBackgroundPad" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
+        <!-- Bannière -->
+        <!-- Placeholder : on charge le composant dynamiquement après initialisation du DI -->
+        <ContentControl x:Name="BannerHost" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+
+        <!-- === Contenu dynamique === -->
+        <Frame x:Name="ActiveHorizontalMenu" NavigationUIVisibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+
+        <Frame x:Name="ActivePage" NavigationUIVisibility="Hidden"/>
+
+    </Grid>
+
+</Window>

@@ -1,0 +1,262 @@
+﻿<!-- ============================================================
+     PAGE 98 — PRÉSENTATION DE L’APPLICATION BATCHSTOCKRELEASE
+     ============================================================
+     <Contexte> Cette page présente le contexte, les objectifs et
+     l’architecture générale de l’application BatchStockRelease. </Contexte>
+
+     <Objectif> Offrir une vue synthétique de l’application pour les
+     utilisateurs, les responsables de production et le support technique. </Objectif>
+
+     <Utilisateurs cibles> Tous les utilisateurs, en particulier les
+     magasiniers, les administrateurs et les responsables de fabrication. </Utilisateurs>
+
+     <Composants principaux>
+       - Bloc de texte descriptif (AppInfoDoc)
+       - Mention du numéro de version
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page98"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page98">
+
+    <Grid x:Name="PageGrid">
+        <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+            <FlowDocument x:Name="AppInfoDoc" Foreground="white">
+                <Paragraph x:Name="VersionTitle">
+                    <Run Text="{DynamicResource P98_01}" FontWeight="Bold" />
+                    <Run Text="{Binding VersionNumber, Mode=OneWay}" />
+                    <LineBreak />
+                </Paragraph>
+                <Paragraph x:Name="ContexTitle" FontWeight="Bold">
+                    <Run Text="{DynamicResource P98_02}" FontWeight="Bold" />
+                </Paragraph>
+                <Paragraph x:Name="ContextContent">
+                    <Run Text="{DynamicResource P98_03}" />
+                    <LineBreak />
+                </Paragraph>
+                <Paragraph x:Name="Section1Title">
+                    <Run Text="{DynamicResource P98_04}" FontWeight="Bold"/>
+                </Paragraph>
+                <Paragraph x:Name="Section1Content">
+                    <Run Text="{DynamicResource P98_05}"/>
+                    <LineBreak />
+                    <Run Text="{DynamicResource P98_06}"/>
+                    <LineBreak />
+                    <Run Text="{DynamicResource P98_07}"/>
+                </Paragraph>
+                <List MarkerStyle="Disc" Margin="10,0,0,10">
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_08}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_09}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_10}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_11}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_12}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_13}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_14}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_15}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                </List>
+                <Paragraph x:Name="Section2Title">
+                    <Run Text="{DynamicResource P98_16}" FontWeight="Bold"/>
+                </Paragraph>
+                <List MarkerStyle="Disc" Margin="10,0,0,10">
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_17}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_18}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_19}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_20}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_21}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_22}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                </List>
+
+                <Paragraph x:Name="Section3Title">
+                    <Run Text="{DynamicResource P98_23}" FontWeight="Bold"/>
+                </Paragraph>
+                <Paragraph x:Name="Section3Content">
+                    <Run Text="{DynamicResource P98_24}"/>
+                    <LineBreak />
+                </Paragraph>
+
+                <Paragraph x:Name="Section31Title" >
+                    <Run Text="{DynamicResource P98_25}" TextDecorations="Underline"/>
+                </Paragraph>
+                <List MarkerStyle="Disc" Margin="10,0,0,10">
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_26}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_27}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_28}" FontWeight="Bold"/>
+                        </Paragraph>
+                        <List MarkerStyle="Disc" Margin="10,0,0,10">
+                            <ListItem>
+                                <Paragraph>
+                                    <Run Text="{DynamicResource P98_29}" FontWeight="Bold"/>
+                                    <Run Text="{DynamicResource P98_30}"/>
+                                    <LineBreak />
+                                </Paragraph>
+                            </ListItem>
+                            <ListItem>
+                                <Paragraph>
+                                    <Run Text="{DynamicResource P98_31}" FontWeight="Bold"/>
+                                    <Run Text="{DynamicResource P98_32}"/>
+                                    <LineBreak />
+                                </Paragraph>
+                            </ListItem>
+                        </List>
+                    </ListItem>
+                </List>
+
+                <Paragraph x:Name="Section32Title" >
+                    <Run Text="{DynamicResource P98_33}" TextDecorations="Underline"/>
+                </Paragraph>
+                <Paragraph x:Name="Section32Content">
+                    <Run Text="{DynamicResource P98_34}"/>
+                </Paragraph>
+                <List MarkerStyle="Disc" Margin="20,0,0,0">
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_35}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_36}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_37}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_38}"/>
+                        </Paragraph>
+                    </ListItem>
+                </List>
+                <Paragraph x:Name="Section39Content">
+                    <Run Text="{DynamicResource P98_39}"/>
+                    <LineBreak />
+                </Paragraph>
+
+                <Paragraph x:Name="Section40Title">
+                    <Run Text="{DynamicResource P98_40}" TextDecorations="Underline"/>
+                </Paragraph>
+                <Paragraph x:Name="Section41Content">
+                    <Run Text="{DynamicResource P98_41}"/>
+                </Paragraph>
+                <List MarkerStyle="Disc" Margin="20,0,0,0">
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_42}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_43}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_44}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_45}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_46}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                </List>
+
+
+                <Paragraph x:Name="Section47Title">
+                    <Run Text="{DynamicResource P98_47}" TextDecorations="Underline"/>
+                </Paragraph>
+                <List MarkerStyle="Disc" Margin="20,0,0,0">
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_48}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_49}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Run Text="{DynamicResource P98_50}" FontWeight="Bold"/>
+                            <Run Text="{DynamicResource P98_51}"/>
+                            <LineBreak />
+                        </Paragraph>
+                    </ListItem>
+                </List>
+
+                <Paragraph x:Name="Section4Title" FontWeight="Bold">
+                    <Run Text="{DynamicResource P98_52}"/>
+
+                </Paragraph>
+                <Paragraph x:Name="Section4Content">
+                    <Run Text="{DynamicResource P98_53}"/>
+                    <LineBreak />
+                    <Run Text="{DynamicResource P98_54}"/>
+                    <LineBreak />
+                    <Run Text="{DynamicResource P98_55}"/>
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+
+    </Grid>
+</generic:Page_Generic>

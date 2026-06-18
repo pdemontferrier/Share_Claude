@@ -1,0 +1,14 @@
+﻿<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page50"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page50">
+
+    <Grid x:Name="PageGrid">
+        <TextBlock x:Name="PageTitleMain" Text="{DynamicResource P50_00}"/>
+    </Grid>
+
+</generic:Page_Generic> 

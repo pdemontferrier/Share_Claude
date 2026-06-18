@@ -1,0 +1,64 @@
+﻿<!-- ============================================================
+     MH_PAGE60 — MENU HORIZONTAL DE LA PAGE 60
+     ============================================================
+     <Contexte> Ce menu horizontal est associé à la Page60.
+     Il permet la navigation et le raffraichissement de la page.</Contexte>
+
+     <Objectif> Fournir les commandes suivantes :
+       - Navigation standard (Menu, Actualiser, Précédent, Accueil)</Objectif>
+
+     <Comportement> Ce menu hérite de <see cref="MH_Page_Generic"/>.
+     Il ne contient pas de bouton supplémentaire, mais applique un style
+     homogène et des règles de navigation standardisées. </Comportement>
+     ============================================================ -->
+    
+<generic:MH_Page_Generic  x:Class="BatchStockRelease.D_Presentation.Views.Components.MenuHorizontal.MH_Page60"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:BatchStockRelease.D_Presentation.ViewModels.Components.MenuHorizontal"
+             xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+             xmlns:localUtilities="clr-namespace:BatchStockRelease.D_Presentation.Utilities"
+             mc:Ignorable="d">
+
+    <Grid x:Name="MH_Grid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MH_Grid_C1"/>
+            <ColumnDefinition x:Name="MH_Grid_C2"/>
+        </Grid.ColumnDefinitions>
+
+        <Border x:Name="MH_Border" Grid.Column="1">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Button x:Name="MH_Home" Command="{Binding HomeCommand}" Background="Transparent" BorderBrush="Transparent" Visibility="Collapsed">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Home_Icon"/>
+                            <TextBlock  x:Name="MH_Home_Text" Text="{DynamicResource MH_Ti_17}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="MH_Previous"  Command="{Binding PreviousCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Previous_Icon"/>
+                            <TextBlock  x:Name="MH_Previous_Text" Text="{DynamicResource MH_Ti_02}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="MH_Refresh" Command="{Binding RefreshCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Refresh_Icon"/>
+                            <TextBlock  x:Name="MH_Refresh_Text" Text="{DynamicResource MH_Ti_03}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel x:Name="MH_StackPanel" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="MH_Menu" Command="{Binding MenuCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Menu_Icon"/>
+                            <TextBlock  x:Name="MH_Menu_Text" Text="{DynamicResource MH_Ti_01}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</generic:MH_Page_Generic>

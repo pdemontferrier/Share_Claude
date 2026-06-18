@@ -1,0 +1,142 @@
+﻿<!--
+=====================================================================================
+Composant : Banner.xaml
+=====================================================================================
+Description :
+    Composant visuel UserControl de bannière principale de l'application DG244Cutting.
+    Bandeau supérieur fixe de hauteur 40 px regroupant cinq zones d'interaction
+    utilisateur, chacune déclenchant une commande exposée par VM_BA_MainWindow :
+        - Bouton Langue          → NavigateLanguageCommand
+        - Bouton Utilisateur     → NavigateUserCommand
+        - Bouton Informations    → NavigateAppInfoCommand
+        - Bouton Messages        → NavigateMessagesCommand   (double icône conditionnée)
+        - Bouton Fermer          → CloseAppCommand
+
+Contexte :
+    Composant hors familles canoniques (UC, SR, CR, CH, QH, SE, RS, DTO, VM-Page, MH,
+    Page), instancié en portée Singleton par le conteneur d'injection de dépendances.
+    Consommé par MainWindow via affectation directe à son BannerHost.Content au
+    moment du OnLoadedHandler de MainWindow (intégration portée par
+    MainWindow_Extension à venir). Son DataContext est VM_BA_MainWindow, ViewModel
+    Singleton injecté au constructeur du code-behind.
+
+Structure visuelle :
+    - UserControl racine, hauteur fixe 40 px, fond transparent.
+    - StackPanel horizontal interne porteur de la Visibility liée à
+      VM_BA_MainWindow.IsBannerVisible (bannière masquée hors session utilisateur).
+      Le report de la Visibility du UserControl vers son StackPanel interne procède
+      d'une contrainte de parsing XAML : la résolution des StaticResource sur les
+      attributs de l'élément racine intervient avant l'enregistrement effectif des
+      UserControl.Resources, rendant impossible la consommation du converter sur le
+      UserControl lui-même. Posture parallèle au legacy.
+    - StackPanel interne hébergeant les cinq boutons enchaînés.
+    - Le bouton Messages héberge un StackPanel imbriqué avec deux Image superposées
+      dont la visibilité est conditionnée par VM_BA_MainWindow.HasUnreadMessages.
+
+Bindings principaux :
+    - Visibility               → IsBannerVisible
+    - Source LanguageIcon      → LanguageFlagUri
+    - Text UserFullName        → UserFullName
+    - Source MessageButtonIcon → MessageIconUri        (visible si !HasUnreadMessages)
+    - Source MessageNotRead    → MessageUnreadIconUri  (visible si  HasUnreadMessages)
+    - Source AppCloseButtonIcon → AppCloseIconUri
+    - Commands                 → NavigateLanguageCommand, NavigateUserCommand,
+                                  NavigateAppInfoCommand, NavigateMessagesCommand,
+                                  CloseAppCommand
+
+Convertisseur :
+    UT_BoolToVisibilityConverter (D_Presentation.Utilities.Converters) déclaré en
+    StaticResource du UserControl sous la clé BoolToVisibilityConverter. Le mode
+    inversé est obtenu par ConverterParameter="Inverse".
+
+Remarques techniques :
+    - Le Text du TextBlock AppInfoSign n'est pas défini dans le XAML : il est
+      affecté au Loaded par IS_ControlStyler.StyleAppInfoButton (arbitrage Q3 du fil).
+    - Les noms d'éléments (x:Name) sont strictement ceux attendus par les signatures
+      de IS_ControlStyler ; toute modification casserait la stylisation appliquée
+      au OnLoadedHandler.
+    - La stylisation visuelle (couleurs, polices, dimensions internes, icônes
+      statiques) est intégralement appliquée au Loaded par le code-behind via
+      IS_ControlStyler ; aucun style WPF n'est défini ici.
+=====================================================================================
+-->
+<UserControl x:Class="DG244Cutting.D_Presentation.Views.Components.Banner.Banner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:DG244Cutting.D_Presentation.Utilities.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="40" d:DesignWidth="800"
+             Height="40"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <converters:UT_BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal"
+                Height="40"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                Visibility="{Binding IsBannerVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+
+        <!-- Bouton Langue -->
+        <Button x:Name="LanguageButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateLanguageCommand}">
+            <Image x:Name="LanguageIcon"
+                   VerticalAlignment="Top"
+                   HorizontalAlignment="Center"
+                   Source="{Binding LanguageFlagUri}"/>
+        </Button>
+
+        <!-- Bouton Utilisateur -->
+        <Button x:Name="UserFullNameButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateUserCommand}">
+            <TextBlock x:Name="UserFullName"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Padding="0,0,10,0"
+                       Text="{Binding UserFullName}"/>
+        </Button>
+
+        <!-- Bouton Informations applicatives -->
+        <Button x:Name="AppInfo"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateAppInfoCommand}">
+            <TextBlock x:Name="AppInfoSign"/>
+        </Button>
+
+        <!-- Bouton Messages -->
+        <Button x:Name="MessageButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateMessagesCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="MessageButtonIcon"
+                       Source="{Binding MessageIconUri}"
+                       Visibility="{Binding HasUnreadMessages, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                <Image x:Name="MessageNotReadButtonIcon"
+                       Source="{Binding MessageUnreadIconUri}"
+                       Visibility="{Binding HasUnreadMessages, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </StackPanel>
+        </Button>
+
+        <!-- Bouton Fermer -->
+        <Button x:Name="AppCloseButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding CloseAppCommand}">
+            <Image x:Name="AppCloseButtonIcon"
+                   VerticalAlignment="Top"
+                   HorizontalAlignment="Center"
+                   Source="{Binding AppCloseIconUri}"/>
+        </Button>
+
+    </StackPanel>
+</UserControl>

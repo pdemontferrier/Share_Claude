@@ -1,0 +1,152 @@
+﻿<!-- ============================================================
+     PAGE 96 — MESSAGERIE INTER-APPLICATIONS
+     ============================================================
+     <Contexte> Cette page affiche les messages échangés entre
+     utilisateurs et applications du système BatchStockRelease. </Contexte>
+
+     <Objectif> Offrir un espace de consultation des messages :
+       - Onglet 1 : Messages reçus
+       - Onglet 2 : Messages envoyés
+       - Onglet 3 : Détail du message sélectionné </Objectif>
+
+     <Utilisateurs cibles> Administrateurs et opérateurs techniques. </Utilisateurs>
+
+     <Composants principaux>
+       - TabControl : navigation entre les listes et le détail.
+       - ScrollViewer : défilement des messages.
+       - ListView : affichage tabulaire des messages reçus/envoyés.
+     ============================================================ -->
+    
+    <generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page96"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      xmlns:localUtilities="clr-namespace:BatchStockRelease.D_Presentation.Utilities"
+                      mc:Ignorable="d"
+                      Title="Page96">
+
+    <generic:Page_Generic.Resources>
+        <localUtilities:DateFormatConverter x:Key="DateFormatConverter" />
+    </generic:Page_Generic.Resources>
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Première ligne -->
+        <TabControl x:Name="MainTabControl" Grid.Row="0" Grid.Column="0"  SelectionChanged="MainTabControl_SelectionChanged">
+
+            <!-- Premier onglet === Reçus === -->
+            <TabItem x:Name="MessagesReceivedTabItem">
+                <Grid x:Name="MessagesReceivedGrid" Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- Première ligne -->
+                        <Border x:Name="MessagesReceivedBorder" Grid.Row="0" Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="MessagesReceivedHeader1" Text="{DynamicResource P96_04}" Width="200"/>
+                                <TextBlock x:Name="MessagesReceivedHeader2" Text="{DynamicResource P96_05}" Width="50"/>
+                                <TextBlock x:Name="MessagesReceivedHeader3" Text="{DynamicResource P96_06}" Width="200"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Deuxième ligne -->
+                        <ScrollViewer x:Name="MessagesReceivedScrollViewer" Grid.Row="1" Grid.Column="0">
+                            <ListView x:Name="MessagesReceivedListView" ItemsSource="{Binding MessagesReceived}" SelectedItem="{Binding SelectedReceivedMessage}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding SentDate, Converter={StaticResource DateFormatConverter}}" Width="200"/>
+                                            <CheckBox IsChecked="{Binding IsRead}" IsEnabled="False" Width="50"/>
+                                            <TextBlock Text="{Binding Subject}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Deuxième onglet === Envoyés === -->
+            <TabItem x:Name="MessagesSentTabItem">
+                <Grid x:Name="MessagesSentsGrid" Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- Première ligne -->
+                        <Border x:Name="MessagesSentBorder" Grid.Row="0" Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="MessagesSentHeader1" Text="{DynamicResource P96_04}" Width="200"/>
+                                <TextBlock x:Name="MessagesSentHeader2" Text="{DynamicResource P96_05}" Width="50"/>
+                                <TextBlock x:Name="MessagesSentHeader3" Text="{DynamicResource P96_06}" Width="200"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Deuxième ligne -->
+                        <ScrollViewer x:Name="MessagesSentScrollViewer" Grid.Row="1" Grid.Column="0">
+                            <ListView x:Name="MessagesSentListView" ItemsSource="{Binding MessagesSent}" SelectedItem="{Binding SelectedSentMessage}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding SentDate, Converter={StaticResource DateFormatConverter}}" Width="200"/>
+                                            <CheckBox IsChecked="{Binding IsRead}" IsEnabled="False" Width="50"/>
+                                            <TextBlock Text="{Binding Subject}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Troisème onglet === Détail === -->
+            <TabItem x:Name="MessageTabItem" IsSelected="{Binding SelectTabItemMessage}">
+                <Border x:Name="MessageBorder" Padding="5,20,5,20">
+                    <Grid x:Name="MessageGrid" Grid.Row="0" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="Col_0" Width="200"/>
+                            <ColumnDefinition x:Name="Col_1" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition x:Name="Row_0" Height="40"/>
+                            <RowDefinition x:Name="Row_1" Height="40"/>
+                            <RowDefinition x:Name="Row_2" MinHeight="40"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Colonne 1 -->
+                        <TextBlock x:Name="SubjectTitle" Grid.Row="0" Grid.Column="0" Text="{DynamicResource P96_07}"/>
+                        <TextBlock x:Name="DateTitle" Grid.Row="1" Grid.Column="0"  Text="{DynamicResource P96_08}"/>
+                        <TextBlock x:Name="ContentTitle" Grid.Row="2" Grid.Column="0" Text="{DynamicResource P96_10}"/>
+
+                        <!-- Colonne 2 -->
+                        <TextBlock x:Name="SujectData" Grid.Row="0" Grid.Column="1" Text="{Binding SelectedMessage.Subject}"/>
+                        <TextBlock x:Name="DateData" Grid.Row="1" Grid.Column="1" Text="{Binding SelectedMessage.SentDate, Converter={StaticResource DateFormatConverter}}"/>
+                        <TextBlock x:Name="ContentData" Grid.Row="2" Grid.Column="1" Text="{Binding SelectedMessage.Content}"/>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</generic:Page_Generic>
