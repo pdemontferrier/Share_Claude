@@ -49,7 +49,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
     /// <para>La classe applique la structure normative à cinq
     /// régions standard (§4.4.2 du 0230) sans aucune extension
     /// §4.4.3. La région Méthodes protégées est absente
-    /// conformément à R-4.4.40 du 0231 (la classe n'expose aucune
+    /// conformément à R-4.4.10 du 0231 (la classe n'expose aucune
     /// méthode <c>protected</c> propre). L'extension Propriétés
     /// publiques n'est pas présente : le présent ViewModel n'expose
     /// aucune propriété publique propre, toutes les propriétés

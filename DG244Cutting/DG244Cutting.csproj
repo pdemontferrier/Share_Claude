@@ -100,6 +100,7 @@
 		<Page Update="D_Presentation\Views\Pages\Page50.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Pages\Page60.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Pages\Page70.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page80.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Pages\Page90.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Pages\Page91.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Pages\Page96.xaml"><SubType>Designer</SubType></Page>
@@ -120,6 +121,7 @@
 		<Compile Update="D_Presentation\Views\Pages\Page50.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Pages\Page60.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Pages\Page70.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page80.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Pages\Page90.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Pages\Page91.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Pages\Page96.xaml.cs"><SubType>Code</SubType></Compile>
@@ -140,6 +142,7 @@
 		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page50.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page60.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page70.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page80.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page90.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page91.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page96.cs"><SubType>Code</SubType></Compile>
@@ -162,6 +165,7 @@
 		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page50.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page60.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page70.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page80.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page90.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page91.xaml"><SubType>Designer</SubType></Page>
 		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page96.xaml"><SubType>Designer</SubType></Page>
@@ -186,6 +190,7 @@
 		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page50.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page60.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page70.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page80.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page90.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page91.xaml.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page96.xaml.cs"><SubType>Code</SubType></Compile>
@@ -210,6 +215,7 @@
 		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page50.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page60.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page70.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page80.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page90.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page91.cs"><SubType>Code</SubType></Compile>
 		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page96.cs"><SubType>Code</SubType></Compile>
