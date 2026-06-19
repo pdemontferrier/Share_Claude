@@ -35,6 +35,7 @@ namespace DG244Cutting.B_UseCases.UseCases.User
     /// <item><description>Charger la session cible via le Query Handler et contrôler son appartenance utilisateur.</description></item>
     /// <item><description>Déléguer la mise à jour à l'état déconnecté au Service spécialisé.</description></item>
     /// <item><description>Déléguer le traitement terminal des erreurs à <see cref="IU_LogAndNotify"/>.</description></item>
+    /// <item><description>Exposer un retour signalable booléen (<see langword="true"/> = succès, <see langword="false"/> = échec applicatif capté) destiné à un éventuel UseCase orchestrant amont, conformément à la clause de chaîne d'appel UseCase → UseCase de §4.14.2.</description></item>
     /// </list>
     /// <para>Non-responsabilités :</para>
     /// <list type="bullet">
@@ -105,7 +106,14 @@ namespace DG244Cutting.B_UseCases.UseCases.User
         /// spécialisé, persiste et valide la transaction. L'absence de session
         /// correspondante est un cas non bloquant (retour sans mutation après validation
         /// d'une transaction vide). Toute exception typée est traitée par le pipeline
-        /// terminal.
+        /// terminal et signalée par <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Retour : <see langword="true"/> si la fermeture de session a abouti (transaction
+        /// validée — soit après passage effectif à l'état déconnecté, soit après constat
+        /// non bloquant d'absence de session correspondante) ; <see langword="false"/> si
+        /// une exception applicative typée a été captée et traitée terminalement par
+        /// <see cref="IU_LogAndNotify"/>.
         /// </para>
         /// <para>Responsabilités :</para>
         /// <list type="bullet">
@@ -113,83 +121,104 @@ namespace DG244Cutting.B_UseCases.UseCases.User
         /// <item><description>Charger la session cible et contrôler son appartenance utilisateur.</description></item>
         /// <item><description>Déléguer la mise à jour à l'état déconnecté au Service spécialisé.</description></item>
         /// <item><description>Persister et valider la transaction, ou l'annuler en cas d'échec.</description></item>
+        /// <item><description>Signaler l'issue du scénario par un retour booléen.</description></item>
         /// </list>
         /// </remarks>
         /// <param name="caller">Chaîne d'appel reçue de l'appelant. Ne doit pas être <see langword="null"/>.</param>
         /// <param name="sessionId">Identifiant de la session à fermer. Doit être strictement positif.</param>
         /// <param name="ct">Jeton d'annulation coopérative. Par défaut <see langword="default"/>.</param>
-        /// <exception cref="Ex_Business">
-        /// Levée si l'identifiant utilisateur lu du contexte applicatif courant ou
-        /// <paramref name="sessionId"/> n'est pas strictement positif, ou si la session
-        /// chargée n'appartient pas à l'utilisateur courant.
+        /// <returns>
+        /// <see langword="true"/> si la fermeture de session a abouti (transaction validée) ;
+        /// <see langword="false"/> si une exception applicative typée a été captée et traitée
+        /// terminalement par <see cref="IU_LogAndNotify"/>.
+        /// </returns>
+        /// <exception cref="OperationCanceledException">
+        /// Propagée à l'appelant lorsque l'annulation coopérative est demandée, conformément à §4.6.
         /// </exception>
-        /// <exception cref="Ex_Infrastructure">Levée si la lecture ou l'écriture en base échoue.</exception>
-        public async Task ExecuteAsync(string caller, int sessionId, CancellationToken ct = default)
+        public async Task<bool> ExecuteAsync(string caller, int sessionId, CancellationToken ct = default)
         {
             string callChain = $"{caller} > {_callee} > {nameof(ExecuteAsync)}";
 
-            await using var transaction = await _dbContext.Database
-                .BeginTransactionAsync(IsolationLevel.ReadCommitted, ct);
+            // P6 — encapsulation dans la stratégie d'exécution exigée par EnableRetryOnFailure
+            // (§4.10.1 du 0230, sous-bloc « Encapsulation dans une stratégie d'exécution » ;
+            //  R-4.10.2 amendée du 0231). Sans elle, BeginTransactionAsync lève
+            //  InvalidOperationException : l'execution strategy ne supporte pas les
+            //  transactions initiées par l'utilisateur hors de ce délégué.
+            var strategy = _dbContext.Database.CreateExecutionStrategy();
 
-            try
+            return await strategy.ExecuteAsync(async () =>
             {
-                if (sessionId <= 0)
-                    throw new Ex_Business(
-                        callChain,
-                        Ex_Business.ErrorCodes.BU_ER_02,
-                        $"L'identifiant de session fourni pour la fermeture est invalide : {sessionId}. Doit être strictement positif.");
+                await using var transaction = await _dbContext.Database
+                    .BeginTransactionAsync(IsolationLevel.ReadCommitted, ct);
 
-                UserAppSession? existingSession =
-                    await _qhUserAppSession.HandleGetByIdAsync(callChain, sessionId, ct);
-
-                DTO_AppContext appCtx = _appContext.GetAppContext();
-
-                if (appCtx.AppUserId <= 0)
-                    throw new Ex_Business(
-                        callChain,
-                        Ex_Business.ErrorCodes.BU_ER_02,
-                        $"L'identifiant utilisateur fourni pour la fermeture de session est invalide : {appCtx.AppUserId}. Doit être strictement positif.");
-
-                if (existingSession is not null)
+                try
                 {
-                    // Sécurité fonctionnelle : on ne ferme pas une session d'un autre
-                    // utilisateur. Ce contrôle est une décision d'orchestration, portée
-                    // par le UseCase qui dispose de la vision globale du scénario.
-                    if (existingSession.IdUser != appCtx.AppUserId)
+                    if (sessionId <= 0)
                         throw new Ex_Business(
                             callChain,
-                            Ex_Business.ErrorCodes.BU_ER_04,
-                            $"Incohérence de session : la session {sessionId} n'appartient pas à l'utilisateur {appCtx.AppUserId}.");
+                            Ex_Business.ErrorCodes.BU_ER_02,
+                            $"L'identifiant de session fourni pour la fermeture est invalide : {sessionId}. Doit être strictement positif.");
 
-                    await _sessionUpdateService.ExecuteAsync(callChain, existingSession, false, appCtx, ct);
+                    UserAppSession? existingSession =
+                        await _qhUserAppSession.HandleGetByIdAsync(callChain, sessionId, ct);
+
+                    DTO_AppContext appCtx = _appContext.GetAppContext();
+
+                    if (appCtx.AppUserId <= 0)
+                        throw new Ex_Business(
+                            callChain,
+                            Ex_Business.ErrorCodes.BU_ER_02,
+                            $"L'identifiant utilisateur fourni pour la fermeture de session est invalide : {appCtx.AppUserId}. Doit être strictement positif.");
+
+                    if (existingSession is not null)
+                    {
+                        // Sécurité fonctionnelle : on ne ferme pas une session d'un autre
+                        // utilisateur. Ce contrôle est une décision d'orchestration, portée
+                        // par le UseCase qui dispose de la vision globale du scénario.
+                        if (existingSession.IdUser != appCtx.AppUserId)
+                            throw new Ex_Business(
+                                callChain,
+                                Ex_Business.ErrorCodes.BU_ER_04,
+                                $"Incohérence de session : la session {sessionId} n'appartient pas à l'utilisateur {appCtx.AppUserId}.");
+
+                        await _sessionUpdateService.ExecuteAsync(callChain, existingSession, false, appCtx, ct);
+                    }
+
+                    await _dbContext.SaveChangesAsync(ct);
+                    await transaction.CommitAsync(ct);
+
+                    return true;
                 }
-
-                await _dbContext.SaveChangesAsync(ct);
-                await transaction.CommitAsync(ct);
-            }
-            catch (Ex_Business ex)
-            {
-                await transaction.RollbackAsync(ct);
-                await _logAndNotify.ExecuteAsync(callChain, "No_EC_01", ex, ct: ct);
-            }
-            catch (Ex_Infrastructure ex)
-            {
-                await transaction.RollbackAsync(ct);
-                await _logAndNotify.ExecuteAsync(callChain, "No_EC_02", ex, ct: ct);
-            }
-            catch (Ex_Unclassified ex)
-            {
-                await transaction.RollbackAsync(ct);
-                await _logAndNotify.ExecuteAsync(callChain, "No_EC_03", ex, ct: ct);
-            }
-            catch (OperationCanceledException)
-            {
-                // Annulation coopérative : rollback implicite par le Dispose du bloc await using.
-                // Ne pas appeler RollbackAsync ici — il serait redondant.
-                // Ne pas appeler IU_LogAndNotify — l'annulation n'est pas une erreur.
-                // Cf. section 4.6 pour la mécanique d'annulation coopérative.
-                throw;
-            }
+                catch (Ex_Business ex)
+                {
+                    await transaction.RollbackAsync(ct);
+                    await _logAndNotify.ExecuteAsync(callChain, "No_EC_01", ex, ct: ct);
+                    return false;
+                }
+                catch (Ex_Infrastructure ex)
+                {
+                    await transaction.RollbackAsync(ct);
+                    await _logAndNotify.ExecuteAsync(callChain, "No_EC_02", ex, ct: ct);
+                    return false;
+                }
+                catch (Ex_Unclassified ex)
+                {
+                    await transaction.RollbackAsync(ct);
+                    await _logAndNotify.ExecuteAsync(callChain, "No_EC_03", ex, ct: ct);
+                    return false;
+                }
+                catch (OperationCanceledException)
+                {
+                    // Annulation coopérative : rollback implicite par le Dispose du bloc await using.
+                    // Ne pas appeler RollbackAsync ici — il serait redondant.
+                    // Ne pas appeler IU_LogAndNotify — l'annulation n'est pas une erreur.
+                    // Ne pas retourner de booléen — l'annulation est propagée à l'appelant
+                    // selon le mécanisme normatif de §4.6, distinct de la signalisation
+                    // d'échec applicatif entre UseCases orchestrants.
+                    // Cf. section 4.6 pour la mécanique d'annulation coopérative.
+                    throw;
+                }
+            });
         }
 
         #endregion
