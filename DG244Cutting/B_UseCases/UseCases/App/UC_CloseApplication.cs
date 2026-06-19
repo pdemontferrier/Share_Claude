@@ -64,6 +64,24 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <c>Task&lt;En_CloseResult&gt;</c> du contrat est motivée par la nécessité
     /// fonctionnelle pour ce consommateur de présentation de piloter
     /// <c>CancelEventArgs.Cancel</c> selon l'issue retournée.</para>
+    /// <para>Conformité à R-4.14.21 (chaîne UC → UC normalisée) sur le versant
+    /// orchestrateur amont : le retour signalable
+    /// <c>Task&lt;bool&gt;</c> exposé par <see cref="IU_UserAppSession_Close.ExecuteAsync"/>
+    /// est exploité par valeur dans chacun des cinq sites de consommation au moyen
+    /// d'un discard explicite (<c>_ = await _userAppSessionClose.ExecuteAsync(...)</c>),
+    /// satisfaisant la condition (a) de la règle. Les conditions (b) indépendance
+    /// transactionnelle (I-4.10.3) et (c) traitement terminal propre via
+    /// <see cref="IU_LogAndNotify"/> dans les catch typés sont satisfaites par
+    /// construction (cf. paragraphe « Nature transactionnelle » et pipeline terminal
+    /// des trois catch typés ci-après). La conduite à tenir en cas de retour
+    /// <see langword="false"/> du UseCase consommé (échec applicatif déjà journalisé
+    /// et notifié à l'utilisateur en aval par son propre pipeline terminal) est la
+    /// convergence inconditionnelle vers <see cref="IS_Shutdown.ExecuteAsync"/> :
+    /// la convergence PR-B documentée prime, l'incident ayant déjà été restitué à
+    /// l'utilisateur par le UseCase consommé. Aucun catch applicatif n'est ajouté
+    /// autour de l'appel — les exceptions applicatives typées ne sont jamais
+    /// propagées entre UseCases orchestrants conformément à la doctrine de chaîne
+    /// UC → UC normalisée.</para>
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
     /// <item><description>Lire le contexte d'environnement depuis les Settings partagés (<c>AppSessionId</c>, <c>ForceClose</c>, <c>IsConnected</c>).</description></item>
@@ -83,6 +101,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <item><description>Ne consulte pas les paramètres <c>confirmation</c>, <c>warning</c>, <c>delaySeconds</c> depuis les Settings : ces trois paramètres sont fournis par le consommateur de présentation à chaque appel.</description></item>
     /// </list>
     /// </remarks>
+    /// <seealso cref="IU_CloseApplication"/>
     public class UC_CloseApplication : IU_CloseApplication
     {
         #region === Propriétés privées ===
@@ -122,7 +141,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
 
         #endregion
 
-        #region === Dépendances injectées ===
+        #region === Dépendances privées ===
 
         private readonly ISE_User _settingsUser;
         private readonly ISE_App _settingsApp;
@@ -249,7 +268,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 {
                     if (isConnected)
                     {
-                        await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+                        _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
                     }
                     else
                     {
@@ -348,7 +367,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 return En_CloseResult.Cancelled;
             }
 
-            await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
             _settingsUser.ForceClose = false;
             await _shutdown.ExecuteAsync(callChain, ct);
             return En_CloseResult.Closed;
@@ -386,7 +405,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         {
             string callChain = $"{caller} > {nameof(ExecuteWithDelayAsync)}";
 
-            await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
             _notification.OpenDialogWindow(callChain, DictKey_DialogTitle, DictKey_DialogContent, ct);
             await Task.Delay(TimeSpan.FromSeconds(delaySeconds), ct);
             _notification.CloseDialogWindow(callChain, ct);
@@ -419,7 +438,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         {
             string callChain = $"{caller} > {nameof(ExecuteWithWarningAsync)}";
 
-            await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
             _notification.Warning(callChain, DictKey_Warning, ct: ct);
             _settingsUser.ForceClose = false;
             await _shutdown.ExecuteAsync(callChain, ct);
@@ -447,7 +466,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         {
             string callChain = $"{caller} > {nameof(ExecuteDirectAsync)}";
 
-            await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
             _settingsUser.ForceClose = false;
             await _shutdown.ExecuteAsync(callChain, ct);
             return En_CloseResult.Closed;

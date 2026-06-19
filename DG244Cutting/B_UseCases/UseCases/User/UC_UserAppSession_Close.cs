@@ -216,7 +216,6 @@ namespace DG244Cutting.B_UseCases.UseCases.User
                     // selon le mécanisme normatif de §4.6, distinct de la signalisation
                     // d'échec applicatif entre UseCases orchestrants.
                     // Cf. section 4.6 pour la mécanique d'annulation coopérative.
-                    // test
                     throw;
                 }
             });
