@@ -441,10 +441,10 @@
     <sys:String x:Key="P00_19">Non défini</sys:String>
 
     <!-- Page 10    -->
-    <sys:String x:Key="P10_00">Lot à approvisionner</sys:String>
-    <sys:String x:Key="P10_01">Barres de chutes :</sys:String>
-    <sys:String x:Key="P10_02">Barres neuves :</sys:String>
-    <sys:String x:Key="P10_03">Lot :</sys:String>
+    <sys:String x:Key="P10_00">Page 10</sys:String>
+    <sys:String x:Key="P10_01">Non défini</sys:String>
+    <sys:String x:Key="P10_02">Non défini</sys:String>
+    <sys:String x:Key="P10_03">Non défini</sys:String>
     <sys:String x:Key="P10_04">Non défini</sys:String>
     <sys:String x:Key="P10_05">Non défini</sys:String>
     <sys:String x:Key="P10_06">Non défini</sys:String>
@@ -463,7 +463,7 @@
     <sys:String x:Key="P10_19">Non défini</sys:String>
 
     <!-- Page 20    -->
-    <sys:String x:Key="P20_00">Veuillez sélectionner un chariot :</sys:String>
+    <sys:String x:Key="P20_00">Page 20</sys:String>
     <sys:String x:Key="P20_01">Non défini</sys:String>
     <sys:String x:Key="P20_02">Non défini</sys:String>
     <sys:String x:Key="P20_03">Non défini</sys:String>
@@ -485,13 +485,13 @@
     <sys:String x:Key="P20_19">Non défini</sys:String>
 
     <!-- Page 21     -->
-    <sys:String x:Key="P21_00">Retour de barres neuves en stock.</sys:String>
-    <sys:String x:Key="P21_01">Référence :</sys:String>
-    <sys:String x:Key="P21_02">Couleur :</sys:String>
-    <sys:String x:Key="P21_03">Conteneur :</sys:String>
-    <sys:String x:Key="P21_04">Quantité :</sys:String>
-    <sys:String x:Key="P21_05">Stock actuel :</sys:String>
-    <sys:String x:Key="P21_06">Emplacement :</sys:String>
+    <sys:String x:Key="P21_00">Page 30</sys:String>
+    <sys:String x:Key="P21_01">Non défini</sys:String>
+    <sys:String x:Key="P21_02">Non défini</sys:String>
+    <sys:String x:Key="P21_03">Non défini</sys:String>
+    <sys:String x:Key="P21_04">Non défini</sys:String>
+    <sys:String x:Key="P21_05">Non défini</sys:String>
+    <sys:String x:Key="P21_06">Non défini</sys:String>
     <sys:String x:Key="P21_07">Non défini</sys:String>
     <sys:String x:Key="P21_08">Non défini</sys:String>
     <sys:String x:Key="P21_09">Non défini</sys:String>
@@ -507,13 +507,13 @@
     <sys:String x:Key="P21_19">Non défini</sys:String>
 
     <!-- Page 22     -->
-    <sys:String x:Key="P22_00">Intégration des barres de chutes en stock.</sys:String>
-    <sys:String x:Key="P22_01">Code Barre :</sys:String>
-    <sys:String x:Key="P22_02">Statut :</sys:String>
-    <sys:String x:Key="P22_03">Barre de chute non trouvée, code barre inconnu.</sys:String>
-    <sys:String x:Key="P22_04">Barre de chute intégrée avec succès.</sys:String>
-    <sys:String x:Key="P22_05">Barre de chute déjà intégrée.</sys:String>
-    <sys:String x:Key="P22_06">Erreur inattendue.</sys:String>
+    <sys:String x:Key="P22_00">Page 22</sys:String>
+    <sys:String x:Key="P22_01">Non défini</sys:String>
+    <sys:String x:Key="P22_02">Non défini</sys:String>
+    <sys:String x:Key="P22_03">Non défini</sys:String>
+    <sys:String x:Key="P22_04">Non défini</sys:String>
+    <sys:String x:Key="P22_05">Non défini</sys:String>
+    <sys:String x:Key="P22_06">Non défini</sys:String>
     <sys:String x:Key="P22_07">Non défini</sys:String>
     <sys:String x:Key="P22_08">Non défini</sys:String>
     <sys:String x:Key="P22_09">Non défini</sys:String>
@@ -529,10 +529,10 @@
     <sys:String x:Key="P22_19">Non défini</sys:String>
 
     <!-- Page 23     -->
-    <sys:String x:Key="P23_00">Lots approvisionnés avec des ruptures de stock.</sys:String>
-    <sys:String x:Key="P23_01">Barres neuves en rupture de stock.</sys:String>
-    <sys:String x:Key="P23_02">Liste des lots :</sys:String>
-    <sys:String x:Key="P23_03">Liste des barres du lot sélectionné :</sys:String>
+    <sys:String x:Key="P23_00">Page 23</sys:String>
+    <sys:String x:Key="P23_01">Non défini</sys:String>
+    <sys:String x:Key="P23_02">Non défini</sys:String>
+    <sys:String x:Key="P23_03">Non défini</sys:String>
     <sys:String x:Key="P23_04">Non défini</sys:String>
     <sys:String x:Key="P23_05">Non défini</sys:String>
     <sys:String x:Key="P23_06">Non défini</sys:String>
@@ -551,12 +551,12 @@
     <sys:String x:Key="P23_19">Non défini</sys:String>
 
     <!-- Page 30     -->
-    <sys:String x:Key="P30_00">Liste des barres de chutes à approvisionner.</sys:String>
-    <sys:String x:Key="P30_01">Barres de chutes :</sys:String>
-    <sys:String x:Key="P30_02">Liste des barres neuves à approvisionner.</sys:String>
-    <sys:String x:Key="P30_03">Barres Neuves :</sys:String>
-    <sys:String x:Key="P30_04">Liste des barres en rupture de stock.</sys:String>
-    <sys:String x:Key="P30_05">Barres en rupture de stock :</sys:String>
+    <sys:String x:Key="P30_00">Page 30</sys:String>
+    <sys:String x:Key="P30_01">Non défini</sys:String>
+    <sys:String x:Key="P30_02">Non défini</sys:String>
+    <sys:String x:Key="P30_03">Non défini</sys:String>
+    <sys:String x:Key="P30_04">Non défini</sys:String>
+    <sys:String x:Key="P30_05">Non défini</sys:String>
     <sys:String x:Key="P30_06">Non défini</sys:String>
     <sys:String x:Key="P30_07">Non défini</sys:String>
     <sys:String x:Key="P30_08">Non défini</sys:String>
@@ -573,16 +573,16 @@
     <sys:String x:Key="P30_19">Non défini</sys:String>
 
     <!-- Page 31     -->
-    <sys:String x:Key="P31_00">Veuillez sortir la barre de chute suivante :</sys:String>
-    <sys:String x:Key="P31_01">Destination:</sys:String>
-    <sys:String x:Key="P31_02">Emplacement :</sys:String>
-    <sys:String x:Key="P31_03">Code barre :</sys:String>
-    <sys:String x:Key="P31_04">Référence :</sys:String>
-    <sys:String x:Key="P31_05">Désignation :</sys:String>
-    <sys:String x:Key="P31_06">Couleur :</sys:String>
-    <sys:String x:Key="P31_07">Longueur :</sys:String>
-    <sys:String x:Key="P31_08">Quantié :</sys:String>
-    <sys:String x:Key="P31_09">Sorties restantes :</sys:String>
+    <sys:String x:Key="P31_00">Page 31</sys:String>
+    <sys:String x:Key="P31_01">Non défini</sys:String>
+    <sys:String x:Key="P31_02">Non défini</sys:String>
+    <sys:String x:Key="P31_03">Non défini</sys:String>
+    <sys:String x:Key="P31_04">Non défini</sys:String>
+    <sys:String x:Key="P31_05">Non défini</sys:String>
+    <sys:String x:Key="P31_06">Non défini</sys:String>
+    <sys:String x:Key="P31_07">Non défini</sys:String>
+    <sys:String x:Key="P31_08">Non défini</sys:String>
+    <sys:String x:Key="P31_09">Non défini</sys:String>
     <sys:String x:Key="P31_10">Non défini</sys:String>
     <sys:String x:Key="P31_11">Non défini</sys:String>
     <sys:String x:Key="P31_12">Non défini</sys:String>
@@ -595,17 +595,17 @@
     <sys:String x:Key="P31_19">Non défini</sys:String>
     
     <!-- Page32  -->
-    <sys:String x:Key="P32_00">Veuillez sortir la ou les barre(s) neuve(s) suivante(s) :</sys:String>
-    <sys:String x:Key="P32_01">Destination:</sys:String>
-    <sys:String x:Key="P32_02">Emplacement :</sys:String>
-    <sys:String x:Key="P32_03">Code barre :</sys:String>
-    <sys:String x:Key="P32_04">Référence :</sys:String>
-    <sys:String x:Key="P32_05">Désignation :</sys:String>
-    <sys:String x:Key="P32_06">Couleur :</sys:String>
-    <sys:String x:Key="P32_07">Longueur :</sys:String>
-    <sys:String x:Key="P32_08">Quantié :</sys:String>
-    <sys:String x:Key="P32_09">Stock :</sys:String>
-    <sys:String x:Key="P32_10">Sorties restantes :</sys:String>
+    <sys:String x:Key="P32_00">Page 32</sys:String>
+    <sys:String x:Key="P32_01">Non défini</sys:String>
+    <sys:String x:Key="P32_02">Non défini</sys:String>
+    <sys:String x:Key="P32_03">Non défini</sys:String>
+    <sys:String x:Key="P32_04">Non défini</sys:String>
+    <sys:String x:Key="P32_05">Non défini</sys:String>
+    <sys:String x:Key="P32_06">Non défini</sys:String>
+    <sys:String x:Key="P32_07">Non défini</sys:String>
+    <sys:String x:Key="P32_08">Non défini</sys:String>
+    <sys:String x:Key="P32_09">Non défini</sys:String>
+    <sys:String x:Key="P32_10">Non défini</sys:String>
     <sys:String x:Key="P32_11">Non défini</sys:String>
     <sys:String x:Key="P32_12">Non défini</sys:String>
     <sys:String x:Key="P32_13">Non défini</sys:String>
@@ -639,12 +639,12 @@
     <sys:String x:Key="P33_19">Non défini</sys:String>
 
     <!-- Page 40    -->
-    <sys:String x:Key="P40_00">Relancer l'approvisionnement d'un lot :</sys:String>
-    <sys:String x:Key="P40_01">Référence :</sys:String>
-    <sys:String x:Key="P40_02">Couleur :</sys:String>
-    <sys:String x:Key="P40_03">Conteneur :</sys:String>
-    <sys:String x:Key="P40_04">Quantité :</sys:String>
-    <sys:String x:Key="P40_05">Stock actuel :</sys:String>
+    <sys:String x:Key="P40_00">Page 40</sys:String>
+    <sys:String x:Key="P40_01">Non défini</sys:String>
+    <sys:String x:Key="P40_02">Non défini</sys:String>
+    <sys:String x:Key="P40_03">Non défini</sys:String>
+    <sys:String x:Key="P40_04">Non défini</sys:String>
+    <sys:String x:Key="P40_05">Non défini</sys:String>
     <sys:String x:Key="P40_06">Non défini</sys:String>
     <sys:String x:Key="P40_07">Non défini</sys:String>
     <sys:String x:Key="P40_08">Non défini</sys:String>
@@ -661,8 +661,8 @@
     <sys:String x:Key="P40_19">Non défini</sys:String>
 
     <!-- Page 41    -->
-    <sys:String x:Key="P41_00">Intégration des barres de chutes en stock.</sys:String>
-    <sys:String x:Key="P41_01">QRCode :</sys:String>
+    <sys:String x:Key="P41_00">Page 41</sys:String>
+    <sys:String x:Key="P41_01">Non défini</sys:String>
     <sys:String x:Key="P41_02">Non défini</sys:String>
     <sys:String x:Key="P41_03">Non défini</sys:String>
     <sys:String x:Key="P41_04">Non défini</sys:String>
@@ -920,7 +920,7 @@
 
     <!-- Page 99    -->
     <sys:String x:Key="P99_00">Page 99</sys:String>
-    <sys:String x:Key="P99_01">Page non accessible !</sys:String>
+    <sys:String x:Key="P99_01">Page demandée non accessible !</sys:String>
 
     <!-- Impression 01    -->
     <sys:String x:Key="I01_00">Non défini</sys:String>
