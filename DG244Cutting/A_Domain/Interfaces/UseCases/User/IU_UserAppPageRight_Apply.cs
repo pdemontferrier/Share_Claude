@@ -55,7 +55,7 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.User
         /// </para>
         /// <para>Responsabilités :</para>
         /// <list type="bullet">
-        /// <item><description>Initialiser les droits de pages par défaut au moindre privilège.</description></item>
+        /// <item><description>Initialiser les droits de pages par défaut au moindre privilège sur l'ensemble des pages applicatives connues, à l'exception des pages système exemptées du contrôle.</description></item>
         /// <item><description>Charger les droits spécifiques de l'utilisateur via le Query Handler.</description></item>
         /// <item><description>Appliquer les droits chargés dans le contexte utilisateur partagé.</description></item>
         /// </list>
@@ -65,11 +65,12 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.User
         /// de la section 4.5. Ne doit pas être <see langword="null"/>.
         /// </param>
         /// <param name="ct">Jeton d'annulation coopérative. Par défaut <see langword="default"/>.</param>
-        /// <exception cref="Ex_Business">
-        /// Levée si l'identifiant utilisateur ou l'identifiant application lus du contexte
-        /// applicatif courant ne sont pas strictement positifs.
+        /// <exception cref="OperationCanceledException">
+        /// Propagée à l'appelant lorsque l'annulation coopérative est demandée, conformément à §4.6.
+        /// Les exceptions applicatives typées (<see cref="Ex_Business"/>, <see cref="Ex_Infrastructure"/>,
+        /// <see cref="Ex_Unclassified"/>) ne sont jamais propagées : elles sont captées et traitées
+        /// terminalement par le pipeline de log et notification, conformément à §4.7.4.
         /// </exception>
-        /// <exception cref="Ex_Infrastructure">Levée lorsqu'une défaillance technique survient lors du chargement des droits.</exception>
         Task ExecuteAsync(string caller, CancellationToken ct = default);
     }
 }
