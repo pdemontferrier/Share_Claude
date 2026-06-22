@@ -14,7 +14,7 @@ public partial class UserAppPage
     public int Id { get; set; }
 
     /// <summary>
-    /// Code unique identifiant fonctionnellement une page applicative (exemple : P10_HOME, P20_STOCK).
+    /// Code unique identifiant fonctionnellement une page applicative (exemple : Page00, Page10, Page99).
     /// </summary>
     public string PageCode { get; set; } = null!;
 
