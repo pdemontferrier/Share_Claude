@@ -590,7 +590,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.Banner
         /// <summary>
         /// Handler asynchrone câblé à <see cref="NavigateUserCommand"/> — délègue
         /// à <see cref="IU_Navigation.NavigateToPageAsync"/> pour la navigation
-        /// vers la page <c>Page90</c>.
+        /// vers la page <c>Page01</c>.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Méthode invoquée par
@@ -611,7 +611,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.Banner
 
             try
             {
-                await _uNavigation.NavigateToPageAsync(callChain, "Page90", _cts.Token);
+                await _uNavigation.NavigateToPageAsync(callChain, "Page01", _cts.Token);
             }
             catch (OperationCanceledException)
             {
