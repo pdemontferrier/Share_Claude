@@ -25,6 +25,9 @@
         /// <summary>Identifiant de l'utilisateur applicatif courant.</summary>
         public int AppUserId { get; set; }
 
+        /// <summary>Nom complet de l'utilisateur applicatif courant.</summary>
+        public string? AppUserFullName { get; set; }
+
         /// <summary>Compte système du poste courant.</summary>
         public string? AppDeviceUser { get; set; }
 
