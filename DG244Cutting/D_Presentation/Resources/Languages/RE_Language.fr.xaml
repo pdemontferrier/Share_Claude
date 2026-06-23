@@ -440,6 +440,48 @@
     <sys:String x:Key="P00_18">Non défini</sys:String>
     <sys:String x:Key="P00_19">Non défini</sys:String>
 
+    <!-- Page 01    -->
+    <sys:String x:Key="P01_00">Page Utilisateur</sys:String>
+    <sys:String x:Key="P01_01">Numéro Identifiant :</sys:String>
+    <sys:String x:Key="P01_02">Nom complet :</sys:String>
+    <sys:String x:Key="P01_03">Windows ID :</sys:String>
+    <sys:String x:Key="P01_04">Poste ID</sys:String>
+    <sys:String x:Key="P01_05">Poste IP</sys:String>
+    <sys:String x:Key="P01_06">Non défini</sys:String>
+    <sys:String x:Key="P01_07">Non défini</sys:String>
+    <sys:String x:Key="P01_08">Non défini</sys:String>
+    <sys:String x:Key="P01_09">Non défini</sys:String>
+    <sys:String x:Key="P01_10">Utilisateur</sys:String>
+    <sys:String x:Key="P01_11">Droits d'accès</sys:String>
+    <sys:String x:Key="P01_12">Droits détaillés</sys:String>
+    <sys:String x:Key="P01_13">Page</sys:String>
+    <sys:String x:Key="P01_14">Access</sys:String>
+    <sys:String x:Key="P01_15">Lecture</sys:String>
+    <sys:String x:Key="P01_16">Modifi.</sys:String>
+    <sys:String x:Key="P01_17">Créat.</sys:String>
+    <sys:String x:Key="P01_18">Suppress.</sys:String>
+    <sys:String x:Key="P01_19">Control.</sys:String>
+    <sys:String x:Key="P01_20">Validat.</sys:String>
+    <sys:String x:Key="P01_21">Supervi.</sys:String>
+    <sys:String x:Key="P01_22">Monitor.</sys:String>
+    <sys:String x:Key="P01_23">Admin.</sys:String>
+    <sys:String x:Key="P01_24">Non défini</sys:String>
+    <sys:String x:Key="P01_25">Non défini</sys:String>
+    <sys:String x:Key="P01_26">Non défini</sys:String>
+    <sys:String x:Key="P01_27">Non défini</sys:String>
+    <sys:String x:Key="P01_28">Non défini</sys:String>
+    <sys:String x:Key="P01_29">Non défini</sys:String>
+    <sys:String x:Key="P01_30">Non défini</sys:String>
+    <sys:String x:Key="P01_31">Non défini</sys:String>
+    <sys:String x:Key="P01_32">Non défini</sys:String>
+    <sys:String x:Key="P01_33">Non défini</sys:String>
+    <sys:String x:Key="P01_34">Non défini</sys:String>
+    <sys:String x:Key="P01_35">Non défini</sys:String>
+    <sys:String x:Key="P01_36">Non défini</sys:String>
+    <sys:String x:Key="P01_37">Non défini</sys:String>
+    <sys:String x:Key="P01_38">Non défini</sys:String>
+    <sys:String x:Key="P01_39">Non défini</sys:String>
+
     <!-- Page 10    -->
     <sys:String x:Key="P10_00">Page 10</sys:String>
     <sys:String x:Key="P10_01">Non défini</sys:String>
