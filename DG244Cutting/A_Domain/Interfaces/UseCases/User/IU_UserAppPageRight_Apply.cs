@@ -29,6 +29,7 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.User
     /// <item><description>Déclarer le point d'entrée du scénario d'application des droits de pages.</description></item>
     /// <item><description>Imposer la propagation de la CallChain via le paramètre <c>caller</c> contractuel.</description></item>
     /// <item><description>Imposer le support de l'annulation coopérative via un <c>CancellationToken</c>.</description></item>
+    /// <item><description>Exposer un retour signalable booléen permettant au UseCase orchestrant amont (le cas échéant) de constater le succès ou l'échec du sous-scénario sans propagation d'exception, conformément à la clause de chaîne d'appel UseCase → UseCase de §4.14.2.</description></item>
     /// </list>
     /// <para>Non-responsabilités :</para>
     /// <list type="bullet">
@@ -53,6 +54,18 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.User
         /// défaut (moindre privilège), charge les droits spécifiques via le Query Handler,
         /// puis applique ces droits dans le contexte utilisateur partagé.
         /// </para>
+        /// <para>
+        /// Retour : <see langword="true"/> si l'application des droits de pages a abouti
+        /// (contexte utilisateur partagé renseigné sans exception applicative captée) ;
+        /// <see langword="false"/> si une exception applicative typée
+        /// (<see cref="Ex_Business"/>, <see cref="Ex_Infrastructure"/>,
+        /// <see cref="Ex_Unclassified"/>) a été captée et traitée terminalement par
+        /// <c>IU_LogAndNotify</c>. Le retour booléen permet à un éventuel UseCase
+        /// orchestrant amont de constater l'issue du sous-scénario, conformément à la
+        /// clause de chaîne d'appel UseCase → UseCase de §4.14.2. L'annulation coopérative
+        /// (<see cref="OperationCanceledException"/>) n'est pas signalée par ce retour :
+        /// elle est propagée à l'appelant selon le mécanisme normatif de §4.6.
+        /// </para>
         /// <para>Responsabilités :</para>
         /// <list type="bullet">
         /// <item><description>Initialiser les droits de pages par défaut au moindre privilège sur l'ensemble des pages applicatives connues, à l'exception des pages système exemptées du contrôle.</description></item>
@@ -65,12 +78,17 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.User
         /// de la section 4.5. Ne doit pas être <see langword="null"/>.
         /// </param>
         /// <param name="ct">Jeton d'annulation coopérative. Par défaut <see langword="default"/>.</param>
+        /// <returns>
+        /// <see langword="true"/> si l'application des droits de pages a abouti ;
+        /// <see langword="false"/> si une exception applicative typée a été captée et
+        /// traitée terminalement.
+        /// </returns>
         /// <exception cref="OperationCanceledException">
         /// Propagée à l'appelant lorsque l'annulation coopérative est demandée, conformément à §4.6.
         /// Les exceptions applicatives typées (<see cref="Ex_Business"/>, <see cref="Ex_Infrastructure"/>,
-        /// <see cref="Ex_Unclassified"/>) ne sont jamais propagées : elles sont captées et traitées
-        /// terminalement par le pipeline de log et notification, conformément à §4.7.4.
+        /// <see cref="Ex_Unclassified"/>) ne sont jamais propagées : elles sont captées et signalées
+        /// par le retour <see langword="false"/>.
         /// </exception>
-        Task ExecuteAsync(string caller, CancellationToken ct = default);
+        Task<bool> ExecuteAsync(string caller, CancellationToken ct = default);
     }
 }

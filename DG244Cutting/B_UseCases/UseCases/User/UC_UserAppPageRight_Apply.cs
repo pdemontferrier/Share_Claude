@@ -39,6 +39,7 @@ namespace DG244Cutting.B_UseCases.UseCases.User
     /// <item><description>Charger les droits spécifiques de l'utilisateur via le Query Handler.</description></item>
     /// <item><description>Appliquer les droits chargés dans le contexte utilisateur partagé.</description></item>
     /// <item><description>Déléguer le traitement terminal des erreurs à <see cref="IU_LogAndNotify"/>.</description></item>
+    /// <item><description>Exposer un retour signalable booléen (<see langword="true"/> = succès, <see langword="false"/> = échec applicatif capté) destiné à un éventuel UseCase orchestrant amont, conformément à la clause de chaîne d'appel UseCase → UseCase de §4.14.2.</description></item>
     /// </list>
     /// <para>Non-responsabilités :</para>
     /// <list type="bullet">
@@ -127,24 +128,33 @@ namespace DG244Cutting.B_UseCases.UseCases.User
         /// Les exceptions applicatives typées (<see cref="Ex_Business"/>,
         /// <see cref="Ex_Infrastructure"/>, <see cref="Ex_Unclassified"/>) sont captées
         /// terminalement et traitées par <see cref="IU_LogAndNotify"/>, conformément à
-        /// §4.7.4 ; elles ne sont jamais propagées à l'appelant.
+        /// §4.7.4, puis signalées à l'appelant par un retour <see langword="false"/> ;
+        /// le scénario nominal retourne <see langword="true"/>.
         /// </para>
         /// <para>Responsabilités :</para>
         /// <list type="bullet">
         /// <item><description>Valider les préconditions structurelles issues du contexte applicatif.</description></item>
         /// <item><description>Initialiser les droits de pages par défaut au moindre privilège sur l'ensemble des pages applicatives connues, à l'exception des pages système.</description></item>
         /// <item><description>Charger les droits spécifiques et les appliquer au contexte utilisateur partagé.</description></item>
+        /// <item><description>Signaler l'issue du scénario par un retour booléen.</description></item>
         /// </list>
         /// </remarks>
         /// <param name="caller">Chaîne d'appel reçue de l'appelant. Ne doit pas être <see langword="null"/>.</param>
         /// <param name="ct">Jeton d'annulation coopérative. Par défaut <see langword="default"/>.</param>
+        /// <returns>
+        /// <see langword="true"/> si l'application des droits de pages a abouti ;
+        /// <see langword="false"/> si une exception applicative typée a été captée et
+        /// traitée terminalement.
+        /// </returns>
         /// <exception cref="OperationCanceledException">
         /// Propagée à l'appelant lorsque l'annulation coopérative est demandée, conformément à §4.6.
         /// Les exceptions applicatives typées (<see cref="Ex_Business"/>, <see cref="Ex_Infrastructure"/>,
         /// <see cref="Ex_Unclassified"/>) ne sont jamais propagées : elles sont captées et traitées
         /// terminalement par <see cref="IU_LogAndNotify"/>, conformément à §4.7.4.
+        /// Les exceptions applicatives typées ne sont jamais propagées : elles sont captées et
+        /// signalées par le retour <see langword="false"/>.
         /// </exception>
-        public async Task ExecuteAsync(string caller, CancellationToken ct = default)
+        public async Task<bool> ExecuteAsync(string caller, CancellationToken ct = default)
         {
             string callChain = $"{caller} > {_callee} > {nameof(ExecuteAsync)}";
 
@@ -173,18 +183,23 @@ namespace DG244Cutting.B_UseCases.UseCases.User
 
                 if (accessiblePages.Count > 0)
                     ApplyPageRights(callChain, accessiblePages);
+
+                return true;
             }
             catch (Ex_Business ex)
             {
                 await _logAndNotify.ExecuteAsync(callChain, "No_EC_01", ex, ct: ct);
+                return false;
             }
             catch (Ex_Infrastructure ex)
             {
                 await _logAndNotify.ExecuteAsync(callChain, "No_EC_02", ex, ct: ct);
+                return false;
             }
             catch (Ex_Unclassified ex)
             {
                 await _logAndNotify.ExecuteAsync(callChain, "No_EC_03", ex, ct: ct);
+                return false;
             }
             catch (OperationCanceledException)
             {
