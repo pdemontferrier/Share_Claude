@@ -445,8 +445,8 @@
     <sys:String x:Key="P01_01">Numéro Identifiant :</sys:String>
     <sys:String x:Key="P01_02">Nom complet :</sys:String>
     <sys:String x:Key="P01_03">Windows ID :</sys:String>
-    <sys:String x:Key="P01_04">Poste ID</sys:String>
-    <sys:String x:Key="P01_05">Poste IP</sys:String>
+    <sys:String x:Key="P01_04">Poste ID :</sys:String>
+    <sys:String x:Key="P01_05">Poste IP :</sys:String>
     <sys:String x:Key="P01_06">Non défini</sys:String>
     <sys:String x:Key="P01_07">Non défini</sys:String>
     <sys:String x:Key="P01_08">Non défini</sys:String>
@@ -455,7 +455,7 @@
     <sys:String x:Key="P01_11">Droits d'accès</sys:String>
     <sys:String x:Key="P01_12">Droits détaillés</sys:String>
     <sys:String x:Key="P01_13">Page</sys:String>
-    <sys:String x:Key="P01_14">Access</sys:String>
+    <sys:String x:Key="P01_14">Accès</sys:String>
     <sys:String x:Key="P01_15">Lecture</sys:String>
     <sys:String x:Key="P01_16">Modifi.</sys:String>
     <sys:String x:Key="P01_17">Créat.</sys:String>
