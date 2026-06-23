@@ -21,7 +21,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <c>App.xaml.cs</c> au Jalon 3 de la séquence de démarrage applicatif (§3.10 du 0230),
     /// après Jalon 1 (construction du conteneur DI via <c>SR_ConteneurDI.ConfigureServices</c>)
     /// et Jalon 2 (traitement des arguments de ligne de commande).</para>
-    /// <para>Objectif : Orchestrer linéairement les huit étapes du Jalon 3 dans l'ordre
+    /// <para>Objectif : Orchestrer linéairement les neuf étapes du Jalon 3 dans l'ordre
     /// normatif posé en §3.10 du 0230, et signaler à <c>App.xaml.cs</c> par valeur booléenne
     /// le verdict de démarrage (Jalon 4a si <see langword="true"/>, Jalon 4b si
     /// <see langword="false"/>, §3.10.6).</para>
@@ -60,7 +60,31 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     ///   (cf. <see cref="IdentifyDeviceUserAndOpenSessionAsync"/>) entre dans le périmètre de
     ///   cette conformité : l'<c>Ex_Business</c> levée est captée terminalement par le bloc
     ///   <c>catch (Ex_Business)</c> de <see cref="ExecuteAsync"/> avec clé dictionnaire
-    ///   <c>"No_EC_01"</c>, homogène avec les refus applicatifs portés par les étapes 3, 4 et 8.</description></item>
+    ///   <c>"No_EC_01"</c>, homogène avec les refus applicatifs portés par les étapes 3, 4 et 9.</description></item>
+    ///   <item><description>Élargissement de la chaîne UC → UC normalisée à une seconde
+    ///   consommation en sous-séquence, et divergence de patron de propagation du retour
+    ///   <see langword="false"/>, levés par le présent fil d'Extension
+    ///   <c>UC_Application_OnStart_Extension</c> (deuxième Extension successive du même
+    ///   couple). Le UseCase consomme désormais <see cref="IU_UserAppPageRight_Apply"/> en
+    ///   sous-séquence à l'étape 8 (<see cref="ApplyUserPageRightAsync"/>) conformément à
+    ///   R-4.14.21 ; les trois conditions doctrinales conjointes (retour signalable
+    ///   <c>Task&lt;bool&gt;</c> exploité par valeur, indépendance transactionnelle conforme
+    ///   à I-4.10.3 — les deux UseCases sont non transactionnels par construction,
+    ///   traitement terminal propre via <see cref="IU_LogAndNotify"/> côté pipeline interne
+    ///   du UseCase consommé) sont vérifiées par construction. La signalisation d'échec
+    ///   applicatif de cette étape PROPAGE directement le retour <see langword="false"/>
+    ///   jusqu'au <c>return false</c> de <see cref="ExecuteAsync"/> sans conversion en
+    ///   <see cref="Ex_Business"/>, divergeant du patron homogène des étapes 3, 4, 6 et 9
+    ///   qui convertissent toutes leur refus applicatif en <c>Ex_Business</c> code
+    ///   <see cref="Ex_Business.ErrorCodes.BU_ER_04"/> captée par le bloc
+    ///   <c>catch (Ex_Business)</c> terminal (clé <c>"No_EC_01"</c>). Cette divergence est
+    ///   doctrinalement assumée au regard de l'item UC22 du 0232-UC qui prescrit
+    ///   l'exploitation par valeur du retour signalable d'un UseCase consommé en
+    ///   sous-séquence (cf. §4.3.3 du 0232-UC) ; elle évite par ailleurs une double
+    ///   notification utilisateur, la notification d'échec étant déjà portée par le pipeline
+    ///   interne de <c>UC_UserAppPageRight_Apply</c> via son propre
+    ///   <see cref="IU_LogAndNotify"/>. Item UC22 demeure ✅ après extension ; nombre de
+    ///   UseCases consommés en sous-séquence porté de un à deux.</description></item>
     /// </list>
     /// <para>Particularité du retour <c>Task&lt;bool&gt;</c> au regard de R-4.14.21
     /// (item UC21) : Le retour signalable <c>Task&lt;bool&gt;</c> n'est pas la marque d'une
@@ -71,20 +95,27 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <c>MainWindow</c>) et Jalon 4b (<c>Current.Shutdown()</c>), conformément à §3.10.6 du
     /// 0230. Item UC21 marqué ➖ en clôture (état pérenne, inchangé par l'extension).</para>
     /// <para>Découpage interne : La méthode publique <see cref="ExecuteAsync"/> orchestre
-    /// linéairement huit méthodes privées correspondant aux huit étapes du Jalon 3
-    /// (cf. région <c>=== Méthodes privées ===</c>). Pour les chemins de refus applicatif
-    /// (étapes 3/4/6/8), une <see cref="Ex_Business"/> est levée intentionnellement avec code
-    /// <see cref="Ex_Business.ErrorCodes.BU_ER_04"/> (état applicatif incompatible), captée par
-    /// le bloc <c>catch (Ex_Business)</c> terminal qui délègue à <c>IU_LogAndNotify</c> avec
-    /// clé <c>"No_EC_01"</c> et retourne <see langword="false"/> — patron strictement conforme
-    /// à §4.7.2 du 0230 et R-4.7.3 du 0231. À l'étape 6, le refus est porté par conversion
-    /// explicite du <see langword="false"/> retourné par <see cref="IU_UserAppSession_Open"/>
-    /// en <see cref="Ex_Business"/> ; aux étapes 3, 4 et 8, le refus est levé directement par
-    /// les méthodes privées correspondantes en cas d'état applicatif incompatible
-    /// (connectivité base, disponibilité applicative, conflit de session).</para>
+    /// linéairement neuf méthodes privées correspondant aux neuf étapes du Jalon 3
+    /// (cf. région <c>=== Méthodes privées ===</c>). Pour les chemins de refus applicatif des
+    /// étapes 3, 4, 6 et 9, une <see cref="Ex_Business"/> est levée intentionnellement avec
+    /// code <see cref="Ex_Business.ErrorCodes.BU_ER_04"/> (état applicatif incompatible),
+    /// captée par le bloc <c>catch (Ex_Business)</c> terminal qui délègue à
+    /// <c>IU_LogAndNotify</c> avec clé <c>"No_EC_01"</c> et retourne <see langword="false"/> —
+    /// patron strictement conforme à §4.7.2 du 0230 et R-4.7.3 du 0231. À l'étape 6, le refus
+    /// est porté par conversion explicite du <see langword="false"/> retourné par
+    /// <see cref="IU_UserAppSession_Open"/> en <see cref="Ex_Business"/> ; aux étapes 3, 4 et
+    /// 9, le refus est levé directement par les méthodes privées correspondantes en cas
+    /// d'état applicatif incompatible (connectivité base, disponibilité applicative, conflit
+    /// de session). L'étape 8 (<see cref="ApplyUserPageRightAsync"/>) cohabite avec ce patron
+    /// homogène en portant un patron divergent : le retour <see langword="false"/> de
+    /// <see cref="IU_UserAppPageRight_Apply.ExecuteAsync"/> est propagé directement au
+    /// <c>return false</c> de <see cref="ExecuteAsync"/> sans conversion en
+    /// <see cref="Ex_Business"/>, pour éviter la double notification utilisateur (cf. 4ème
+    /// dérogation tracée ci-dessus).</para>
     /// </remarks>
     /// <seealso cref="IU_Application_OnStart"/>
     /// <seealso cref="IU_UserAppSession_Open"/>
+    /// <seealso cref="IU_UserAppPageRight_Apply"/>
     public sealed class UC_Application_OnStart : IU_Application_OnStart
     {
         #region === Propriétés privées ===
@@ -110,6 +141,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         private readonly IQ_UserAppSession _userAppSessionQuery;
         private readonly IQ_AppList _appListQuery;
         private readonly IU_UserAppSession_Open _userAppSessionOpen;
+        private readonly IU_UserAppPageRight_Apply _userAppPageRightApply;
 
         #endregion
 
@@ -123,8 +155,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <para>Contexte : Constructeur appelé par le conteneur d'injection de dépendances
         /// (<c>SR_ConteneurDI</c>) lors de la résolution du contrat <see cref="IU_Application_OnStart"/>
         /// par <c>App.xaml.cs</c> au Jalon 1 de la séquence de démarrage applicatif (§3.10 du 0230).</para>
-        /// <para>Objectif : Câbler les onze dépendances nécessaires à l'orchestration des
-        /// huit étapes du Jalon 3.</para>
+        /// <para>Objectif : Câbler les douze dépendances nécessaires à l'orchestration des
+        /// neuf étapes du Jalon 3.</para>
         /// </remarks>
         /// <param name="language">Service d'orchestration du changement de langue.</param>
         /// <param name="logAndNotify">Pipeline terminal d'erreurs (catch typés applicatifs).</param>
@@ -137,6 +169,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <param name="userAppSessionQuery">Query Handler de l'entité <c>UserAppSession</c>.</param>
         /// <param name="appListQuery">Query Handler de l'entité <c>AppList</c>.</param>
         /// <param name="userAppSessionOpen">UseCase orchestré en sous-séquence pour l'ouverture de la session applicative utilisateur (R-4.14.21).</param>
+        /// <param name="userAppPageRightApply">UseCase orchestré en sous-séquence pour l'initialisation systématique des droits de pages au moindre privilège et l'application conditionnelle des droits utilisateur (R-4.14.21).</param>
         /// <exception cref="ArgumentNullException">Levée si l'un des paramètres est <see langword="null"/>.</exception>
         public UC_Application_OnStart(
             IS_Language language,
@@ -149,7 +182,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
             IQ_UserApp userAppQuery,
             IQ_UserAppSession userAppSessionQuery,
             IQ_AppList appListQuery,
-            IU_UserAppSession_Open userAppSessionOpen)
+            IU_UserAppSession_Open userAppSessionOpen,
+            IU_UserAppPageRight_Apply userAppPageRightApply)
         {
             _language = language ?? throw new ArgumentNullException(nameof(language));
             _logAndNotify = logAndNotify ?? throw new ArgumentNullException(nameof(logAndNotify));
@@ -162,6 +196,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
             _userAppSessionQuery = userAppSessionQuery ?? throw new ArgumentNullException(nameof(userAppSessionQuery));
             _appListQuery = appListQuery ?? throw new ArgumentNullException(nameof(appListQuery));
             _userAppSessionOpen = userAppSessionOpen ?? throw new ArgumentNullException(nameof(userAppSessionOpen));
+            _userAppPageRightApply = userAppPageRightApply ?? throw new ArgumentNullException(nameof(userAppPageRightApply));
             _callee = GetType().Name;
         }
 
@@ -212,7 +247,14 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 // Étape 7 - Chargement conditionnel du nom complet utilisateur (si AppUserId > 0).
                 await LoadUserFullNameAsync(callChain, ct);
 
-                // Étape 8 - Vérification de l'intégrité de session (absence de conflit sur autre poste).
+                // Étape 8 - Application des droits de pages (initialisation systématique au
+                // moindre privilège + application conditionnelle des droits utilisateur).
+                // Patron de propagation par valeur du retour signalable (R-4.14.21, item UC22 ;
+                // cf. 4ème dérogation du <remarks> de classe).
+                if (!await ApplyUserPageRightAsync(callChain, ct))
+                    return false;
+
+                // Étape 9 - Vérification de l'intégrité de session (absence de conflit sur autre poste).
                 await CheckSessionIntegrityAsync(callChain, ct);
 
                 return true;
@@ -267,7 +309,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <see cref="IS_UserDeviceContext"/> qui résout machine, IPv4 et compte Windows puis
         /// écrit via <c>SetDeviceContext</c>.</para>
         /// <para>Objectif : Garantir que les étapes ultérieures disposent du contexte
-        /// poste pour vérifier l'intégrité de session (étape 8) notamment.</para>
+        /// poste pour vérifier l'intégrité de session (étape 9) notamment.</para>
         /// </remarks>
         private Task LoadDeviceContextAsync(string callChain, CancellationToken ct)
         {
@@ -308,21 +350,28 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <see cref="IU_UserAppSession_Open"/> en sous-séquence conformément à R-4.14.21.</para>
         /// <para>Objectif : Établir l'identité applicative effective de l'utilisateur du
         /// poste courant et garantir qu'une session applicative valide est ouverte avant que les
-        /// étapes ultérieures (7 — nom complet utilisateur, 8 — intégrité de session) ne
-        /// s'exécutent. En cas d'utilisateur Windows non inscrit en base ou logiquement supprimé,
-        /// l'étape sort silencieusement sans erreur ; <c>AppUserId</c> conserve sa valeur courante
-        /// (typiquement 0 si aucun identifiant n'a été transmis en ligne de commande au Jalon 2)
-        /// et les étapes 7 et 8 seront sautées en interne par leurs gardes <c>AppUserId &lt;= 0</c>
-        /// existantes. Arbitrage explicite du développeur tracé nominativement dans le fil
-        /// d'extension <c>UC_Application_OnStart_Extension</c>.</para>
+        /// étapes ultérieures (7 — nom complet utilisateur, 8 — application des droits de pages,
+        /// 9 — intégrité de session) ne s'exécutent. En cas d'utilisateur Windows non inscrit en
+        /// base ou logiquement supprimé, l'étape sort silencieusement sans erreur ;
+        /// <c>AppUserId</c> conserve sa valeur courante (typiquement 0 si aucun identifiant n'a
+        /// été transmis en ligne de commande au Jalon 2) et les étapes 7 et 9 sont sautées en
+        /// interne par leurs gardes <c>AppUserId &lt;= 0</c> existantes ; l'étape 8
+        /// (<see cref="ApplyUserPageRightAsync"/>) procède néanmoins à l'initialisation
+        /// systématique au moindre privilège des droits de pages dans le contexte utilisateur
+        /// partagé indépendamment de l'identification utilisateur (cf. contrat
+        /// <see cref="IU_UserAppPageRight_Apply"/>), comportement assumé conforme à la sémantique
+        /// de poursuite tolérée du démarrage applicatif. Arbitrage explicite du développeur tracé
+        /// nominativement dans les fils d'extension successifs
+        /// <c>UC_Application_OnStart_Extension</c>.</para>
         /// <para>Sortie silencieuse — cas de figure : Lorsque
         /// <see cref="IQ_UserApp.HandleGetByWindowsLoginAsync"/> retourne <see langword="null"/>
         /// (utilisateur Windows non inscrit en base) ou retourne une entité dont l'<c>Id</c> est
         /// inférieur ou égal à zéro (cas limite défensif), la méthode termine sans lever
         /// d'exception ni ouvrir de session ; la séquence orchestrée par
         /// <see cref="ExecuteAsync"/> se poursuit jusqu'à <see langword="true"/> en clôture, sauf
-        /// refus ultérieur sur les étapes 7 ou 8 (typiquement refus impossible si AppUserId reste
-        /// à 0, les deux étapes étant gardées par <c>AppUserId &gt; 0</c>).</para>
+        /// refus ultérieur sur les étapes 8 ou 9 (l'étape 8 procède inconditionnellement à
+        /// l'initialisation par défaut et ne refuse que sur référentiel <c>UserAppPage</c> vide ;
+        /// l'étape 9 est sautée par sa garde <c>AppUserId &gt; 0</c>).</para>
         /// <para>Conversion du retour <see langword="false"/> de
         /// <see cref="IU_UserAppSession_Open"/> en <see cref="Ex_Business"/> : Lorsque le
         /// UseCase consommé en sous-séquence retourne <see langword="false"/> (échec d'ouverture
@@ -333,14 +382,16 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// existant de <see cref="ExecuteAsync"/> (clé dictionnaire <c>"No_EC_01"</c>),
         /// conformément à R-3.10.3 et au patron des refus applicatifs déjà en place pour les
         /// étapes 3 (<see cref="CheckDatabaseConnectivityAsync"/>), 4
-        /// (<see cref="CheckAppAvailabilityAsync"/>) et 8
-        /// (<see cref="CheckSessionIntegrityAsync"/>).</para>
+        /// (<see cref="CheckAppAvailabilityAsync"/>) et 9
+        /// (<see cref="CheckSessionIntegrityAsync"/>). L'étape 8
+        /// (<see cref="ApplyUserPageRightAsync"/>) suit un patron divergent, cf. 4ème dérogation
+        /// du <c>&lt;remarks&gt;</c> de classe.</para>
         /// <para>Signature <see cref="Task"/> simple au regard de R-4.14.21 : La méthode
         /// privée n'expose pas de retour signalable <c>Task&lt;bool&gt;</c> bien qu'elle
         /// consomme un UseCase à retour signalable en sous-séquence. La signalisation d'échec
         /// applicatif transite intégralement par levée explicite d'exception applicative typée
         /// (<see cref="Ex_Business"/>) captée terminalement par <see cref="ExecuteAsync"/>,
-        /// conformément à la doctrine §4.7 du 0230 et au patron des étapes 3, 4 et 8 en place.
+        /// conformément à la doctrine §4.7 du 0230 et au patron des étapes 3, 4 et 9 en place.
         /// Le retour <see cref="Task"/> simple est interne au UseCase et ne participe pas à la
         /// chaîne UC → UC normalisée — l'invocation de <see cref="IU_UserAppSession_Open"/> à
         /// l'intérieur de cette méthode privée constitue, elle, la participation effective à
@@ -381,8 +432,12 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// de l'utilisateur applicatif associé au login Windows du poste courant. Si aucun
         /// identifiant utilisateur n'a été transmis et que l'étape 6 n'a pas identifié
         /// d'utilisateur applicatif (sortie silencieuse), <c>AppUserId</c> vaut <c>0</c> et la
-        /// présente étape est sautée sans erreur ; l'étape 8 sera également sautée par sa
-        /// propre garde <c>AppUserId &gt; 0</c>, et la séquence ExecuteAsync se poursuit jusqu'à
+        /// présente étape est sautée sans erreur ; l'étape 8
+        /// (<see cref="ApplyUserPageRightAsync"/>) procède néanmoins à l'initialisation
+        /// systématique au moindre privilège des droits de pages indépendamment de
+        /// l'identification utilisateur (cf. contrat <see cref="IU_UserAppPageRight_Apply"/>) ;
+        /// l'étape 9 (<see cref="CheckSessionIntegrityAsync"/>) est ensuite sautée par sa propre
+        /// garde <c>AppUserId &gt; 0</c>, et la séquence ExecuteAsync se poursuit jusqu'à
         /// <see langword="true"/> en clôture - comportement assumé conforme à la sémantique du
         /// démarrage applicatif (poursuite tolérée en l'absence d'utilisateur identifié).</para>
         /// <para>Objectif : Renseigner <c>ISE_User.AppUserFullName</c> à partir de la
@@ -400,6 +455,73 @@ namespace DG244Cutting.B_UseCases.UseCases.App
 
             if (!string.IsNullOrWhiteSpace(fullName))
                 _settingsUser.AppUserFullName = fullName;
+        }
+
+        /// <summary>
+        /// Étape 8 — Applique les droits de pages dans le contexte utilisateur partagé en
+        /// consommant <see cref="IU_UserAppPageRight_Apply"/> en sous-séquence, selon une
+        /// sémantique en deux temps : initialisation systématique au moindre privilège puis
+        /// application conditionnelle des droits utilisateur.
+        /// </summary>
+        /// <remarks>
+        /// <para>Contexte : Huitième étape du Jalon 3, exécutée après le chargement
+        /// conditionnel du nom complet utilisateur à l'étape 7
+        /// (<see cref="LoadUserFullNameAsync"/>) et avant la vérification de l'intégrité de
+        /// session à l'étape 9 (<see cref="CheckSessionIntegrityAsync"/>). Délègue
+        /// l'orchestration au UseCase <see cref="IU_UserAppPageRight_Apply"/> consommé en
+        /// sous-séquence conformément à R-4.14.21.</para>
+        /// <para>Objectif : Constituer l'état des droits de pages dans le contexte
+        /// utilisateur partagé (<c>ISE_User</c>) avant l'ouverture de <c>MainWindow</c>. Le
+        /// UseCase consommé procède en deux temps - (1) initialisation systématique des droits
+        /// de pages au moindre privilège indépendamment de la présence d'un utilisateur
+        /// identifié dans le contexte applicatif, puis (2) chargement et application
+        /// conditionnels des droits spécifiques de l'utilisateur courant lorsque
+        /// <c>AppUserId &gt; 0</c>. Cette sémantique est constitutive du contrat
+        /// <see cref="IU_UserAppPageRight_Apply"/> et garantit que les fonctionnalités de
+        /// présentation consommant les droits de pages disposent d'un état cohérent au
+        /// démarrage, y compris dans le cas de poursuite tolérée en l'absence d'utilisateur
+        /// identifié.</para>
+        /// <para>Divergence de patron de propagation du retour <see langword="false"/> au
+        /// regard du patron des étapes 3, 4, 6 et 9 : Contrairement aux étapes 3
+        /// (<see cref="CheckDatabaseConnectivityAsync"/>), 4
+        /// (<see cref="CheckAppAvailabilityAsync"/>), 6
+        /// (<see cref="IdentifyDeviceUserAndOpenSessionAsync"/>) et 9
+        /// (<see cref="CheckSessionIntegrityAsync"/>) qui convertissent toutes leur refus
+        /// applicatif en <see cref="Ex_Business"/> code
+        /// <see cref="Ex_Business.ErrorCodes.BU_ER_04"/> captée terminalement par le bloc
+        /// <c>catch (Ex_Business)</c> de <see cref="ExecuteAsync"/> (clé dictionnaire
+        /// <c>"No_EC_01"</c>, notification <c>IU_LogAndNotify</c>), la présente étape PROPAGE
+        /// directement la valeur booléenne <see langword="false"/> retournée par
+        /// <see cref="IU_UserAppPageRight_Apply.ExecuteAsync"/> jusqu'au <c>return false</c>
+        /// de <see cref="ExecuteAsync"/> sans levée d'exception applicative typée. Cette
+        /// divergence est doctrinalement assumée au regard de l'item UC22 du 0232-UC qui
+        /// prescrit l'exploitation par valeur du retour signalable d'un UseCase consommé en
+        /// sous-séquence (cf. §4.3.3 du 0232-UC) ; elle évite par ailleurs une double
+        /// notification utilisateur, la notification d'échec étant déjà portée par le pipeline
+        /// interne de <c>UC_UserAppPageRight_Apply</c> via son propre
+        /// <see cref="IU_LogAndNotify"/>. Le retour <see langword="false"/> couvre quatre cas
+        /// d'échec applicatif capté terminalement par le pipeline interne du UseCase consommé
+        /// - précondition structurelle <c>AppId &lt;= 0</c> (<c>Ex_Business BU_ER_02</c>),
+        /// absence de page applicative non supprimée dans le référentiel <c>UserAppPage</c>
+        /// empêchant l'initialisation par défaut (<c>Ex_Business BU_ER_04</c>), défaillance
+        /// d'infrastructure (<c>Ex_Infrastructure</c>), défaillance applicative non
+        /// classifiée (<c>Ex_Unclassified</c>). Trace nominative dans la 4ème dérogation du
+        /// <c>&lt;remarks&gt;</c> de classe.</para>
+        /// <para>Signature <see cref="Task{TResult}"/> de type <see langword="bool"/> au
+        /// regard de R-4.14.21 : La méthode privée expose un retour signalable
+        /// <c>Task&lt;bool&gt;</c> aligné sur la signature de
+        /// <see cref="IU_UserAppPageRight_Apply.ExecuteAsync"/>, propagé par valeur à
+        /// <see cref="ExecuteAsync"/> sans transformation. La signalisation succès/échec
+        /// transite intégralement par cette valeur booléenne, conformément à la doctrine de
+        /// chaîne UC → UC normalisée §4.14.21 et à l'invocation par valeur prescrite par
+        /// l'item UC22 (cf. §4.3.3 du 0232-UC). L'<see cref="OperationCanceledException"/>
+        /// remontée par le UseCase consommé n'est pas captée et est propagée naturellement au
+        /// bloc <c>catch (OperationCanceledException)</c> de <see cref="ExecuteAsync"/>
+        /// conformément à R-4.6.13.</para>
+        /// </remarks>
+        private Task<bool> ApplyUserPageRightAsync(string callChain, CancellationToken ct)
+        {
+            return _userAppPageRightApply.ExecuteAsync(callChain, ct);
         }
 
         /// <summary>
@@ -461,11 +583,11 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         }
 
         /// <summary>
-        /// Étape 8 — Vérifie l'absence de conflit de session active sur un autre poste pour le
+        /// Étape 9 — Vérifie l'absence de conflit de session active sur un autre poste pour le
         /// couple (utilisateur, application) courant.
         /// </summary>
         /// <remarks>
-        /// <para>Contexte : Huitième étape du Jalon 3. Consomme
+        /// <para>Contexte : Neuvième étape du Jalon 3. Consomme
         /// <see cref="IQ_UserAppSession.HandleGetByUserIdAppIdAsync"/> pour récupérer la liste
         /// des sessions du couple (utilisateur, application), puis applique la réduction
         /// LINQ-to-Objects portée par <see cref="HasActiveSessionOnAnotherDevice"/>. En cas de
