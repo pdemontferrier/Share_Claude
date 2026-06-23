@@ -162,7 +162,7 @@ namespace DG244Cutting.D_Presentation.Settings
             // de nommage des fichiers : PageNN.xaml et MH_PageNN.xaml
             var pageSuffixes = new[]
             {
-                "00",
+                "00", "01",
                 "10",
                 "20", "21", "22", "23",
                 "30", "31", "32", "33",

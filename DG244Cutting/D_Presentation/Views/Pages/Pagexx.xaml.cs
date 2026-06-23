@@ -63,7 +63,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   mais vide, marqueur <c>// A compléter</c>.</description></item>
     /// </list>
     /// </remarks>
-    public partial class Page01 : Page_Generic
+    public partial class Pagexx : Page_Generic
     {
         #region === Propriétés privées ===
 
@@ -144,7 +144,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// survenant au chargement, au déchargement et au
         /// redimensionnement de la page.</para>
         /// </remarks>
-        public Page01()
+        public Pagexx()
         {
             _viewModel = App.ServiceProvider.GetRequiredService<VM_Page01>();
 

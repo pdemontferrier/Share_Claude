@@ -47,10 +47,10 @@ namespace DG244Cutting.D_Presentation.Services
         #region TextBlock
         public void StyleApplicationTitle(TextBlock TitleContent)
                         => ControlStyler.StyleApplicationTitle(TitleContent);
-        public void StyleTextBlockPageTitle(TextBlock textBlock, string? text = null, double? width = null)
-                        => ControlStyler.StyleTextBlockPageTitle(textBlock, text, width);
-        public void StyleTextBlockTitle(TextBlock textBlock, string? text = null, double? width = null)
-                        => ControlStyler.StyleTextBlockTitle(textBlock, text, width);
+        public void StyleTextBlockPageTitle(TextBlock textBlock, double? width = null)
+                        => ControlStyler.StyleTextBlockPageTitle(textBlock, width);
+        public void StyleTextBlockTitle(TextBlock textBlock, double? width = null)
+                        => ControlStyler.StyleTextBlockTitle(textBlock, width);
         public void StyleTextBlockData(TextBlock textBlock, double? width = null) => ControlStyler.StyleTextBlockData(textBlock, width);
         public void StyleTextBlockInput(TextBlock textBlock, double? width = null) => ControlStyler.StyleTextBlockInput(textBlock, width);
         public void StyleTextBlockhHyperlink(TextBlock textBlock) => ControlStyler.StyleTextBlockhHyperlink(textBlock);
@@ -74,11 +74,11 @@ namespace DG244Cutting.D_Presentation.Services
         public void StyleAppUserButton(Button button, TextBlock textBlock) => ControlStyler.StyleAppUserButton(button, textBlock);
         public void StyleAppInfoButton(Button button, TextBlock textBlock) => ControlStyler.StyleAppInfoButton(button, textBlock);
         public void StyleAppCloseButton(Button button, Image icon) => ControlStyler.StyleAppCloseButton(button, icon);
-        public void StyleHorizontalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri, string? text = null)
-                        => ControlStyler.StyleHorizontalMenuButton(button, icon, textBlock, iconUri, text);
+        public void StyleHorizontalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri)
+                        => ControlStyler.StyleHorizontalMenuButton(button, icon, textBlock, iconUri);
         public void StyleVerticalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri)
                                 => ControlStyler.StyleVerticalMenuButton(button, icon, textBlock, iconUri);
-        public void StyleButton(Button button, Uri iconUri, string? text = null) => ControlStyler.StyleButton(button, iconUri, text);
+        public void StyleButton(Button button, Uri iconUri) => ControlStyler.StyleButton(button, iconUri);
         public void StyleBasicButton(Button button, double? width = null) => ControlStyler.StyleBasicButton(button, width);
         public void StyleLanguageButton(Button button, Image flag, RadioButton radioButton, double? width = null) => ControlStyler.StyleLanguageButton(button, flag, radioButton, width);
         public void StylePlusMinusButton(Button button, TextBlock textBlock) => ControlStyler.StylePlusMinusButton(button, textBlock);
@@ -100,8 +100,8 @@ namespace DG244Cutting.D_Presentation.Services
 
         #region TabControl / TabItem
         public void StyleTabControl(TabControl tabControl) => ControlStyler.StyleTabControl(tabControl);
-        public void StyleTabItem(TabItem tabItem, TextBlock tabHeader, string textBlockTitle, double width)
-                                => ControlStyler.StyleTabItem(tabItem, tabHeader, textBlockTitle, width);
+        public void StyleTabItem(TabItem tabItem, TextBlock tabHeader, double width)
+                                => ControlStyler.StyleTabItem(tabItem, tabHeader, width);
         public void StyleTabItemTitle(TabItem tabItem, double? width = null) => ControlStyler.StyleTabItemTitle(tabItem, width);
         #endregion
 
@@ -167,7 +167,7 @@ namespace DG244Cutting.D_Presentation.Services
             }
             else if (name.EndsWith("Title", StringComparison.OrdinalIgnoreCase))
             {
-                ControlStyler.StyleTextBlockTitle(textBlock, textBlock.Text);
+                ControlStyler.StyleTextBlockTitle(textBlock);
             }
             else if (name.EndsWith("Data", StringComparison.OrdinalIgnoreCase))
             {

@@ -28,8 +28,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Presentation
         #endregion
 
         #region TextBlock
-        void StyleTextBlockPageTitle(TextBlock textBlock, string? text = null, double? width = null);
-        void StyleTextBlockTitle(TextBlock textBlock, string? text = null, double? width = null);
+        void StyleTextBlockPageTitle(TextBlock textBlock, double? width = null);
+        void StyleTextBlockTitle(TextBlock textBlock, double? width = null);
         void StyleTextBlockData(TextBlock textBlock, double? width = null);
         void StyleTextBlockInput(TextBlock textBlock, double? width = null);
         void StyleTextBlockhHyperlink(TextBlock textBlock);
@@ -51,9 +51,9 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Presentation
         void StyleAppUserButton(Button button, TextBlock textBlock);
         void StyleAppInfoButton(Button button, TextBlock textBlock);
         void StyleAppCloseButton(Button button, Image icon);
-        void StyleHorizontalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri, string? text = null);
+        void StyleHorizontalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri);
         void StyleVerticalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri);
-        void StyleButton(Button button, Uri iconUri, string? text = null);
+        void StyleButton(Button button, Uri iconUri);
         void StyleBasicButton(Button button, double? width = null);
         void StyleLanguageButton(Button button, Image flag, RadioButton radioButton, double? width = null);
         void StylePlusMinusButton(Button button, TextBlock textBlock);
@@ -72,7 +72,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Presentation
         #region TabControl / TabItem
         void StyleTabControl(TabControl tabControl);
         void StyleTabItemTitle(TabItem tabItem, double? width = null);
-        void StyleTabItem(TabItem tabItem, TextBlock tabHeader, string textBlockTitle, double width);
+        void StyleTabItem(TabItem tabItem, TextBlock tabHeader, double width);
         #endregion
     }
 }

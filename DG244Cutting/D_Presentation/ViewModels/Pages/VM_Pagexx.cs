@@ -89,7 +89,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// par <see cref="VM_Generic"/> au titre d'INPC et hérité par
     /// transitivité.</para>
     /// </remarks>
-    public class VM_Page01 : VM_Page_Generic
+    public class VM_Pagexx : VM_Page_Generic
     {
         #region === Propriétés privées ===
 
@@ -224,7 +224,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <exception cref="ArgumentNullException">Levée par
         /// <see cref="VM_Generic"/> via la chaîne <c>base(...)</c> si
         /// l'un des trois paramètres est <see langword="null"/>.</exception>
-        public VM_Page01(
+        public VM_Pagexx(
             IS_Dictionary dictionary,
             IU_LogAndNotify logAndNotify,
             ISE_App app)
