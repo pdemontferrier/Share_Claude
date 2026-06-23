@@ -22,6 +22,7 @@
     ///   <item><description>Mettre à jour le titre applicatif dans <c>ISE_App.ApplicationTitle</c>.</description></item>
     ///   <item><description>Identifier l'utilisateur applicatif associé au login Windows du poste courant et orchestrer l'ouverture de la session applicative associée par consommation de <c>IU_UserAppSession_Open</c> en sous-séquence (R-4.14.21), avec conversion du retour <see langword="false"/> en <see cref="DG244Cutting.A_Domain.Common.Exceptions.Ex_Business"/> code <c>BU_ER_04</c> captée terminalement.</description></item>
     ///   <item><description>Charger le nom complet de l'utilisateur courant si <c>ISE_User.AppUserId &gt; 0</c>.</description></item>
+    ///   <item><description>Appliquer les droits de pages de l'utilisateur identifié dans le contexte utilisateur partagé par consommation de <c>IU_UserAppPageRight_Apply</c> en sous-séquence (R-4.14.21), avec exploitation directe du retour <see langword="false"/> propagé à <c>App.xaml.cs</c> sans conversion en exception applicative typée (la notification utilisateur en cas d'échec est portée par le pipeline interne du UseCase consommé via son propre <c>IU_LogAndNotify</c>).</description></item>
     ///   <item><description>Vérifier la connectivité à la base de données et notifier l'état de connexion sur <c>ISE_App</c>.</description></item>
     ///   <item><description>Vérifier la disponibilité applicative (verrou administrateur).</description></item>
     ///   <item><description>Vérifier l'absence de session active sur un autre poste pour le couple (utilisateur, application).</description></item>
@@ -48,6 +49,7 @@
     /// </remarks>
     /// <seealso cref="DG244Cutting.B_UseCases.UseCases.App.UC_Application_OnStart"/>
     /// <seealso cref="DG244Cutting.A_Domain.Interfaces.UseCases.User.IU_UserAppSession_Open"/>
+    /// <seealso cref="DG244Cutting.A_Domain.Interfaces.UseCases.User.IU_UserAppPageRight_Apply"/>
     public interface IU_Application_OnStart
     {
         /// <summary>
@@ -61,11 +63,12 @@
         /// transmis depuis <c>App.xaml.cs</c> sur la base de <c>CultureInfo.CurrentCulture.Name</c>
         /// (dérogation assumée à la logique de priorité à 3 niveaux décrite en §3.10.8 du 0230 ;
         /// cf. <c>&lt;remarks&gt;</c> de l'implémentation <c>UC_Application_OnStart</c>).</para>
-        /// <para>Objectif : Enchaîner les huit étapes du Jalon 3 dans l'ordre normatif posé
+        /// <para>Objectif : Enchaîner les neuf étapes du Jalon 3 dans l'ordre normatif posé
         /// en §3.10 du 0230 : 1) initialisation langue ; 2) titre applicatif ; 3) connectivité
         /// base ; 4) disponibilité applicative ; 5) contexte poste ; 6) identification DeviceUser
-        /// et ouverture de session ; 7) nom complet utilisateur ; 8) intégrité de session.
-        /// Retourner ensuite le verdict applicatif à <c>App.xaml.cs</c>.</para>
+        /// et ouverture de session ; 7) nom complet utilisateur ; 8) application des droits de
+        /// pages ; 9) intégrité de session. Retourner ensuite le verdict applicatif à
+        /// <c>App.xaml.cs</c>.</para>
         /// <para>Comportement vis-à-vis des erreurs (R-3.10.3) : Aucune exception applicative
         /// typée (<c>Ex_Business</c>, <c>Ex_Infrastructure</c>, <c>Ex_Unclassified</c>) n'est
         /// propagée par cette méthode. Chaque catch typé applicatif délègue à <c>IU_LogAndNotify</c>
@@ -91,11 +94,12 @@
         /// <returns>
         /// <see langword="true"/> si la séquence de démarrage applicatif est validée dans son
         /// intégralité : <c>App.xaml.cs</c> procède alors à l'ouverture de <c>MainWindow</c>
-        /// (Jalon 4a, §3.10.6 du 0230). <see langword="false"/> si l'une des huit étapes de la
+        /// (Jalon 4a, §3.10.6 du 0230). <see langword="false"/> si l'une des neuf étapes de la
         /// séquence aboutit à un refus de démarrage applicatif (échec de connectivité base,
-        /// indisponibilité applicative, échec d'ouverture de session applicative, conflit de
-        /// session, exception applicative typée captée terminalement) : <c>App.xaml.cs</c>
-        /// procède alors à <c>Current.Shutdown()</c> (Jalon 4b, §3.10.6 du 0230).
+        /// indisponibilité applicative, échec d'ouverture de session applicative, échec
+        /// d'application des droits de pages, conflit de session, exception applicative typée
+        /// captée terminalement) : <c>App.xaml.cs</c> procède alors à <c>Current.Shutdown()</c>
+        /// (Jalon 4b, §3.10.6 du 0230).
         /// </returns>
         /// <exception cref="System.OperationCanceledException">
         /// Levée si <paramref name="ct"/> est annulé avant ou pendant l'exécution. Aucune

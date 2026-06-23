@@ -13,39 +13,58 @@ using DG244Cutting.A_Domain.Interfaces.UseCases.User;
 namespace DG244Cutting.B_UseCases.UseCases.User
 {
     /// <summary>
-    /// UseCase orchestrateur de l'application des droits de pages de l'utilisateur courant.
+    /// UseCase orchestrateur de l'initialisation systématique des droits de pages au
+    /// moindre privilège et de l'application conditionnelle des droits de l'utilisateur
+    /// courant.
     /// </summary>
     /// <remarks>
     /// <para>
     /// Contexte : ce UseCase appartient à la couche applicative (B_UseCases) et réside en
-    /// <c>B_UseCases/UseCases/User</c>. Il est résolu par injection de dépendances et
-    /// constitue le point unique d'orchestration de la constitution des droits de pages
-    /// dans le contexte utilisateur partagé. Il consomme les Query Handlers pour le
-    /// chargement du référentiel des pages applicatives et des droits spécifiques, écrit
-    /// le contexte utilisateur partagé via <see cref="ISE_User"/> (accès Settings légitime
-    /// au niveau UseCase, §4.14.2), et porte le traitement terminal des erreurs.
+    /// <c>B_UseCases/UseCases/User</c>, conformément à la cellule UC_ ↔ B_UseCases/UseCases/[Domaine]
+    /// du tableau famille × couche de §2.8 du 0230 et à la note [b] du même tableau
+    /// restreignant le sous-dossier [Domaine] à <c>{App, Business, User}</c>. Il est résolu
+    /// par injection de dépendances et constitue le point unique d'orchestration de la
+    /// constitution des droits de pages dans le contexte utilisateur partagé. Il consomme
+    /// les Query Handlers pour le chargement du référentiel des pages applicatives et des
+    /// droits spécifiques, écrit le contexte utilisateur partagé via <see cref="ISE_User"/>
+    /// (accès Settings légitime au niveau UseCase au titre de la neuvième obligation
+    /// contractuelle de §4.14.2 amendée), et porte le traitement terminal des erreurs.
     /// </para>
     /// <para>
     /// Objectif : garantir que le contexte utilisateur partagé contient un état cohérent
-    /// et à jour des droits de pages avant toute interaction avec l'interface. Le scénario
-    /// est en lecture seule côté base de données ; son seul effet est l'écriture du
-    /// contexte utilisateur partagé, qui ne constitue pas une mutation persistée et
-    /// n'ouvre donc pas de transaction (§4.10).
+    /// des droits de pages avant toute interaction avec l'interface, selon une logique
+    /// fonctionnelle en deux temps - initialisation systématique au moindre privilège
+    /// indépendamment de la présence d'un utilisateur identifié dans le contexte applicatif,
+    /// puis application conditionnelle des droits spécifiques de l'utilisateur courant
+    /// lorsqu'un identifiant utilisateur strictement positif est présent dans le contexte
+    /// applicatif. Le scénario est en lecture seule côté base de données ; son seul effet
+    /// est l'écriture du contexte utilisateur partagé, qui ne constitue pas une mutation
+    /// persistée et n'ouvre donc pas de transaction (§4.10).
+    /// </para>
+    /// <para>
+    /// Chaîne d'appel : le UseCase est conçu pour être consommé en sous-séquence par un
+    /// UseCase orchestrant amont au sens de la clause de chaîne d'appel UseCase → UseCase
+    /// de §4.14.2 amendée indexée par R-4.14.21 (orchestrateur amont prévu :
+    /// <c>UC_Application_OnStart</c> dans le cadre de la séquence de démarrage applicatif
+    /// posée en §3.10 du 0230). La signature signalable <c>Task&lt;bool&gt;</c> de la
+    /// méthode publique permet à cet orchestrant amont de constater l'issue du
+    /// sous-scénario sans propagation d'exception applicative typée.
     /// </para>
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
-    /// <item><description>Valider les préconditions structurelles issues du contexte applicatif.</description></item>
-    /// <item><description>Initialiser les droits de pages par défaut au moindre privilège sur l'ensemble des pages applicatives connues, à l'exception des pages système exemptées du contrôle.</description></item>
-    /// <item><description>Charger les droits spécifiques de l'utilisateur via le Query Handler.</description></item>
-    /// <item><description>Appliquer les droits chargés dans le contexte utilisateur partagé.</description></item>
-    /// <item><description>Déléguer le traitement terminal des erreurs à <see cref="IU_LogAndNotify"/>.</description></item>
-    /// <item><description>Exposer un retour signalable booléen (<see langword="true"/> = succès, <see langword="false"/> = échec applicatif capté) destiné à un éventuel UseCase orchestrant amont, conformément à la clause de chaîne d'appel UseCase → UseCase de §4.14.2.</description></item>
+    /// <item><description>Valider la précondition structurelle d'identifiant application strictement positif issue du contexte applicatif.</description></item>
+    /// <item><description>Initialiser systématiquement les droits de pages par défaut au moindre privilège sur l'ensemble des pages applicatives connues, à l'exception des pages système exemptées du contrôle, indépendamment de la présence d'un utilisateur identifié.</description></item>
+    /// <item><description>Charger conditionnellement les droits spécifiques de l'utilisateur via le Query Handler lorsqu'un identifiant utilisateur strictement positif est présent dans le contexte applicatif.</description></item>
+    /// <item><description>Appliquer conditionnellement les droits chargés dans le contexte utilisateur partagé.</description></item>
+    /// <item><description>Déléguer le traitement terminal des erreurs à <see cref="IU_LogAndNotify"/> conformément à §4.7.4 du 0230.</description></item>
+    /// <item><description>Exposer un retour signalable booléen (<see langword="true"/> = succès, <see langword="false"/> = échec applicatif capté) destiné au UseCase orchestrant amont, conformément à la clause de chaîne d'appel UseCase → UseCase de §4.14.2 amendée indexée par R-4.14.21.</description></item>
     /// </list>
     /// <para>Non-responsabilités :</para>
     /// <list type="bullet">
-    /// <item><description>Ne décide pas du moment d'appel ni de l'identité de l'utilisateur : ceux-ci sont fournis par le contexte applicatif.</description></item>
-    /// <item><description>N'ouvre aucune transaction : le scénario ne persiste aucune mutation.</description></item>
-    /// <item><description>N'appelle jamais directement un Repository : la lecture passe par les Query Handlers.</description></item>
+    /// <item><description>Ne décide pas du moment d'appel : celui-ci est fixé par l'orchestrateur amont (séquence de démarrage applicatif, pipeline d'authentification ou réinitialisation du contexte).</description></item>
+    /// <item><description>Ne décide pas de la présence ou non d'un utilisateur identifié : la conditionnalité d'application des droits utilisateur est portée par la lecture du contexte applicatif courant.</description></item>
+    /// <item><description>N'ouvre aucune transaction : le scénario ne persiste aucune mutation (invariant 6 + R-4.10.1).</description></item>
+    /// <item><description>N'appelle jamais directement un Repository : la lecture passe par les Query Handlers (I-4.14.4 amendée, I-4.14.6, I-4.14.9).</description></item>
     /// </list>
     /// </remarks>
     /// <seealso cref="IU_UserAppPageRight_Apply"/>
@@ -113,76 +132,104 @@ namespace DG244Cutting.B_UseCases.UseCases.User
         #region === Méthodes publiques ===
 
         /// <summary>
-        /// Constitue l'état des droits de pages de l'utilisateur courant dans le contexte
-        /// utilisateur partagé, en initialisant les droits par défaut puis en appliquant
-        /// les droits spécifiques chargés.
+        /// Initialise systématiquement les droits de pages au moindre privilège dans le
+        /// contexte utilisateur partagé, puis applique conditionnellement les droits
+        /// spécifiques de l'utilisateur courant lorsqu'un utilisateur est identifié dans
+        /// le contexte applicatif.
         /// </summary>
         /// <remarks>
         /// <para>
-        /// Contexte : exécuté après authentification ou lors d'une réinitialisation du
-        /// contexte utilisateur. L'identité de l'utilisateur et de l'application est lue
-        /// depuis le contexte applicatif courant. Initialise les droits par défaut au
-        /// moindre privilège sur l'ensemble des pages applicatives connues, à l'exception
-        /// des pages système exemptées du contrôle, charge les droits spécifiques via le
-        /// Query Handler, puis applique ces droits dans le contexte utilisateur partagé.
-        /// Les exceptions applicatives typées (<see cref="Ex_Business"/>,
-        /// <see cref="Ex_Infrastructure"/>, <see cref="Ex_Unclassified"/>) sont captées
-        /// terminalement et traitées par <see cref="IU_LogAndNotify"/>, conformément à
-        /// §4.7.4, puis signalées à l'appelant par un retour <see langword="false"/> ;
-        /// le scénario nominal retourne <see langword="true"/>.
+        /// Contexte : invocable au démarrage applicatif avant toute authentification, ainsi
+        /// qu'après authentification ou lors d'une réinitialisation du contexte utilisateur.
+        /// L'identité de l'application et, le cas échéant, de l'utilisateur sont lues depuis
+        /// le contexte applicatif courant via <see cref="IS_AppContext.GetAppContext"/>.
+        /// </para>
+        /// <para>
+        /// Sémantique fonctionnelle en deux temps : (1) initialisation systématique au
+        /// moindre privilège - après validation de la précondition structurelle
+        /// d'identifiant application strictement positif, le UseCase invoque
+        /// <see cref="InitializeDefaultPageRightsAsync"/> de manière inconditionnelle pour
+        /// initialiser les droits par défaut sur l'ensemble des pages applicatives connues,
+        /// à l'exception des pages système exemptées du contrôle, indépendamment de la
+        /// présence d'un utilisateur identifié ; (2) application conditionnelle des droits
+        /// utilisateur - lorsque le contexte applicatif fournit un identifiant utilisateur
+        /// strictement positif (<c>AppUserId &gt; 0</c>), le UseCase charge les droits
+        /// spécifiques via <see cref="IQ_UserAppPageRight.HandleGetByUserIdAppIdAsync"/>
+        /// et invoque <see cref="ApplyPageRights"/> lorsque le jeu retourné est non vide.
+        /// En l'absence d'un identifiant utilisateur strictement positif, le contexte
+        /// utilisateur partagé est laissé en état initialisé au moindre privilège.
+        /// </para>
+        /// <para>
+        /// Sémantique du retour : le scénario nominal retourne <see langword="true"/> et
+        /// couvre les deux variantes - avec utilisateur identifié, l'initialisation par
+        /// défaut a été effectuée puis les droits utilisateur ont été chargés et appliqués
+        /// (le maintien des droits par défaut en cas de jeu vide retourné par le Query
+        /// Handler est une variante admise de cette branche) ; sans utilisateur identifié,
+        /// seule l'initialisation par défaut a été effectuée. Le retour
+        /// <see langword="false"/> signale qu'une exception applicative typée a été captée
+        /// terminalement et traitée par <see cref="IU_LogAndNotify"/> conformément à §4.7.4
+        /// du 0230, et couvre quatre cas - précondition structurelle <c>AppId &lt;= 0</c>
+        /// (<see cref="Ex_Business"/> code <see cref="Ex_Business.ErrorCodes.BU_ER_02"/>),
+        /// absence de page applicative non supprimée dans le référentiel <c>UserAppPage</c>
+        /// empêchant l'initialisation par défaut (<see cref="Ex_Business"/> code
+        /// <see cref="Ex_Business.ErrorCodes.BU_ER_04"/> levée par
+        /// <see cref="InitializeDefaultPageRightsAsync"/> et captée terminalement par la
+        /// présente méthode), défaillance d'infrastructure remontée par les composants aval
+        /// (<see cref="Ex_Infrastructure"/>), défaillance applicative non classifiée
+        /// (<see cref="Ex_Unclassified"/>). L'annulation coopérative
+        /// (<see cref="OperationCanceledException"/>) est propagée à l'appelant sans
+        /// signalisation booléenne, conformément au mécanisme normatif de §4.6 du 0230.
         /// </para>
         /// <para>Responsabilités :</para>
         /// <list type="bullet">
-        /// <item><description>Valider les préconditions structurelles issues du contexte applicatif.</description></item>
-        /// <item><description>Initialiser les droits de pages par défaut au moindre privilège sur l'ensemble des pages applicatives connues, à l'exception des pages système.</description></item>
-        /// <item><description>Charger les droits spécifiques et les appliquer au contexte utilisateur partagé.</description></item>
-        /// <item><description>Signaler l'issue du scénario par un retour booléen.</description></item>
+        /// <item><description>Valider la précondition structurelle d'identifiant application strictement positif.</description></item>
+        /// <item><description>Initialiser systématiquement les droits de pages par défaut au moindre privilège.</description></item>
+        /// <item><description>Charger et appliquer conditionnellement les droits spécifiques de l'utilisateur courant.</description></item>
+        /// <item><description>Signaler l'issue du scénario par un retour booléen destiné à un orchestrant amont.</description></item>
         /// </list>
         /// </remarks>
         /// <param name="caller">Chaîne d'appel reçue de l'appelant. Ne doit pas être <see langword="null"/>.</param>
         /// <param name="ct">Jeton d'annulation coopérative. Par défaut <see langword="default"/>.</param>
         /// <returns>
-        /// <see langword="true"/> si l'application des droits de pages a abouti ;
-        /// <see langword="false"/> si une exception applicative typée a été captée et
-        /// traitée terminalement.
+        /// <see langword="true"/> si le scénario a abouti à son objectif - avec utilisateur
+        /// identifié, initialisation par défaut effectuée puis chargement et application
+        /// des droits utilisateur ; sans utilisateur identifié, seule l'initialisation par
+        /// défaut effectuée. <see langword="false"/> si une exception applicative typée
+        /// (<see cref="Ex_Business"/> code <c>BU_ER_02</c> ou <c>BU_ER_04</c>,
+        /// <see cref="Ex_Infrastructure"/>, <see cref="Ex_Unclassified"/>) a été captée
+        /// et traitée terminalement par <see cref="IU_LogAndNotify"/>.
         /// </returns>
         /// <exception cref="OperationCanceledException">
-        /// Propagée à l'appelant lorsque l'annulation coopérative est demandée, conformément à §4.6.
-        /// Les exceptions applicatives typées (<see cref="Ex_Business"/>, <see cref="Ex_Infrastructure"/>,
-        /// <see cref="Ex_Unclassified"/>) ne sont jamais propagées : elles sont captées et traitées
-        /// terminalement par <see cref="IU_LogAndNotify"/>, conformément à §4.7.4.
-        /// Les exceptions applicatives typées ne sont jamais propagées : elles sont captées et
-        /// signalées par le retour <see langword="false"/>.
+        /// Propagée à l'appelant lorsque l'annulation coopérative est demandée, conformément
+        /// à §4.6 du 0230. Les exceptions applicatives typées (<see cref="Ex_Business"/>,
+        /// <see cref="Ex_Infrastructure"/>, <see cref="Ex_Unclassified"/>) ne sont jamais
+        /// propagées : elles sont captées et signalées par le retour <see langword="false"/>.
         /// </exception>
         public async Task<bool> ExecuteAsync(string caller, CancellationToken ct = default)
         {
             string callChain = $"{caller} > {_callee} > {nameof(ExecuteAsync)}";
-
             try
             {
                 DTO_AppContext appCtx = _appContext.GetAppContext();
-
-                if (appCtx.AppUserId <= 0)
-                    throw new Ex_Business(
-                        callChain,
-                        Ex_Business.ErrorCodes.BU_ER_02,
-                        $"L'identifiant utilisateur fourni pour l'application des droits de pages est invalide : {appCtx.AppUserId}. Doit être strictement positif.");
 
                 if (appCtx.AppId <= 0)
                     throw new Ex_Business(
                         callChain,
                         Ex_Business.ErrorCodes.BU_ER_02,
                         $"L'identifiant application fourni pour l'application des droits de pages est invalide : {appCtx.AppId}. Doit être strictement positif.");
-
+                
                 ct.ThrowIfCancellationRequested();
 
                 await InitializeDefaultPageRightsAsync(callChain, ct);
 
-                List<UserAppPageRight> accessiblePages =
-                    await _qhUserAppPageRight.HandleGetByUserIdAppIdAsync(callChain, appCtx.AppUserId, appCtx.AppId, ct);
+                if (appCtx.AppUserId > 0)
+                {
+                    List<UserAppPageRight> accessiblePages =
+                        await _qhUserAppPageRight.HandleGetByUserIdAppIdAsync(callChain, appCtx.AppUserId, appCtx.AppId, ct);
 
-                if (accessiblePages.Count > 0)
-                    ApplyPageRights(callChain, accessiblePages);
+                    if (accessiblePages.Count > 0)
+                        ApplyPageRights(callChain, accessiblePages);
+                }
 
                 return true;
             }

@@ -36,7 +36,7 @@ namespace DG244Cutting.B_UseCases.Settings.User
 
         // --- Identité utilisateur ---
         private int _appUserId;
-        private string _appUserFullName = string.Empty;
+        private string _appUserFullName = "Utilisateur non identifié !"; // string.Empty;
 
         // --- Contexte poste ---
         private string _appDeviceId = string.Empty;
