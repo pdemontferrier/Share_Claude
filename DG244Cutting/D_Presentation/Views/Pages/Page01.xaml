@@ -98,9 +98,9 @@ Remarques techniques :
             <!-- ============================================================ -->
             <!-- Onglet 1 — Informations d'identification utilisateur / poste -->
             <!-- ============================================================ -->
-            <TabItem x:Name="UserDetailsTabItem" Height="40">
+            <TabItem x:Name="UserDetailsTabItem">
                 <TabItem.Header>
-                    <TextBlock x:Name="UserDetailsTabHeader" Text="{Binding Label_P01_10}" Background="Transparent"/>
+                    <TextBlock x:Name="UserDetailsTabHeader" Text="{Binding Label_P01_10}"/>
                 </TabItem.Header>
 
                 <Border x:Name="UserDetailsBorder" Padding="5,20,5,20">
@@ -137,9 +137,9 @@ Remarques techniques :
             <!-- ============================================================ -->
             <!-- Onglet 2 — Droits d'accès granulaires aux pages              -->
             <!-- ============================================================ -->
-            <TabItem x:Name="UserAccessTabItem" Height="40">
+            <TabItem x:Name="UserAccessTabItem">
                 <TabItem.Header>
-                    <TextBlock x:Name="UserAccessTabHeader" Text="{Binding Label_P01_11}" Background="Transparent"/>
+                    <TextBlock x:Name="UserAccessTabHeader" Text="{Binding Label_P01_11}"/>
                 </TabItem.Header>
 
                 <Grid x:Name="UserAccessGrid">

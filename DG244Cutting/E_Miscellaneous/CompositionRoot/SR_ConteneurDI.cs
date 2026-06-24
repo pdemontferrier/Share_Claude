@@ -358,6 +358,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             services.AddSingleton<VM_MH60>();
             services.AddSingleton<VM_MH70>();
             services.AddSingleton<VM_MH80>();
+            services.AddSingleton<VM_MH98>();
             services.AddSingleton<VM_MH99>();
 
             // Generic
