@@ -224,8 +224,9 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         ///   <see langword="null"/>, vide ou composé uniquement d'espaces.</item>
         ///   <item>Vérification de l'annulation coopérative via
         ///   <see cref="CancellationToken.ThrowIfCancellationRequested"/>.</item>
-        ///   <item>Court-circuit d'idempotence : retour immédiat sans effet
-        ///   si <paramref name="cultureCode"/> est déjà le code culture actif
+        ///   <item>Court-circuit d'idempotence : retour immédiat
+        ///   <see langword="true"/> sans effet si
+        ///   <paramref name="cultureCode"/> est déjà le code culture actif
         ///   (<see cref="ISE_App.AppCultureCode"/>), comparé en
         ///   <see cref="StringComparison.OrdinalIgnoreCase"/>.</item>
         ///   <item>Sous-étape 1/4 - Résolution de l'URI du dictionnaire XAML
@@ -246,6 +247,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         ///   <c>DefaultThreadCurrentUICulture</c>,
         ///   <c>Thread.CurrentThread.CurrentCulture</c>,
         ///   <c>Thread.CurrentThread.CurrentUICulture</c>).</item>
+        ///   <item>Retour <see langword="true"/> en clôture du chemin nominal
+        ///   après la quatrième sous-étape d'effet.</item>
         /// </list>
         /// <para>Comportement en cas d'erreur : Les trois familles
         /// d'exceptions applicatives (<see cref="Ex_Business"/>,
@@ -254,17 +257,23 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <see cref="IU_LogAndNotify"/> avec les clés dictionnaire
         /// <c>La_EC_01</c>, <c>La_EC_02</c> et <c>La_EC_03</c> respectivement
         /// et <c>notify: true</c> (cohérence avec le point d'appel actuel
-        /// <c>UC_Application_OnStart</c>). L'<see cref="OperationCanceledException"/>
-        /// est positionnée en dernière position du patron de catch et
-        /// propagée intacte à l'appelant conformément à la doctrine
-        /// d'annulation coopérative §4.6.</para>
+        /// <c>UC_Application_OnStart</c>). Chacun des trois catch typés
+        /// retourne <see langword="false"/> après délégation à
+        /// <see cref="IU_LogAndNotify"/>, conformément à la doctrine de
+        /// chaîne UC → UC normalisée (R-4.14.21) qui prescrit le signalement
+        /// par valeur de retour à l'orchestrateur amont sans propagation
+        /// d'exception applicative typée entre UseCases orchestrants.
+        /// L'<see cref="OperationCanceledException"/> est positionnée en
+        /// dernière position du patron de catch et propagée intacte à
+        /// l'appelant conformément à la doctrine d'annulation coopérative
+        /// §4.6.</para>
         /// </remarks>
         /// <exception cref="OperationCanceledException">
         /// Propagée à l'appelant lorsque le jeton <paramref name="ct"/> est
         /// déclenché pendant l'opération, conformément à la doctrine
         /// d'annulation coopérative §4.6 du référentiel.
         /// </exception>
-        public async Task ExecuteAsync(string caller, string cultureCode, CancellationToken ct = default)
+        public async Task<bool> ExecuteAsync(string caller, string cultureCode, CancellationToken ct = default)
         {
             string callChain = $"{caller} > {_callee} > {nameof(ExecuteAsync)}";
 
@@ -282,7 +291,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
 
                 // Étape 2.c - Court-circuit d'idempotence
                 if (string.Equals(cultureCode, _seApp.AppCultureCode, StringComparison.OrdinalIgnoreCase))
-                    return;
+                    return true;
 
                 // Étape 2.d - Sous-étape d'effet 1/4 - Chargement du dictionnaire XAML
                 Uri dictionaryUri = _seLanguage.GetDictionaryUri(cultureCode);
@@ -301,10 +310,12 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 CultureInfo.DefaultThreadCurrentUICulture = ci;
                 Thread.CurrentThread.CurrentCulture = ci;
                 Thread.CurrentThread.CurrentUICulture = ci;
+
+                return true;
             }
-            catch (Ex_Business ex) { await _logAndNotify.ExecuteAsync(callChain, "La_EC_01", ex, notify: true, ct: ct); }
-            catch (Ex_Infrastructure ex) { await _logAndNotify.ExecuteAsync(callChain, "La_EC_02", ex, notify: true, ct: ct); }
-            catch (Ex_Unclassified ex) { await _logAndNotify.ExecuteAsync(callChain, "La_EC_03", ex, notify: true, ct: ct); }
+            catch (Ex_Business ex) { await _logAndNotify.ExecuteAsync(callChain, "No_EC_01", ex, ct: ct); return false; }
+            catch (Ex_Infrastructure ex) { await _logAndNotify.ExecuteAsync(callChain, "No_EC_02", ex, ct: ct); return false; }
+            catch (Ex_Unclassified ex) { await _logAndNotify.ExecuteAsync(callChain, "No_EC_03", ex, ct: ct); return false; }
             catch (OperationCanceledException) { throw; }
         }
 

@@ -107,8 +107,7 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
         /// <remarks>
         /// <para>Contexte : Appelée au démarrage de l'application depuis le UseCase
         /// orchestrateur de séquence de démarrage (typiquement
-        /// <c>UC_Application_OnStart</c>) via l'invocateur de UseCase
-        /// <c>IS_UseCaseInvoker</c> (EA-11), ou lors d'un changement de langue
+        /// <c>UC_Application_OnStart</c>), ou lors d'un changement de langue
         /// explicite déclenché par l'opérateur depuis une page de sélection de
         /// langue.</para>
         ///
@@ -158,13 +157,30 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
         /// non vide et non composé uniquement d'espaces blancs.</param>
         /// <param name="ct">Jeton d'annulation coopérative. Par défaut
         /// <see langword="default"/>.</param>
-        /// <returns>Une tâche représentant l'exécution asynchrone du changement
-        /// de langue.</returns>
+        /// <returns>
+        /// <para>Une tâche représentant l'exécution asynchrone du changement de
+        /// langue, dont la valeur signalable au sens de R-4.14.21 est :</para>
+        /// <list type="bullet">
+        ///   <item><description><see langword="true"/> lorsque la langue cible
+        ///   est constatée appliquée à l'issue de l'invocation, indistinctement
+        ///   au terme du chemin nominal d'exécution des quatre sous-étapes
+        ///   d'effet ou au terme du court-circuit d'idempotence (cas où le code
+        ///   culture demandé est déjà le code culture actif).</description></item>
+        ///   <item><description><see langword="false"/> lorsqu'une des trois
+        ///   familles d'exceptions applicatives (<see cref="Ex_Business"/>,
+        ///   <see cref="Ex_Infrastructure"/>, <see cref="Ex_Unclassified"/>)
+        ///   est captée terminalement par le UseCase ; la valeur permet à
+        ///   l'orchestrateur amont (cas de consommation en sous-séquence par
+        ///   <c>UC_Application_OnStart</c>) de constater l'échec applicatif
+        ///   sans propagation d'exception, conformément à la doctrine de chaîne
+        ///   UC → UC normalisée (R-4.14.21).</description></item>
+        /// </list>
+        /// </returns>
         /// <exception cref="OperationCanceledException">
         /// Propagée à l'appelant lorsque le jeton <paramref name="ct"/> est
         /// déclenché pendant l'opération, conformément à la doctrine d'annulation
         /// coopérative §4.6 du référentiel.
         /// </exception>
-        Task ExecuteAsync(string caller, string cultureCode, CancellationToken ct = default);
+        Task<bool> ExecuteAsync(string caller, string cultureCode, CancellationToken ct = default);
     }
 }

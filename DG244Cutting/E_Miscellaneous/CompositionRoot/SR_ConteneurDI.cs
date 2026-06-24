@@ -356,6 +356,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             //   ValidateScopes=true en build DEBUG.
             services.AddSingleton<VM_MH_Reduce>();
             services.AddSingleton<VM_MH01>();
+            services.AddSingleton<VM_MH02>();
             services.AddSingleton<VM_MH10>();
             services.AddSingleton<VM_MH20>();
             services.AddSingleton<VM_MH30>();
