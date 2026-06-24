@@ -79,6 +79,9 @@
 	<ItemGroup>
 		<Page Update="App.xaml"><SubType>Designer</SubType></Page>
 		<Compile Update="App.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\HorizontalMenus\MH02.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
 		<Compile Update="D_Presentation\Views\Components\HorizontalMenus\MH98.xaml.cs">
 		  <SubType>Code</SubType>
 		</Compile>

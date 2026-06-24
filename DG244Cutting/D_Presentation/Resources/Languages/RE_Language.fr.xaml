@@ -482,6 +482,28 @@
     <sys:String x:Key="P01_38">Non défini</sys:String>
     <sys:String x:Key="P01_39">Non défini</sys:String>
 
+    <!-- Page 02    -->
+    <sys:String x:Key="P02_00">Liste des langues disponibles :</sys:String>
+    <sys:String x:Key="P02_01">Français</sys:String>
+    <sys:String x:Key="P02_02">Anglais</sys:String>
+    <sys:String x:Key="P02_03">Allemand</sys:String>
+    <sys:String x:Key="P02_04">Espagnol</sys:String>
+    <sys:String x:Key="P02_05">Italien</sys:String>
+    <sys:String x:Key="P02_06">Portugais</sys:String>
+    <sys:String x:Key="P02_07">Non défini</sys:String>
+    <sys:String x:Key="P02_08">Non défini</sys:String>
+    <sys:String x:Key="P02_09">Non défini</sys:String>
+    <sys:String x:Key="P02_10">Non défini</sys:String>
+    <sys:String x:Key="P02_11">Non défini</sys:String>
+    <sys:String x:Key="P02_12">Non défini</sys:String>
+    <sys:String x:Key="P02_13">Non défini</sys:String>
+    <sys:String x:Key="P02_14">Non défini</sys:String>
+    <sys:String x:Key="P02_15">Non défini</sys:String>
+    <sys:String x:Key="P02_16">Non défini</sys:String>
+    <sys:String x:Key="P02_17">Non défini</sys:String>
+    <sys:String x:Key="P02_18">Non défini</sys:String>
+    <sys:String x:Key="P02_19">Non défini</sys:String>
+
     <!-- Page 10    -->
     <sys:String x:Key="P10_00">Page 10</sys:String>
     <sys:String x:Key="P10_01">Non défini</sys:String>
@@ -791,68 +813,26 @@
     <sys:String x:Key="P70_19">Non défini</sys:String>
 
     <!-- Page 90    -->
-    <sys:String x:Key="P90_00">Page Utilisateur</sys:String>
-    <sys:String x:Key="P90_01">Numéro Id :</sys:String>
-    <sys:String x:Key="P90_02">Nom :</sys:String>
-    <sys:String x:Key="P90_03">Prénom :</sys:String>
-    <sys:String x:Key="P90_04">Identifiant :</sys:String>
-    <sys:String x:Key="P90_05">Initiale :</sys:String>
-    <sys:String x:Key="P90_06">Mail professionnel :</sys:String>
-    <sys:String x:Key="P90_07">User ID :</sys:String>
-    <sys:String x:Key="P90_08">Poste ID :</sys:String>
-    <sys:String x:Key="P90_09">Poste IP :</sys:String>
-    <sys:String x:Key="P90_10">Utilisateur</sys:String>
-    <sys:String x:Key="P90_11">Droits d'accès</sys:String>
-    <sys:String x:Key="P90_12">Droits détaillés</sys:String>
-    <sys:String x:Key="P90_13">Page</sys:String>
-    <sys:String x:Key="P90_14">Access</sys:String>
-    <sys:String x:Key="P90_15">Lecture</sys:String>
-    <sys:String x:Key="P90_16">Modifi.</sys:String>
-    <sys:String x:Key="P90_17">Créat.</sys:String>
-    <sys:String x:Key="P90_18">Suppress.</sys:String>
-    <sys:String x:Key="P90_19">Control.</sys:String>
-    <sys:String x:Key="P90_20">Validat.</sys:String>
-    <sys:String x:Key="P90_21">Supervi.</sys:String>
-    <sys:String x:Key="P90_22">Monitor.</sys:String>
-    <sys:String x:Key="P90_23">Admin.</sys:String>
-    <sys:String x:Key="P90_24">Non défini</sys:String>
-    <sys:String x:Key="P90_25">Non défini</sys:String>
-    <sys:String x:Key="P90_26">Non défini</sys:String>
-    <sys:String x:Key="P90_27">Non défini</sys:String>
-    <sys:String x:Key="P90_28">Non défini</sys:String>
-    <sys:String x:Key="P90_29">Non défini</sys:String>
-    <sys:String x:Key="P90_30">Non défini</sys:String>
-    <sys:String x:Key="P90_31">Non défini</sys:String>
-    <sys:String x:Key="P90_32">Non défini</sys:String>
-    <sys:String x:Key="P90_33">Non défini</sys:String>
-    <sys:String x:Key="P90_34">Non défini</sys:String>
-    <sys:String x:Key="P90_35">Non défini</sys:String>
-    <sys:String x:Key="P90_36">Non défini</sys:String>
-    <sys:String x:Key="P90_37">Non défini</sys:String>
-    <sys:String x:Key="P90_38">Non défini</sys:String>
-    <sys:String x:Key="P90_39">Non défini</sys:String>
-
-    <!-- Page 91    -->
-    <sys:String x:Key="P91_00">Liste des langues disponibles :</sys:String>
-    <sys:String x:Key="P91_01">Français</sys:String>
-    <sys:String x:Key="P91_02">Anglais</sys:String>
-    <sys:String x:Key="P91_03">Allemand</sys:String>
-    <sys:String x:Key="P91_04">Espagnol</sys:String>
-    <sys:String x:Key="P91_05">Italien</sys:String>
-    <sys:String x:Key="P91_06">Portugais</sys:String>
-    <sys:String x:Key="P91_07">Non défini</sys:String>
-    <sys:String x:Key="P91_08">Non défini</sys:String>
-    <sys:String x:Key="P91_09">Non défini</sys:String>
-    <sys:String x:Key="P91_10">Non défini</sys:String>
-    <sys:String x:Key="P91_11">Non défini</sys:String>
-    <sys:String x:Key="P91_12">Non défini</sys:String>
-    <sys:String x:Key="P91_13">Non défini</sys:String>
-    <sys:String x:Key="P91_14">Non défini</sys:String>
-    <sys:String x:Key="P91_15">Non défini</sys:String>
-    <sys:String x:Key="P91_16">Non défini</sys:String>
-    <sys:String x:Key="P91_17">Non défini</sys:String>
-    <sys:String x:Key="P91_18">Non défini</sys:String>
-    <sys:String x:Key="P91_19">Non défini</sys:String>
+    <sys:String x:Key="P90_00">Page 90</sys:String>
+    <sys:String x:Key="P90_01">Non défini</sys:String>
+    <sys:String x:Key="P90_02">Non défini</sys:String>
+    <sys:String x:Key="P90_03">Non défini</sys:String>
+    <sys:String x:Key="P90_04">Non défini</sys:String>
+    <sys:String x:Key="P90_05">Non défini</sys:String>
+    <sys:String x:Key="P90_06">Non défini</sys:String>
+    <sys:String x:Key="P90_07">Non défini</sys:String>
+    <sys:String x:Key="P90_08">Non défini</sys:String>
+    <sys:String x:Key="P90_09">Non défini</sys:String>
+    <sys:String x:Key="P90_10">Non défini</sys:String>
+    <sys:String x:Key="P90_11">Non défini</sys:String>
+    <sys:String x:Key="P90_12">Non défini</sys:String>
+    <sys:String x:Key="P90_13">Non défini</sys:String>
+    <sys:String x:Key="P90_14">Non défini</sys:String>
+    <sys:String x:Key="P90_15">Non défini</sys:String>
+    <sys:String x:Key="P90_16">Non défini</sys:String>
+    <sys:String x:Key="P90_17">Non défini</sys:String>
+    <sys:String x:Key="P90_18">Non défini</sys:String>
+    <sys:String x:Key="P90_19">Non défini</sys:String>
 
     <!-- Page 96    -->
     <sys:String x:Key="P96_00">Page Messagerie</sys:String>
@@ -953,8 +933,8 @@
     <sys:String x:Key="P98_51">L'application a été conçue et développée par Patrick de Montferrier.</sys:String>
     <sys:String x:Key="P98_52">Conclusion</sys:String>
     <sys:String x:Key="P98_53">Conçue pour intégrer et simplifier les processus de fabrication de  notre société, cette application est un élément clé de notre stratégie de digitalisation. Elle permet à l'entreprise de rester compétitive en modernisant ses opérations de fabrication, en augmentant la précision et en maximisant l'efficacité à travers une gestion optimisée des données de production.</sys:String>
-    <sys:String x:Key="P98_54">L'architecture de l'application, fondée sur des technologies de pointe et des principes de micro-services, assure non seulement une intégration transparente avec les systèmes existants mais aussi une adaptabilité future pour répondre à l'évolution des exigences de l'entreprise. Cela positionne Le Vérandier comme une entreprise avant-gardiste dans l'utilisation de solutions technologiques avancées pour améliorer l'efficience et la qualité de ses processus de fabrication.</sys:String>
-    <sys:String x:Key="P98_55">Cette application représente un jalon crucial dans notre quête d'excellence opérationnelle. En automatisant et en rationalisant des processus clés, Le Vérandier est mieux équipé pour répondre aux demandes du marché avec agilité et précision, tout en soutenant notre vision d'un avenir durable et innovant.</sys:String>
+    <sys:String x:Key="P98_54">L'architecture de l'application, fondée sur des technologies de pointe et des principes de micro-services, assure non seulement une intégration transparente avec les systèmes existants mais aussi une adaptabilité future pour répondre à l'évolution des exigences de l'entreprise. Cela positionne notre entreprise comme avant-gardiste dans l'utilisation de solutions technologiques avancées pour améliorer l'efficience et la qualité de ses processus de fabrication.</sys:String>
+    <sys:String x:Key="P98_55">Cette application représente un jalon crucial dans notre quête d'excellence opérationnelle. En automatisant et en rationalisant des processus clés, notre entreprise est mieux équipé pour répondre aux demandes du marché avec agilité et précision, tout en soutenant notre vision d'un avenir durable et innovant.</sys:String>
     <sys:String x:Key="P98_56">Non défini</sys:String>
     <sys:String x:Key="P98_57">Non défini</sys:String>
     <sys:String x:Key="P98_58">Non défini</sys:String>

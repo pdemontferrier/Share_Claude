@@ -146,122 +146,122 @@ Remarques techniques :
             <FlowDocument x:Name="AppInfoDoc" Foreground="white">
 
                 <Paragraph x:Name="VersionTitle">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_01}" FontWeight="Bold" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_01, Mode=OneWay}" FontWeight="Bold" />
                     <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.VersionNumber, Mode=OneWay}" />
                     <LineBreak />
                 </Paragraph>
 
                 <Paragraph x:Name="ContexTitle" FontWeight="Bold">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_02}" FontWeight="Bold" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_02, Mode=OneWay}" FontWeight="Bold" />
                 </Paragraph>
                 <Paragraph x:Name="ContextContent">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_03}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_03, Mode=OneWay}" />
                     <LineBreak />
                 </Paragraph>
 
                 <Paragraph x:Name="Section1Title">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_04}" FontWeight="Bold" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_04, Mode=OneWay}" FontWeight="Bold" />
                 </Paragraph>
                 <Paragraph x:Name="Section1Content">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_05}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_05, Mode=OneWay}" />
                     <LineBreak />
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_06}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_06, Mode=OneWay}" />
                     <LineBreak />
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_07}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_07, Mode=OneWay}" />
                 </Paragraph>
                 <List MarkerStyle="Disc" Margin="10,0,0,10">
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_08}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_09}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_08, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_09, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_10}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_11}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_10, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_11, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_12}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_13}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_12, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_13, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_14}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_15}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_14, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_15, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                 </List>
 
                 <Paragraph x:Name="Section2Title">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_16}" FontWeight="Bold" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_16, Mode=OneWay}" FontWeight="Bold" />
                 </Paragraph>
                 <List MarkerStyle="Disc" Margin="10,0,0,10">
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_17}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_18}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_17, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_18, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_19}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_20}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_19, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_20, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_21}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_22}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_21, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_22, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                 </List>
 
                 <Paragraph x:Name="Section3Title">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_23}" FontWeight="Bold" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_23, Mode=OneWay}" FontWeight="Bold" />
                 </Paragraph>
                 <Paragraph x:Name="Section3Content">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_24}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_24, Mode=OneWay}" />
                     <LineBreak />
                 </Paragraph>
 
                 <Paragraph x:Name="Section31Title">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_25}" TextDecorations="Underline" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_25, Mode=OneWay}" TextDecorations="Underline" />
                 </Paragraph>
                 <List MarkerStyle="Disc" Margin="10,0,0,10">
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_26}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_27}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_26, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_27, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_28}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_28, Mode=OneWay}" FontWeight="Bold" />
                         </Paragraph>
                         <List MarkerStyle="Disc" Margin="10,0,0,10">
                             <ListItem>
                                 <Paragraph>
-                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_29}" FontWeight="Bold" />
-                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_30}" />
+                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_29, Mode=OneWay}" FontWeight="Bold" />
+                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_30, Mode=OneWay}" />
                                     <LineBreak />
                                 </Paragraph>
                             </ListItem>
                             <ListItem>
                                 <Paragraph>
-                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_31}" FontWeight="Bold" />
-                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_32}" />
+                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_31, Mode=OneWay}" FontWeight="Bold" />
+                                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_32, Mode=OneWay}" />
                                     <LineBreak />
                                 </Paragraph>
                             </ListItem>
@@ -270,109 +270,109 @@ Remarques techniques :
                 </List>
 
                 <Paragraph x:Name="Section32Title">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_33}" TextDecorations="Underline" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_33, Mode=OneWay}" TextDecorations="Underline" />
                 </Paragraph>
                 <Paragraph x:Name="Section32Content">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_34}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_34, Mode=OneWay}" />
                 </Paragraph>
                 <List MarkerStyle="Disc" Margin="20,0,0,0">
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_35}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_35, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_36}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_36, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_37}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_37, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_38}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_38, Mode=OneWay}" />
                         </Paragraph>
                     </ListItem>
                 </List>
                 <Paragraph x:Name="Section39Content">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_39}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_39, Mode=OneWay}" />
                     <LineBreak />
                 </Paragraph>
 
                 <Paragraph x:Name="Section40Title">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_40}" TextDecorations="Underline" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_40, Mode=OneWay}" TextDecorations="Underline" />
                 </Paragraph>
                 <Paragraph x:Name="Section41Content">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_41}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_41, Mode=OneWay}" />
                 </Paragraph>
                 <List MarkerStyle="Disc" Margin="20,0,0,0">
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_42}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_42, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_43}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_43, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_44}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_44, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_45}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_45, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_46}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_46, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                 </List>
 
                 <Paragraph x:Name="Section47Title">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_47}" TextDecorations="Underline" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_47, Mode=OneWay}" TextDecorations="Underline" />
                 </Paragraph>
                 <List MarkerStyle="Disc" Margin="20,0,0,0">
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_48}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_49}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_48, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_49, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                     <ListItem>
                         <Paragraph>
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_50}" FontWeight="Bold" />
-                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_51}" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_50, Mode=OneWay}" FontWeight="Bold" />
+                            <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_51, Mode=OneWay}" />
                             <LineBreak />
                         </Paragraph>
                     </ListItem>
                 </List>
 
                 <Paragraph x:Name="Section4Title" FontWeight="Bold">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_52}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_52, Mode=OneWay}" />
                 </Paragraph>
                 <Paragraph x:Name="Section4Content">
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_53}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_53, Mode=OneWay}" />
                     <LineBreak />
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_54}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_54, Mode=OneWay}" />
                     <LineBreak />
-                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_55}" />
+                    <Run Text="{Binding Source={StaticResource Proxy}, Path=Data.Label_P98_55, Mode=OneWay}" />
                 </Paragraph>
 
             </FlowDocument>
