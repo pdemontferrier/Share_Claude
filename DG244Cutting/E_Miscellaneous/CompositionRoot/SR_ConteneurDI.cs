@@ -256,6 +256,12 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             //   de classe), sans dépendance Scoped ni accès au DbContext partagé -> Singleton
             //   (P4-bis, §4.10.10).
             services.AddSingleton<IU_GetApplicationVersion, UC_GetApplicationVersion>();
+            // UC_Language_Apply : orchestrateur du changement de langue de l'application
+            //   (chargement du dictionnaire XAML, persistance du code culture, synchronisation
+            //   du drapeau et des cibles CultureInfo .NET) — dépendances Singleton uniquement
+            //   (ISE_App, ISE_Language, ISE_Flag, IU_LogAndNotify), non transactionnel par
+            //   construction -> Singleton (P4-bis, §4.10.10).
+            services.AddSingleton<IU_Language_Apply, UC_Language_Apply>();
             // UC_LogAndNotify : pipeline d'erreur autonome (IS_AppContext, IS_ErrorLogger,
             //   IS_Notification, IS_Dictionary — tous Singleton, hors DbContext partagé) -> Singleton.
             services.AddSingleton<IU_LogAndNotify, UC_LogAndNotify>();
