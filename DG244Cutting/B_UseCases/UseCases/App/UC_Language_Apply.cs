@@ -301,8 +301,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 _seApp.AppCultureCode = cultureCode;
 
                 // Étape 2.f - Sous-étape d'effet 3/4 - Synchronisation de l'URI du drapeau
-                string languageCode = ExtractCountryCode(cultureCode);
-                _seFlag.AppFlagUri = _seFlag.GetFlagUriOrDefault(languageCode);
+                string countryCode = ExtractCountryCode(cultureCode);
+                _seFlag.AppFlagUri = _seFlag.GetFlagUriOrDefault(countryCode);
 
                 // Étape 2.g - Sous-étape d'effet 4/4 - Synchronisation CultureInfo .NET (4 cibles)
                 CultureInfo ci = CultureInfo.GetCultureInfo(cultureCode);
