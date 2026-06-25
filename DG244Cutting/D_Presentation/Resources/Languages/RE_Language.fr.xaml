@@ -812,6 +812,28 @@
     <sys:String x:Key="P70_18">Non défini</sys:String>
     <sys:String x:Key="P70_19">Non défini</sys:String>
 
+    <!-- Page 80    -->
+    <sys:String x:Key="P80_00">Page 80</sys:String>
+    <sys:String x:Key="P80_01">Non défini</sys:String>
+    <sys:String x:Key="P80_02">Non défini</sys:String>
+    <sys:String x:Key="P80_03">Non défini</sys:String>
+    <sys:String x:Key="P80_04">Non défini</sys:String>
+    <sys:String x:Key="P80_05">Non défini</sys:String>
+    <sys:String x:Key="P80_06">Non défini</sys:String>
+    <sys:String x:Key="P80_07">Non défini</sys:String>
+    <sys:String x:Key="P80_08">Non défini</sys:String>
+    <sys:String x:Key="P80_09">Non défini</sys:String>
+    <sys:String x:Key="P80_10">Non défini</sys:String>
+    <sys:String x:Key="P80_11">Non défini</sys:String>
+    <sys:String x:Key="P80_12">Non défini</sys:String>
+    <sys:String x:Key="P80_13">Non défini</sys:String>
+    <sys:String x:Key="P80_14">Non défini</sys:String>
+    <sys:String x:Key="P80_15">Non défini</sys:String>
+    <sys:String x:Key="P80_16">Non défini</sys:String>
+    <sys:String x:Key="P80_17">Non défini</sys:String>
+    <sys:String x:Key="P80_18">Non défini</sys:String>
+    <sys:String x:Key="P80_19">Non défini</sys:String>
+
     <!-- Page 90    -->
     <sys:String x:Key="P90_00">Page 90</sys:String>
     <sys:String x:Key="P90_01">Non défini</sys:String>
