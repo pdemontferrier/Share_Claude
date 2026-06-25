@@ -570,7 +570,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.Banner
 
             try
             {
-                await _uNavigation.NavigateToPageAsync(callChain, "Page91", _cts.Token);
+                await _uNavigation.NavigateToPageAsync(callChain, "Page02", _cts.Token);
             }
             catch (OperationCanceledException)
             {

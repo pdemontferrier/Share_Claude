@@ -473,7 +473,7 @@
     <sys:String x:Key="P01_39">Non défini</sys:String>
 
     <!-- Page 02    -->
-    <sys:String x:Key="P02_00">Liste des langues disponibles :</sys:String>
+    <sys:String x:Key="P02_00">Langues disponibles :</sys:String>
     <sys:String x:Key="P02_01">Français</sys:String>
     <sys:String x:Key="P02_02">English</sys:String>
     <sys:String x:Key="P02_03">Deutsch</sys:String>

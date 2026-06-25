@@ -69,11 +69,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   booléens sont alimentés en deux occasions : (1) à l'entrée
     ///   sur la page par <see cref="LoadAsync"/> qui dérive le
     ///   bouton à cocher de la composante pays de
-    ///   <see cref="ISE_App.AppCultureCode"/> via les helpers privés
-    ///   <see cref="ExtractCountryCodeFromCulture"/> et
-    ///   <see cref="ApplyLanguageSelection"/> ; (2) à chaque
-    ///   changement de langue déclenché par l'utilisateur par le
-    ///   handler privé <see cref="ChangeLanguageAsync"/> qui
+    ///   <see cref="ISE_App.AppCultureCode"/> via
+    ///   <see cref="ISE_Language.ExtractCountryCodeFromCulture"/> et
+    ///   le helper privé <see cref="ApplyLanguageSelection"/> ; (2) à
+    ///   chaque changement de langue déclenché par l'utilisateur par
+    ///   le handler privé <see cref="ChangeLanguageAsync"/> qui
     ///   ré-invoque <see cref="ApplyLanguageSelection"/> de manière
     ///   inconditionnelle après invocation du UseCase, par
     ///   transposition littérale du comportement legacy.</description></item>
@@ -296,11 +296,15 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   Les 6 propriétés <c>Flag{n}Source</c> sont déclarées en
     ///   auto-property et n'ont pas de champ support nommé.</description></item>
     ///   <item><description><c>=== Dépendances privées ===</c> :
-    ///   3 champs <c>private readonly</c> stockant les dépendances
+    ///   4 champs <c>private readonly</c> stockant les dépendances
     ///   propres au dérivé, affectés au constructeur : <c>_app</c>
     ///   (<see cref="ISE_App"/>, au titre d'EA-NN-VMPageLectureCultureCode),
-    ///   <c>_flag</c> (<see cref="ISE_Flag"/>) et
-    ///   <c>_useCaseInvoker</c> (<see cref="IS_UseCaseInvoker"/>).</description></item>
+    ///   <c>_flag</c> (<see cref="ISE_Flag"/>),
+    ///   <c>_useCaseInvoker</c> (<see cref="IS_UseCaseInvoker"/>) et
+    ///   <c>_language</c> (<see cref="ISE_Language"/>, consommé pour
+    ///   les deux conversions code culture ↔ code pays au titre de
+    ///   l'arbitrage Q-B=[Q-B.1] du fil
+    ///   <c>Page-VM_02_Creation</c>).</description></item>
     ///   <item><description><c>=== Propriétés publiques ===</c>
     ///   (extension §4.4.3) : 7 propriétés observables
     ///   <c>Label_P02_0n</c> en setter privé via
@@ -311,16 +315,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   1 commande <see cref="ChangeLanguageCommand"/> en lecture
     ///   seule avec instanciation en place au constructeur.</description></item>
     ///   <item><description><c>=== Constructeur ===</c> : constructeur
-    ///   <c>public</c> à cinq paramètres, délégation à
+    ///   <c>public</c> à six paramètres, délégation à
     ///   <see cref="VM_Page_Generic"/> via
     ///   <c>base(dictionary, logAndNotify, app)</c>, affectation du
     ///   champ <see cref="_app"/> au titre d'EA-NN-VMPageLectureCultureCode
     ///   (sans garde locale redondante, la garde sur <c>app</c>
     ///   étant portée par la chaîne <c>base(...)</c> conformément à
     ///   l'item VM-P5 de §4.2 du 0232-Page-VM), gardes
-    ///   <see cref="ArgumentNullException"/> locales sur les deux
-    ///   dépendances <c>flag</c> et <c>useCaseInvoker</c>,
-    ///   alimentation des 6 propriétés <c>Flag{n}Source</c> via
+    ///   <see cref="ArgumentNullException"/> locales sur les trois
+    ///   dépendances propres au dérivé non transmises à
+    ///   <see cref="VM_Generic"/> (<c>flag</c>, <c>useCaseInvoker</c>,
+    ///   <c>language</c>), alimentation des 6 propriétés
+    ///   <c>Flag{n}Source</c> via
     ///   <see cref="ISE_Flag.GetFlagUriOrDefault"/> sur les 6 codes
     ///   pays ISO 3166-1 alpha-2, instanciation de
     ///   <see cref="ChangeLanguageCommand"/>, invocation finale de
@@ -339,14 +345,20 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   (<c>P02_00</c>, <c>P02_01</c>, …, <c>P02_06</c>), sans
     ///   appel à <c>base.LoadLabels(callChain)</c>.</description></item>
     ///   <item><description><c>=== Méthodes privées ===</c> :
-    ///   4 helpers privés —
-    ///   <see cref="ExtractCountryCodeFromCulture"/> (extraction de
-    ///   la composante pays depuis un code culture),
-    ///   <see cref="GetCultureCodeFromCountryCode"/> (conversion
-    ///   tabulaire code pays → code culture),
+    ///   2 helpers privés —
     ///   <see cref="ApplyLanguageSelection"/> (mise à jour des
     ///   6 booléens de sélection), et le handler asynchrone de la
-    ///   commande <see cref="ChangeLanguageAsync"/>.</description></item>
+    ///   commande <see cref="ChangeLanguageAsync"/>. Les deux
+    ///   conversions code culture ↔ code pays sont déléguées au
+    ///   Setting de présentation <see cref="ISE_Language"/> via les
+    ///   méthodes
+    ///   <see cref="ISE_Language.ExtractCountryCodeFromCulture"/>
+    ///   (consommée par <see cref="LoadAsync"/>) et
+    ///   <see cref="ISE_Language.GetCultureCodeFromCountryCode"/>
+    ///   (consommée par <see cref="ChangeLanguageAsync"/>),
+    ///   conformément à l'arbitrage Q-B=[Q-B.1] du fil
+    ///   <c>Page-VM_02_Creation</c> de mutualisation des conversions
+    ///   au sein de <see cref="ISE_Language"/>.</description></item>
     /// </list>
     ///
     /// <para>L'extension <c>=== Événements / Délégués / Indexeurs ===</c>
@@ -497,6 +509,62 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// (R-4.14.21).</para>
         /// </remarks>
         private readonly IS_UseCaseInvoker _useCaseInvoker;
+
+        /// <summary>
+        /// Setting Singleton de présentation portant l'état du
+        /// dictionnaire de langue actif et les deux conversions
+        /// symétriques de code culture .NET BCL et de code pays
+        /// ISO 3166-1 alpha-2.
+        /// </summary>
+        /// <remarks>
+        /// <para>Contexte : Injecté en Singleton par le conteneur DI
+        /// au constructeur. <see cref="ISE_Language"/> est un Setting
+        /// de présentation portant l'état linguistique partagé
+        /// (URI du dictionnaire actif observable, résolution
+        /// culture → URI, chargement atomique du dictionnaire) et
+        /// les deux conversions
+        /// <see cref="ISE_Language.ExtractCountryCodeFromCulture"/>
+        /// (consommée par <see cref="LoadAsync"/> pour identifier la
+        /// langue active à partir de
+        /// <see cref="ISE_App.AppCultureCode"/>) et
+        /// <see cref="ISE_Language.GetCultureCodeFromCountryCode"/>
+        /// (consommée par <see cref="ChangeLanguageAsync"/> pour
+        /// convertir le code pays reçu en code culture transmis au
+        /// UseCase <see cref="IU_Language_Apply"/>). Le repli
+        /// silencieux sur <c>"en-GB"</c> en cas d'entrée non
+        /// exploitable est porté par la sémantique propre des deux
+        /// méthodes et n'est pas reproduit localement.</para>
+        ///
+        /// <para>Mutualisation des conversions : Le présent ViewModel
+        /// ne porte pas de helper privé de conversion code culture ↔
+        /// code pays — les deux conversions sont déléguées à
+        /// <see cref="ISE_Language"/> au titre de l'arbitrage
+        /// Q-B=[Q-B.1] du fil <c>Page-VM_02_Creation</c>. La
+        /// délégation tire bénéfice de la table de correspondance
+        /// exhaustive portée par <see cref="ISE_Language"/> (ancrage
+        /// CLDR couvrant les 27 pays de l'Union européenne et une
+        /// sélection des principaux pays hors UE), et garantit la
+        /// cohérence sémantique entre la résolution amont (au
+        /// démarrage de l'application par
+        /// <c>UC_Application_OnStart</c>) et la résolution avale (au
+        /// changement de langue par l'utilisateur). Toute extension
+        /// ultérieure du référentiel des langues supportées
+        /// bénéficiera automatiquement au présent ViewModel sans
+        /// modification.</para>
+        ///
+        /// <para>L'injection de <see cref="ISE_Language"/> en
+        /// dépendance propre du dérivé est nominale au titre du
+        /// Setting de présentation portant les conversions
+        /// applicatives, sans portée d'EA propre — la consommation
+        /// se fait exclusivement par les deux méthodes de conversion
+        /// (lecture sans état) ; aucun abonnement INPC propre
+        /// (notamment sur <see cref="ISE_Language.CurrentDictionaryUri"/>)
+        /// n'est branché par le présent dérivé : la cascade INPC
+        /// déclenchée par le changement de langue est intégralement
+        /// portée par <see cref="VM_Generic"/> via son abonnement
+        /// interne à <see cref="ISE_App.AppCultureCode"/>.</para>
+        /// </remarks>
+        private readonly ISE_Language _language;
 
         #endregion
 
@@ -752,12 +820,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   du présent constructeur. Conformité à l'item VM-P5 de
         ///   §4.2 du 0232-Page-VM.</description></item>
         ///   <item><description>Gardes
-        ///   <see cref="ArgumentNullException"/> locales sur les deux
+        ///   <see cref="ArgumentNullException"/> locales sur les trois
         ///   dépendances propres au dérivé non transmises à
         ///   <see cref="VM_Generic"/> (<paramref name="flag"/>,
-        ///   <paramref name="useCaseInvoker"/>) et affectation aux
-        ///   champs <see cref="_flag"/> et
-        ///   <see cref="_useCaseInvoker"/>.</description></item>
+        ///   <paramref name="useCaseInvoker"/>,
+        ///   <paramref name="language"/>) et affectation aux champs
+        ///   <see cref="_flag"/>, <see cref="_useCaseInvoker"/> et
+        ///   <see cref="_language"/>.</description></item>
         ///   <item><description>Alimentation des 6 propriétés
         ///   auto-property <see cref="Flag1Source"/> à
         ///   <see cref="Flag6Source"/> par 6 appels successifs à
@@ -856,9 +925,20 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// ViewModel. Mobilisé par
         /// <see cref="ChangeLanguageAsync"/>. Injecté en Singleton
         /// par le conteneur DI.</param>
+        /// <param name="language">Setting Singleton de présentation
+        /// portant l'état du dictionnaire de langue actif et les
+        /// deux conversions symétriques code culture ↔ code pays.
+        /// Mobilisé par <see cref="LoadAsync"/> (consommation de
+        /// <see cref="ISE_Language.ExtractCountryCodeFromCulture"/>)
+        /// et par <see cref="ChangeLanguageAsync"/> (consommation de
+        /// <see cref="ISE_Language.GetCultureCodeFromCountryCode"/>),
+        /// au titre de l'arbitrage Q-B=[Q-B.1] du fil
+        /// <c>Page-VM_02_Creation</c>. Injecté en Singleton par le
+        /// conteneur DI.</param>
         /// <exception cref="ArgumentNullException">Levée si
-        /// <paramref name="flag"/> ou
-        /// <paramref name="useCaseInvoker"/> est
+        /// <paramref name="flag"/>,
+        /// <paramref name="useCaseInvoker"/> ou
+        /// <paramref name="language"/> est
         /// <see langword="null"/>. Les gardes sur
         /// <paramref name="dictionary"/>,
         /// <paramref name="logAndNotify"/> et <paramref name="app"/>
@@ -869,7 +949,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             IU_LogAndNotify logAndNotify,
             ISE_App app,
             ISE_Flag flag,
-            IS_UseCaseInvoker useCaseInvoker)
+            IS_UseCaseInvoker useCaseInvoker,
+            ISE_Language language)
             : base(dictionary, logAndNotify, app)
         {
             _app = app;
@@ -877,6 +958,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
                 ?? throw new ArgumentNullException(nameof(flag));
             _useCaseInvoker = useCaseInvoker
                 ?? throw new ArgumentNullException(nameof(useCaseInvoker));
+            _language = language
+                ?? throw new ArgumentNullException(nameof(language));
 
             Flag1Source = _flag.GetFlagUriOrDefault("FR");
             Flag2Source = _flag.GetFlagUriOrDefault("GB");
@@ -934,14 +1017,17 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// asynchrone au <c>Loaded</c> de la page de l'autre.</para>
         ///
         /// <para>Objectif : Lire la composante pays de
-        /// <see cref="ISE_App.AppCultureCode"/> via le helper privé
-        /// <see cref="ExtractCountryCodeFromCulture"/>, puis mettre à
-        /// jour l'état de sélection des 6 booléens
-        /// <c>IsLanguage{n}Selected</c> via le helper privé
-        /// <see cref="ApplyLanguageSelection"/>, qui réinitialise les
-        /// 6 booléens à <see langword="false"/> puis affecte
-        /// <see langword="true"/> au booléen correspondant au code
-        /// pays extrait. Pour un code pays inconnu (cas marginal
+        /// <see cref="ISE_App.AppCultureCode"/> via
+        /// <see cref="ISE_Language.ExtractCountryCodeFromCulture"/>
+        /// (consommation du Setting <see cref="ISE_Language"/>
+        /// injecté en dépendance propre du présent dérivé au titre
+        /// de l'arbitrage Q-B=[Q-B.1] du fil
+        /// <c>Page-VM_02_Creation</c>), puis mettre à jour l'état de
+        /// sélection des 6 booléens <c>IsLanguage{n}Selected</c> via
+        /// le helper privé <see cref="ApplyLanguageSelection"/>, qui
+        /// réinitialise les 6 booléens à <see langword="false"/> puis
+        /// affecte <see langword="true"/> au booléen correspondant au
+        /// code pays extrait. Pour un code pays inconnu (cas marginal
         /// structurellement non atteignable par construction de
         /// l'application au démarrage qui force <c>en-GB</c> à
         /// défaut), aucun booléen n'est sélectionné — comportement
@@ -1009,7 +1095,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             await ExecuteSafeAsync(innerCallChain, () =>
             {
                 string countryCode =
-                    ExtractCountryCodeFromCulture(_app.AppCultureCode);
+                    _language.ExtractCountryCodeFromCulture(
+                        _app.AppCultureCode);
                 ApplyLanguageSelection(countryCode);
                 return Task.CompletedTask;
             }, ct);
@@ -1096,106 +1183,6 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         #endregion
 
         #region === Méthodes privées ===
-
-        /// <summary>
-        /// Extrait la composante pays ISO 3166-1 alpha-2 d'un code
-        /// culture au format RFC 4646 (par exemple
-        /// <c>"fr-FR"</c> → <c>"FR"</c>, <c>"en-GB"</c> → <c>"GB"</c>).
-        /// </summary>
-        /// <param name="cultureCode">Code culture au format RFC 4646,
-        /// typiquement <c>{langue}-{pays}</c>.</param>
-        /// <returns>Code pays ISO 3166-1 alpha-2 en majuscules. Si
-        /// <paramref name="cultureCode"/> ne comporte pas de séparateur
-        /// <c>-</c> ou si la composante après le séparateur est vide,
-        /// retourne <paramref name="cultureCode"/> en majuscules tel
-        /// quel (cas marginal défensif).</returns>
-        /// <remarks>
-        /// <para>Contexte : Helper privé consommé exclusivement par
-        /// <see cref="LoadAsync"/> pour l'initialisation de l'état
-        /// de sélection au montage de la page. Reproduit la sémantique
-        /// d'extraction de <c>UC_Language_Apply.ExtractCountryCode</c>
-        /// côté <c>B_UseCases</c> (composante après le séparateur
-        /// <c>-</c>, mise en majuscules), avec robustesse aux cas
-        /// marginaux d'absence de séparateur ou de composante vide.</para>
-        ///
-        /// <para>Comportement détaillé :</para>
-        /// <list type="bullet">
-        ///   <item><description><c>"fr-FR"</c> → <c>"FR"</c> :
-        ///   séparateur trouvé en index 2, composante après le
-        ///   séparateur non vide, retour de
-        ///   <c>Substring(3).ToUpperInvariant()</c>.</description></item>
-        ///   <item><description><c>"en-GB"</c> → <c>"GB"</c> : idem.</description></item>
-        ///   <item><description><c>"FR"</c> → <c>"FR"</c> : séparateur
-        ///   absent, retour du paramètre en majuscules tel quel.</description></item>
-        ///   <item><description><c>"fr-"</c> → <c>"FR-"</c> :
-        ///   séparateur trouvé mais composante vide, retour du
-        ///   paramètre en majuscules tel quel (cas marginal défensif).</description></item>
-        ///   <item><description><c>""</c> → <c>""</c> : paramètre
-        ///   vide, retour du paramètre tel quel.</description></item>
-        /// </list>
-        /// </remarks>
-        private string ExtractCountryCodeFromCulture(string cultureCode)
-        {
-            int index = cultureCode.LastIndexOf('-');
-            return index >= 0 && index < cultureCode.Length - 1
-                ? cultureCode.Substring(index + 1).ToUpperInvariant()
-                : cultureCode.ToUpperInvariant();
-        }
-
-        /// <summary>
-        /// Convertit un code pays ISO 3166-1 alpha-2 en code culture
-        /// au format RFC 4646 par table de correspondance statique
-        /// des 6 langues supportées par l'application.
-        /// </summary>
-        /// <param name="countryCode">Code pays ISO 3166-1 alpha-2
-        /// transmis par WPF en <c>CommandParameter</c> du bouton de
-        /// langue cliqué (« FR », « GB », « DE », « ES », « IT »,
-        /// « PT »).</param>
-        /// <returns>Code culture au format RFC 4646 correspondant au
-        /// code pays fourni. Pour un code pays inconnu, retourne le
-        /// code culture <c>"en-GB"</c> au titre du repli aligné sur
-        /// la politique d'application au démarrage portée par
-        /// <c>UC_Application_OnStart</c>.</returns>
-        /// <remarks>
-        /// <para>Contexte : Helper privé consommé exclusivement par
-        /// <see cref="ChangeLanguageAsync"/> pour la conversion du
-        /// code pays reçu de la commande en code culture transmis au
-        /// UseCase <see cref="IU_Language_Apply"/>. La table de
-        /// correspondance est en dur (6 cas + repli), par
-        /// transposition littérale du legacy <c>VM_Page91</c> en
-        /// substituant les codes langue ISO 639-1 (FR, EN, DE, ES,
-        /// IT, PT) par les codes pays ISO 3166-1 alpha-2 (FR, GB,
-        /// DE, ES, IT, PT) conformément à la convention sémantique
-        /// structurante du fil. La correspondance
-        /// <c>"GB" → "en-GB"</c> en particulier remplace la
-        /// correspondance legacy <c>"EN" → "en-US"</c>, par
-        /// alignement sur le code culture appliqué par défaut au
-        /// démarrage de l'application (<c>en-GB</c>).</para>
-        ///
-        /// <para>Repli défensif : Pour un code pays inconnu, le repli
-        /// par défaut est <c>"en-GB"</c> (et non <c>"fr-FR"</c> comme
-        /// le legacy), par alignement sur la politique d'application
-        /// au démarrage de DG244Cutting qui applique <c>en-GB</c> à
-        /// défaut lorsque la langue du poste n'est pas l'une des six
-        /// langues supportées. Cas marginal structurellement
-        /// non atteignable depuis l'utilisateur (les 6
-        /// <c>CommandParameter</c> bindés en dur dans le XAML couvrent
-        /// les 6 codes pays attendus), mais le repli est posé en
-        /// geste de robustesse.</para>
-        /// </remarks>
-        private string GetCultureCodeFromCountryCode(string countryCode)
-        {
-            return countryCode switch
-            {
-                "FR" => "fr-FR",
-                "GB" => "en-GB",
-                "DE" => "de-DE",
-                "ES" => "es-ES",
-                "IT" => "it-IT",
-                "PT" => "pt-PT",
-                _ => "en-GB"
-            };
-        }
 
         /// <summary>
         /// Met à jour l'état de sélection des 6 booléens
@@ -1299,8 +1286,12 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   <see cref="OperationCanceledException"/>), §4.7.3 du
         ///   0230.</description></item>
         ///   <item><description>Conversion du code pays reçu en code
-        ///   culture via le helper privé
-        ///   <see cref="GetCultureCodeFromCountryCode"/>.</description></item>
+        ///   culture via
+        ///   <see cref="ISE_Language.GetCultureCodeFromCountryCode"/>
+        ///   (consommation du Setting <see cref="ISE_Language"/>
+        ///   injecté en dépendance propre du présent dérivé au titre
+        ///   de l'arbitrage Q-B=[Q-B.1] du fil
+        ///   <c>Page-VM_02_Creation</c>).</description></item>
         ///   <item><description>Invocation du UseCase
         ///   <see cref="IU_Language_Apply"/> via
         ///   <see cref="IS_UseCaseInvoker"/>, surcharge à retour
@@ -1360,7 +1351,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             await ExecuteSafeAsync(innerCallChain, async () =>
             {
                 string cultureCode =
-                    GetCultureCodeFromCountryCode(countryCode);
+                    _language.GetCultureCodeFromCountryCode(countryCode);
 
                 await _useCaseInvoker
                     .InvokeAsync<IU_Language_Apply, bool>(

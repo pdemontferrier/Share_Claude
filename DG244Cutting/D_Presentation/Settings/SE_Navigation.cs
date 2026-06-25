@@ -162,7 +162,7 @@ namespace DG244Cutting.D_Presentation.Settings
             // de nommage des fichiers : PageNN.xaml et MH_PageNN.xaml
             var pageSuffixes = new[]
             {
-                "00", "01",
+                "00", "01", "02",
                 "10",
                 "20", "21", "22", "23",
                 "30", "31", "32", "33",
@@ -170,7 +170,7 @@ namespace DG244Cutting.D_Presentation.Settings
                 "50",
                 "60",
                 "70",
-                "90", "91", "96", "97", "98", "99"
+                "90", "96", "97", "98", "99"
             };
 
             // Génération automatique du dictionnaire par convention

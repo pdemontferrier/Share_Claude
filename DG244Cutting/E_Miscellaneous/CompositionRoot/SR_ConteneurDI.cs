@@ -371,6 +371,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
 
             // Pages
             services.AddSingleton<VM_Page01>();
+            services.AddSingleton<VM_Page02>();
             services.AddSingleton<VM_Page10>();
             services.AddSingleton<VM_Page20>();
             services.AddSingleton<VM_Page30>();
