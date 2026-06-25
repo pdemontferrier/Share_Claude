@@ -8,7 +8,7 @@ namespace DG244Cutting.D_Presentation.Settings
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Composant Singleton de présentation injectable via <see cref="ISE_Language"/>,
-    /// enregistré dans le Composition Root. Consommé par <c>SR_Language</c> pour appliquer une langue
+    /// enregistré dans le Composition Root. Consommé par <c>UC_Language_Apply</c> pour appliquer une langue
     /// et par <c>SR_Dictionary</c> pour résoudre les textes traduits.</para>
     /// <para>Objectif : Fournir un point d'accès unique à l'état linguistique de l'application,
     /// en isolant complètement la dépendance WPF (<see cref="ResourceDictionary"/>) de toutes les autres couches.</para>
