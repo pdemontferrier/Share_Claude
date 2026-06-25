@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
 using DG244Cutting.A_Domain.Interfaces.Settings.Presentation;
 
 namespace DG244Cutting.D_Presentation.Settings
@@ -8,14 +10,19 @@ namespace DG244Cutting.D_Presentation.Settings
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Composant Singleton de présentation injectable via <see cref="ISE_Language"/>,
-    /// enregistré dans le Composition Root. Consommé par <c>UC_Language_Apply</c> pour appliquer une langue
-    /// et par <c>SR_Dictionary</c> pour résoudre les textes traduits.</para>
-    /// <para>Objectif : Fournir un point d'accès unique à l'état linguistique de l'application,
-    /// en isolant complètement la dépendance WPF (<see cref="ResourceDictionary"/>) de toutes les autres couches.</para>
+    /// enregistré dans <c>E_Miscellaneous/CompositionRoot/SR_ConteneurDI.cs</c>. Consommé par
+    /// <c>UC_Language_Apply</c> pour appliquer une langue et par <c>SR_Dictionary</c> pour
+    /// résoudre les textes traduits.</para>
+    /// <para>Objectif : Fournir un point d'accès unique et observable à l'état linguistique de
+    /// l'application, en isolant complètement la dépendance WPF (<see cref="ResourceDictionary"/>)
+    /// de toutes les autres couches. Implémente <see cref="INotifyPropertyChanged"/> en concentrant
+    /// l'émission des notifications sur le helper privé canonique <see cref="SetField{T}"/>
+    /// (§4.14.7 du 0230, R-4.14.15).</para>
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
     /// <item>Résoudre l'URI du fichier XAML selon le code culture demandé.</item>
     /// <item>Charger et injecter le dictionnaire dans les ressources WPF fusionnées.</item>
+    /// <item>Exposer l'URI du dictionnaire actif sous forme de propriété observable au contrat.</item>
     /// <item>Exposer l'accès aux textes traduits sans référencer <see cref="ResourceDictionary"/> à l'extérieur.</item>
     /// </list>
     /// <para>Non-responsabilités :</para>
@@ -31,6 +38,7 @@ namespace DG244Cutting.D_Presentation.Settings
         #region === Propriétés privées ===
 
         private ResourceDictionary? _currentDictionary;
+        private Uri? _currentDictionaryUri;
 
         // --- URI internes des dictionnaires de langue ---
         // Constantes de configuration interne du SE_Language. Ces URI ne sont pas
@@ -98,6 +106,20 @@ namespace DG244Cutting.D_Presentation.Settings
             ["SI"] = "sl-SI",   // Slovénie            — slovène (87%, officielle unique)
             ["SK"] = "sk-SK",   // Slovaquie           — slovaque (90%, officielle unique)
 
+            // Europe non-UE
+            ["AL"] = "sq-AL",   // Albanie             — albanais (100%, officielle unique)
+            ["GB"] = "en-GB",   // Royaume-Uni         — anglais (98%, officielle unique)
+            ["IS"] = "is-IS",   // Islande             — islandais (100%, officielle unique)
+            ["LI"] = "de-LI",   // Liechtenstein       — allemand (100%, officielle unique)
+            ["MD"] = "ro-MD",   // Moldavie            — roumain (63%, officielle unique)
+            ["MK"] = "mk-MK",   // Macédoine du Nord   — macédonien (67%, officielle unique)
+            ["RU"] = "ru-RU",   // Russie              — russe (99%, officielle unique)
+            ["UA"] = "uk-UA",   // Ukraine             — ukrainien (65%, officielle unique)
+
+            // Afrique du Nord
+            ["DZ"] = "ar-DZ",   // Algérie             — arabe (74%, tie-break 2.2x vs fr 33%)
+            ["EG"] = "ar-EG",   // Égypte              — arabe (94%, officielle unique)
+
             // Amérique du Nord et Centrale
             ["CA"] = "en-CA",   // Canada              — anglais (87%, tie-break net 3.0x vs fr 29%)
             ["MX"] = "es-MX",   // Mexique             — espagnol (83%, de_facto_official)
@@ -145,20 +167,6 @@ namespace DG244Cutting.D_Presentation.Settings
             ["NZ"] = "en-NZ",   // Nouvelle-Zélande    — anglais (dérogation nominative : CLDR liste mi-NZ
                                 //                       à 2.8% comme seule officielle législative ; substitution
                                 //                       en-NZ par cohérence avec les pays anglo-saxons)
-
-            // Europe non-UE
-            ["AL"] = "sq-AL",   // Albanie             — albanais (100%, officielle unique)
-            ["GB"] = "en-GB",   // Royaume-Uni         — anglais (98%, officielle unique)
-            ["IS"] = "is-IS",   // Islande             — islandais (100%, officielle unique)
-            ["LI"] = "de-LI",   // Liechtenstein       — allemand (100%, officielle unique)
-            ["MD"] = "ro-MD",   // Moldavie            — roumain (63%, officielle unique)
-            ["MK"] = "mk-MK",   // Macédoine du Nord   — macédonien (67%, officielle unique)
-            ["RU"] = "ru-RU",   // Russie              — russe (99%, officielle unique)
-            ["UA"] = "uk-UA",   // Ukraine             — ukrainien (65%, officielle unique)
-
-            // Afrique du Nord
-            ["DZ"] = "ar-DZ",   // Algérie             — arabe (74%, tie-break 2.2x vs fr 33%)
-            ["EG"] = "ar-EG",   // Égypte              — arabe (94%, officielle unique)
         };
 
         #endregion
@@ -171,7 +179,24 @@ namespace DG244Cutting.D_Presentation.Settings
 
         #region === Propriétés publiques ===
 
-        // A compléter
+        // --- État du dictionnaire actif (lecture seule via le contrat) ---
+
+        /// <inheritdoc/>
+        /// <remarks>
+        /// <para>Implémentation : exposition en lecture seule du backing field
+        /// <c>_currentDictionaryUri</c>, initialisé à <see langword="null"/> en région
+        /// Propriétés privées. L'écriture est canalisée exclusivement par
+        /// <see cref="LoadDictionary"/>, qui invoque le helper canonique
+        /// <see cref="SetField{T}"/> et émet ainsi la notification
+        /// <see cref="PropertyChanged"/> sur changement effectif.</para>
+        /// </remarks>
+        public Uri? CurrentDictionaryUri => _currentDictionaryUri;
+
+        #endregion
+
+        #region === Événements / Délégués / Indexeurs ===
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         #endregion
 
@@ -188,6 +213,7 @@ namespace DG244Cutting.D_Presentation.Settings
         public SE_Language()
         {
             _currentDictionary = null;
+            _currentDictionaryUri = null;
         }
 
         #endregion
@@ -224,6 +250,12 @@ namespace DG244Cutting.D_Presentation.Settings
         /// <see cref="Application.Current"/>.<see cref="Application.Resources"/>.<see cref="ResourceDictionary.MergedDictionaries"/>,
         /// effet de bord global assumé sur l'application WPF, et conserver une référence locale
         /// pour la résolution ultérieure des clés via <see cref="GetEntry"/>.</para>
+        /// <para>Réalise en outre l'écriture atomique de la propriété observable
+        /// <see cref="CurrentDictionaryUri"/> via le helper canonique <see cref="SetField{T}"/>,
+        /// lequel émet la notification <see cref="PropertyChanged"/> sur
+        /// <c>nameof(CurrentDictionaryUri)</c> en cas de changement effectif de l'URI.
+        /// La fusion dans <see cref="ResourceDictionary.MergedDictionaries"/> est en revanche
+        /// inconditionnelle, conformément au comportement préexistant.</para>
         /// </remarks>
         public void LoadDictionary(Uri dictionaryUri)
         {
@@ -233,6 +265,7 @@ namespace DG244Cutting.D_Presentation.Settings
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
 
             _currentDictionary = dictionary;
+            SetField(ref _currentDictionaryUri, dictionaryUri, nameof(CurrentDictionaryUri));
         }
 
         /// <inheritdoc/>
@@ -300,7 +333,31 @@ namespace DG244Cutting.D_Presentation.Settings
 
         #region === Méthodes privées ===
 
-        // A compléter
+        /// <summary>
+        /// Helper canonique d'écriture INPC avec comparaison de valeur, affectation conditionnelle
+        /// et émission de la notification <see cref="PropertyChanged"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>Signature canonique invariante posée en §4.14.7 du 0230 (R-4.14.15) : le nom
+        /// <c>SetField</c> est normatif, le type de retour <c>bool</c> informe l'appelant du
+        /// changement effectif, et le paramètre <paramref name="propertyName"/> est résolu
+        /// automatiquement par <see cref="CallerMemberNameAttribute"/> lorsqu'il n'est pas
+        /// fourni explicitement.</para>
+        /// </remarks>
+        /// <typeparam name="T">Type du champ et de la valeur.</typeparam>
+        /// <param name="field">Référence au champ support à mettre à jour.</param>
+        /// <param name="value">Nouvelle valeur à affecter.</param>
+        /// <param name="propertyName">Nom de la propriété notifiée (résolu via <see cref="CallerMemberNameAttribute"/>).</param>
+        /// <returns><see langword="true"/> si la valeur a effectivement changé ; <see langword="false"/> sinon.</returns>
+        private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value))
+                return false;
+
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
+        }
 
         #endregion
     }

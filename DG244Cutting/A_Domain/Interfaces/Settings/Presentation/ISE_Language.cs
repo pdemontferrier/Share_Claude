@@ -1,17 +1,23 @@
-﻿namespace DG244Cutting.A_Domain.Interfaces.Settings.Presentation
+﻿using System.ComponentModel;
+
+namespace DG244Cutting.A_Domain.Interfaces.Settings.Presentation
 {
     /// <summary>
     /// Contrat d'accès à l'état du dictionnaire de langue actif de l'application.
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Contrat Singleton défini dans <c>A_Domain</c>, consommé principalement
-    /// par <c>UC_Language_Apply</c> et <c>SR_Dictionary</c> via injection de dépendances.</para>
-    /// <para>Objectif : Exposer l'état linguistique partagé (dictionnaire actif, résolution
-    /// d'URI) sans aucune dépendance vers WPF, afin de préserver l'indépendance de <c>A_Domain</c>.
-    /// La classe d'implémentation est seule à connaître <c>ResourceDictionary</c>.</para>
+    /// par <c>UC_Language_Apply</c> et <c>SR_Dictionary</c> via injection de dépendances.
+    /// L'interface hérite explicitement de <see cref="INotifyPropertyChanged"/> afin que les
+    /// consommateurs WPF puissent observer le changement de dictionnaire actif via le binding
+    /// et que tout consommateur du contrat reçoive notification de chaque mutation effective.</para>
+    /// <para>Objectif : Exposer l'état linguistique partagé (dictionnaire actif observable,
+    /// résolution d'URI) sans aucune dépendance vers WPF, afin de préserver l'indépendance
+    /// de <c>A_Domain</c>. La classe d'implémentation est seule à connaître <c>ResourceDictionary</c>.</para>
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
     /// <item>Résoudre l'URI du fichier de ressources correspondant à un code culture.</item>
+    /// <item>Exposer l'URI du dictionnaire actif sous forme de propriété observable.</item>
     /// <item>Charger et appliquer le dictionnaire de langue à partir d'une URI.</item>
     /// <item>Exposer l'accès aux textes traduits du dictionnaire actif.</item>
     /// <item>Convertir un code pays (ISO 3166-1 alpha-2) en code culture .NET BCL.</item>
@@ -26,7 +32,7 @@
     /// <item>Aucune référence directe aux types WPF (<c>ResourceDictionary</c> encapsulé dans l'implémentation).</item>
     /// </list>
     /// </remarks>
-    public interface ISE_Language
+    public interface ISE_Language : INotifyPropertyChanged
     {
         // --- Groupe 1 : Résolution de l'URI ---
 
@@ -41,18 +47,23 @@
         /// <returns>URI du fichier XAML correspondant, ou l'URI anglaise par défaut si la culture est inconnue.</returns>
         Uri GetDictionaryUri(string cultureCode);
 
-        // --- Groupe 2 : Chargement du dictionnaire ---
+        // --- Groupe 2 : État du dictionnaire actif (lecture seule via le contrat) ---
 
         /// <summary>
-        /// Charge et applique le dictionnaire de langue correspondant à l'URI fournie.
+        /// URI du dictionnaire de langue actuellement chargé, ou <see langword="null"/> tant qu'aucun
+        /// dictionnaire n'a été appliqué.
         /// </summary>
         /// <remarks>
-        /// <para>Contexte : Appelée par <c>UC_Language_Apply</c> lors du démarrage ou d'un changement de langue.</para>
-        /// <para>Objectif : Injecter le nouveau dictionnaire dans les ressources WPF fusionnées
-        /// et le persister comme dictionnaire actif, sans exposer <c>ResourceDictionary</c> à l'extérieur.</para>
+        /// <para>Contexte : Propriété observable du Setting reflétant le dictionnaire effectivement
+        /// fusionné dans les ressources WPF par le dernier appel à <see cref="LoadDictionary"/>.
+        /// Émet une notification <see cref="INotifyPropertyChanged.PropertyChanged"/> à chaque
+        /// changement effectif de valeur.</para>
+        /// <para>Écriture exclusive via <see cref="LoadDictionary"/> ; aucune mutation directe
+        /// n'est admise au contrat. Le régime de lecture seule au contrat est dicté par l'effet
+        /// de bord supplémentaire qui accompagne l'écriture (fusion du dictionnaire dans les
+        /// ressources WPF de l'application), au-delà de la seule notification INPC.</para>
         /// </remarks>
-        /// <param name="dictionaryUri">URI du fichier XAML à charger.</param>
-        void LoadDictionary(Uri dictionaryUri);
+        Uri? CurrentDictionaryUri { get; }
 
         // --- Groupe 3 : Accès aux textes traduits ---
 
@@ -109,5 +120,22 @@
         /// <param name="cultureCode">Code culture .NET BCL à analyser (ex. : <c>"fr-FR"</c>, <c>"zh-Hans-CN"</c>).</param>
         /// <returns>Code pays ISO 3166-1 alpha-2 en majuscules, ou <c>"GB"</c> par défaut si l'entrée est non exploitable.</returns>
         string ExtractCountryCodeFromCulture(string cultureCode);
+
+        // --- Groupe 5 : Opérations atomiques ---
+
+        /// <summary>
+        /// Charge et applique le dictionnaire de langue correspondant à l'URI fournie.
+        /// </summary>
+        /// <remarks>
+        /// <para>Contexte : Appelée par <c>UC_Language_Apply</c> lors du démarrage ou d'un changement de langue.</para>
+        /// <para>Objectif : Injecter le nouveau dictionnaire dans les ressources WPF fusionnées
+        /// et le persister comme dictionnaire actif, sans exposer <c>ResourceDictionary</c> à l'extérieur.</para>
+        /// <para>Opération atomique d'écriture de la propriété <see cref="CurrentDictionaryUri"/> :
+        /// émet une notification <see cref="INotifyPropertyChanged.PropertyChanged"/> sur
+        /// <c>nameof(CurrentDictionaryUri)</c> dès lors que la valeur change effectivement, en
+        /// complément de la fusion du dictionnaire dans les ressources WPF de l'application.</para>
+        /// </remarks>
+        /// <param name="dictionaryUri">URI du fichier XAML à charger.</param>
+        void LoadDictionary(Uri dictionaryUri);
     }
 }
