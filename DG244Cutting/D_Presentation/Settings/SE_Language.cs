@@ -218,7 +218,7 @@ namespace DG244Cutting.D_Presentation.Settings
 
         /// <inheritdoc/>
         /// <remarks>
-        /// <para>Contexte : Appelée par <c>SR_Language</c> lors du démarrage de l'application
+        /// <para>Contexte : Appelée par <c>UC_Language_Apply</c> lors du démarrage de l'application
         /// ou d'un changement de langue explicite.</para>
         /// <para>Objectif : Remplacer atomiquement le dictionnaire actif dans
         /// <see cref="Application.Current"/>.<see cref="Application.Resources"/>.<see cref="ResourceDictionary.MergedDictionaries"/>,

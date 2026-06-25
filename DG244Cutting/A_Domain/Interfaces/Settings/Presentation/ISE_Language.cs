@@ -5,7 +5,7 @@
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Contrat Singleton défini dans <c>A_Domain</c>, consommé principalement
-    /// par <c>SR_Language</c> et <c>SR_Dictionary</c> via injection de dépendances.</para>
+    /// par <c>UC_Language_Apply</c> et <c>SR_Dictionary</c> via injection de dépendances.</para>
     /// <para>Objectif : Exposer l'état linguistique partagé (dictionnaire actif, résolution
     /// d'URI) sans aucune dépendance vers WPF, afin de préserver l'indépendance de <c>A_Domain</c>.
     /// La classe d'implémentation est seule à connaître <c>ResourceDictionary</c>.</para>
@@ -47,7 +47,7 @@
         /// Charge et applique le dictionnaire de langue correspondant à l'URI fournie.
         /// </summary>
         /// <remarks>
-        /// <para>Contexte : Appelée par <c>SR_Language</c> lors du démarrage ou d'un changement de langue.</para>
+        /// <para>Contexte : Appelée par <c>UC_Language_Apply</c> lors du démarrage ou d'un changement de langue.</para>
         /// <para>Objectif : Injecter le nouveau dictionnaire dans les ressources WPF fusionnées
         /// et le persister comme dictionnaire actif, sans exposer <c>ResourceDictionary</c> à l'extérieur.</para>
         /// </remarks>

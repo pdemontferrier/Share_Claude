@@ -13,7 +13,7 @@ namespace DG244Cutting.D_Presentation.Services
     /// <remarks>
     /// <para>
     /// Contexte : service positionné dans B_UseCases/Services/Presentation, implémentant
-    /// <see cref="IS_Dictionary"/>. Contrairement à <c>SR_Language</c> et <c>SE_Language</c>
+    /// <see cref="IS_Dictionary"/>. Contrairement à <c>SE_Language</c>
     /// qui manipulent directement les types WPF, ce service ne contient aucune référence à
     /// WPF et peut être injecté dans des UseCases, des services ou des ViewModels sans créer
     /// de dépendance descendante vers D_Presentation.
