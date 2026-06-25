@@ -322,6 +322,50 @@
     <sys:String x:Key="P00_18">Undefined</sys:String>
     <sys:String x:Key="P00_19">Undefined</sys:String>
 
+    <!-- Page 01 -->
+    <sys:String x:Key="P01_00">Page 01</sys:String>
+    <sys:String x:Key="P01_01">Undefined</sys:String>
+    <sys:String x:Key="P01_02">Undefined</sys:String>
+    <sys:String x:Key="P01_03">Undefined</sys:String>
+    <sys:String x:Key="P01_04">Undefined</sys:String>
+    <sys:String x:Key="P01_05">Undefined</sys:String>
+    <sys:String x:Key="P01_06">Undefined</sys:String>
+    <sys:String x:Key="P01_07">Undefined</sys:String>
+    <sys:String x:Key="P01_08">Undefined</sys:String>
+    <sys:String x:Key="P01_09">Undefined</sys:String>
+    <sys:String x:Key="P01_10">Undefined</sys:String>
+    <sys:String x:Key="P01_11">Undefined</sys:String>
+    <sys:String x:Key="P01_12">Undefined</sys:String>
+    <sys:String x:Key="P01_13">Undefined</sys:String>
+    <sys:String x:Key="P01_14">Undefined</sys:String>
+    <sys:String x:Key="P01_15">Undefined</sys:String>
+    <sys:String x:Key="P01_16">Undefined</sys:String>
+    <sys:String x:Key="P01_17">Undefined</sys:String>
+    <sys:String x:Key="P01_18">Undefined</sys:String>
+    <sys:String x:Key="P01_19">Undefined</sys:String>
+
+    <!-- Page 02 -->
+    <sys:String x:Key="P02_00">Available languages:</sys:String>
+    <sys:String x:Key="P02_01">Français</sys:String>
+    <sys:String x:Key="P02_02">English</sys:String>
+    <sys:String x:Key="P02_03">Deutsch</sys:String>
+    <sys:String x:Key="P02_04">Español</sys:String>
+    <sys:String x:Key="P02_05">Italiano</sys:String>
+    <sys:String x:Key="P02_06">Português</sys:String>
+    <sys:String x:Key="P02_07">Undefined</sys:String>
+    <sys:String x:Key="P02_08">Undefined</sys:String>
+    <sys:String x:Key="P02_09">Undefined</sys:String>
+    <sys:String x:Key="P02_10">Undefined</sys:String>
+    <sys:String x:Key="P02_11">Undefined</sys:String>
+    <sys:String x:Key="P02_12">Undefined</sys:String>
+    <sys:String x:Key="P02_13">Undefined</sys:String>
+    <sys:String x:Key="P02_14">Undefined</sys:String>
+    <sys:String x:Key="P02_15">Undefined</sys:String>
+    <sys:String x:Key="P02_16">Undefined</sys:String>
+    <sys:String x:Key="P02_17">Undefined</sys:String>
+    <sys:String x:Key="P02_18">Undefined</sys:String>
+    <sys:String x:Key="P02_19">Undefined</sys:String>
+
     <!-- Page 10 -->
     <sys:String x:Key="P10_00">Batches to be cut:</sys:String>
     <sys:String x:Key="P10_01">Batch list:</sys:String>

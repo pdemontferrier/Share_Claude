@@ -485,11 +485,11 @@
     <!-- Page 02    -->
     <sys:String x:Key="P02_00">Liste des langues disponibles :</sys:String>
     <sys:String x:Key="P02_01">Français</sys:String>
-    <sys:String x:Key="P02_02">Anglais</sys:String>
-    <sys:String x:Key="P02_03">Allemand</sys:String>
-    <sys:String x:Key="P02_04">Espagnol</sys:String>
-    <sys:String x:Key="P02_05">Italien</sys:String>
-    <sys:String x:Key="P02_06">Portugais</sys:String>
+    <sys:String x:Key="P02_02">English</sys:String>
+    <sys:String x:Key="P02_03">Deutsch</sys:String>
+    <sys:String x:Key="P02_04">Español</sys:String>
+    <sys:String x:Key="P02_05">Italiano</sys:String>
+    <sys:String x:Key="P02_06">Português</sys:String>
     <sys:String x:Key="P02_07">Non défini</sys:String>
     <sys:String x:Key="P02_08">Non défini</sys:String>
     <sys:String x:Key="P02_09">Non défini</sys:String>

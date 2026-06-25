@@ -322,6 +322,50 @@
     <sys:String x:Key="P00_18">Não definido</sys:String>
     <sys:String x:Key="P00_19">Não definido</sys:String>
 
+    <!-- Page01 -->
+    <sys:String x:Key="P01_00">Página 01</sys:String>
+    <sys:String x:Key="P01_01">Não definido</sys:String>
+    <sys:String x:Key="P01_02">Não definido</sys:String>
+    <sys:String x:Key="P01_03">Não definido</sys:String>
+    <sys:String x:Key="P01_04">Não definido</sys:String>
+    <sys:String x:Key="P01_05">Não definido</sys:String>
+    <sys:String x:Key="P01_06">Não definido</sys:String>
+    <sys:String x:Key="P01_07">Não definido</sys:String>
+    <sys:String x:Key="P01_08">Não definido</sys:String>
+    <sys:String x:Key="P01_09">Não definido</sys:String>
+    <sys:String x:Key="P01_10">Não definido</sys:String>
+    <sys:String x:Key="P01_11">Não definido</sys:String>
+    <sys:String x:Key="P01_12">Não definido</sys:String>
+    <sys:String x:Key="P01_13">Não definido</sys:String>
+    <sys:String x:Key="P01_14">Não definido</sys:String>
+    <sys:String x:Key="P01_15">Não definido</sys:String>
+    <sys:String x:Key="P01_16">Não definido</sys:String>
+    <sys:String x:Key="P01_17">Não definido</sys:String>
+    <sys:String x:Key="P01_18">Não definido</sys:String>
+    <sys:String x:Key="P01_19">Não definido</sys:String>
+
+    <!-- Page02 -->
+    <sys:String x:Key="P02_00">Idiomas disponíveis:</sys:String>
+    <sys:String x:Key="P02_01">Français</sys:String>
+    <sys:String x:Key="P02_02">English</sys:String>
+    <sys:String x:Key="P02_03">Deutsch</sys:String>
+    <sys:String x:Key="P02_04">Español</sys:String>
+    <sys:String x:Key="P02_05">Italiano</sys:String>
+    <sys:String x:Key="P02_06">Português</sys:String>
+    <sys:String x:Key="P02_07">Não definido</sys:String>
+    <sys:String x:Key="P02_08">Não definido</sys:String>
+    <sys:String x:Key="P02_09">Não definido</sys:String>
+    <sys:String x:Key="P02_10">Não definido</sys:String>
+    <sys:String x:Key="P02_11">Não definido</sys:String>
+    <sys:String x:Key="P02_12">Não definido</sys:String>
+    <sys:String x:Key="P02_13">Não definido</sys:String>
+    <sys:String x:Key="P02_14">Não definido</sys:String>
+    <sys:String x:Key="P02_15">Não definido</sys:String>
+    <sys:String x:Key="P02_16">Não definido</sys:String>
+    <sys:String x:Key="P02_17">Não definido</sys:String>
+    <sys:String x:Key="P02_18">Não definido</sys:String>
+    <sys:String x:Key="P02_19">Não definido</sys:String>
+
     <!-- Page10 -->
     <sys:String x:Key="P10_00">Lotes a serem cortados:</sys:String>
     <sys:String x:Key="P10_01">Lista de lotes:</sys:String>

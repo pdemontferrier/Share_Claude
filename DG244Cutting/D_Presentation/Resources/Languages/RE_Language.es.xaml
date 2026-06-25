@@ -322,6 +322,50 @@
     <sys:String x:Key="P00_18">Indefinido</sys:String>
     <sys:String x:Key="P00_19">Indefinido</sys:String>
 
+    <!-- Page01 -->
+    <sys:String x:Key="P01_00">Página 01</sys:String>
+    <sys:String x:Key="P01_01">Indefinido</sys:String>
+    <sys:String x:Key="P01_02">Indefinido</sys:String>
+    <sys:String x:Key="P01_03">Indefinido</sys:String>
+    <sys:String x:Key="P01_04">Indefinido</sys:String>
+    <sys:String x:Key="P01_05">Indefinido</sys:String>
+    <sys:String x:Key="P01_06">Indefinido</sys:String>
+    <sys:String x:Key="P01_07">Indefinido</sys:String>
+    <sys:String x:Key="P01_08">Indefinido</sys:String>
+    <sys:String x:Key="P01_09">Indefinido</sys:String>
+    <sys:String x:Key="P01_10">Indefinido</sys:String>
+    <sys:String x:Key="P01_11">Indefinido</sys:String>
+    <sys:String x:Key="P01_12">Indefinido</sys:String>
+    <sys:String x:Key="P01_13">Indefinido</sys:String>
+    <sys:String x:Key="P01_14">Indefinido</sys:String>
+    <sys:String x:Key="P01_15">Indefinido</sys:String>
+    <sys:String x:Key="P01_16">Indefinido</sys:String>
+    <sys:String x:Key="P01_17">Indefinido</sys:String>
+    <sys:String x:Key="P01_18">Indefinido</sys:String>
+    <sys:String x:Key="P01_19">Indefinido</sys:String>
+
+    <!-- Page02 -->
+    <sys:String x:Key="P02_00">Idiomas disponibles:</sys:String>
+    <sys:String x:Key="P02_01">Français</sys:String>
+    <sys:String x:Key="P02_02">English</sys:String>
+    <sys:String x:Key="P02_03">Deutsch</sys:String>
+    <sys:String x:Key="P02_04">Español</sys:String>
+    <sys:String x:Key="P02_05">Italiano</sys:String>
+    <sys:String x:Key="P02_06">Português</sys:String>
+    <sys:String x:Key="P02_07">Indefinido</sys:String>
+    <sys:String x:Key="P02_08">Indefinido</sys:String>
+    <sys:String x:Key="P02_09">Indefinido</sys:String>
+    <sys:String x:Key="P02_10">Indefinido</sys:String>
+    <sys:String x:Key="P02_11">Indefinido</sys:String>
+    <sys:String x:Key="P02_12">Indefinido</sys:String>
+    <sys:String x:Key="P02_13">Indefinido</sys:String>
+    <sys:String x:Key="P02_14">Indefinido</sys:String>
+    <sys:String x:Key="P02_15">Indefinido</sys:String>
+    <sys:String x:Key="P02_16">Indefinido</sys:String>
+    <sys:String x:Key="P02_17">Indefinido</sys:String>
+    <sys:String x:Key="P02_18">Indefinido</sys:String>
+    <sys:String x:Key="P02_19">Indefinido</sys:String>
+
     <!-- Page10 -->
     <sys:String x:Key="P10_00">Lotes a cortar:</sys:String>
     <sys:String x:Key="P10_01">Lista de lotes:</sys:String>

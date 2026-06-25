@@ -322,6 +322,50 @@
     <sys:String x:Key="P00_18">Undefiniert</sys:String>
     <sys:String x:Key="P00_19">Undefiniert</sys:String>
 
+    <!-- Page01 -->
+    <sys:String x:Key="P01_00">Seite 01</sys:String>
+    <sys:String x:Key="P01_01">Undefiniert</sys:String>
+    <sys:String x:Key="P01_02">Undefiniert</sys:String>
+    <sys:String x:Key="P01_03">Undefiniert</sys:String>
+    <sys:String x:Key="P01_04">Undefiniert</sys:String>
+    <sys:String x:Key="P01_05">Undefiniert</sys:String>
+    <sys:String x:Key="P01_06">Undefiniert</sys:String>
+    <sys:String x:Key="P01_07">Undefiniert</sys:String>
+    <sys:String x:Key="P01_08">Undefiniert</sys:String>
+    <sys:String x:Key="P01_09">Undefiniert</sys:String>
+    <sys:String x:Key="P01_10">Undefiniert</sys:String>
+    <sys:String x:Key="P01_11">Undefiniert</sys:String>
+    <sys:String x:Key="P01_12">Undefiniert</sys:String>
+    <sys:String x:Key="P01_13">Undefiniert</sys:String>
+    <sys:String x:Key="P01_14">Undefiniert</sys:String>
+    <sys:String x:Key="P01_15">Undefiniert</sys:String>
+    <sys:String x:Key="P01_16">Undefiniert</sys:String>
+    <sys:String x:Key="P01_17">Undefiniert</sys:String>
+    <sys:String x:Key="P01_18">Undefiniert</sys:String>
+    <sys:String x:Key="P01_19">Undefiniert</sys:String>
+
+    <!-- Page02 -->
+    <sys:String x:Key="P02_00">Verfügbare Sprachen:</sys:String>
+    <sys:String x:Key="P02_01">Français</sys:String>
+    <sys:String x:Key="P02_02">English</sys:String>
+    <sys:String x:Key="P02_03">Deutsch</sys:String>
+    <sys:String x:Key="P02_04">Español</sys:String>
+    <sys:String x:Key="P02_05">Italiano</sys:String>
+    <sys:String x:Key="P02_06">Português</sys:String>
+    <sys:String x:Key="P02_07">Undefiniert</sys:String>
+    <sys:String x:Key="P02_08">Undefiniert</sys:String>
+    <sys:String x:Key="P02_09">Undefiniert</sys:String>
+    <sys:String x:Key="P02_10">Undefiniert</sys:String>
+    <sys:String x:Key="P02_11">Undefiniert</sys:String>
+    <sys:String x:Key="P02_12">Undefiniert</sys:String>
+    <sys:String x:Key="P02_13">Undefiniert</sys:String>
+    <sys:String x:Key="P02_14">Undefiniert</sys:String>
+    <sys:String x:Key="P02_15">Undefiniert</sys:String>
+    <sys:String x:Key="P02_16">Undefiniert</sys:String>
+    <sys:String x:Key="P02_17">Undefiniert</sys:String>
+    <sys:String x:Key="P02_18">Undefiniert</sys:String>
+    <sys:String x:Key="P02_19">Undefiniert</sys:String>
+
     <!-- Page10 -->
     <sys:String x:Key="P10_00">Lose zu schneiden:</sys:String>
     <sys:String x:Key="P10_01">Losliste:</sys:String>
