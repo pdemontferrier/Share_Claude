@@ -85,6 +85,35 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     ///   interne de <c>UC_UserAppPageRight_Apply</c> via son propre
     ///   <see cref="IU_LogAndNotify"/>. Item UC22 demeure ✅ après extension ; nombre de
     ///   UseCases consommés en sous-séquence porté de un à deux.</description></item>
+    ///   <item><description>Élargissement de la chaîne UC → UC normalisée à une troisième
+    ///   consommation en sous-séquence, levée par le présent fil de Refactoring
+    ///   <c>UC_ApplicationOnStart_Refactoring</c> par substitution de la dépendance
+    ///   <c>IS_Language</c> par <see cref="IU_Language_Apply"/> à l'étape 1
+    ///   (<see cref="ApplyCultureAsync"/>) conformément à R-4.14.21. La substitution
+    ///   parachève la transposition de la responsabilité d'orchestration du changement
+    ///   de langue vers la couche <c>B_UseCases</c>, consécutivement à la mise en place
+    ///   du couple <see cref="IU_Language_Apply"/> / <c>UC_Language_Apply</c> en
+    ///   remplacement du Service de présentation <c>IS_Language</c> / <c>SR_Language</c>.
+    ///   Les trois conditions doctrinales conjointes (retour signalable
+    ///   <c>Task&lt;bool&gt;</c> exploité par valeur, indépendance transactionnelle
+    ///   conforme à I-4.10.3 — les deux UseCases sont non transactionnels par
+    ///   construction, traitement terminal propre via <see cref="IU_LogAndNotify"/> côté
+    ///   pipeline interne du UseCase consommé via les clés <c>"La_EC_01"</c>,
+    ///   <c>"La_EC_02"</c>, <c>"La_EC_03"</c>) sont vérifiées par construction. La
+    ///   signalisation d'échec applicatif de cette étape suit le même Patron A de
+    ///   propagation directe du retour <see langword="false"/> que celui retenu à
+    ///   l'étape 8 (cf. 4ème dérogation ci-dessus), évitant par analogie stricte la
+    ///   double notification utilisateur — la notification d'échec étant déjà portée par
+    ///   le pipeline interne de <c>UC_Language_Apply</c> via son propre
+    ///   <see cref="IU_LogAndNotify"/>. Patron retenu pour la consommation UC → UC :
+    ///   injection directe de <see cref="IU_Language_Apply"/> au constructeur
+    ///   (Singleton → Scoped : licite, R-4.10.14 et P4-bis §4.10.10 du 0230 ; pas de
+    ///   captive dependency dans ce sens) ; pas de passage par <c>IS_UseCaseInvoker</c>
+    ///   (EA-11) — la mention <c>EA-11</c> du contrat <see cref="IU_Language_Apply"/>
+    ///   ayant été préalablement requalifiée par le fil prédécesseur
+    ///   <c>UC_Language_Apply_Refactoring</c> pour cantonner cette voie aux
+    ///   consommateurs ViewModels. Item UC22 demeure ✅ après refactoring ; nombre de
+    ///   UseCases consommés en sous-séquence porté de deux à trois.</description></item>
     /// </list>
     /// <para>Particularité du retour <c>Task&lt;bool&gt;</c> au regard de R-4.14.21
     /// (item UC21) : Le retour signalable <c>Task&lt;bool&gt;</c> n'est pas la marque d'une
@@ -106,12 +135,14 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <see cref="IU_UserAppSession_Open"/> en <see cref="Ex_Business"/> ; aux étapes 3, 4 et
     /// 9, le refus est levé directement par les méthodes privées correspondantes en cas
     /// d'état applicatif incompatible (connectivité base, disponibilité applicative, conflit
-    /// de session). L'étape 8 (<see cref="ApplyUserPageRightAsync"/>) cohabite avec ce patron
-    /// homogène en portant un patron divergent : le retour <see langword="false"/> de
-    /// <see cref="IU_UserAppPageRight_Apply.ExecuteAsync"/> est propagé directement au
-    /// <c>return false</c> de <see cref="ExecuteAsync"/> sans conversion en
-    /// <see cref="Ex_Business"/>, pour éviter la double notification utilisateur (cf. 4ème
-    /// dérogation tracée ci-dessus).</para>
+    /// de session). Les étapes 1 (<see cref="ApplyCultureAsync"/>) et 8
+    /// (<see cref="ApplyUserPageRightAsync"/>) cohabitent avec ce patron homogène en portant
+    /// un patron divergent commun (Patron A — propagation par valeur, R-4.14.21, item UC22)
+    /// : le retour <see langword="false"/> de <see cref="IU_Language_Apply.ExecuteAsync"/>
+    /// (étape 1) et de <see cref="IU_UserAppPageRight_Apply.ExecuteAsync"/> (étape 8) est
+    /// propagé directement au <c>return false</c> de <see cref="ExecuteAsync"/> sans
+    /// conversion en <see cref="Ex_Business"/>, pour éviter la double notification
+    /// utilisateur (cf. 4ème et 5ème dérogations tracées ci-dessus).</para>
     /// </remarks>
     /// <seealso cref="IU_Application_OnStart"/>
     /// <seealso cref="IU_UserAppSession_Open"/>
@@ -130,7 +161,6 @@ namespace DG244Cutting.B_UseCases.UseCases.App
 
         #region === Dépendances privées ===
 
-        private readonly IS_Language _language;
         private readonly IU_LogAndNotify _logAndNotify;
         private readonly IS_Dictionary _dictionary;
         private readonly ISE_App _settingsApp;
@@ -142,6 +172,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         private readonly IQ_AppList _appListQuery;
         private readonly IU_UserAppSession_Open _userAppSessionOpen;
         private readonly IU_UserAppPageRight_Apply _userAppPageRightApply;
+        private readonly IU_Language_Apply _languageApply;
 
         #endregion
 
@@ -158,7 +189,6 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <para>Objectif : Câbler les douze dépendances nécessaires à l'orchestration des
         /// neuf étapes du Jalon 3.</para>
         /// </remarks>
-        /// <param name="language">Service d'orchestration du changement de langue.</param>
         /// <param name="logAndNotify">Pipeline terminal d'erreurs (catch typés applicatifs).</param>
         /// <param name="dictionary">Service de résolution des libellés multilingues.</param>
         /// <param name="settingsApp">Setting Singleton d'état applicatif partagé.</param>
@@ -170,9 +200,9 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <param name="appListQuery">Query Handler de l'entité <c>AppList</c>.</param>
         /// <param name="userAppSessionOpen">UseCase orchestré en sous-séquence pour l'ouverture de la session applicative utilisateur (R-4.14.21).</param>
         /// <param name="userAppPageRightApply">UseCase orchestré en sous-séquence pour l'initialisation systématique des droits de pages au moindre privilège et l'application conditionnelle des droits utilisateur (R-4.14.21).</param>
+        /// <param name="languageApply">UseCase orchestré en sous-séquence pour l'application d'une langue à l'application — chargement du dictionnaire XAML, persistance du code culture, synchronisation du drapeau et synchronisation des quatre cibles CultureInfo .NET (R-4.14.21).</param>
         /// <exception cref="ArgumentNullException">Levée si l'un des paramètres est <see langword="null"/>.</exception>
         public UC_Application_OnStart(
-            IS_Language language,
             IU_LogAndNotify logAndNotify,
             IS_Dictionary dictionary,
             ISE_App settingsApp,
@@ -183,9 +213,9 @@ namespace DG244Cutting.B_UseCases.UseCases.App
             IQ_UserAppSession userAppSessionQuery,
             IQ_AppList appListQuery,
             IU_UserAppSession_Open userAppSessionOpen,
-            IU_UserAppPageRight_Apply userAppPageRightApply)
+            IU_UserAppPageRight_Apply userAppPageRightApply,
+            IU_Language_Apply languageApply)
         {
-            _language = language ?? throw new ArgumentNullException(nameof(language));
             _logAndNotify = logAndNotify ?? throw new ArgumentNullException(nameof(logAndNotify));
             _dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
             _settingsApp = settingsApp ?? throw new ArgumentNullException(nameof(settingsApp));
@@ -197,6 +227,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
             _appListQuery = appListQuery ?? throw new ArgumentNullException(nameof(appListQuery));
             _userAppSessionOpen = userAppSessionOpen ?? throw new ArgumentNullException(nameof(userAppSessionOpen));
             _userAppPageRightApply = userAppPageRightApply ?? throw new ArgumentNullException(nameof(userAppPageRightApply));
+            _languageApply = languageApply ?? throw new ArgumentNullException(nameof(languageApply));
             _callee = GetType().Name;
         }
 
@@ -227,7 +258,10 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 ct.ThrowIfCancellationRequested();
 
                 // Étape 1 - Initialisation langue + dictionnaire + drapeau (§3.10, R-3.10.5).
-                await ApplyCultureAsync(callChain, cultureCode, ct);
+                // Patron de propagation par valeur du retour signalable (R-4.14.21, item UC22 ;
+                // cf. 5ème dérogation du <remarks> de classe).
+                if (!await ApplyCultureAsync(callChain, cultureCode, ct))
+                    return false;
 
                 // Étape 2 - Mise à jour du titre applicatif (clé dictionnaire "App_Ti_00").
                 LoadApplicationTitle(callChain, ct);
@@ -259,26 +293,10 @@ namespace DG244Cutting.B_UseCases.UseCases.App
 
                 return true;
             }
-            catch (Ex_Business ex)
-            {
-                await _logAndNotify.ExecuteAsync(callChain, "No_EC_01", ex, notify: true, ct: ct);
-                return false;
-            }
-            catch (Ex_Infrastructure ex)
-            {
-                await _logAndNotify.ExecuteAsync(callChain, "No_EC_02", ex, notify: true, ct: ct);
-                return false;
-            }
-            catch (Ex_Unclassified ex)
-            {
-                await _logAndNotify.ExecuteAsync(callChain, "No_EC_03", ex, notify: true, ct: ct);
-                return false;
-            }
-            catch (OperationCanceledException)
-            {
-                // R-4.6.13 : annulation coopérative propagée sans requalification ni signalisation booléenne.
-                throw;
-            }
+            catch (Ex_Business ex) { await _logAndNotify.ExecuteAsync(callChain, "No_EC_01", ex, ct: ct); return false; }
+            catch (Ex_Infrastructure ex) { await _logAndNotify.ExecuteAsync(callChain, "No_EC_02", ex, ct: ct);  return false; }
+            catch (Ex_Unclassified ex) { await _logAndNotify.ExecuteAsync(callChain, "No_EC_03", ex, ct: ct);  return false; }
+            catch (OperationCanceledException) { throw; }
         }
 
         #endregion
@@ -286,19 +304,26 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         #region === Méthodes privées ===
 
         /// <summary>
-        /// Étape 1 — Applique la langue applicative correspondant au code culture fourni.
+        /// Étape 1 — Applique la langue applicative correspondant au code culture fourni en
+        /// consommant <see cref="IU_Language_Apply"/> en sous-séquence.
         /// </summary>
         /// <remarks>
-        /// <para>Contexte : Première étape du Jalon 3, déléguée à <see cref="IS_Language"/>
-        /// qui orchestre la persistance du code culture (<c>ISE_App.AppCultureCode</c>), le
-        /// chargement du dictionnaire XAML (<c>ISE_Language</c>) et la mise à jour du drapeau
-        /// (<c>ISE_Flag</c>).</para>
+        /// <para>Contexte : Première étape du Jalon 3, déléguée à
+        /// <see cref="IU_Language_Apply"/> qui orchestre le chargement du dictionnaire XAML
+        /// (<c>ISE_Language</c>), la persistance du code culture
+        /// (<c>ISE_App.AppCultureCode</c>) déclenchant la cascade INPC vers le rechargement
+        /// des libellés côté Presentation, la mise à jour du drapeau (<c>ISE_Flag</c>), et la
+        /// synchronisation des quatre cibles standard de
+        /// <see cref="System.Globalization.CultureInfo"/> .NET
+        /// (<c>DefaultThreadCurrentCulture</c>, <c>DefaultThreadCurrentUICulture</c>,
+        /// <c>Thread.CurrentThread.CurrentCulture</c>,
+        /// <c>Thread.CurrentThread.CurrentUICulture</c>).</para>
         /// <para>Objectif : Initialiser le contexte multilingue avant tout libellé
         /// dictionnaire consommé en aval (notamment à l'étape 2).</para>
         /// </remarks>
-        private Task ApplyCultureAsync(string callChain, string cultureCode, CancellationToken ct)
+        private Task<bool> ApplyCultureAsync(string callChain, string cultureCode, CancellationToken ct)
         {
-            return _language.ExecuteAsync(callChain, cultureCode, ct);
+            return _languageApply.ExecuteAsync(callChain, cultureCode, ct);
         }
 
         /// <summary>

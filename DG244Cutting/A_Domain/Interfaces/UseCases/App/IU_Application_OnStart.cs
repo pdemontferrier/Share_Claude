@@ -43,13 +43,28 @@
     /// entre Jalon 4a (ouverture de <c>MainWindow</c> si <see langword="true"/>) et Jalon 4b
     /// (<c>Current.Shutdown()</c> si <see langword="false"/>), conformément à §3.10.6 du 0230.
     /// En conséquence, l'item UC21 de la checklist §4.3.3 du 0232-UC est marqué ➖ pour
-    /// l'implémentation correspondante. L'item UC22 est marqué ✅ depuis l'extension
-    /// <c>UC_Application_OnStart_Extension</c> : le UseCase consomme désormais
-    /// <c>IU_UserAppSession_Open</c> en sous-séquence conformément à R-4.14.21.</para>
+    /// l'implémentation correspondante. L'item UC22 est marqué ✅ : le UseCase consomme
+    /// désormais trois UseCases en sous-séquence conformément à R-4.14.21 :</para>
+    /// <list type="bullet">
+    ///   <item><description><see cref="DG244Cutting.A_Domain.Interfaces.UseCases.User.IU_UserAppSession_Open"/>
+    ///   à l'étape 6 d'<c>ExecuteAsync</c> (méthode privée
+    ///   <c>IdentifyDeviceUserAndOpenSessionAsync</c>), introduit par le fil d'Extension
+    ///   <c>UC_Application_OnStart_Extension</c> (1ère Extension du couple).</description></item>
+    ///   <item><description><see cref="DG244Cutting.A_Domain.Interfaces.UseCases.User.IU_UserAppPageRight_Apply"/>
+    ///   à l'étape 8 d'<c>ExecuteAsync</c> (méthode privée
+    ///   <c>ApplyUserPageRightAsync</c>), introduit par le fil d'Extension
+    ///   <c>UC_Application_OnStart_Extension</c> (2ème Extension successive du couple).</description></item>
+    ///   <item><description><see cref="DG244Cutting.A_Domain.Interfaces.UseCases.App.IU_Language_Apply"/>
+    ///   à l'étape 1 d'<c>ExecuteAsync</c> (méthode privée <c>ApplyCultureAsync</c>),
+    ///   introduit par le présent fil de Refactoring
+    ///   <c>UC_ApplicationOnStart_Refactoring</c> en substitution du Service
+    ///   <c>IS_Language</c>.</description></item>
+    /// </list>
     /// </remarks>
     /// <seealso cref="DG244Cutting.B_UseCases.UseCases.App.UC_Application_OnStart"/>
     /// <seealso cref="DG244Cutting.A_Domain.Interfaces.UseCases.User.IU_UserAppSession_Open"/>
     /// <seealso cref="DG244Cutting.A_Domain.Interfaces.UseCases.User.IU_UserAppPageRight_Apply"/>
+    /// <seealso cref="DG244Cutting.A_Domain.Interfaces.UseCases.App.IU_Language_Apply"/>
     public interface IU_Application_OnStart
     {
         /// <summary>

@@ -112,7 +112,7 @@ namespace DG244Cutting.D_Presentation.Settings
                 "es-ES" => _dic_es,
                 "it-IT" => _dic_it,
                 "pt-PT" => _dic_pt,
-                _ => _dic_fr
+                _ => _dic_en
             };
         }
 

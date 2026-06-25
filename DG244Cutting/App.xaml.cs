@@ -242,6 +242,7 @@ namespace DG244Cutting
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             string callChain = $"{_callee} > {nameof(Application_Startup)}";
+
             string cultureCode = CultureInfo.CurrentCulture.Name;
 
             try
