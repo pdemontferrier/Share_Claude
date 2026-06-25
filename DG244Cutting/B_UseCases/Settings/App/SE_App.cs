@@ -38,7 +38,7 @@ namespace DG244Cutting.B_UseCases.Settings.App
 
         // --- Valeurs par défaut des propriétés mutables (utilisées par Reset) ---
         private const string InitialApplicationTitle = "Application de découpe pour DG244-ALU";
-        private const string InitialAppCultureCode = "fr-FR";
+        private const string InitialAppCultureCode = "";
 
         // --- Backing fields de l'état mutable ---
         private string _applicationTitle = InitialApplicationTitle;
