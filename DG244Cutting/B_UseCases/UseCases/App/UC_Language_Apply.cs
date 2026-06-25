@@ -236,8 +236,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         ///   <item>Sous-étape 2/4 - Persistance du code culture dans
         ///   <see cref="ISE_App.AppCultureCode"/>, déclenchant la cascade
         ///   INPC vers le rechargement des labels côté Presentation.</item>
-        ///   <item>Sous-étape 3/4 - Extraction du code langue en majuscules
-        ///   via <see cref="ExtractLanguageCode(string)"/>, résolution de
+        ///   <item>Sous-étape 3/4 - Extraction du code pays en majuscules
+        ///   via <see cref="ExtractCountryCode(string)"/>, résolution de
         ///   l'URI du drapeau via
         ///   <see cref="ISE_Flag.GetFlagUriOrDefault(string)"/> et affectation
         ///   à <see cref="ISE_Flag.AppFlagUri"/>.</item>
@@ -301,7 +301,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 _seApp.AppCultureCode = cultureCode;
 
                 // Étape 2.f - Sous-étape d'effet 3/4 - Synchronisation de l'URI du drapeau
-                string languageCode = ExtractLanguageCode(cultureCode);
+                string languageCode = ExtractCountryCode(cultureCode);
                 _seFlag.AppFlagUri = _seFlag.GetFlagUriOrDefault(languageCode);
 
                 // Étape 2.g - Sous-étape d'effet 4/4 - Synchronisation CultureInfo .NET (4 cibles)
@@ -324,36 +324,35 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         #region === Méthodes privées ===
 
         /// <summary>
-        /// Extrait le code langue en majuscules à partir d'un code culture
+        /// Extrait le code pays en majuscules à partir d'un code culture
         /// (par exemple <c>"fr-FR"</c> → <c>"FR"</c>).
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Méthode utilitaire consommée par la sous-étape
         /// 2.f de <see cref="ExecuteAsync"/> pour convertir le code culture
-        /// en code langue compatible avec le référentiel de drapeaux de
+        /// en code pays compatible avec le référentiel de drapeaux de
         /// <see cref="ISE_Flag"/>.</para>
         /// <para>Objectif : Isoler la logique d'extraction pour améliorer la
         /// lisibilité de la méthode publique et faciliter les tests unitaires
         /// indépendants.</para>
         /// <para>Comportement : Si le code culture ne contient pas de
         /// séparateur <c>'-'</c>, la chaîne entière est retournée en
-        /// majuscules. Reprise à l'identique de la logique antérieurement
-        /// portée par <c>SR_Language.ExtractLanguageCode</c>.</para>
+        /// majuscules.</para>
         /// </remarks>
         /// <param name="cultureCode">
         /// Code culture source. Doit être non <see langword="null"/> (validé
         /// en amont par <see cref="ExecuteAsync"/>).
         /// </param>
         /// <returns>
-        /// Code langue en majuscules, extrait avant le premier séparateur
+        /// Code pays en majuscules, extrait après le premier séparateur
         /// <c>'-'</c>, ou code culture complet en majuscules si aucun
         /// séparateur n'est trouvé.
         /// </returns>
-        private static string ExtractLanguageCode(string cultureCode)
+        private static string ExtractCountryCode(string cultureCode)
         {
             int index = cultureCode.IndexOf('-');
-            string languageCode = index >= 0 ? cultureCode[..index] : cultureCode;
-            return languageCode.ToUpperInvariant();
+            string countryCode = index >= 0 ? cultureCode[(index + 1)..] : cultureCode;
+            return countryCode.ToUpperInvariant();
         }
 
         #endregion
