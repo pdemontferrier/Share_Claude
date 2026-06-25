@@ -237,8 +237,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         ///   <see cref="ISE_App.AppCultureCode"/>, déclenchant la cascade
         ///   INPC vers le rechargement des labels côté Presentation.</item>
         ///   <item>Sous-étape 3/4 - Extraction du code pays en majuscules
-        ///   via <see cref="ExtractCountryCode(string)"/>, résolution de
-        ///   l'URI du drapeau via
+        ///   via <see cref="ISE_Language.ExtractCountryCodeFromCulture(string)"/>,
+        ///   résolution de l'URI du drapeau via
         ///   <see cref="ISE_Flag.GetFlagUriOrDefault(string)"/> et affectation
         ///   à <see cref="ISE_Flag.AppFlagUri"/>.</item>
         ///   <item>Sous-étape 4/4 - Synchronisation des quatre cibles standard
@@ -255,7 +255,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <see cref="Ex_Infrastructure"/>, <see cref="Ex_Unclassified"/>)
         /// sont captées terminalement et déléguées au pipeline terminal
         /// <see cref="IU_LogAndNotify"/> avec les clés dictionnaire
-        /// <c>La_EC_01</c>, <c>La_EC_02</c> et <c>La_EC_03</c> respectivement
+        /// <c>No_EC_01</c>, <c>No_EC_02</c> et <c>No_EC_03</c> respectivement
         /// et <c>notify: true</c> (cohérence avec le point d'appel actuel
         /// <c>UC_Application_OnStart</c>). Chacun des trois catch typés
         /// retourne <see langword="false"/> après délégation à
@@ -301,7 +301,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 _seApp.AppCultureCode = cultureCode;
 
                 // Étape 2.f - Sous-étape d'effet 3/4 - Synchronisation de l'URI du drapeau
-                string countryCode = ExtractCountryCode(cultureCode);
+                string countryCode = _seLanguage.ExtractCountryCodeFromCulture(cultureCode);
                 _seFlag.AppFlagUri = _seFlag.GetFlagUriOrDefault(countryCode);
 
                 // Étape 2.g - Sous-étape d'effet 4/4 - Synchronisation CultureInfo .NET (4 cibles)
@@ -322,38 +322,6 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         #endregion
 
         #region === Méthodes privées ===
-
-        /// <summary>
-        /// Extrait le code pays en majuscules à partir d'un code culture
-        /// (par exemple <c>"fr-FR"</c> → <c>"FR"</c>).
-        /// </summary>
-        /// <remarks>
-        /// <para>Contexte : Méthode utilitaire consommée par la sous-étape
-        /// 2.f de <see cref="ExecuteAsync"/> pour convertir le code culture
-        /// en code pays compatible avec le référentiel de drapeaux de
-        /// <see cref="ISE_Flag"/>.</para>
-        /// <para>Objectif : Isoler la logique d'extraction pour améliorer la
-        /// lisibilité de la méthode publique et faciliter les tests unitaires
-        /// indépendants.</para>
-        /// <para>Comportement : Si le code culture ne contient pas de
-        /// séparateur <c>'-'</c>, la chaîne entière est retournée en
-        /// majuscules.</para>
-        /// </remarks>
-        /// <param name="cultureCode">
-        /// Code culture source. Doit être non <see langword="null"/> (validé
-        /// en amont par <see cref="ExecuteAsync"/>).
-        /// </param>
-        /// <returns>
-        /// Code pays en majuscules, extrait après le premier séparateur
-        /// <c>'-'</c>, ou code culture complet en majuscules si aucun
-        /// séparateur n'est trouvé.
-        /// </returns>
-        private static string ExtractCountryCode(string cultureCode)
-        {
-            int index = cultureCode.IndexOf('-');
-            string countryCode = index >= 0 ? cultureCode[(index + 1)..] : cultureCode;
-            return countryCode.ToUpperInvariant();
-        }
 
         #endregion
     }

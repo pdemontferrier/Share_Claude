@@ -143,7 +143,7 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
         /// <see cref="Ex_Unclassified"/>) sont captées terminalement par le
         /// UseCase lui-même via le patron de trois catch typés et déléguées au
         /// pipeline terminal <c>IU_LogAndNotify</c> avec une clé dictionnaire
-        /// dédiée (<c>La_EC_01</c>, <c>La_EC_02</c>, <c>La_EC_03</c>). Aucune
+        /// dédiée (<c>No_EC_01</c>, <c>No_EC_02</c>, <c>No_EC_03</c>). Aucune
         /// de ces trois exceptions n'est propagée à l'appelant. Seul
         /// <see cref="OperationCanceledException"/> est propagé conformément à
         /// la doctrine d'annulation coopérative §4.6.</para>

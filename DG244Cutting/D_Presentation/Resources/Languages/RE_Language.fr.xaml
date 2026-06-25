@@ -118,15 +118,15 @@
 
     <!-- 03 Message de Notification d'erreur    -->
     <sys:String x:Key="No_Er_00">Notification Erreur ...</sys:String>
-    <sys:String x:Key="No_Er_01">Une erreur s'est produite lors de l'ajout !</sys:String>
-    <sys:String x:Key="No_Er_02">Une erreur s'est produite lors de l'importation :</sys:String>
-    <sys:String x:Key="No_Er_03">Une erreur s'est produite lors de la lecture !</sys:String>
-    <sys:String x:Key="No_Er_04">Une erreur s'est produite lors de La mise à jour !</sys:String>
-    <sys:String x:Key="No_Er_05">Une erreur s'est produite lors de la suppression !</sys:String>
-    <sys:String x:Key="No_Er_06">Une erreur s'est produite lors de l'enregistrement !</sys:String>
-    <sys:String x:Key="No_Er_07">Une erreur s'est produite lors de la validation !</sys:String>
-    <sys:String x:Key="No_Er_08">Une erreur s'est produite lors du chargement des données !</sys:String>
-    <sys:String x:Key="No_Er_09">Une erreur s'est produite lors du chargement de la page :</sys:String>
+    <sys:String x:Key="No_Er_01">Non défini</sys:String>
+    <sys:String x:Key="No_Er_02">Non défini</sys:String>
+    <sys:String x:Key="No_Er_03">Non défini</sys:String>
+    <sys:String x:Key="No_Er_04">Non défini</sys:String>
+    <sys:String x:Key="No_Er_05">Non défini</sys:String>
+    <sys:String x:Key="No_Er_06">Non défini</sys:String>
+    <sys:String x:Key="No_Er_07">Non défini</sys:String>
+    <sys:String x:Key="No_Er_08">Non défini</sys:String>
+    <sys:String x:Key="No_Er_09">Non défini</sys:String>
     <sys:String x:Key="No_Er_10">Non défini</sys:String>
     <sys:String x:Key="No_Er_11">Non défini</sys:String>
     <sys:String x:Key="No_Er_12">Non défini</sys:String>
@@ -140,39 +140,29 @@
 
     <!-- 04 Message de Notification d'erreur avec commentaires   -->
     <sys:String x:Key="No_EC_00">Notification Erreur ...</sys:String>
-    <sys:String x:Key="No_EC_01">Une erreur s'est produite :</sys:String>
-    <sys:String x:Key="No_EC_02">Détails internes de l'erreur :</sys:String>
-    <sys:String x:Key="No_EC_03">Une erreur s'est produite lors de l'ajout :</sys:String>
-    <sys:String x:Key="No_EC_04">Une erreur s'est produite lors de l'importation :</sys:String>
-    <sys:String x:Key="No_EC_05">Une erreur s'est produite lors de la lecture :</sys:String>
-    <sys:String x:Key="No_EC_06">Une erreur s'est produite lors de La mise à jour :</sys:String>
-    <sys:String x:Key="No_EC_07">Une erreur s'est produite lors de la suppression :</sys:String>
-    <sys:String x:Key="No_EC_08">Une erreur s'est produite lors de l'enregistrement :</sys:String>
-    <sys:String x:Key="No_EC_09">Une erreur s'est produite lors de la validation :</sys:String>
-    <sys:String x:Key="No_EC_10">Une erreur s'est produite lors de l'écoute des commandes de session :</sys:String>
-    <sys:String x:Key="No_EC_11">Une erreur s'est produite lors de la déconnexion de l'utilisateur :</sys:String>
-    <sys:String x:Key="No_EC_12">Une erreur s'est produite lors de la déconnexion de tous les utilisateurs :</sys:String>
-    <sys:String x:Key="No_EC_13">Une erreur s'est produite lors de la mise à jour de l'état de la commande client :</sys:String>
-    <sys:String x:Key="No_EC_14">Une erreur s'est produite lors de la mise à jour de commande client action :</sys:String>
-    <sys:String x:Key="No_EC_15">Une erreur s'est produite lors du chargement des données :</sys:String>
-    <sys:String x:Key="No_EC_16">Une erreur s'est produite lors de l'impression :</sys:String>
-    <sys:String x:Key="No_EC_17">Une erreur s'est produite lors de l'envoi :</sys:String>
-    <sys:String x:Key="No_EC_18">Une erreur métier s'est produite lors de l'exécution :</sys:String>
-    <sys:String x:Key="No_EC_19">Une erreur d'infrastructure s'est produite lors de l'exécution :</sys:String>
-    <sys:String x:Key="No_EC_20">Une erreur s'est produite lors de l'exécution :</sys:String>
-    <sys:String x:Key="No_EC_21">Non défini</sys:String>
-    <sys:String x:Key="No_EC_22">Non défini</sys:String>
-    <sys:String x:Key="No_EC_23">Non défini</sys:String>
-    <sys:String x:Key="No_EC_24">Non défini</sys:String>
-    <sys:String x:Key="No_EC_25">Non défini</sys:String>
-    <sys:String x:Key="No_EC_26">Non défini</sys:String>
-    <sys:String x:Key="No_EC_27">Non défini</sys:String>
-    <sys:String x:Key="No_EC_28">Non défini</sys:String>
-    <sys:String x:Key="No_EC_29">Non défini</sys:String>
+    <sys:String x:Key="No_EC_01">Une erreur métier s'est produite lors de l'exécution :</sys:String>
+    <sys:String x:Key="No_EC_02">Une erreur d'infrastructure s'est produite lors de l'exécution :</sys:String>
+    <sys:String x:Key="No_EC_03">Une erreur s'est produite lors de l'exécution :</sys:String>
+    <sys:String x:Key="No_EC_04">Non défini</sys:String>
+    <sys:String x:Key="No_EC_05">Non défini</sys:String>
+    <sys:String x:Key="No_EC_06">Non défini</sys:String>
+    <sys:String x:Key="No_EC_07">Non défini</sys:String>
+    <sys:String x:Key="No_EC_08">Non défini</sys:String>
+    <sys:String x:Key="No_EC_09">Non défini</sys:String>
+    <sys:String x:Key="No_EC_10">Non défini</sys:String>
+    <sys:String x:Key="No_EC_11">Non défini</sys:String>
+    <sys:String x:Key="No_EC_12">Non défini</sys:String>
+    <sys:String x:Key="No_EC_13">Non défini</sys:String>
+    <sys:String x:Key="No_EC_14">Non défini</sys:String>
+    <sys:String x:Key="No_EC_15">Non défini</sys:String>
+    <sys:String x:Key="No_EC_16">Non défini</sys:String>
+    <sys:String x:Key="No_EC_17">Non défini</sys:String>
+    <sys:String x:Key="No_EC_18">Non défini</sys:String>
+    <sys:String x:Key="No_EC_19">Non défini</sys:String>
 
     <!-- 05 Message de Questionnement    -->
     <sys:String x:Key="No_Qe_00">Notification Question ?</sys:String>
-    <sys:String x:Key="No_Qe_01">Il y a des modifications non enregistrées. Voulez-vous enregistrer les modifications ?</sys:String>
+    <sys:String x:Key="No_Qe_01">Non défini</sys:String>
     <sys:String x:Key="No_Qe_02">Non défini</sys:String>
     <sys:String x:Key="No_Qe_03">Non défini</sys:String>
     <sys:String x:Key="No_Qe_04">Non défini</sys:String>
