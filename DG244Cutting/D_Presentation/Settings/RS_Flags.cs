@@ -54,7 +54,7 @@
         #region === Propriétés publiques ===
 
         /// <summary>URI du drapeau par défaut utilisé en cas de repli (drapeau France).</summary>
-        public static readonly Uri DefaultFlag_Source = GetFlag("RE_france.png");
+        public static readonly Uri DefaultFlag_Source = GetFlag("RE_united_kingdom.png");
 
         public static readonly Uri Flag_Afghanistan_Source = GetFlag("RE_afghanistan.png");
         public static readonly Uri Flag_Aland_islands_Source = GetFlag("RE_aland_islands.png");
