@@ -494,6 +494,28 @@
     <sys:String x:Key="P02_18">Non défini</sys:String>
     <sys:String x:Key="P02_19">Non défini</sys:String>
 
+    <!-- Page 03    -->
+    <sys:String x:Key="P03_00">Page Messagerie</sys:String>
+    <sys:String x:Key="P03_01">Messages reçus</sys:String>
+    <sys:String x:Key="P03_02">Messages envoyés</sys:String>
+    <sys:String x:Key="P03_03">Détail</sys:String>
+    <sys:String x:Key="P03_04">Date</sys:String>
+    <sys:String x:Key="P03_05">Lu</sys:String>
+    <sys:String x:Key="P03_06">Objet</sys:String>
+    <sys:String x:Key="P03_07">Objet :</sys:String>
+    <sys:String x:Key="P03_08">Reçu le :</sys:String>
+    <sys:String x:Key="P03_09">Envoyé le :</sys:String>
+    <sys:String x:Key="P03_10">Contenu :</sys:String>
+    <sys:String x:Key="P03_11">Non défini</sys:String>
+    <sys:String x:Key="P03_12">Non défini</sys:String>
+    <sys:String x:Key="P03_13">Non défini</sys:String>
+    <sys:String x:Key="P03_14">Non défini</sys:String>
+    <sys:String x:Key="P03_15">Non défini</sys:String>
+    <sys:String x:Key="P03_16">Non défini</sys:String>
+    <sys:String x:Key="P03_17">Non défini</sys:String>
+    <sys:String x:Key="P03_18">Non défini</sys:String>
+    <sys:String x:Key="P03_19">Non défini</sys:String>
+
     <!-- Page 10    -->
     <sys:String x:Key="P10_00">Page 10</sys:String>
     <sys:String x:Key="P10_01">Non défini</sys:String>
