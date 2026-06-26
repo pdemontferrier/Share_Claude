@@ -1164,7 +1164,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// propriétés observables <see cref="Label_P98_01"/> à
         /// <see cref="Label_P98_55"/>.
         /// </summary>
-        /// <param name="callChain">CallChain construite par
+        /// <param name="caller">CallChain construite par
         /// <see cref="VM_Generic.InitializeLabels"/> au constructeur
         /// (premier chargement) ou par le handler interne d'abonnement
         /// INPC de <see cref="VM_Generic"/> au changement de langue
@@ -1196,10 +1196,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// nominative permet une revue de code aisée et un repérage
         /// statique des clés consommées.</para>
         ///
-        /// <para>Absence d'appel à <c>base.LoadLabels(callChain)</c> :
+        /// <para>Absence d'appel à <c>base.LoadLabels(caller)</c> :
         /// L'implémentation par défaut de
         /// <see cref="VM_Generic.LoadLabels"/> ne porte aucun
-        /// traitement. L'appel à <c>base.LoadLabels(callChain)</c>
+        /// traitement. L'appel à <c>base.LoadLabels(caller)</c>
         /// n'apporterait qu'un bruit inutile et est délibérément omis,
         /// conformément à la pratique standard d'override lorsque la
         /// base ne porte aucun traitement, alignée sur le patron de
@@ -1220,8 +1220,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// (paramètre optionnel par défaut <c>default</c>, équivalent
         /// à <see cref="System.Threading.CancellationToken.None"/>).</para>
         /// </remarks>
-        protected override void LoadLabels(string callChain)
+        protected override void LoadLabels(string caller)
         {
+            string callChain = $"{caller} > {nameof(LoadLabels)}";
+
             Label_P98_01 = _dictionary.GetText(callChain, "P98_01");
             Label_P98_02 = _dictionary.GetText(callChain, "P98_02");
             Label_P98_03 = _dictionary.GetText(callChain, "P98_03");

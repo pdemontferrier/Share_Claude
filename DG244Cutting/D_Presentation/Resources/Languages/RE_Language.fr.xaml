@@ -868,28 +868,6 @@
     <sys:String x:Key="P90_18">Non défini</sys:String>
     <sys:String x:Key="P90_19">Non défini</sys:String>
 
-    <!-- Page 96    -->
-    <sys:String x:Key="P96_00">Page Messagerie</sys:String>
-    <sys:String x:Key="P96_01">Messages reçus</sys:String>
-    <sys:String x:Key="P96_02">Messages envoyés</sys:String>
-    <sys:String x:Key="P96_03">Message</sys:String>
-    <sys:String x:Key="P96_04">Date</sys:String>
-    <sys:String x:Key="P96_05">Lu</sys:String>
-    <sys:String x:Key="P96_06">Objet</sys:String>
-    <sys:String x:Key="P96_07">Objet :</sys:String>
-    <sys:String x:Key="P96_08">Reçu le :</sys:String>
-    <sys:String x:Key="P96_09">Envoyé le :</sys:String>
-    <sys:String x:Key="P96_10">Message</sys:String>
-    <sys:String x:Key="P96_11">Non défini</sys:String>
-    <sys:String x:Key="P96_12">Non défini</sys:String>
-    <sys:String x:Key="P96_13">Non défini</sys:String>
-    <sys:String x:Key="P96_14">Non défini</sys:String>
-    <sys:String x:Key="P96_15">Non défini</sys:String>
-    <sys:String x:Key="P96_16">Non défini</sys:String>
-    <sys:String x:Key="P96_17">Non défini</sys:String>
-    <sys:String x:Key="P96_18">Non défini</sys:String>
-    <sys:String x:Key="P96_19">Non défini</sys:String>
-
     <!-- Page 97    -->
     <sys:String x:Key="P97_00">Page Administration</sys:String>
     <sys:String x:Key="P97_01">Administration des utilisateurs</sys:String>
