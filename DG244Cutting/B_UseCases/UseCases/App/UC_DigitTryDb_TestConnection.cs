@@ -91,6 +91,44 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <see cref="IU_LogAndNotify"/> expose <c>notify</c> en paramètre de
     /// modulation explicitement documenté avec valeur par défaut <c>true</c>.
     /// </para>
+    /// <para>
+    /// Périmètre comportemental — branche <see langword="else"/> du <c>try</c>.
+    /// La branche <see langword="else"/> du retour binaire du Service
+    /// Infrastructure (retour <see langword="false"/> de <c>Database.CanConnectAsync</c>
+    /// sans exception sous-jacente) est instrumentée par levée volontaire d'une
+    /// <see cref="Ex_Infrastructure"/> portant le code spécifique
+    /// <see cref="DBCN_ER_01"/> conforme R-4.7.9 et R-4.7.10 (constante privée
+    /// hébergée en région <c>=== Propriétés privées ===</c>, inscription
+    /// concomitante au fichier d'inventaire
+    /// <c>E_Miscellaneous/Documentation/Exceptions/SpecificErrorCodes.md</c>).
+    /// La levée converge naturellement dans le <c>catch</c>
+    /// (<see cref="Ex_Infrastructure"/>) existant, qui en absorbe terminalement
+    /// la source au même titre que les requalifications du classifier amont
+    /// (R-4.7.14 : appel à <see cref="IU_LogAndNotify"/> strictement dans un
+    /// <c>catch</c>). Deux sources d'<see cref="Ex_Infrastructure"/> convergent
+    /// ainsi dans ce catch, discriminables en log par
+    /// <see cref="Ex_Infrastructure.ErrorId"/> :
+    /// <list type="bullet">
+    /// <item><description>Codes génériques <c>IN_ER_*</c> de
+    /// <see cref="Ex_Infrastructure.ErrorCodes"/> — requalification du classifier
+    /// amont via <c>IS_ExClassifier</c> côté Service Infrastructure, à partir
+    /// d'une exception .NET ou tierce sous-jacente préservée en
+    /// <see cref="Exception.InnerException"/>.</description></item>
+    /// <item><description>Code spécifique <c>DBCN_ER_01</c> — levée intentionnelle
+    /// de la branche <see langword="else"/>, sans exception sous-jacente
+    /// (<see cref="Exception.InnerException"/> = <see langword="null"/>),
+    /// conforme à R-4.7.11 par interprétation littérale (la règle prescrit
+    /// l'<c>innerException</c> pour les <see cref="Ex_Infrastructure"/> d'origine
+    /// tierce, ce qui n'est pas le cas d'une levée volontaire à motif
+    /// intentionnel).</description></item>
+    /// </list>
+    /// Le message technique transporté respecte R-4.7.13 (français, texte libre,
+    /// destiné aux logs et au support). Le pattern de levée volontaire est
+    /// transposé de <c>UC_Application_OnStart.IdentifyDeviceUserAndOpenSessionAsync</c>
+    /// (branche <c>if (!sessionOpened)</c>, levée d'<see cref="Ex_Business"/>
+    /// avec code générique <see cref="Ex_Business.ErrorCodes.BU_ER_04"/>) à
+    /// <see cref="Ex_Infrastructure"/> avec code spécifique conforme R-4.7.9.
+    /// </para>
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
     /// <item><description>Construire la CallChain au format normatif et la propager au Service Infrastructure consommé en aval (R-4.5.5, R-4.5.7).</description></item>
@@ -114,6 +152,30 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         #region === Propriétés privées ===
 
         private readonly string _callee;
+
+        /// <summary>
+        /// Code spécifique d'erreur infrastructure au format <c>xxxx_ER_NN</c>
+        /// (R-4.7.9) porté par la levée volontaire d'<see cref="Ex_Infrastructure"/>
+        /// instrumentant la branche <see langword="else"/> du <c>try</c> de
+        /// <see cref="ExecuteAsync"/> (retour binaire négatif du Service
+        /// Infrastructure <see cref="IS_DigitTryDb_TestConnection"/> sans
+        /// exception sous-jacente requalifiée).
+        /// </summary>
+        /// <remarks>
+        /// <para>Convergence dans le <c>catch</c> (<see cref="Ex_Infrastructure"/>)
+        /// existant au même titre que les requalifications du classifier amont
+        /// portées par les codes génériques <see cref="Ex_Infrastructure.ErrorCodes"/>
+        /// (préfixe <c>IN_ER_</c>). Les deux sources sont discriminables en log
+        /// par la valeur de <see cref="Ex_Infrastructure.ErrorId"/> : <c>IN_ER_*</c>
+        /// pour la requalification du classifier amont via <c>IS_ExClassifier</c>
+        /// côté Service Infrastructure ; <c>DBCN_ER_01</c> pour la levée
+        /// intentionnelle de la branche <see langword="else"/>.</para>
+        /// <para>Inventaire centralisé en
+        /// <c>E_Miscellaneous/Documentation/Exceptions/SpecificErrorCodes.md</c>
+        /// conformément à R-4.7.10 (origine : Service technique ; composant
+        /// générateur : <c>UC_DigitTryDb_TestConnection</c>).</para>
+        /// </remarks>
+        private const string DBCN_ER_01 = "DBCN_ER_01";
 
         #endregion
 
@@ -201,16 +263,30 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// Chemin nominal du <c>try</c> : (i) délégation du test de
         /// connectivité au Service Infrastructure, retour booléen ; (ii) si
         /// <see langword="true"/>, <see cref="ISE_App.NotifyConnectionRestored"/> ;
-        /// si <see langword="false"/>, <see cref="ISE_App.NotifyConnectionLost"/>.
-        /// La branche <see langword="false"/> du retour binaire du Service
-        /// (retour négatif de la primitive EF Core <c>Database.CanConnectAsync</c>
-        /// sans exception) correspond à une perte de connexion observée sans
-        /// défaillance technique requalifiée ; elle ne lève pas
-        /// <see cref="Ex_Business"/> (cas distinct de la branche analogue du
-        /// UseCase <c>UC_Application_OnStart</c> qui refuse le démarrage
-        /// applicatif par levée de BU_ER_04 — strictement hors périmètre du
-        /// présent UseCase qui n'a pas vocation à refuser une exécution mais
-        /// à observer en boucle).
+        /// si <see langword="false"/>, levée volontaire d'une
+        /// <see cref="Ex_Infrastructure"/> portant le code spécifique
+        /// <see cref="DBCN_ER_01"/> conforme R-4.7.9. La branche
+        /// <see langword="false"/> du retour binaire du Service (retour négatif
+        /// de la primitive EF Core <c>Database.CanConnectAsync</c> sans
+        /// exception) correspond à une perte de connexion observée sans
+        /// défaillance technique requalifiée ; elle est instrumentée par
+        /// l'<see cref="Ex_Infrastructure"/> intentionnelle pour converger
+        /// dans le <c>catch</c> (<see cref="Ex_Infrastructure"/>) existant
+        /// (mutation <see cref="ISE_App.NotifyConnectionLost"/> et délégation
+        /// à <see cref="IU_LogAndNotify"/> avec clé <c>No_EC_02</c> et
+        /// <c>notify = false</c>). Elle ne lève pas <see cref="Ex_Business"/>
+        /// (cas distinct de la branche analogue du UseCase
+        /// <c>UC_Application_OnStart</c> qui refuse le démarrage applicatif
+        /// par levée de BU_ER_04 — strictement hors périmètre du présent
+        /// UseCase qui n'a pas vocation à refuser une exécution mais à
+        /// observer en boucle). Le pattern de levée volontaire dans le chemin
+        /// nominal d'un UseCase est lui en revanche transposé de
+        /// <c>UC_Application_OnStart.IdentifyDeviceUserAndOpenSessionAsync</c>
+        /// (étalon doctrinal du fil amont), avec substitution de la famille
+        /// d'exception (<see cref="Ex_Infrastructure"/> au lieu d'
+        /// <see cref="Ex_Business"/>) et du registre de code (spécifique
+        /// <c>DBCN_ER_01</c> conforme R-4.7.9 au lieu de générique
+        /// <c>BU_ER_04</c>).
         /// </para>
         /// <para>
         /// Traitement terminal des erreurs (politique d'asymétrie arbitrée,
@@ -219,7 +295,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// </para>
         /// <list type="bullet">
         /// <item><description><c>catch (Ex_Business ex)</c> — Branche défensive injoignable en pratique ; aucune mutation de <see cref="ISE_App.IsConnected"/> ; délégation à <see cref="IU_LogAndNotify"/> avec clé <c>No_EC_01</c> et <c>notify = true</c> (défaut).</description></item>
-        /// <item><description><c>catch (Ex_Infrastructure ex)</c> — Perte de connexion techniquement identifiée ; <see cref="ISE_App.NotifyConnectionLost"/> ; délégation à <see cref="IU_LogAndNotify"/> avec clé <c>No_EC_02</c> et <c>notify = false</c> (journalisation seule, la modale opérateur étant portée par l'événement <see cref="ISE_App.ConnectionLost"/>).</description></item>
+        /// <item><description><c>catch (Ex_Infrastructure ex)</c> — Convergence terminale de deux sources discriminables par <see cref="Ex_Infrastructure.ErrorId"/> : (a) requalification du classifier amont via <c>IS_ExClassifier</c> côté Service Infrastructure (codes génériques <c>IN_ER_*</c>, avec <see cref="Exception.InnerException"/> préservée) ; (b) levée volontaire de la branche <see langword="else"/> du <c>try</c> portant le code spécifique <see cref="DBCN_ER_01"/> (sans <see cref="Exception.InnerException"/>, conforme R-4.7.11 par interprétation littérale). Dans les deux cas : <see cref="ISE_App.NotifyConnectionLost"/> ; délégation à <see cref="IU_LogAndNotify"/> avec clé <c>No_EC_02</c> et <c>notify = false</c> (journalisation seule, la modale opérateur étant portée par l'événement <see cref="ISE_App.ConnectionLost"/>).</description></item>
         /// <item><description><c>catch (Ex_Unclassified ex)</c> — Exception non classifiable ; <see cref="ISE_App.NotifyConnectionLost"/> par prudence ; délégation à <see cref="IU_LogAndNotify"/> avec clé <c>No_EC_03</c> et <c>notify = true</c> (défaut).</description></item>
         /// <item><description><c>catch (OperationCanceledException)</c> — Propagation directe à l'appelant (§4.6, R-4.6.13) ; aucune mutation de <see cref="ISE_App.IsConnected"/> ; aucun appel à <see cref="IU_LogAndNotify"/>.</description></item>
         /// </list>
@@ -264,7 +340,22 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 }
                 else
                 {
-                    _settingsApp.NotifyConnectionLost();
+                    // Levée volontaire d'Ex_Infrastructure portant le code spécifique
+                    // DBCN_ER_01 : le retour binaire négatif du Service Infrastructure,
+                    // sans exception sous-jacente requalifiée, est instrumenté en
+                    // défaillance infrastructure intentionnelle pour converger dans le
+                    // catch (Ex_Infrastructure) existant (mutation NotifyConnectionLost
+                    // et journalisation par IU_LogAndNotify avec No_EC_02, notify: false).
+                    // Pattern transposé de UC_Application_OnStart.IdentifyDeviceUserAndOpenSessionAsync
+                    // (branche if (!sessionOpened), levée Ex_Business BU_ER_04) à Ex_Infrastructure
+                    // avec code spécifique conforme R-4.7.9 et R-4.7.10. Absence d'innerException
+                    // conforme à R-4.7.11 par interprétation littérale (levée volontaire sans
+                    // exception sous-jacente, distincte des requalifications du classifier amont).
+                    throw new Ex_Infrastructure(
+                        callChain,
+                        DBCN_ER_01,
+                        "Échec du diagnostic de connectivité signalé par IS_DigitTryDb_TestConnection " +
+                        "(retour false sans exception sous-jacente) ; perte de connexion observée.");
                 }
             }
             catch (Ex_Business ex)

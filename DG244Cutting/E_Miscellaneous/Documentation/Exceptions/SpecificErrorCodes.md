@@ -10,3 +10,4 @@ Toute introduction d'un nouveau code spécifique dans le code applicatif doit s'
 | --- | --- | --- | --- |
 | DICT_ER_01 | Service technique | SR_Dictionary | Clé de traduction absente du dictionnaire actif ou dictionnaire non initialisé. |
 | DICT_ER_02 | Service technique | SR_Dictionary | Erreur inattendue survenue lors de la résolution d'une clé de traduction. |
+| DBCN_ER_01 | Service technique | UC_DigitTryDb_TestConnection | Perte de connexion à la base de données partagée observée par retour binaire négatif du Service Infrastructure IS_DigitTryDb_TestConnection sans exception sous-jacente. Levée intentionnellement dans la branche else du try de ExecuteAsync pour converger dans le catch (Ex_Infrastructure) existant. |

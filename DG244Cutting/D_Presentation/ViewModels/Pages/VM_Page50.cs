@@ -296,8 +296,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// INPC de <see cref="VM_Generic"/> au changement de langue
         /// dynamique (rechargement), et transmise au service de
         /// dictionnaire pour traçabilité.</param>
-        protected override void LoadLabels(string callChain)
+        protected override void LoadLabels(string caller)
         {
+            string callChain = $"{caller} > {nameof(LoadLabels)}";
+
             PageName = _dictionary.GetText(callChain, "P50_00");
         }
 

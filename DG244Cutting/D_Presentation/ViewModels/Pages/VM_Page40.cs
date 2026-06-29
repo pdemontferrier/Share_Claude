@@ -290,14 +290,16 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// (paramètre optionnel par défaut <c>default</c>, équivalent
         /// à <see cref="System.Threading.CancellationToken.None"/>).</para>
         /// </remarks>
-        /// <param name="callChain">CallChain construite par
+        /// <param name="caller">CallChain construite par
         /// <see cref="VM_Generic.InitializeLabels"/> au constructeur
         /// (premier chargement) ou par le handler interne d'abonnement
         /// INPC de <see cref="VM_Generic"/> au changement de langue
         /// dynamique (rechargement), et transmise au service de
         /// dictionnaire pour traçabilité.</param>
-        protected override void LoadLabels(string callChain)
+        protected override void LoadLabels(string caller)
         {
+            string callChain = $"{caller} > {nameof(LoadLabels)}";
+
             PageName = _dictionary.GetText(callChain, "P40_00");
         }
 
