@@ -250,6 +250,13 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             //   le DbContext partagé -> Scoped (P4-bis, §4.10.10 ; R-4.10.14).
             services.AddScoped<IU_Application_OnStart, UC_Application_OnStart>();
             services.AddScoped<IU_CloseApplication, UC_CloseApplication>();
+            // UC_DigitTryDb_TestConnection : test unitaire de connectivité à la base partagée
+            //   en boucle de surveillance, propagation d'état sur ISE_App.IsConnected via les
+            //   opérations atomiques NotifyConnectionLost / NotifyConnectionRestored.
+            //   Dépendances Singleton uniquement (IS_DigitTryDb_TestConnection, ISE_App,
+            //   IU_LogAndNotify), non transactionnel par construction -> Singleton (P4-bis,
+            //   §4.10.10).
+            services.AddSingleton<IU_DigitTryDb_TestConnection, UC_DigitTryDb_TestConnection>();
             // UC_GetApplicationVersion : lecture transverse du numéro de version applicatif
             //   par accès direct à Assembly.GetExecutingAssembly (EA propre tracée au remarks
             //   de classe), sans dépendance Scoped ni accès au DbContext partagé -> Singleton
