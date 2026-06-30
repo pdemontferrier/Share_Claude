@@ -18,7 +18,6 @@ namespace DG244Cutting.D_Presentation.Settings
     /// <list type="bullet">
     /// <item><description>Exposer les dimensions minimales fixes de la fenêtre principale.</description></item>
     /// <item><description>Maintenir et notifier les dimensions, la position et la marge ajustée courantes de la fenêtre principale.</description></item>
-    /// <item><description>Exposer les dimensions fixes de la fenêtre dialogue.</description></item>
     /// <item><description>Maintenir et notifier l'état mutable de la fenêtre dialogue (titre, contenu, ouverture).</description></item>
     /// <item><description>Fournir des opérations atomiques d'ouverture et de fermeture de la fenêtre dialogue.</description></item>
     /// <item><description>Fournir des opérations atomiques de mise à jour des dimensions et de la position de la fenêtre principale.</description></item>
@@ -124,23 +123,6 @@ namespace DG244Cutting.D_Presentation.Settings
         /// alimenter les bindings XAML des espacements et marges dynamiques.</para>
         /// </remarks>
         public int MainWindowMarginAdjusted => _mainWindowMarginAdjusted;
-
-        // --- Fenêtre dialogue — dimensions immuables ---
-
-        /// <summary>
-        /// Obtient la largeur de référence de la fenêtre dialogue, en pixels.
-        /// </summary>
-        public int DW_Width => 500;
-
-        /// <summary>
-        /// Obtient la hauteur de référence de la fenêtre dialogue, en pixels.
-        /// </summary>
-        public int DW_Height => 350;
-
-        /// <summary>
-        /// Obtient le délai (en secondes) avant l'ouverture automatique de la fenêtre modale d'attente.
-        /// </summary>
-        public int DW_ShowDelay => 5;
 
         // --- Fenêtre dialogue — état mutable (lecture seule) ---
 

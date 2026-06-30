@@ -20,7 +20,6 @@ namespace DG244Cutting.A_Domain.Interfaces.Settings.Presentation
     /// <list type="bullet">
     ///   <item><description>Exposer les dimensions minimales fixes de la fenêtre principale.</description></item>
     ///   <item><description>Exposer en lecture les dimensions courantes, la position et la marge ajustée de la fenêtre principale, mises à jour via opérations atomiques.</description></item>
-    ///   <item><description>Exposer les dimensions fixes de la fenêtre dialogue.</description></item>
     ///   <item><description>Exposer en lecture l'état mutable de la fenêtre dialogue (titre, contenu, ouverture), modifié via opérations atomiques.</description></item>
     ///   <item><description>Fournir des opérations atomiques d'ouverture et de fermeture de la fenêtre dialogue.</description></item>
     ///   <item><description>Fournir des opérations atomiques de mise à jour des dimensions et de la position de la fenêtre principale.</description></item>
@@ -91,23 +90,6 @@ namespace DG244Cutting.A_Domain.Interfaces.Settings.Presentation
         /// Calculée par <c>SR_Window</c> et affectée via <see cref="UpdateWindowDimensions"/>.
         /// </remarks>
         int MainWindowMarginAdjusted { get; }
-
-        // --- Groupe 3 : Fenêtre dialogue — dimensions immuables ---
-
-        /// <summary>
-        /// Largeur de référence de la fenêtre dialogue, en pixels.
-        /// </summary>
-        int DW_Width { get; }
-
-        /// <summary>
-        /// Hauteur de référence de la fenêtre dialogue, en pixels.
-        /// </summary>
-        int DW_Height { get; }
-
-        /// <summary>
-        /// Délai (en secondes) avant l'ouverture automatique de la fenêtre modale d'attente.
-        /// </summary>
-        int DW_ShowDelay { get; }
 
         // --- Groupe 4 : Fenêtre dialogue — état mutable (lecture seule via le contrat) ---
 

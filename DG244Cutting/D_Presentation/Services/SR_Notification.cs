@@ -637,6 +637,12 @@ namespace DG244Cutting.D_Presentation.Services
 
                 Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
                 {
+
+                    // Mecanique à intégrer avec  completer _dialogWindow
+                    // Avant ouverture de OpenDialog vérifier si _seWindow = false
+                    // Si false _seWindow.OpenDialog(title, content);
+                    // Si true _seWindow.DW_Content = content et _seWindow.DW_Title = title
+
                     if (_dialogWindow != null && _dialogWindow.IsVisible)
                         return;
 
