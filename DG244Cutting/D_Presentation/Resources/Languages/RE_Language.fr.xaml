@@ -199,9 +199,9 @@
     <sys:String x:Key="No_Wa_13">Votre session est terminée !</sys:String>
     <sys:String x:Key="No_Wa_14">Le fichier du logo est introuvable !</sys:String>
     <sys:String x:Key="No_Wa_15">L'application n'a pas accès à la base de données ! Veuillez patienter pendant la tentative de reconnexion.</sys:String>
-    <sys:String x:Key="No_Wa_16">Connexion impossible après deux tentatives. L'application va se fermer.</sys:String>
-    <sys:String x:Key="No_Wa_17">Reconnexion à la base de données réussie, l'application est de nouveau disponible.</sys:String>
-    <sys:String x:Key="No_Wa_18">Fermeture forcée de l'application sans accès à la base.</sys:String>
+    <sys:String x:Key="No_Wa_16">Non défini</sys:String>
+    <sys:String x:Key="No_Wa_17">Non défini</sys:String>
+    <sys:String x:Key="No_Wa_18">Non défini</sys:String>
     <sys:String x:Key="No_Wa_19">Non défini</sys:String>
     <sys:String x:Key="No_Wa_20">Non défini</sys:String>
     <sys:String x:Key="No_Wa_21">Non défini</sys:String>

@@ -73,7 +73,7 @@ namespace DG244Cutting.D_Presentation.Services
         public void StyleAppLanguageButton(Button button, Image icon) => ControlStyler.StyleAppLanguageButton(button, icon);
         public void StyleAppUserButton(Button button, TextBlock textBlock) => ControlStyler.StyleAppUserButton(button, textBlock);
         public void StyleAppInfoButton(Button button, TextBlock textBlock) => ControlStyler.StyleAppInfoButton(button, textBlock);
-        public void StyleAppCloseButton(Button button, Image icon) => ControlStyler.StyleAppCloseButton(button, icon);
+        public void StyleAppCloseButton(Button button, Image icon1, Image icon2) => ControlStyler.StyleAppCloseButton(button, icon1, icon2);
         public void StyleHorizontalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri)
                         => ControlStyler.StyleHorizontalMenuButton(button, icon, textBlock, iconUri);
         public void StyleVerticalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri)

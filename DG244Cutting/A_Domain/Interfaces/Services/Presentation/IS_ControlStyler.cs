@@ -50,7 +50,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Presentation
         void StyleAppLanguageButton(Button button, Image icon);
         void StyleAppUserButton(Button button, TextBlock textBlock);
         void StyleAppInfoButton(Button button, TextBlock textBlock);
-        void StyleAppCloseButton(Button button, Image icon);
+        void StyleAppCloseButton(Button button, Image icon1, Image icon2);
         void StyleHorizontalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri);
         void StyleVerticalMenuButton(Button button, Image icon, TextBlock textBlock, Uri iconUri);
         void StyleButton(Button button, Uri iconUri);
