@@ -323,7 +323,7 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
                 _controlStyler.StyleAppUserButton(UserFullNameButton, UserFullName);
                 _controlStyler.StyleAppInfoButton(AppInfo, AppInfoSign);
                 _controlStyler.StyleAppMessageButton(MessageButton, MessageButtonIcon, MessageNotReadButtonIcon);
-                _controlStyler.StyleAppCloseButton(AppCloseButton, AppCloseButtonIcon);
+                _controlStyler.StyleAppCloseButton(AppCloseButton, AppCloseButtonIcon, AppCloseButtonIcon);
             }
             catch (Exception ex)
             {
