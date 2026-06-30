@@ -45,10 +45,12 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
     ///   propriétés observables (<see cref="VM_Banner.UserFullName"/>,
     ///   <see cref="VM_Banner.IsBannerVisible"/>,
     ///   <see cref="VM_Banner.HasUnreadMessages"/>,
-    ///   <see cref="VM_Banner.LanguageFlagUri"/>), des propriétés immuables
+    ///   <see cref="VM_Banner.LanguageFlagUri"/>,
+    ///   <see cref="VM_Banner.IsConnected"/>), des propriétés immuables
     ///   d'URI d'icônes (<see cref="VM_Banner.MessageIconUri"/>,
     ///   <see cref="VM_Banner.MessageUnreadIconUri"/>,
-    ///   <see cref="VM_Banner.AppCloseIconUri"/>) et des cinq commandes WPF
+    ///   <see cref="VM_Banner.AppCloseConnectedIconUri"/>,
+    ///   <see cref="VM_Banner.AppCloseDisconnectedIconUri"/>) et des cinq commandes WPF
     ///   de la bannière.</item>
     ///   <item>S'abonner à l'unique événement WPF du composant
     ///   (<see cref="FrameworkElement.Loaded"/>) et garantir qu'aucune exception
@@ -161,7 +163,7 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
         /// <see cref="FrameworkElement.DataContext"/> pour alimenter l'ensemble
         /// des bindings WPF de <c>Banner.xaml</c>.
         /// </summary>
-        private readonly VM_Banner _vmBaMainWindow;
+        private readonly VM_Banner _vmBanner;
 
         /// <summary>
         /// Service technique de présentation appliquant la stylisation des
@@ -215,7 +217,7 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
         ///   affectation de <see cref="FrameworkElement.DataContext"/> ou
         ///   abonnement à un événement WPF du composant.</item>
         ///   <item>Affectation de <see cref="FrameworkElement.DataContext"/> à
-        ///   <c>_vmBaMainWindow</c> pour activer l'ensemble des bindings WPF
+        ///   <c>_vmBanner</c> pour activer l'ensemble des bindings WPF
         ///   déclarés par <c>Banner.xaml</c>.</item>
         ///   <item>Abonnement à l'unique événement WPF du composant
         ///   (<see cref="FrameworkElement.Loaded"/>).</item>
@@ -228,7 +230,7 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
         /// sécurité ultime <c>EA-NN-FilSecuriteBanniere</c> se matérialise
         /// exclusivement au bord du handler <see cref="OnLoadedHandler"/>.</para>
         /// </remarks>
-        /// <param name="vmBaMainWindow">ViewModel singulier de la bannière, affecté
+        /// <param name="vmBanner">ViewModel singulier de la bannière, affecté
         /// à <see cref="FrameworkElement.DataContext"/>. Injecté en Singleton par
         /// le conteneur DI.</param>
         /// <param name="controlStyler">Service technique de stylisation des
@@ -240,11 +242,11 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
         /// <exception cref="ArgumentNullException">Levée si l'une des dépendances
         /// injectées est <see langword="null"/>.</exception>
         public Banner(
-            VM_Banner vmBaMainWindow,
+            VM_Banner vmBanner,
             IS_ControlStyler controlStyler,
             IU_LogAndNotify logAndNotify)
         {
-            _vmBaMainWindow = vmBaMainWindow ?? throw new ArgumentNullException(nameof(vmBaMainWindow));
+            _vmBanner = vmBanner ?? throw new ArgumentNullException(nameof(vmBanner));
             _controlStyler = controlStyler ?? throw new ArgumentNullException(nameof(controlStyler));
             _logAndNotify = logAndNotify ?? throw new ArgumentNullException(nameof(logAndNotify));
 
@@ -253,7 +255,7 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
 
             InitializeComponent();
 
-            DataContext = _vmBaMainWindow;
+            DataContext = _vmBanner;
 
             Loaded += OnLoadedHandler;
         }
@@ -323,7 +325,7 @@ namespace DG244Cutting.D_Presentation.Views.Components.Banner
                 _controlStyler.StyleAppUserButton(UserFullNameButton, UserFullName);
                 _controlStyler.StyleAppInfoButton(AppInfo, AppInfoSign);
                 _controlStyler.StyleAppMessageButton(MessageButton, MessageButtonIcon, MessageNotReadButtonIcon);
-                _controlStyler.StyleAppCloseButton(AppCloseButton, AppCloseButtonIcon, AppCloseButtonIcon);
+                _controlStyler.StyleAppCloseButton(AppCloseButton, AppCloseButtonIcon, AppCloseDisconnectedButtonIcon);
             }
             catch (Exception ex)
             {

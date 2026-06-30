@@ -5,25 +5,25 @@ Composant : Banner.xaml
 Description :
     Composant visuel UserControl de bannière principale de l'application DG244Cutting.
     Bandeau supérieur fixe de hauteur 40 px regroupant cinq zones d'interaction
-    utilisateur, chacune déclenchant une commande exposée par VM_BA_MainWindow :
+    utilisateur, chacune déclenchant une commande exposée par VM_Banner :
         - Bouton Langue          → NavigateLanguageCommand
         - Bouton Utilisateur     → NavigateUserCommand
         - Bouton Informations    → NavigateAppInfoCommand
         - Bouton Messages        → NavigateMessagesCommand   (double icône conditionnée)
-        - Bouton Fermer          → CloseAppCommand
+        - Bouton Fermer          → CloseAppCommand           (double icône conditionnée)
 
 Contexte :
     Composant hors familles canoniques (UC, SR, CR, CH, QH, SE, RS, DTO, VM-Page, MH,
     Page), instancié en portée Singleton par le conteneur d'injection de dépendances.
     Consommé par MainWindow via affectation directe à son BannerHost.Content au
     moment du OnLoadedHandler de MainWindow (intégration portée par
-    MainWindow_Extension à venir). Son DataContext est VM_BA_MainWindow, ViewModel
+    MainWindow_Extension à venir). Son DataContext est VM_Banner, ViewModel
     Singleton injecté au constructeur du code-behind.
 
 Structure visuelle :
     - UserControl racine, hauteur fixe 40 px, fond transparent.
     - StackPanel horizontal interne porteur de la Visibility liée à
-      VM_BA_MainWindow.IsBannerVisible (bannière masquée hors session utilisateur).
+      VM_Banner.IsBannerVisible (bannière masquée hors session utilisateur).
       Le report de la Visibility du UserControl vers son StackPanel interne procède
       d'une contrainte de parsing XAML : la résolution des StaticResource sur les
       attributs de l'élément racine intervient avant l'enregistrement effectif des
@@ -31,7 +31,15 @@ Structure visuelle :
       UserControl lui-même. Posture parallèle au legacy.
     - StackPanel interne hébergeant les cinq boutons enchaînés.
     - Le bouton Messages héberge un StackPanel imbriqué avec deux Image superposées
-      dont la visibilité est conditionnée par VM_BA_MainWindow.HasUnreadMessages.
+      dont la visibilité est conditionnée par VM_Banner.HasUnreadMessages.
+    - Le bouton Fermer héberge symétriquement un StackPanel imbriqué avec deux Image
+      superposées dont la visibilité est conditionnée par VM_Banner.IsConnected,
+      en parallèle nominatif au bouton Messages. L'asymétrie de polarité vis-à-vis
+      du bouton Messages est dictée par la sémantique du booléen pivot : pour le
+      bouton Messages, l'icône d'alerte (mail non lu) est visible si
+      HasUnreadMessages == true (sans ConverterParameter=Inverse) ; pour le bouton
+      Fermer, l'icône nominale (état connecté) est visible si IsConnected == true
+      (sans ConverterParameter=Inverse).
 
 Bindings principaux :
     - Visibility               → IsBannerVisible
@@ -39,7 +47,10 @@ Bindings principaux :
     - Text UserFullName        → UserFullName
     - Source MessageButtonIcon → MessageIconUri        (visible si !HasUnreadMessages)
     - Source MessageNotRead    → MessageUnreadIconUri  (visible si  HasUnreadMessages)
-    - Source AppCloseButtonIcon → AppCloseIconUri
+    - Source AppCloseButtonIcon            → AppCloseConnectedIconUri
+                                              (visible si  IsConnected)
+    - Source AppCloseDisconnectedButtonIcon → AppCloseDisconnectedIconUri
+                                              (visible si !IsConnected)
     - Commands                 → NavigateLanguageCommand, NavigateUserCommand,
                                   NavigateAppInfoCommand, NavigateMessagesCommand,
                                   CloseAppCommand
@@ -132,10 +143,14 @@ Remarques techniques :
                 Background="Transparent"
                 BorderBrush="Transparent"
                 Command="{Binding CloseAppCommand}">
-            <Image x:Name="AppCloseButtonIcon"
-                   VerticalAlignment="Top"
-                   HorizontalAlignment="Center"
-                   Source="{Binding AppCloseIconUri}"/>
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="AppCloseButtonIcon"
+                       Source="{Binding AppCloseConnectedIconUri}"
+                       Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <Image x:Name="AppCloseDisconnectedButtonIcon"
+                       Source="{Binding AppCloseDisconnectedIconUri}"
+                       Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}"/>
+            </StackPanel>
         </Button>
 
     </StackPanel>

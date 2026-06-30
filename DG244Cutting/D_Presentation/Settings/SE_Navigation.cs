@@ -170,7 +170,8 @@ namespace DG244Cutting.D_Presentation.Settings
                 "50",
                 "60",
                 "70",
-                "90", "97", "98", "99"
+                "80",
+                "90", "98", "99"
             };
 
             // Génération automatique du dictionnaire par convention
