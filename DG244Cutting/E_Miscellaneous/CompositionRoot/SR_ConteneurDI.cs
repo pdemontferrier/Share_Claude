@@ -41,10 +41,12 @@ using DG244Cutting.C_Infrastructure.Settings;
 using DG244Cutting.D_Presentation.Services;
 using DG244Cutting.D_Presentation.Settings;
 using DG244Cutting.D_Presentation.ViewModels.Components.Banner;
+using DG244Cutting.D_Presentation.ViewModels.Components.DialogWindow;
 using DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus;
 using DG244Cutting.D_Presentation.ViewModels.Pages;
 using DG244Cutting.D_Presentation.ViewModels.Shell;
 using DG244Cutting.D_Presentation.Views.Components.Banner;
+using DG244Cutting.D_Presentation.Views.Components.DialogWindow;
 using DG244Cutting.D_Presentation.Views.Shell;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -362,6 +364,9 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             //   Banner
             services.AddSingleton<VM_Banner>();
 
+            //   DialogWindow
+            services.AddSingleton<VM_DialogWindow>();
+
             //   MenuHorizontal
             //   Famille VM_MH : aucune dépendance scoped (IS_Dictionary,
             //   IU_LogAndNotify, IU_Navigation, ISE_App tous Singleton),
@@ -411,6 +416,10 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             // Components
             services.AddSingleton<Banner>();
 
+            // DialogWindow — Transient (asymétrie volontaire avec Banner Singleton :
+            // la nature WPF Window éphémère justifie une instanciation par appel).
+            services.AddTransient<DialogWindow>();
+            
             // Generic
             // Instanciée par WPF Navigation via Activator.CreateInstance, hors conteneur DI
 

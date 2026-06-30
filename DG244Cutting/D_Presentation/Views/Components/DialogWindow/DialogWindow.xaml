@@ -1,0 +1,93 @@
+﻿<!--
+=====================================================================================
+Composant : DialogWindow.xaml
+=====================================================================================
+Description :
+    Composant visuel Window de dialogue applicatif modal non bloquant de
+    l'application DG244Cutting. Reproduction structurelle fidèle de la
+    Shared.Views.Components.DialogWindow legacy : Grid racine porteur d'un
+    Border de fond, d'un Border de titre englobant un Image (logo) et un
+    TextBlock (titre), et d'un TextBlock de contenu central.
+
+Contexte :
+    Composant hors familles canoniques (UC, SR, CR, CH, QH, SE, RS, DTO, VM-Page,
+    MH, Page), instancié en portée Transient par le conteneur d'injection de
+    dépendances. Consommé par SR_Notification (au Fil 2 ultérieur) via
+    résolution depuis le ServiceProvider à chaque appel à OpenDialogWindow.
+    L'asymétrie Transient (View) / Singleton (ViewModel) est volontaire : la
+    nature WPF Window éphémère, instanciée à chaque ouverture de dialogue,
+    impose la portée Transient pour la fenêtre ; le ViewModel reste Singleton
+    pour conserver l'abonnement INPC à ISE_Window au travers du cycle de vie
+    applicatif. Son DataContext est VM_DialogWindow, ViewModel Singleton
+    injecté au constructeur du code-behind.
+
+Structure visuelle :
+    Reproduction structurelle fidèle de Shared.Views.Components.DialogWindow.xaml,
+    avec deux divergences fonctionnelles assumées par rapport au legacy :
+        (a) les libellés Title et Content ne sont plus lus impérativement au
+            Loaded depuis CR_CommonSettings mais via bindings INPC à
+            VM_DialogWindow.DW_Title et VM_DialogWindow.DW_Content ;
+        (b) l'icône logo n'est plus affectée impérativement au Loaded depuis
+            CR_CommonSettings.DW_Icon mais via binding XAML à
+            VM_DialogWindow.LogoIconUri.
+    Le tag Window racine porte WindowStyle="ToolWindow" et ResizeMode="NoResize"
+    (alignement strict legacy). La suppression du bouton Fermer (X) du menu
+    système est portée par le code-behind via P/Invoke user32.dll au
+    OnSourceInitialized (alignement fidèle legacy). La maximisation de la
+    fenêtre est portée par le code-behind au OnLoadedHandler (alignement fidèle
+    legacy).
+
+Bindings principaux :
+    - Source LogoImage   → LogoIconUri
+    - Text   TitleContent → DW_Title
+    - Text   MainContent  → DW_Content
+
+Convertisseur :
+    Aucun convertisseur consommé — aucun StaticResource déclaré.
+
+Remarques techniques :
+    - Les noms d'éléments XAML (x:Name) sont strictement ceux attendus par la
+      signature IS_ControlStyler.StyleWindow(Border background1, Border? background2,
+      Border titleBorder, Image logoImage, TextBlock titleContent,
+      TextBlock? mainContent) — toute modification casserait la stylisation
+      appliquée au OnLoadedHandler du code-behind. Pour le présent composant,
+      le second paramètre Border? background2 est passé à null (aucun second
+      Border de fond, alignement strict signature legacy).
+    - La stylisation visuelle (couleurs, polices, dimensions internes, marges
+      ajustées) est intégralement appliquée au Loaded par le code-behind via
+      IS_ControlStyler.StyleWindow ; aucun style WPF n'est défini ici.
+    - Le legacy code-behind surchargeait au OnLoaded les propriétés Margin /
+      VerticalAlignment / HorizontalAlignment de TitleContent et la Margin de
+      MainContent. La présente version bascule ces réglages vers le contrat
+      IS_ControlStyler.StyleWindow et n'effectue plus d'affectation impérative
+      en code-behind.
+=====================================================================================
+-->
+<Window x:Class="DG244Cutting.D_Presentation.Views.Components.DialogWindow.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Fenêtre d'information"
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize">
+
+    <Grid x:Name="MainGrid" Background="White">
+        <Border x:Name="Background_1"/>
+        <Border x:Name="TitleBorder">
+            <Grid x:Name="TitleGrid">
+                <Image x:Name="LogoImage"
+                       Source="{Binding LogoIconUri}"/>
+                <TextBlock x:Name="TitleContent"
+                           Text="{Binding DW_Title}"/>
+            </Grid>
+        </Border>
+        <TextBlock x:Name="MainContent"
+                   Text="{Binding DW_Content}"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="30,0,30,0"/>
+    </Grid>
+</Window>
