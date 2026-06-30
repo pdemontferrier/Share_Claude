@@ -250,6 +250,14 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             //   le DbContext partagé -> Scoped (P4-bis, §4.10.10 ; R-4.10.14).
             services.AddScoped<IU_Application_OnStart, UC_Application_OnStart>();
             services.AddScoped<IU_CloseApplication, UC_CloseApplication>();
+            // UC_DigitTryDb_RecoverConnection : orchestrateur de la procédure de récupération
+            //   de connexion à la base partagée à la suite d'un événement
+            //   ISE_App.ConnectionLost (observation polling de IsConnected sur deux cycles
+            //   avec garde de stabilité, délégation à IU_CloseApplication mode delay en cas
+            //   d'échec complet — chaîne UC → UC normalisée R-4.14.21). Non transactionnel
+            //   par construction, mais consomme IU_CloseApplication Scoped en sous-séquence
+            //   (P4-bis transitif) -> Scoped (§4.10.10 ; R-4.10.14).
+            services.AddScoped<IU_DigitTryDb_RecoverConnection, UC_DigitTryDb_RecoverConnection>();
             // UC_DigitTryDb_TestConnection : test unitaire de connectivité à la base partagée
             //   en boucle de surveillance, propagation d'état sur ISE_App.IsConnected via les
             //   opérations atomiques NotifyConnectionLost / NotifyConnectionRestored.
