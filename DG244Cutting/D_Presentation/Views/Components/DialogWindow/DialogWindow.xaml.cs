@@ -433,7 +433,7 @@ namespace DG244Cutting.D_Presentation.Views.Components.DialogWindow
             try
             {
                 WindowState = WindowState.Maximized;
-                _controlStyler.StyleWindow(Background_1, null, TitleBorder, LogoImage, TitleContent, MainContent);
+                _controlStyler.StyleDialogWindow(Background_1, null, TitleBorder, LogoImage, TitleContent, MainContent);
             }
             catch (Exception ex)
             {

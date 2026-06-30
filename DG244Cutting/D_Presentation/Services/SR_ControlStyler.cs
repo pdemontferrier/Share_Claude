@@ -25,6 +25,8 @@ namespace DG244Cutting.D_Presentation.Services
                                 => ControlStyler.StyleWindow(background1, background2, titleBorder, logoImage, titleContent, mainContent);
         public void StyleWindowPad(Border Background_1, Border TitleBorder, Image LogoImage, TextBlock TitleContent, TextBlock? MainContent)
                                 => ControlStyler.StyleWindowPad(Background_1, TitleBorder, LogoImage, TitleContent, MainContent);
+        public void StyleDialogWindow(Border background1, Border? background2, Border titleBorder, Image logoImage, TextBlock titleContent, TextBlock? mainContent)
+                                => ControlStyler.StyleDialogWindow(background1, background2, titleBorder, logoImage, titleContent, mainContent);
         public void StyleHorizontalMenuGrid(Grid grid, ColumnDefinition column1, ColumnDefinition column2, Border border, double windowWidth)
                                 => ControlStyler.StyleHorizontalMenuGrid(grid, column1, column2, border, windowWidth);
         public void StyleScrollViewer(ScrollViewer scrollViewer, TextBlock? titleText = null, Border? headerBorder = null,

@@ -12,6 +12,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Presentation
         void StyleMH_Reduce(Border MH_Border, Button button, Uri iconUri);
         void StyleWindow(Border background1, Border? background2, Border titleBorder, Image logoImage, TextBlock titleContent, TextBlock? mainContent);
         void StyleWindowPad(Border Background_1, Border TitleBorder, Image LogoImage, TextBlock TitleContent, TextBlock? MainContent);
+        void StyleDialogWindow(Border background1, Border? background2, Border titleBorder, Image logoImage, TextBlock titleContent, TextBlock? mainContent);
         void StyleApplicationTitle(TextBlock TitleContent);
         void StyleHorizontalMenuGrid(Grid grid, ColumnDefinition column1, ColumnDefinition column2, Border border, double windowWidth);
         void StyleScrollViewer(ScrollViewer scrollViewer, TextBlock? titleText = null, Border? headerBorder = null,

@@ -3,7 +3,8 @@ using DG244Cutting.A_Domain.Common.Exceptions;
 using DG244Cutting.A_Domain.Interfaces.Services.App;
 using DG244Cutting.A_Domain.Interfaces.Services.Presentation;
 using DG244Cutting.A_Domain.Interfaces.Settings.Presentation;
-using Shared.Views.Components;
+using DG244Cutting.D_Presentation.Views.Components.DialogWindow;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DG244Cutting.D_Presentation.Services
 {
@@ -24,8 +25,16 @@ namespace DG244Cutting.D_Presentation.Services
     /// IS_ depuis les ViewModels, les Menu Handlers et le UseCase terminal
     /// <c>UC_LogAndNotify</c> au titre du pipeline standard de gestion d'erreurs
     /// (§4.7.5 du 0230). Le service est enregistré en singleton dans
-    /// <c>SR_ConteneurDI</c>, portée admise au titre de P4-bis (§4.10.10) en
-    /// l'absence de dépendance scoped consommée.
+    /// <c>SR_ConteneurDI</c>, portée admise au titre de P4-bis (§4.10.10) :
+    /// les dépendances injectées (<see cref="IS_Dictionary"/>, <see cref="ISE_Window"/>,
+    /// <see cref="IS_ExClassifier"/> et <see cref="IServiceProvider"/>) sont toutes
+    /// de portée Singleton dans le pipeline DI .NET standard, aucune dépendance
+    /// scoped n'étant consommée. La <see cref="DialogWindow"/> mobilisée est la
+    /// View locale du projet (<c>DG244Cutting.D_Presentation.Views.Components.DialogWindow</c>)
+    /// livrée au fil <c>DialogWindow_Creation</c>, résolue en Transient via
+    /// <see cref="IServiceProvider.GetRequiredService"/> en remplacement de
+    /// l'instanciation par <c>new</c> qui contournait le conteneur DI et empêchait
+    /// le wiring du DataContext par le constructeur paramétré de la View.
     /// </para>
     ///
     /// Objectif :
@@ -60,7 +69,8 @@ namespace DG244Cutting.D_Presentation.Services
     /// <list type="bullet">
     /// <item><description>Résoudre les messages et les titres standards via <see cref="IS_Dictionary"/>.</description></item>
     /// <item><description>Afficher les notifications via <see cref="MessageBox"/> sur le dispatcher WPF.</description></item>
-    /// <item><description>Piloter l'ouverture et la fermeture d'une <see cref="DialogWindow"/> non bloquante via <see cref="ISE_Window.OpenDialog(string, string)"/> et <see cref="ISE_Window.CloseDialog"/>.</description></item>
+    /// <item><description>Résoudre la <see cref="DialogWindow"/> locale en Transient via <see cref="IServiceProvider"/> à la première ouverture (le DataContext étant wiré par le constructeur paramétré de la View).</description></item>
+    /// <item><description>Piloter l'ouverture et la fermeture d'une <see cref="DialogWindow"/> non bloquante via <see cref="ISE_Window.OpenDialog(string, string)"/> et <see cref="ISE_Window.CloseDialog"/>, l'idempotence de l'écriture des libellés étant portée par le helper canonique <c>SetField</c> du <see cref="ISE_Window"/> consommé.</description></item>
     /// </list>
     ///
     /// Non-responsabilités :
@@ -91,6 +101,7 @@ namespace DG244Cutting.D_Presentation.Services
         private readonly IS_Dictionary _dictionary;
         private readonly ISE_Window _seWindow;
         private readonly IS_ExClassifier _classifier;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -103,33 +114,40 @@ namespace DG244Cutting.D_Presentation.Services
         /// <remarks>
         /// Contexte :
         /// <para>Cette classe est instanciée par le conteneur d'injection de dépendances dans
-        /// la couche Presentation. Les trois dépendances injectées sont des contrats stables
-        /// (deux services transversaux d'utilité et un Setting de présentation), conformes
-        /// aux dépendances admises pour un Service Presentation (SR24, R-2.5.6).</para>
+        /// la couche Presentation. Les quatre dépendances injectées sont des contrats stables
+        /// (deux services transversaux d'utilité, un Setting de présentation et le
+        /// <see cref="IServiceProvider"/> du conteneur DI), conformes aux dépendances admises
+        /// pour un Service Presentation (SR24, R-2.5.6). Toutes les dépendances sont de portée
+        /// Singleton dans le pipeline DI .NET standard ; aucune dépendance scoped n'est consommée,
+        /// la portée Singleton du Service reste admise au titre de P4-bis (§4.10.10).</para>
         /// Objectif :
         /// <para>Initialiser le champ <c>_callee</c> par réflexion sur le type courant et
-        /// valider les trois dépendances obligatoires par garde <see cref="ArgumentNullException"/>.</para>
+        /// valider les quatre dépendances obligatoires par garde <see cref="ArgumentNullException"/>.</para>
         /// Tâches / Actions :
         /// <list type="bullet">
         /// <item><description>Initialiser <c>_callee = GetType().Name</c> en première instruction (R-4.5.5).</description></item>
         /// <item><description>Valider et stocker <see cref="IS_Dictionary"/>.</description></item>
         /// <item><description>Valider et stocker <see cref="ISE_Window"/>.</description></item>
         /// <item><description>Valider et stocker <see cref="IS_ExClassifier"/>.</description></item>
+        /// <item><description>Valider et stocker <see cref="IServiceProvider"/> (utilisé pour la résolution Transient de la <see cref="DialogWindow"/> locale dans <see cref="OpenDialogWindow"/>).</description></item>
         /// </list>
         /// </remarks>
         /// <param name="dictionary">Service de dictionnaire multilingue (résolution clés → textes).</param>
         /// <param name="seWindow">Setting transverse de présentation centralisant l'état partagé des fenêtres principale et dialogue.</param>
         /// <param name="classifier">Service transversal d'utilité de requalification des exceptions brutes en exceptions typées (R-4.7.25).</param>
+        /// <param name="serviceProvider">Conteneur d'injection de dépendances racine, utilisé pour résoudre en Transient la <see cref="DialogWindow"/> locale à la première ouverture du dialogue.</param>
         /// <exception cref="ArgumentNullException">Levée si une dépendance obligatoire est <see langword="null"/>.</exception>
         public SR_Notification(
             IS_Dictionary dictionary,
             ISE_Window seWindow,
-            IS_ExClassifier classifier)
+            IS_ExClassifier classifier,
+            IServiceProvider serviceProvider)
         {
             _callee = GetType().Name;
             _dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
             _seWindow = seWindow ?? throw new ArgumentNullException(nameof(seWindow));
             _classifier = classifier ?? throw new ArgumentNullException(nameof(classifier));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         #endregion
@@ -597,18 +615,27 @@ namespace DG244Cutting.D_Presentation.Services
         /// résoudre <paramref name="titleKey"/> et <paramref name="contentKey"/> en interne via
         /// <see cref="IS_Dictionary"/> (en cohérence avec la résolution interne pratiquée par les
         /// autres méthodes publiques de notification du service), puis sur le dispatcher WPF :
-        /// instancier la <see cref="DialogWindow"/> avec <c>Owner = MainWindow</c> et
+        /// pivoter l'instanciation par <see cref="ISE_Window.DW_IsOpen"/> (source de vérité) ;
+        /// à la première ouverture, résoudre la <see cref="DialogWindow"/> locale en Transient
+        /// via <see cref="IServiceProvider.GetRequiredService"/> en lieu et place de
+        /// <c>new DialogWindow()</c> (le DataContext étant wiré par le constructeur paramétré
+        /// de la View), affecter <c>Owner = MainWindow</c> et
         /// <see cref="WindowStartupLocation.CenterOwner"/>, appeler
         /// <see cref="ISE_Window.OpenDialog(string, string)"/> AVANT le <c>Show()</c>, désactiver
-        /// la fenêtre principale, puis afficher la fenêtre dialogue. Garde de non-réentrance
-        /// préservée.</para>
+        /// la fenêtre principale, puis afficher la fenêtre dialogue ; à la réouverture sur dialog
+        /// déjà ouverte, déléguer à <see cref="ISE_Window.OpenDialog(string, string)"/> seule, dont
+        /// l'idempotence est portée par <c>SetField</c> dans <c>SE_Window</c> (mise à jour des
+        /// libellés à la volée via INPC sans réouverture WPF). Une double garde défensive
+        /// <c>_dialogWindow != null &amp;&amp; _dialogWindow.IsVisible</c> est conservée à titre
+        /// de filet secondaire couvrant une éventuelle désynchronisation transitoire entre la
+        /// fenêtre WPF effective et l'état partagé.</para>
         /// Tâches / Actions :
         /// <list type="bullet">
         /// <item><description>Construire la callChain au format normatif.</description></item>
         /// <item><description>Valider <paramref name="caller"/>, <paramref name="titleKey"/>, <paramref name="contentKey"/> (A3).</description></item>
         /// <item><description>Vérifier l'annulation coopérative.</description></item>
         /// <item><description>Résoudre <paramref name="titleKey"/> et <paramref name="contentKey"/> via <see cref="SafeGetDictionaryText"/>.</description></item>
-        /// <item><description>Sur le dispatcher WPF : garde de non-réentrance, instanciation, opération atomique <c>OpenDialog</c>, désactivation <c>MainWindow</c>, <c>Show()</c>.</description></item>
+        /// <item><description>Sur le dispatcher WPF : pivot sur <see cref="ISE_Window.DW_IsOpen"/> avec double garde défensive ; branche d'instanciation (résolution Transient via <see cref="IServiceProvider"/>, affectation Owner / WindowStartupLocation, opération atomique <c>OpenDialog</c>, désactivation <c>MainWindow</c>, <c>Show()</c>) ; branche idempotente (<c>OpenDialog</c> seule).</description></item>
         /// </list>
         /// </remarks>
         /// <param name="caller">CallChain amont propagée par le composant appelant.</param>
@@ -637,27 +664,38 @@ namespace DG244Cutting.D_Presentation.Services
 
                 Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    // Pivot d'instanciation : DW_IsOpen est la source de vérité (arbitrage Q2 du
+                    // fil SR_Notification_Refactoring). La double garde
+                    // _dialogWindow != null && _dialogWindow.IsVisible bloque toute double
+                    // instanciation en cas de désync transitoire entre View WPF effective et état
+                    // partagé.
+                    bool shouldInstantiate = !_seWindow.DW_IsOpen
+                                             && (_dialogWindow == null || !_dialogWindow.IsVisible);
 
-                    // Mecanique à intégrer avec  completer _dialogWindow
-                    // Avant ouverture de OpenDialog vérifier si _seWindow = false
-                    // Si false _seWindow.OpenDialog(title, content);
-                    // Si true _seWindow.DW_Content = content et _seWindow.DW_Title = title
-
-                    if (_dialogWindow != null && _dialogWindow.IsVisible)
-                        return;
-
-                    _dialogWindow = new DialogWindow
+                    if (shouldInstantiate)
                     {
-                        Owner = Application.Current.MainWindow,
-                        WindowStartupLocation = WindowStartupLocation.CenterOwner
-                    };
+                        // Première ouverture : résolution Transient de la View locale via le
+                        // conteneur DI (le DataContext est wiré par le constructeur paramétré de
+                        // la View — arbitrage α du fil SR_Notification_Refactoring).
+                        _dialogWindow = _serviceProvider.GetRequiredService<DialogWindow>();
+                        _dialogWindow.Owner = Application.Current.MainWindow;
+                        _dialogWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-                    _seWindow.OpenDialog(title, content);
+                        _seWindow.OpenDialog(title, content);
 
-                    if (Application.Current.MainWindow != null)
-                        Application.Current.MainWindow.IsEnabled = false;
+                        if (Application.Current.MainWindow != null)
+                            Application.Current.MainWindow.IsEnabled = false;
 
-                    _dialogWindow.Show();
+                        _dialogWindow.Show();
+                    }
+                    else
+                    {
+                        // Dialog déjà ouverte : idempotence portée par SetField dans
+                        // SE_Window.OpenDialog (arbitrage Q1 du fil SR_Notification_Refactoring).
+                        // Les libellés sont publiés à la volée aux bindings via INPC, sans
+                        // réouverture WPF.
+                        _seWindow.OpenDialog(title, content);
+                    }
                 }));
             }
             catch (Ex_Business) { throw; }
