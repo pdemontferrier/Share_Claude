@@ -136,8 +136,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
 
         /// <summary>
         /// Délai (en secondes) passé à <see cref="IU_CloseApplication"/> en
-        /// mode delay dans la branche d'échec des deux cycles d'observation
-        /// (arbitrage Q5.1 du fil de création option A).
+        /// mode delay dans la branche d'échec des deux cycles d'observation.
         /// </summary>
         /// <remarks>
         /// <para>Cette durée correspond au délai pendant lequel la fenêtre de
@@ -147,13 +146,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// l'opérateur de prendre connaissance de la situation et de
         /// sauvegarder le cas échéant des éléments contextuels externes à
         /// l'application avant fermeture.</para>
-        /// <para>Une remarque écosystème est consignée en clôture du fil de
-        /// création pour signaler la pertinence d'une éventuelle introduction
-        /// future d'une propriété dédiée à <see cref="ISE_App"/>
-        /// (typiquement <c>DatabaseRecoverShutdownDelay</c>), dans un fil
-        /// distinct portant sur la famille SE/RS.</para>
         /// </remarks>
-        private const int ShutdownDelaySeconds = 300;
+        private const int ShutdownDelaySeconds = 180;
 
         /// <summary>
         /// Clé dictionnaire du titre de la fenêtre de dialogue d'attente
