@@ -21,16 +21,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>Contexte : Composant de la famille VM_Page de la couche
     /// <c>D_Presentation</c>, ViewModel concret de la page
     /// <see cref="DG244Cutting.D_Presentation.Views.Pages.Page03"/>.
-    /// La page constitue la migration vers le modèle de
-    /// développement DG244Cutting de la fonctionnalité aujourd'hui
-    /// portée par <c>Page96</c> du legacy <c>BatchStockRelease</c>,
-    /// dans le cadre du chantier 1 du programme de migration
-    /// <c>Page03_Création</c>. La page est accessible à tout
-    /// utilisateur connecté et n'expose aucune commande de
-    /// composition de message : la messagerie est strictement
-    /// applicative, l'application étant l'émetteur exclusif via
-    /// d'autres mécanismes hors périmètre du présent ViewModel. La
-    /// sortie s'effectue exclusivement via les boutons transverses
+    /// La page est accessible à tout utilisateur connecté et n'expose 
+    /// aucune commande de composition de message : la messagerie est 
+    /// strictement applicative, l'application étant l'émetteur exclusif 
+    /// via d'autres mécanismes hors périmètre du présent ViewModel. 
+    /// La sortie s'effectue exclusivement via les boutons transverses
     /// du menu horizontal portés par le couple
     /// <c>VM_MH_Generic</c> / <c>MH_Generic</c>.</para>
     ///

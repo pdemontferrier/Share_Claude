@@ -56,9 +56,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   ajuster dynamiquement la hauteur du
     ///   <see cref="TabControl"/> et des deux
     ///   <see cref="ScrollViewer"/> en fonction de la hauteur
-    ///   courante de la fenêtre principale, à parité avec
-    ///   <c>Page01</c> et le legacy
-    ///   <c>BatchStockRelease.Page96</c>.</description></item>
+    ///   courante de la fenêtre principale.</description></item>
     /// </list>
     ///
     /// <para>Non-responsabilités :</para>
@@ -173,9 +171,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <c>ColumnDefinition Width="200"</c> du <c>MessageGrid</c>
         /// de l'onglet Détail du XAML, garantissant la
         /// cohérence visuelle entre la largeur du contrôle stylé
-        /// et la largeur de la colonne hôte. Reproduction stricte
-        /// de la valeur du legacy
-        /// <c>BatchStockRelease.Page96</c>.</para>
+        /// et la largeur de la colonne hôte.</para>
         /// </remarks>
         private const double DetailTitleWidth = 200;
 
@@ -554,9 +550,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <see cref="TabControl"/> <c>MainTabControl</c> à
         /// <c>MainWindowHeight - 220</c> et la hauteur des deux
         /// <see cref="ScrollViewer"/> à
-        /// <c>tabControlHeight - 93</c>, à parité avec
-        /// <c>Page01</c> et le composant legacy
-        /// <c>BatchStockRelease.Page96</c>. Les constantes
+        /// <c>tabControlHeight - 93</c>. Les constantes
         /// <c>220</c> et <c>93</c> reproduisent strictement les
         /// valeurs du legacy et représentent les marges réservées
         /// à l'environnement de la page (bandeau de fenêtre, menu

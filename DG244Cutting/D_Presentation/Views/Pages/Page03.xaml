@@ -14,9 +14,7 @@ Contexte :
     étant l'émetteur exclusif via d'autres mécanismes hors périmètre. La page n'expose
     aucune commande utilisateur de composition ; la sortie s'effectue exclusivement
     via les boutons transverses du menu horizontal portés par le couple
-    VM_MH_Generic / MH_Generic. Migration vers le modèle DG244Cutting de la
-    fonctionnalité aujourd'hui portée par Page96 du legacy BatchStockRelease, dans
-    le cadre du chantier 1 du programme de migration Page03_Création.
+    VM_MH_Generic / MH_Generic.
 
 Statut canonique :
     Sous-cas riche de la famille Page-VM selon §5.2 du 0232-Page-VM. Pré-qualification
@@ -116,7 +114,7 @@ Remarques techniques :
       est appliqué au Loaded puis à chaque SizeChanged par l'override OnResized.
     - Les largeurs (Width=200/50/200 des colonnes des ListViews et Width=200 de
       la première colonne du Grid de l'onglet Détail) sont reprises sans
-      modification du legacy BatchStockRelease.Page96.
+      modification.
     - Aucun handler SelectionChanged sur le TabControl ni autre handler côté
       code-behind (arbitrage Q9=A du fil de fabrique) : la coordination des
       trois propriétés de sélection et la sélection automatique de l'onglet
@@ -127,7 +125,7 @@ Remarques techniques :
       ViewModel via la mécanique multilingue héritée.
     - Le DataTemplate des ListViews n'est pas stylisé par IS_ControlStyler : le
       contrat ne porte aucune méthode dédiée à la stylisation des éléments
-      d'ItemTemplate (parité Page01 / legacy Page96).
+      d'ItemTemplate.
 =====================================================================================
 -->
 <generic:Page_Generic x:Class="DG244Cutting.D_Presentation.Views.Pages.Page03"
