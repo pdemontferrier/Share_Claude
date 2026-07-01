@@ -251,6 +251,15 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             //   Query Handlers Scoped (IQ_UserApp, IQ_UserAppSession, IQ_AppList) qui touchent
             //   le DbContext partagé -> Scoped (P4-bis, §4.10.10 ; R-4.10.14).
             services.AddScoped<IU_Application_OnStart, UC_Application_OnStart>();
+            // UC_CloseApplication : orchestrateur de la procédure de fermeture applicative
+            //   selon la matrice à quatre modes (confirmation, delay, warning, direct) et la
+            //   branche ForceClose (priorité absolue), avec filet de fermeture de session à
+            //   deux branches conditionnel à ISE_App.IsConnected. Non transactionnel par
+            //   construction, mais consomme IU_UserAppSession_Close Scoped en sous-séquence
+            //   (chaîne UC → UC normalisée R-4.14.21) -> Scoped (P4-bis, §4.10.10 ;
+            //   R-4.10.14). Consommé en sous-séquence par UC_DigitTryDb_RecoverConnection
+            //   en mode delay (versant UseCase consommé de R-4.14.21) et par la couche de
+            //   présentation (VM ou code-behind WPF) à l'occasion de l'événement OnClosing.
             services.AddScoped<IU_CloseApplication, UC_CloseApplication>();
             // UC_DigitTryDb_RecoverConnection : orchestrateur de la procédure de récupération
             //   de connexion à la base partagée à la suite d'un événement

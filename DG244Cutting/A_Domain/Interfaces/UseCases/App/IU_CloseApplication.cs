@@ -10,13 +10,16 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
     /// <para>
     /// Contexte : interface définie dans <c>A_Domain</c> conformément à
     /// l'obligation de placement des contrats (§4.14.1 du 0230). Elle est consommée
-    /// par injection de dépendances par la couche de présentation (ViewModel ou
-    /// code-behind de la fenêtre principale WPF) à l'occasion de l'événement
-    /// <c>OnClosing</c>, et plus généralement par tout consommateur de présentation
-    /// pilotant la fermeture applicative (commande de menu, raccourci global,
-    /// mécanisme de surveillance de connexion). Le contrat appartient au domaine
-    /// <c>App</c> (orchestration applicative transverse, cycle de vie applicatif).
-    /// Son implémentation concrète
+    /// par injection de dépendances selon deux catégories de consommateurs :
+    /// (1) la couche de présentation — ViewModel ou code-behind de la fenêtre
+    /// principale WPF à l'occasion de l'événement <c>OnClosing</c>, ou tout autre
+    /// consommateur de présentation pilotant la fermeture applicative (commande
+    /// de menu, raccourci global) ; (2) un UseCase amont, en pratique
+    /// <see cref="IU_DigitTryDb_RecoverConnection"/> qui délègue en mode delay
+    /// dans la branche d'échec de la procédure de récupération de connexion à
+    /// la base partagée, au titre de la chaîne UC → UC normalisée (R-4.14.21).
+    /// Le contrat appartient au domaine <c>App</c> (orchestration applicative
+    /// transverse, cycle de vie applicatif). Son implémentation concrète
     /// <see cref="DG244Cutting.B_UseCases.UseCases.App.UC_CloseApplication"/>
     /// réside en <c>B_UseCases/UseCases/App/</c>.
     /// </para>
@@ -53,19 +56,20 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
     /// <see cref="En_CloseResult.Closed"/>.</description></item>
     /// </list>
     /// <para>
-    /// Branche legacy <c>ForceClose</c> (priorité absolue) : le flag
+    /// Branche <c>ForceClose</c> : le flag
     /// <c>ISE_User.ForceClose</c> est lu en début de scénario et, s'il est à
-    /// <see langword="true"/>, prime sur la matrice à quatre modes. Selon l'état
-    /// <c>ISE_App.IsConnected</c>, la branche legacy effectue soit la déconnexion
-    /// de la session (cas connecté), soit une journalisation silencieuse (cas
-    /// déconnecté), puis converge vers la fermeture applicative effective. Retour
+    /// <see langword="true"/>, prime sur la matrice à quatre modes par priorité
+    /// absolue. Selon l'état <c>ISE_App.IsConnected</c>, la branche
+    /// <c>ForceClose</c> effectue soit la déconnexion de la session (cas connecté),
+    /// soit une journalisation silencieuse (cas déconnecté), puis converge vers la
+    /// fermeture applicative effective. Retour
     /// <see cref="En_CloseResult.ForceClosed"/> dans les deux cas.
     /// </para>
     /// <para>
     /// Convergence PR-B : à l'exception du mode confirmation sur refus
     /// utilisateur (qui retourne <see cref="En_CloseResult.Cancelled"/> sans
     /// fermeture effective), tous les chemins fonctionnels — y compris la branche
-    /// legacy <c>ForceClose</c> — convergent vers le geste WPF terminal de
+    /// <c>ForceClose</c> — convergent vers le geste WPF terminal de
     /// fermeture de la fenêtre principale, isolé en D_Presentation derrière le
     /// contrat <c>IS_Shutdown</c>. Cette convergence garantit l'uniformité du
     /// pilotage WPF côté présentation pour l'ensemble des modes.
@@ -115,7 +119,7 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
         /// </list>
         /// <para>Logique d'orchestration :</para>
         /// <list type="bullet">
-        /// <item><description>Branche legacy <c>ForceClose</c> (priorité absolue) : si <c>ISE_User.ForceClose == true</c>, la matrice à quatre modes est court-circuitée. Cas <c>IsConnected == true</c> : délégation à <c>IU_UserAppSession_Close</c> pour la déconnexion de la session courante. Cas <c>IsConnected == false</c> : journalisation silencieuse (<c>notify: false</c>) via <c>IU_LogAndNotify</c> avec construction d'un <c>Ex_Infrastructure</c> documentant la situation. Dans les deux cas : remise à zéro du flag <c>ForceClose</c>, fermeture applicative effective via <c>IS_Shutdown</c>. Retour <see cref="En_CloseResult.ForceClosed"/>.</description></item>
+        /// <item><description>Branche <c>ForceClose</c> : si <c>ISE_User.ForceClose == true</c>, la matrice à quatre modes est court-circuitée par priorité absolue. Cas <c>IsConnected == true</c> : délégation à <c>IU_UserAppSession_Close</c> pour la déconnexion de la session courante. Cas <c>IsConnected == false</c> : journalisation silencieuse (<c>notify: false</c>) via <c>IU_LogAndNotify</c> avec construction d'un <c>Ex_Infrastructure</c> documentant la situation. Dans les deux cas : remise à zéro du flag <c>ForceClose</c>, fermeture applicative effective via <c>IS_Shutdown</c>. Retour <see cref="En_CloseResult.ForceClosed"/>.</description></item>
         /// <item><description>Mode confirmation : demande de confirmation utilisateur via <c>IS_Notification.ConfirmationReturn</c>. Refus : retour <see cref="En_CloseResult.Cancelled"/> sans déconnexion ni fermeture WPF. Acceptation : délégation à <c>IU_UserAppSession_Close</c>, remise à zéro de <c>ForceClose</c>, fermeture applicative effective via <c>IS_Shutdown</c>. Retour <see cref="En_CloseResult.Closed"/>.</description></item>
         /// <item><description>Mode delay : délégation à <c>IU_UserAppSession_Close</c>, ouverture d'une fenêtre de dialogue non bloquante via <c>IS_Notification.OpenDialogWindow</c>, attente coopérative de <paramref name="delaySeconds"/> secondes (<c>Task.Delay</c> avec propagation du jeton d'annulation), fermeture de la fenêtre de dialogue via <c>IS_Notification.CloseDialogWindow</c>, remise à zéro de <c>ForceClose</c>, fermeture applicative effective via <c>IS_Shutdown</c>. Retour <see cref="En_CloseResult.ForceClosed"/>.</description></item>
         /// <item><description>Mode warning : délégation à <c>IU_UserAppSession_Close</c>, émission d'un avertissement utilisateur via <c>IS_Notification.Warning</c>, remise à zéro de <c>ForceClose</c>, fermeture applicative effective via <c>IS_Shutdown</c>. Retour <see cref="En_CloseResult.ForceClosed"/>.</description></item>
@@ -123,7 +127,7 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
         /// </list>
         /// <para>
         /// Convergence PR-B : à l'exception du mode confirmation sur refus
-        /// utilisateur, tous les chemins fonctionnels — y compris la branche legacy
+        /// utilisateur, tous les chemins fonctionnels — y compris la branche
         /// <c>ForceClose</c> — convergent vers <c>IS_Shutdown.ExecuteAsync</c>,
         /// uniformisant le pilotage WPF côté présentation.
         /// </para>
@@ -175,7 +179,7 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
         /// <list type="bullet">
         /// <item><description><see cref="En_CloseResult.Cancelled"/> : fermeture annulée — soit par refus utilisateur lors de la confirmation, soit par absorption d'une exception applicative typée dans le pipeline terminal. Le consommateur de présentation positionne <c>CancelEventArgs.Cancel</c> à <see langword="true"/>.</description></item>
         /// <item><description><see cref="En_CloseResult.Closed"/> : fermeture confirmée par l'utilisateur (mode confirmation accepté) ou fermeture directe (mode direct), menée à terme avec déconnexion de la session applicative courante et fermeture WPF effective. Le consommateur de présentation positionne <c>CancelEventArgs.Cancel</c> à <see langword="false"/>.</description></item>
-        /// <item><description><see cref="En_CloseResult.ForceClosed"/> : fermeture forcée — soit pilotée par <c>ISE_User.ForceClose</c> (branche legacy, priorité absolue), soit issue du mode warning, soit issue du mode delay. Le consommateur de présentation positionne <c>CancelEventArgs.Cancel</c> à <see langword="false"/>.</description></item>
+        /// <item><description><see cref="En_CloseResult.ForceClosed"/> : fermeture forcée — soit pilotée par <c>ISE_User.ForceClose</c> par priorité absolue, soit issue du mode warning, soit issue du mode delay. Le consommateur de présentation positionne <c>CancelEventArgs.Cancel</c> à <see langword="false"/>.</description></item>
         /// </list>
         /// </returns>
         /// <exception cref="OperationCanceledException">

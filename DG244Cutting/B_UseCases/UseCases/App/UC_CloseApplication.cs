@@ -35,17 +35,17 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <item><description>sinon <c>warning == true</c> → mode warning.</description></item>
     /// <item><description>sinon → mode direct.</description></item>
     /// </list>
-    /// <para>Branche legacy <c>ForceClose</c> (priorité absolue) : le flag
+    /// <para>Branche <c>ForceClose</c> : le flag
     /// <see cref="ISE_User.ForceClose"/> est lu en début de scénario et, s'il est à
-    /// <see langword="true"/>, prime sur la matrice à quatre modes. Selon l'état
-    /// <see cref="ISE_App.IsConnected"/>, la branche legacy effectue soit la
-    /// déconnexion de la session (cas connecté), soit une journalisation silencieuse
-    /// (cas déconnecté), puis converge vers la fermeture applicative effective via
-    /// <see cref="IS_Shutdown"/>. Retour <see cref="En_CloseResult.ForceClosed"/>
-    /// dans les deux cas.</para>
+    /// <see langword="true"/>, prime sur la matrice à quatre modes par priorité
+    /// absolue. Selon l'état <see cref="ISE_App.IsConnected"/>, la branche
+    /// <c>ForceClose</c> effectue soit la déconnexion de la session (cas connecté),
+    /// soit une journalisation silencieuse (cas déconnecté), puis converge vers la
+    /// fermeture applicative effective via <see cref="IS_Shutdown"/>. Retour
+    /// <see cref="En_CloseResult.ForceClosed"/> dans les deux cas.</para>
     /// <para>Convergence PR-B : à l'exception du mode confirmation sur refus
     /// utilisateur (qui retourne <see cref="En_CloseResult.Cancelled"/> sans fermeture
-    /// effective), tous les chemins fonctionnels — y compris la branche legacy
+    /// effective), tous les chemins fonctionnels — y compris la branche
     /// <c>ForceClose</c> — convergent vers <see cref="IS_Shutdown.ExecuteAsync"/>,
     /// uniformisant le pilotage WPF côté D_Presentation.</para>
     /// <para>Nature transactionnelle : non transactionnel par construction
@@ -55,15 +55,24 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <see cref="IU_UserAppSession_Close"/> qui ouvre et clôt sa propre transaction,
     /// au titre de l'indépendance transactionnelle I-4.10.3.</para>
     /// <para>Participation à la chaîne UC → UC : ce UseCase consomme
-    /// <see cref="IU_UserAppSession_Close"/> en sous-séquence dans cinq des six sites
-    /// d'orchestration (branche legacy connectée, mode confirmation accepté, mode
-    /// delay, mode warning, mode direct ; la branche legacy déconnectée court-circuite
-    /// cette consommation au profit d'une journalisation silencieuse). Il n'est
-    /// lui-même pas consommé en sous-séquence par un UseCase amont ; son consommateur
-    /// est la couche de présentation. La signature signalable
-    /// <c>Task&lt;En_CloseResult&gt;</c> du contrat est motivée par la nécessité
-    /// fonctionnelle pour ce consommateur de présentation de piloter
-    /// <c>CancelEventArgs.Cancel</c> selon l'issue retournée.</para>
+    /// <see cref="IU_UserAppSession_Close"/> en sous-séquence dans chacune des cinq
+    /// voies opératoires (branche <c>ForceClose</c> + quatre modes de la matrice),
+    /// conditionnellement à l'état <see cref="ISE_App.IsConnected"/> : la délégation
+    /// effective à <see cref="IU_UserAppSession_Close"/> n'a lieu que si la connexion
+    /// à la base est établie, sinon une journalisation silencieuse via
+    /// <see cref="IU_LogAndNotify"/> se substitue à la déconnexion. Ce filet à deux
+    /// branches est factorisé dans la méthode privée helper
+    /// <c>EnsureSessionClosedAsync</c> mobilisée par les cinq voies. Il est
+    /// par ailleurs consommé en sous-séquence par
+    /// <see cref="IU_DigitTryDb_RecoverConnection"/> en mode delay dans la branche
+    /// d'échec de la procédure de récupération de connexion à la base partagée, au
+    /// titre de la chaîne UC → UC normalisée (R-4.14.21). La signature signalable
+    /// <c>Task&lt;En_CloseResult&gt;</c> du contrat est doublement motivée : par la
+    /// nécessité fonctionnelle pour le consommateur de présentation (ViewModel ou
+    /// code-behind de la fenêtre principale WPF) de piloter
+    /// <c>CancelEventArgs.Cancel</c> selon l'issue retournée, et par la conformité
+    /// à R-4.14.21 côté versant amont vis-à-vis de
+    /// <see cref="IU_DigitTryDb_RecoverConnection"/>.</para>
     /// <para>Conformité à R-4.14.21 (chaîne UC → UC normalisée) sur le versant
     /// orchestrateur amont : le retour signalable
     /// <c>Task&lt;bool&gt;</c> exposé par <see cref="IU_UserAppSession_Close.ExecuteAsync"/>
@@ -85,7 +94,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
     /// <item><description>Lire le contexte d'environnement depuis les Settings partagés (<c>AppSessionId</c>, <c>ForceClose</c>, <c>IsConnected</c>).</description></item>
-    /// <item><description>Dispatcher l'orchestration selon la matrice à quatre modes et la branche legacy <c>ForceClose</c> (priorité absolue).</description></item>
+    /// <item><description>Dispatcher l'orchestration selon les cinq voies opératoires : branche <c>ForceClose</c> (priorité absolue) et matrice à quatre modes (confirmation, delay, warning, direct).</description></item>
     /// <item><description>Déléguer la déconnexion de la session à <see cref="IU_UserAppSession_Close"/>.</description></item>
     /// <item><description>Émettre la demande de confirmation utilisateur, l'avertissement ou l'ouverture / fermeture de fenêtre de dialogue via <see cref="IS_Notification"/>.</description></item>
     /// <item><description>Remettre à zéro le flag <see cref="ISE_User.ForceClose"/> juste avant chaque déclenchement de la fermeture WPF effective.</description></item>
@@ -203,14 +212,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <para>Séquence d'orchestration :</para>
         /// <list type="number">
         /// <item><description>Construction de la CallChain en première instruction effective (§4.5, item UC7).</description></item>
-        /// <item><description>Lecture du contexte d'environnement depuis les Settings partagés.</description></item>
-        /// <item><description>Branchement sur <c>ForceClose</c> (priorité absolue) :
-        /// <list type="bullet">
-        /// <item><description>Legacy + connecté : délégation à <see cref="IU_UserAppSession_Close"/>, remise à zéro de <c>ForceClose</c>, fermeture WPF via <see cref="IS_Shutdown"/>, retour <see cref="En_CloseResult.ForceClosed"/>.</description></item>
-        /// <item><description>Legacy + non connecté : journalisation silencieuse (<c>notify: false</c>) via <see cref="IU_LogAndNotify"/> avec construction d'un <see cref="Ex_Infrastructure"/> documentant la situation, remise à zéro de <c>ForceClose</c>, fermeture WPF via <see cref="IS_Shutdown"/>, retour <see cref="En_CloseResult.ForceClosed"/>.</description></item>
-        /// </list>
-        /// </description></item>
-        /// <item><description>Sinon, dispatch hiérarchique sur la matrice à quatre modes vers la méthode privée correspondante : <see cref="ExecuteWithConfirmationAsync"/>, <see cref="ExecuteWithDelayAsync"/>, <see cref="ExecuteWithWarningAsync"/>, <see cref="ExecuteDirectAsync"/>.</description></item>
+        /// <item><description>Lecture du contexte d'environnement depuis les Settings partagés (<c>AppSessionId</c>, <c>ForceClose</c>, <c>IsConnected</c>).</description></item>
+        /// <item><description>Dispatcher à cinq voies : si <c>ForceClose == true</c>, délégation à <see cref="ExecuteWithForceCloseAsync"/> (priorité absolue) ; sinon, dispatch hiérarchique sur la matrice à quatre modes vers la méthode privée correspondante — <see cref="ExecuteWithConfirmationAsync"/>, <see cref="ExecuteWithDelayAsync"/>, <see cref="ExecuteWithWarningAsync"/>, <see cref="ExecuteDirectAsync"/>. L'état <c>IsConnected</c> est propagé à chaque méthode privée de mode pour pilotage du filet <see cref="EnsureSessionClosedAsync"/>.</description></item>
         /// </list>
         /// <para>Matrice à quatre modes (priorité hiérarchique stricte) :
         /// (1) <c>confirmation == true</c> → mode confirmation ;
@@ -218,8 +221,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// (3) sinon <c>warning == true</c> → mode warning ;
         /// (4) sinon → mode direct.</para>
         /// <para>Convergence PR-B : à l'exception du refus utilisateur en mode
-        /// confirmation, tous les chemins (legacy ×2, confirmation accepté, delay,
-        /// warning, direct — soit six sites au total) déclenchent
+        /// confirmation, tous les chemins (branche <c>ForceClose</c>, confirmation
+        /// accepté, delay, warning, direct — soit cinq voies au total) déclenchent
         /// <see cref="IS_Shutdown.ExecuteAsync"/> après remise à zéro de
         /// <see cref="ISE_User.ForceClose"/>.</para>
         /// <para>Pipeline terminal (§4.7.4, items UC10, UC11, UC12, UC13) :
@@ -260,51 +263,30 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 bool forceClose = _settingsUser.ForceClose;
                 bool isConnected = _settingsApp.IsConnected;
 
-                // Branche legacy — Priorité absolue : fermeture forcée pilotée par
-                // ISE_User.ForceClose (arbitrage R2-B de l'atelier amont, point (6)
-                // du prompt d'ouverture). Convergence PR-B vers _shutdown.ExecuteAsync
-                // dans les deux sous-branches.
+                // Branche ForceClose — Priorité absolue : fermeture pilotée par
+                // ISE_User.ForceClose. Court-circuite la matrice à quatre modes.
                 if (forceClose)
                 {
-                    if (isConnected)
-                    {
-                        _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
-                    }
-                    else
-                    {
-                        await _logAndNotify.ExecuteAsync(
-                            callChain,
-                            "No_EC_02",
-                            new Ex_Infrastructure(
-                                callChain: callChain,
-                                errorId: Ex_Infrastructure.ErrorCodes.IN_ER_04,
-                                errorException: "Fermeture forcée de l'application sans accès à la base."),
-                            notify: false,
-                            ct: ct);
-                    }
-
-                    _settingsUser.ForceClose = false;
-                    await _shutdown.ExecuteAsync(callChain, ct);
-                    return En_CloseResult.ForceClosed;
+                    return await ExecuteWithForceCloseAsync(callChain, sessionId, isConnected, ct);
                 }
 
-                // Branche normale — Dispatch hiérarchique sur la matrice à quatre modes
+                // Dispatch hiérarchique sur la matrice à quatre modes
                 if (confirmation)
                 {
-                    return await ExecuteWithConfirmationAsync(callChain, sessionId, ct);
+                    return await ExecuteWithConfirmationAsync(callChain, sessionId, isConnected, ct);
                 }
 
                 if (delaySeconds > 0)
                 {
-                    return await ExecuteWithDelayAsync(callChain, sessionId, delaySeconds, ct);
+                    return await ExecuteWithDelayAsync(callChain, sessionId, isConnected, delaySeconds, ct);
                 }
 
                 if (warning)
                 {
-                    return await ExecuteWithWarningAsync(callChain, sessionId, ct);
+                    return await ExecuteWithWarningAsync(callChain, sessionId, isConnected, ct);
                 }
 
-                return await ExecuteDirectAsync(callChain, sessionId, ct);
+                return await ExecuteDirectAsync(callChain, sessionId, isConnected, ct);
             }
             catch (OperationCanceledException)
             {
@@ -332,9 +314,48 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         #region === Méthodes privées ===
 
         /// <summary>
+        /// Orchestre la branche <c>ForceClose</c> (priorité absolue) : fermeture de
+        /// session conditionnelle à <paramref name="isConnected"/> puis fermeture WPF
+        /// effective, sans interaction utilisateur.
+        /// </summary>
+        /// <remarks>
+        /// <para>Séquence : délégation au filet <see cref="EnsureSessionClosedAsync"/>
+        /// (délégation à <see cref="IU_UserAppSession_Close"/> si
+        /// <paramref name="isConnected"/> est <see langword="true"/>, journalisation
+        /// silencieuse via <see cref="IU_LogAndNotify"/> sinon), remise à zéro de
+        /// <see cref="ISE_User.ForceClose"/>, fermeture WPF via
+        /// <see cref="IS_Shutdown"/>, retour <see cref="En_CloseResult.ForceClosed"/>.</para>
+        /// <para>Priorité absolue : cette méthode est appelée directement depuis
+        /// <see cref="ExecuteAsync"/> lorsque le flag <see cref="ISE_User.ForceClose"/>
+        /// est à <see langword="true"/>, court-circuitant la matrice à quatre modes.</para>
+        /// </remarks>
+        /// <param name="caller">CallChain amont propagée par <see cref="ExecuteAsync"/>.</param>
+        /// <param name="sessionId">Identifiant de la session applicative courante,
+        /// lu en amont depuis <see cref="ISE_User.AppSessionId"/>.</param>
+        /// <param name="isConnected">État de connexion à la base de données,
+        /// lu en amont depuis <see cref="ISE_App.IsConnected"/>. Pilote le filet
+        /// <see cref="EnsureSessionClosedAsync"/>.</param>
+        /// <param name="ct">Jeton d'annulation coopérative.</param>
+        /// <returns><see cref="En_CloseResult.ForceClosed"/>.</returns>
+        private async Task<En_CloseResult> ExecuteWithForceCloseAsync(
+            string caller,
+            int sessionId,
+            bool isConnected,
+            CancellationToken ct)
+        {
+            string callChain = $"{caller} > {nameof(ExecuteWithForceCloseAsync)}";
+
+            await EnsureSessionClosedAsync(callChain, sessionId, isConnected, "forceClose", ct);
+            _settingsUser.ForceClose = false;
+            await _shutdown.ExecuteAsync(callChain, ct);
+            return En_CloseResult.ForceClosed;
+        }
+
+        /// <summary>
         /// Orchestre le mode confirmation de la matrice à quatre modes : demande de
-        /// confirmation utilisateur préalable, puis déconnexion de session et fermeture
-        /// WPF effective sur acceptation, ou abandon sans effet sur refus.
+        /// confirmation utilisateur préalable, puis fermeture de session conditionnelle
+        /// à <paramref name="isConnected"/> et fermeture WPF effective sur acceptation,
+        /// ou abandon sans effet sur refus.
         /// </summary>
         /// <remarks>
         /// <para>Séquence : demande de confirmation utilisateur via
@@ -342,20 +363,26 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <c>DictKey_Confirmation</c>). Sur retour <see langword="false"/> (refus
         /// utilisateur ou fermeture forcée de la boîte) : retour
         /// <see cref="En_CloseResult.Cancelled"/> sans déconnexion ni fermeture
-        /// WPF. Sur acceptation (<see langword="true"/>) : délégation à
-        /// <see cref="IU_UserAppSession_Close"/>, remise à zéro de
-        /// <see cref="ISE_User.ForceClose"/>, fermeture WPF via
+        /// WPF. Sur acceptation (<see langword="true"/>) : délégation au filet
+        /// <see cref="EnsureSessionClosedAsync"/> (délégation à
+        /// <see cref="IU_UserAppSession_Close"/> si <paramref name="isConnected"/>
+        /// est <see langword="true"/>, journalisation silencieuse sinon), remise
+        /// à zéro de <see cref="ISE_User.ForceClose"/>, fermeture WPF via
         /// <see cref="IS_Shutdown"/>, retour <see cref="En_CloseResult.Closed"/>.</para>
         /// </remarks>
         /// <param name="caller">CallChain amont propagée par <see cref="ExecuteAsync"/>.</param>
         /// <param name="sessionId">Identifiant de la session applicative courante,
         /// lu en amont depuis <see cref="ISE_User.AppSessionId"/>.</param>
+        /// <param name="isConnected">État de connexion à la base de données,
+        /// lu en amont depuis <see cref="ISE_App.IsConnected"/>. Pilote le filet
+        /// <see cref="EnsureSessionClosedAsync"/>.</param>
         /// <param name="ct">Jeton d'annulation coopérative.</param>
         /// <returns><see cref="En_CloseResult.Cancelled"/> sur refus utilisateur,
         /// <see cref="En_CloseResult.Closed"/> sur acceptation.</returns>
         private async Task<En_CloseResult> ExecuteWithConfirmationAsync(
             string caller,
             int sessionId,
+            bool isConnected,
             CancellationToken ct)
         {
             string callChain = $"{caller} > {nameof(ExecuteWithConfirmationAsync)}";
@@ -367,21 +394,23 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                 return En_CloseResult.Cancelled;
             }
 
-            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            await EnsureSessionClosedAsync(callChain, sessionId, isConnected, "confirmation", ct);
             _settingsUser.ForceClose = false;
             await _shutdown.ExecuteAsync(callChain, ct);
             return En_CloseResult.Closed;
         }
 
         /// <summary>
-        /// Orchestre le mode delay de la matrice à quatre modes : déconnexion de
-        /// session, ouverture d'une fenêtre de dialogue non bloquante, attente
-        /// coopérative, fermeture de la fenêtre de dialogue puis fermeture WPF
-        /// effective.
+        /// Orchestre le mode delay de la matrice à quatre modes : fermeture de session
+        /// conditionnelle à <paramref name="isConnected"/>, ouverture d'une fenêtre
+        /// de dialogue non bloquante, attente coopérative, fermeture de la fenêtre
+        /// de dialogue puis fermeture WPF effective.
         /// </summary>
         /// <remarks>
-        /// <para>Séquence : délégation à <see cref="IU_UserAppSession_Close"/>,
-        /// ouverture d'une fenêtre de dialogue non bloquante via
+        /// <para>Séquence : délégation au filet <see cref="EnsureSessionClosedAsync"/>
+        /// (délégation à <see cref="IU_UserAppSession_Close"/> si
+        /// <paramref name="isConnected"/> est <see langword="true"/>, journalisation
+        /// silencieuse sinon), ouverture d'une fenêtre de dialogue non bloquante via
         /// <see cref="IS_Notification.OpenDialogWindow"/> (clés
         /// <c>DictKey_DialogTitle</c> et <c>DictKey_DialogContent</c>), attente
         /// coopérative de <paramref name="delaySeconds"/> secondes via
@@ -393,6 +422,9 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <param name="caller">CallChain amont propagée par <see cref="ExecuteAsync"/>.</param>
         /// <param name="sessionId">Identifiant de la session applicative courante,
         /// lu en amont depuis <see cref="ISE_User.AppSessionId"/>.</param>
+        /// <param name="isConnected">État de connexion à la base de données,
+        /// lu en amont depuis <see cref="ISE_App.IsConnected"/>. Pilote le filet
+        /// <see cref="EnsureSessionClosedAsync"/>.</param>
         /// <param name="delaySeconds">Durée de l'attente coopérative en secondes,
         /// reçue depuis le paramètre fonctionnel d'entrée d'<see cref="ExecuteAsync"/>.</param>
         /// <param name="ct">Jeton d'annulation coopérative.</param>
@@ -400,12 +432,13 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         private async Task<En_CloseResult> ExecuteWithDelayAsync(
             string caller,
             int sessionId,
+            bool isConnected,
             int delaySeconds,
             CancellationToken ct)
         {
             string callChain = $"{caller} > {nameof(ExecuteWithDelayAsync)}";
 
-            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            await EnsureSessionClosedAsync(callChain, sessionId, isConnected, "delay", ct);
             _notification.OpenDialogWindow(callChain, DictKey_DialogTitle, DictKey_DialogContent, ct);
             await Task.Delay(TimeSpan.FromSeconds(delaySeconds), ct);
             _notification.CloseDialogWindow(callChain, ct);
@@ -415,13 +448,15 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         }
 
         /// <summary>
-        /// Orchestre le mode warning de la matrice à quatre modes : déconnexion de
-        /// session, émission d'un avertissement utilisateur puis fermeture WPF
-        /// effective.
+        /// Orchestre le mode warning de la matrice à quatre modes : fermeture de
+        /// session conditionnelle à <paramref name="isConnected"/>, émission d'un
+        /// avertissement utilisateur puis fermeture WPF effective.
         /// </summary>
         /// <remarks>
-        /// <para>Séquence : délégation à <see cref="IU_UserAppSession_Close"/>,
-        /// émission d'un avertissement utilisateur via
+        /// <para>Séquence : délégation au filet <see cref="EnsureSessionClosedAsync"/>
+        /// (délégation à <see cref="IU_UserAppSession_Close"/> si
+        /// <paramref name="isConnected"/> est <see langword="true"/>, journalisation
+        /// silencieuse sinon), émission d'un avertissement utilisateur via
         /// <see cref="IS_Notification.Warning"/> (clé <c>DictKey_Warning</c>), remise
         /// à zéro de <see cref="ISE_User.ForceClose"/>, fermeture WPF via
         /// <see cref="IS_Shutdown"/>, retour <see cref="En_CloseResult.ForceClosed"/>.</para>
@@ -429,16 +464,20 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <param name="caller">CallChain amont propagée par <see cref="ExecuteAsync"/>.</param>
         /// <param name="sessionId">Identifiant de la session applicative courante,
         /// lu en amont depuis <see cref="ISE_User.AppSessionId"/>.</param>
+        /// <param name="isConnected">État de connexion à la base de données,
+        /// lu en amont depuis <see cref="ISE_App.IsConnected"/>. Pilote le filet
+        /// <see cref="EnsureSessionClosedAsync"/>.</param>
         /// <param name="ct">Jeton d'annulation coopérative.</param>
         /// <returns><see cref="En_CloseResult.ForceClosed"/>.</returns>
         private async Task<En_CloseResult> ExecuteWithWarningAsync(
             string caller,
             int sessionId,
+            bool isConnected,
             CancellationToken ct)
         {
             string callChain = $"{caller} > {nameof(ExecuteWithWarningAsync)}";
 
-            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            await EnsureSessionClosedAsync(callChain, sessionId, isConnected, "warning", ct);
             _notification.Warning(callChain, DictKey_Warning, ct: ct);
             _settingsUser.ForceClose = false;
             await _shutdown.ExecuteAsync(callChain, ct);
@@ -446,30 +485,109 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         }
 
         /// <summary>
-        /// Orchestre le mode direct de la matrice à quatre modes : déconnexion de
-        /// session puis fermeture WPF effective, sans interaction utilisateur.
+        /// Orchestre le mode direct de la matrice à quatre modes : fermeture de
+        /// session conditionnelle à <paramref name="isConnected"/> puis fermeture WPF
+        /// effective, sans interaction utilisateur.
         /// </summary>
         /// <remarks>
-        /// <para>Séquence : délégation à <see cref="IU_UserAppSession_Close"/>,
-        /// remise à zéro de <see cref="ISE_User.ForceClose"/>, fermeture WPF via
-        /// <see cref="IS_Shutdown"/>, retour <see cref="En_CloseResult.Closed"/>.</para>
+        /// <para>Séquence : délégation au filet <see cref="EnsureSessionClosedAsync"/>
+        /// (délégation à <see cref="IU_UserAppSession_Close"/> si
+        /// <paramref name="isConnected"/> est <see langword="true"/>, journalisation
+        /// silencieuse sinon), remise à zéro de <see cref="ISE_User.ForceClose"/>,
+        /// fermeture WPF via <see cref="IS_Shutdown"/>, retour
+        /// <see cref="En_CloseResult.Closed"/>.</para>
         /// </remarks>
         /// <param name="caller">CallChain amont propagée par <see cref="ExecuteAsync"/>.</param>
         /// <param name="sessionId">Identifiant de la session applicative courante,
         /// lu en amont depuis <see cref="ISE_User.AppSessionId"/>.</param>
+        /// <param name="isConnected">État de connexion à la base de données,
+        /// lu en amont depuis <see cref="ISE_App.IsConnected"/>. Pilote le filet
+        /// <see cref="EnsureSessionClosedAsync"/>.</param>
         /// <param name="ct">Jeton d'annulation coopérative.</param>
         /// <returns><see cref="En_CloseResult.Closed"/>.</returns>
         private async Task<En_CloseResult> ExecuteDirectAsync(
             string caller,
             int sessionId,
+            bool isConnected,
             CancellationToken ct)
         {
             string callChain = $"{caller} > {nameof(ExecuteDirectAsync)}";
 
-            _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            await EnsureSessionClosedAsync(callChain, sessionId, isConnected, "direct", ct);
             _settingsUser.ForceClose = false;
             await _shutdown.ExecuteAsync(callChain, ct);
             return En_CloseResult.Closed;
+        }
+
+        /// <summary>
+        /// Filet de fermeture de session à deux branches : délégation à
+        /// <see cref="IU_UserAppSession_Close"/> si <paramref name="isConnected"/>
+        /// est <see langword="true"/>, journalisation silencieuse via
+        /// <see cref="IU_LogAndNotify"/> sinon. Consommé par les cinq voies
+        /// opératoires du UseCase.
+        /// </summary>
+        /// <remarks>
+        /// <para>Séquence conditionnelle :</para>
+        /// <list type="bullet">
+        /// <item><description>Cas <paramref name="isConnected"/> <see langword="true"/> :
+        /// délégation à <see cref="IU_UserAppSession_Close"/> pour la déconnexion de
+        /// la session applicative courante. Retour signalable <c>Task&lt;bool&gt;</c>
+        /// exploité par valeur via discard explicite (R-4.14.21, condition (a)) — la
+        /// convergence PR-B est inconditionnelle en aval côté méthode privée de mode,
+        /// l'incident éventuel du UseCase consommé ayant déjà été journalisé et
+        /// notifié terminalement par son propre pipeline.</description></item>
+        /// <item><description>Cas <paramref name="isConnected"/> <see langword="false"/> :
+        /// journalisation silencieuse (<c>notify: false</c>) via
+        /// <see cref="IU_LogAndNotify"/> avec construction d'un
+        /// <see cref="Ex_Infrastructure"/> portant le code
+        /// <see cref="Ex_Infrastructure.ErrorCodes.IN_ER_04"/> et un message contextuel
+        /// paramétré par <paramref name="modeLabel"/> documentant le mode opératoire
+        /// courant. Aucune déconnexion effective de session.</description></item>
+        /// </list>
+        /// <para>Le helper ne pilote ni la remise à zéro de
+        /// <see cref="ISE_User.ForceClose"/>, ni l'appel à
+        /// <see cref="IS_Shutdown.ExecuteAsync"/> : ces deux gestes sont portés par
+        /// chaque méthode privée de mode appelante (convergence PR-B centralisée
+        /// en aval de la consommation du helper).</para>
+        /// </remarks>
+        /// <param name="caller">CallChain amont propagée par la méthode privée
+        /// de mode appelante.</param>
+        /// <param name="sessionId">Identifiant de la session applicative courante,
+        /// lu en amont depuis <see cref="ISE_User.AppSessionId"/>.</param>
+        /// <param name="isConnected">État de connexion à la base de données,
+        /// lu en amont depuis <see cref="ISE_App.IsConnected"/>. Pilote la branche
+        /// du filet.</param>
+        /// <param name="modeLabel">Libellé textuel du mode opératoire courant
+        /// (<c>"forceClose"</c>, <c>"confirmation"</c>, <c>"delay"</c>,
+        /// <c>"warning"</c> ou <c>"direct"</c>), injecté dans le message contextuel du
+        /// <see cref="Ex_Infrastructure"/> construit dans la branche non connectée
+        /// pour traçabilité en journalisation.</param>
+        /// <param name="ct">Jeton d'annulation coopérative.</param>
+        private async Task EnsureSessionClosedAsync(
+            string caller,
+            int sessionId,
+            bool isConnected,
+            string modeLabel,
+            CancellationToken ct)
+        {
+            string callChain = $"{caller} > {nameof(EnsureSessionClosedAsync)}";
+
+            if (isConnected)
+            {
+                _ = await _userAppSessionClose.ExecuteAsync(callChain, sessionId, ct);
+            }
+            else
+            {
+                await _logAndNotify.ExecuteAsync(
+                    callChain,
+                    "No_EC_02",
+                    new Ex_Infrastructure(
+                        callChain: callChain,
+                        errorId: Ex_Infrastructure.ErrorCodes.IN_ER_04,
+                        errorException: $"Fermeture de l'application en mode '{modeLabel}' sans accès à la base."),
+                    notify: false,
+                    ct: ct);
+            }
         }
 
         #endregion
