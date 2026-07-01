@@ -37,16 +37,22 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
     /// confirmant la disponibilité de la connexion ; (iii) en cas de
     /// récupération réussie pendant l'un des deux cycles, fermeture de la
     /// fenêtre de dialogue et restitution de la main à l'opérateur ; en cas
-    /// d'échec des deux cycles, fermeture de la fenêtre de dialogue puis
-    /// délégation à <see cref="IU_CloseApplication"/> en mode delay pour
-    /// informer l'opérateur de l'imminence de la fermeture applicative et
-    /// procéder à celle-ci.</para>
+    /// d'échec des deux cycles, délégation à
+    /// <see cref="IU_CloseApplication"/> en mode delay pour informer
+    /// l'opérateur de l'imminence de la fermeture applicative et procéder à
+    /// celle-ci, la fenêtre de dialogue d'attente restant ouverte au moment
+    /// de la délégation et ses libellés basculant en place par idempotence
+    /// de <see cref="IS_Notification.OpenDialogWindow"/> à la seconde
+    /// ouverture portée par <see cref="IU_CloseApplication"/> — la
+    /// fermeture WPF unique et effective de la fenêtre est alors portée par
+    /// le <see cref="IS_Notification.CloseDialogWindow"/> terminal de
+    /// <see cref="IU_CloseApplication"/>.</para>
     ///
     /// <para>Note sur la convention de méthode publique : Ce contrat expose
     /// une méthode publique unique <see cref="ExecuteAsync"/>, conformément
     /// à la configuration nominale du cas Concept au sens de la convention
     /// de nommage UC_ dual-cas Entité / Concept (R-4.14.7 amendée). Le
-    /// segment <c>Database</c> est un nom propre de concept applicatif (la
+    /// segment <c>DigitTryDb</c> est un nom propre de concept applicatif (la
     /// base de données partagée) non rattaché à une entité du modèle de
     /// domaine (aucune entité EF Core homonyme dans
     /// <c>A_Domain/Entities</c>) ; le segment <c>RecoverConnection</c> est
@@ -182,11 +188,17 @@ namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
         /// <see cref="ISE_App.IsConnected"/>, et oriente la suite selon
         /// l'issue : récupération réussie pendant l'un des cycles —
         /// fermeture de la fenêtre de dialogue et retour à l'opérateur ;
-        /// échec des deux cycles — fermeture de la fenêtre de dialogue puis
-        /// délégation à <see cref="IU_CloseApplication"/> en mode delay
+        /// échec des deux cycles — délégation à
+        /// <see cref="IU_CloseApplication"/> en mode delay
         /// (<c>confirmation = false</c>, <c>warning = false</c>,
-        /// <c>delaySeconds &gt; 0</c>) pour fermeture applicative
-        /// informée.</para>
+        /// <c>delaySeconds &gt; 0</c>) pour fermeture applicative informée,
+        /// la fenêtre de dialogue d'attente restant ouverte au moment de la
+        /// délégation et ses libellés basculant en place par idempotence de
+        /// <see cref="IS_Notification.OpenDialogWindow"/> à la seconde
+        /// ouverture portée par <see cref="IU_CloseApplication"/> ; la
+        /// fermeture WPF de la fenêtre est portée par le
+        /// <see cref="IS_Notification.CloseDialogWindow"/> terminal de
+        /// <see cref="IU_CloseApplication"/>.</para>
         ///
         /// <para>Cadences d'observation : les délais sont lus depuis le
         /// Singleton applicatif. Le cycle 1 dispose de

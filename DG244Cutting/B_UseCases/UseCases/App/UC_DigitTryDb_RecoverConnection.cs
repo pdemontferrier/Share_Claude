@@ -26,7 +26,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// </para>
     /// <para>
     /// Configuration typologique : cas Concept à méthode publique unique
-    /// (segment <c>Database</c> nom propre de concept applicatif non rattaché
+    /// (segment <c>DigitTryDb</c> nom propre de concept applicatif non rattaché
     /// à une entité du modèle de domaine, segment <c>RecoverConnection</c>
     /// action facultative qualifiant le concept porté ; R-4.14.7 amendée),
     /// domaine <c>App</c> (mécanique transverse de récupération de
@@ -52,11 +52,18 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// <see cref="ISE_App.IsConnected"/> aux cadences applicatives, conditionnés
     /// par une garde de stabilité ; (iii) en cas de récupération réussie,
     /// fermeture de la fenêtre de dialogue et restitution de la main à
-    /// l'opérateur ; (iv) en cas d'échec des deux cycles, fermeture de la
-    /// fenêtre de dialogue puis délégation à <see cref="IU_CloseApplication"/>
-    /// en mode delay (<c>confirmation = false</c>, <c>warning = false</c>,
+    /// l'opérateur ; (iv) en cas d'échec des deux cycles, délégation à
+    /// <see cref="IU_CloseApplication"/> en mode delay
+    /// (<c>confirmation = false</c>, <c>warning = false</c>,
     /// <c>delaySeconds = <see cref="ShutdownDelaySeconds"/></c>) pour
-    /// fermeture applicative informée. Toute défaillance applicative est
+    /// fermeture applicative informée, la fenêtre de dialogue d'attente
+    /// restant ouverte au moment de la délégation et ses libellés basculant
+    /// en place par idempotence de
+    /// <see cref="IS_Notification.OpenDialogWindow"/> à la seconde ouverture
+    /// portée par <see cref="IU_CloseApplication"/> ; la fermeture WPF
+    /// unique et effective de la fenêtre est portée par le
+    /// <see cref="IS_Notification.CloseDialogWindow"/> terminal de
+    /// <see cref="IU_CloseApplication"/>. Toute défaillance applicative est
     /// traitée terminalement sans propagation à l'appelant.
     /// </para>
     /// <para>
@@ -275,8 +282,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// dialogue et retour à l'appelant ; (iii) sinon exécution du cycle 2
         /// lent de durée <see cref="ISE_App.DatabaseCheckSecondLoop"/>
         /// secondes ; si réussi, fermeture de la fenêtre de dialogue et
-        /// retour à l'appelant ; (iv) sinon fermeture de la fenêtre de
-        /// dialogue puis délégation à
+        /// retour à l'appelant ; (iv) sinon délégation à
         /// <see cref="IU_CloseApplication.ExecuteAsync"/> en mode delay
         /// (<c>confirmation = false</c>, <c>warning = false</c>,
         /// <c>delaySeconds = <see cref="ShutdownDelaySeconds"/></c>) avec
@@ -285,7 +291,14 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// (arbitrage Q5.4 option A — le pipeline terminal de
         /// <c>UC_CloseApplication</c> assure déjà la journalisation des cas
         /// <see cref="En_CloseResult.Cancelled"/> par son propre
-        /// <see cref="IU_LogAndNotify"/>).
+        /// <see cref="IU_LogAndNotify"/>) ; la fenêtre de dialogue d'attente
+        /// reste ouverte au moment de la délégation, ses libellés basculant
+        /// en place par idempotence de
+        /// <see cref="IS_Notification.OpenDialogWindow"/> à la seconde
+        /// ouverture portée par <see cref="IU_CloseApplication"/>, et la
+        /// fermeture WPF unique et effective de la fenêtre est portée par
+        /// le <see cref="IS_Notification.CloseDialogWindow"/> terminal de
+        /// <see cref="IU_CloseApplication"/>.
         /// </para>
         /// <para>
         /// Aucune précondition structurelle n'est validée à l'intérieur du
@@ -359,11 +372,16 @@ namespace DG244Cutting.B_UseCases.UseCases.App
                     return;
                 }
 
-                // (iv) Échec des deux cycles - fermeture de la fenêtre
-                // d'attente avant délégation à IU_CloseApplication mode delay
-                // (qui ouvrira sa propre fenêtre de dialogue d'imminence de
-                // fermeture).
-                _notification.CloseDialogWindow(callChain, ct);
+                // (iv) Échec des deux cycles - délégation directe à
+                // IU_CloseApplication mode delay sans fermeture intermédiaire
+                // de la fenêtre de dialogue d'attente : la mécanique
+                // d'idempotence portée par SR_Notification.OpenDialogWindow en
+                // aval permet à la seconde ouverture de dialogue (portée par
+                // UC_CloseApplication en mode delay) de basculer les libellés
+                // en place plutôt que de fermer et rouvrir la fenêtre. Une
+                // seule fenêtre WPF reste ouverte de bout en bout ; la
+                // fermeture WPF unique et effective est portée par le
+                // CloseDialogWindow terminal de UC_CloseApplication.
 
                 // Délégation à IU_CloseApplication en mode delay
                 // (confirmation: false, warning: false, delaySeconds > 0).
