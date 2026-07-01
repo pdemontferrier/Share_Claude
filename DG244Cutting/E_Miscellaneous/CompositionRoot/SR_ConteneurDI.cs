@@ -185,6 +185,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             });
 
             services.AddSingleton<IS_StoredProcedure, SR_StoredProcedure>(); // factory (hors DbContext partagé).
+            services.AddSingleton<IS_SingleInstanceGuard, SR_SingleInstanceGuard>();
             services.AddSingleton<IS_DigitTryDb_TestConnection, SR_DigitTryDb_TestConnection>();
 
             // Presentation (techniques transverses, sans dépendance scoped) -> Singleton.

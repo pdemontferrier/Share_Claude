@@ -183,9 +183,6 @@ namespace DG244Cutting.D_Presentation.Services
 
             try
             {
-                if (string.IsNullOrWhiteSpace(caller))
-                    throw new Ex_Business(callChain, Ex_Business.ErrorCodes.BU_ER_01, "Le paramètre 'caller' ne peut pas être null, vide ou composé uniquement d'espaces.");
-
                 ct.ThrowIfCancellationRequested();
 
                 // Basculement sur le thread UI. Invoke synchrone (et non BeginInvoke) :
