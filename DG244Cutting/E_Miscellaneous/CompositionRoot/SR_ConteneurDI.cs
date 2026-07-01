@@ -190,6 +190,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             // Presentation (techniques transverses, sans dépendance scoped) -> Singleton.
             services.AddSingleton<IS_ControlStyler, SR_ControlStyler>();
             services.AddSingleton<IS_Dictionary, SR_Dictionary>();
+            services.AddSingleton<IS_MainWindowActivator, SR_MainWindowActivator>();
             services.AddSingleton<IS_Navigation, SR_Navigation>();
             services.AddSingleton<IS_Notification, SR_Notification>();
             services.AddSingleton<IS_Shutdown, SR_Shutdown>();
