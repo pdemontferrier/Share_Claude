@@ -7,7 +7,10 @@ Description :
     DG244Cutting. Page d'accueil affichée après authentification, point d'entrée du
     flux de traitement d'une série. Présente en cinq colonnes les séries de
     production admissibles réparties selon leur statut de classement : à réaliser,
-    en retard, en cours, réalisées, à venir.
+    en retard, en cours, réalisées, à venir. Le tableau de bord signale par ailleurs
+    les séries en rupture de stock de barres neuves, rendues en italique afin que le
+    responsable d'atelier et les opérateurs repèrent d'un coup d'œil les séries dont
+    l'avancement bute sur un manque matière.
 
 Contexte :
     Transposition à cinq colonnes de la Page10 du projet legacy BatchStockRelease
@@ -19,8 +22,9 @@ Contexte :
 Structure visuelle :
     - Élément racine generic:Page_Generic (cycle de vie WPF, filet de sécurité ultime,
       résolution d'IS_ControlStyler et d'ISE_Window via Service Locator).
-    - Ressources : trois convertisseurs à sens unique déclarés en StaticResource
-      (UT_ProductionEndDayToBrush, UT_IsLateToFontWeight, UT_TruncateString).
+    - Ressources : quatre convertisseurs à sens unique déclarés en StaticResource
+      (UT_ProductionEndDayToBrush, UT_IsLateToFontWeight, UT_TruncateString,
+      UT_IsBarOutOfStockToFontStyle).
     - Grid central PageGrid à cinq colonnes de largeur égale et trois lignes :
         · Row 0 : TextBlock PageTitleMain, titre unique de la page en span sur les
           cinq colonnes (Grid.ColumnSpan="5"), bindé sur PageName (clé P10_00).
@@ -36,6 +40,7 @@ DataTemplate de ligne :
       (ConverterParameter=15), source non altérée.
     - Fond de ligne : via UT_ProductionEndDayToBrush lié à ProductionEndDay.
     - Graisse de police : via UT_IsLateToFontWeight lié à IsLate.
+    - Style de police : via UT_IsBarOutOfStockToFontStyle lié à IsBarOutOfStock.
     - Câblage du clic : InputBinding (MouseBinding Gesture="LeftClick") porté par le
       DataTemplate de ligne, attaché au StackPanel racine de la ligne via
       StackPanel.InputBindings, déclenchant SelectSeriesCommand avec le
@@ -48,7 +53,7 @@ Remarques techniques :
       binding sur une propriété observable du ViewModel.
     - Aucun DynamicResource ni StaticResource pour les textes UI (I-4.11.10 du 0231) ;
       les titres et en-têtes sont bindés sur les propriétés observables du ViewModel.
-      Les seules StaticResource admises sont les trois convertisseurs.
+      Les seules StaticResource admises sont les quatre convertisseurs.
     - Les x:Name sont ceux attendus par les signatures d'IS_ControlStyler consommées
       dans l'override ApplyLayout du code-behind ; toute modification casserait la
       stylisation appliquée au Loaded.
@@ -61,6 +66,13 @@ Remarques techniques :
       (MouseBinding sur le StackPanel racine), non par un ItemContainerStyle.
     - Le DataTemplate de ligne n'est pas stylisé par IS_ControlStyler : le contrat ne
       porte aucune méthode dédiée aux éléments d'ItemTemplate (parité Page04).
+    - Indépendance des canaux typographiques : la graisse de police (liée à IsLate via
+      UT_IsLateToFontWeight) et le style de police (lié à IsBarOutOfStock via
+      UT_IsBarOutOfStockToFontStyle) sont DEUX CANAUX DISTINCTS, alimentés par deux
+      propriétés sources distinctes au travers de deux convertisseurs distincts. Ils ne
+      doivent en aucun cas être fusionnés en une liaison composite : une série à la fois
+      en retard et en rupture doit porter les deux signaux simultanément et lisiblement,
+      et toute fusion en une source unique détruirait l'un des deux signaux.
 =====================================================================================
 -->
 <generic:Page_Generic x:Class="DG244Cutting.D_Presentation.Views.Pages.Page10"
@@ -77,6 +89,7 @@ Remarques techniques :
         <converters:UT_ProductionEndDayToBrush x:Key="ProductionEndDayToBrush" />
         <converters:UT_IsLateToFontWeight x:Key="IsLateToFontWeight" />
         <converters:UT_TruncateString x:Key="TruncateString" />
+        <converters:UT_IsBarOutOfStockToFontStyle x:Key="IsBarOutOfStockToFontStyle" />
     </generic:Page_Generic.Resources>
 
     <Grid x:Name="PageGrid">
@@ -132,10 +145,12 @@ Remarques techniques :
                             </StackPanel.InputBindings>
                             <TextBlock Text="{Binding IdSerialNumber}"
                                        Width="80" Padding="5,10,0,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                             <TextBlock Text="{Binding Description, Converter={StaticResource TruncateString}, ConverterParameter=25}"
                                        MinWidth="230" Padding="0,10,5,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -157,10 +172,12 @@ Remarques techniques :
                             </StackPanel.InputBindings>
                             <TextBlock Text="{Binding IdSerialNumber}"
                                        Width="80" Padding="5,10,0,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                             <TextBlock Text="{Binding Description, Converter={StaticResource TruncateString}, ConverterParameter=25}"
                                        MinWidth="230" Padding="0,10,5,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -182,10 +199,12 @@ Remarques techniques :
                             </StackPanel.InputBindings>
                             <TextBlock Text="{Binding IdSerialNumber}"
                                        Width="80" Padding="5,10,0,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                             <TextBlock Text="{Binding Description, Converter={StaticResource TruncateString}, ConverterParameter=25}"
                                        MinWidth="230" Padding="0,10,5,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -207,10 +226,12 @@ Remarques techniques :
                             </StackPanel.InputBindings>
                             <TextBlock Text="{Binding IdSerialNumber}"
                                        Width="80" Padding="5,10,0,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                             <TextBlock Text="{Binding Description, Converter={StaticResource TruncateString}, ConverterParameter=25}"
                                        MinWidth="230" Padding="0,10,5,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -232,10 +253,12 @@ Remarques techniques :
                             </StackPanel.InputBindings>
                             <TextBlock Text="{Binding IdSerialNumber}"
                                        Width="80" Padding="5,10,0,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                             <TextBlock Text="{Binding Description, Converter={StaticResource TruncateString}, ConverterParameter=25}"
                                        MinWidth="230" Padding="0,10,5,0" MinHeight="35"
-                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}" />
+                                       FontWeight="{Binding IsLate, Converter={StaticResource IsLateToFontWeight}}"
+                                       FontStyle="{Binding IsBarOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
