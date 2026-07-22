@@ -346,7 +346,7 @@ public partial class ProductionCutPiece
     /// <summary>
     /// Indique si la barre necessaire à la découpe est en rupture de stock.
     /// </summary>
-    public bool IsBarOutOfSTock { get; set; }
+    public bool IsBarOutOfStock { get; set; }
 
     /// <summary>
     /// Indique si la decoupe a ete realisee.
