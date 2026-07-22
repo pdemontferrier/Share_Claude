@@ -262,6 +262,7 @@ namespace DG244Cutting.B_UseCases.Services.Business
                 IsDropBarSupplied = serie.IsDropBarSupplied,
                 IsNewBarOptimized = serie.IsNewBarOptimized,
                 IsNewBarSupplied = serie.IsNewBarSupplied,
+                IsBarOutOfStock = serie.IsBarOutOfStock,
                 Status = ResolveStatus(serie, appDate, isStarted, startDate, endDate),
                 IsLate = isStarted && appDate >= endDate,
                 WeekDayKey = BuildWeekDayKey(startDate)
