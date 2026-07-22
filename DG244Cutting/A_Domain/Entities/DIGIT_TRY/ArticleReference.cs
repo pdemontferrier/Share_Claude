@@ -99,37 +99,47 @@ public partial class ArticleReference
     public decimal? StandardBarLengthMm { get; set; }
 
     /// <summary>
-    /// Indique si la référence participe à la gestion des chutes.
+    /// Largeur de la barre en millimètres issu du champ Tempor_Import.Feld_10_051.
+    /// </summary>
+    public decimal? BarWidthMm { get; set; }
+
+    /// <summary>
+    /// Hauteur de la barre en millimètres issu du champ Tempor_Import.Feld_10_075.
+    /// </summary>
+    public decimal? BarHeightMm { get; set; }
+
+    /// <summary>
+    /// Indique si la gestion des chutes est active pour cette référence.
     /// </summary>
     public bool ManageScraps { get; set; }
 
     /// <summary>
-    /// Longueur minimale de chute réutilisable pour la découpe.
+    /// Longueur minimale en millimètres au-delà de laquelle une chute est conservée.
     /// </summary>
     public decimal? MinScrapLength { get; set; }
 
     /// <summary>
-    /// Longueur verticale maximale supportée par le stockage.
+    /// Longueur maximale en millimètres admise pour un stockage vertical.
     /// </summary>
     public int MaxVerticalLength { get; set; }
 
     /// <summary>
-    /// Ordre de tri utilisé pour l’affichage et les traitements.
+    /// Ordre d&apos;affichage de la référence dans les listes.
     /// </summary>
     public short SortOrder { get; set; }
 
     /// <summary>
-    /// Date et heure de création de l’enregistrement.
+    /// Date de création de la ligne dans le système local.
     /// </summary>
     public DateTime CreatedAt { get; set; }
 
     /// <summary>
-    /// Date et heure de la dernière mise à jour.
+    /// Date de dernière modification dans le système local.
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
-    /// Indique si la référence est supprimée logiquement (0=active, 1=supprimée).
+    /// Indicateur de suppression logique (soft delete).
     /// </summary>
     public bool IsDeleted { get; set; }
 

@@ -42,6 +42,10 @@ public partial class vw_ArticleInternalDetail
 
     public double? StandardBarLengthMm { get; set; }
 
+    public decimal? BarWidthMm { get; set; }
+
+    public decimal? BarHeightMm { get; set; }
+
     /// <summary>
     /// Catégorie article niveau 1.
     /// </summary>

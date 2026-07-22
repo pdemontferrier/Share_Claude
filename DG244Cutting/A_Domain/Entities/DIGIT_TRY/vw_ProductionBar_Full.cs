@@ -187,6 +187,10 @@ public partial class vw_ProductionBar_Full
     /// </summary>
     public string? ARCodeArticleCuttingMachine { get; set; }
 
+    public decimal? ARBarWidthMm { get; set; }
+
+    public decimal? ARBarHeightMm { get; set; }
+
     /// <summary>
     /// Source : [ArticleReference] - Champ [MinScrapLength] - Longueur minimale de chute réutilisable.
     /// </summary>
