@@ -1,0 +1,145 @@
+﻿<!-- ============================================================
+     PAGE 90 — INFORMATIONS UTILISATEUR
+     ============================================================
+     <Contexte> Cette page affiche les informations personnelles de
+     l’utilisateur connecté ainsi que ses droits d’accès aux pages
+     de l’application BatchStockRelease. </Contexte>
+
+     <Objectif> Offrir une vue synthétique et claire sur :
+       - Les informations d’identification de l’utilisateur.
+       - Ses droits d’accès (lecture, modification, suppression) pour
+         chaque page de l’application. </Objectif>
+
+     <Utilisateurs cibles> Tous les utilisateurs connectés,
+     notamment les administrateurs et responsables d’équipe. </Utilisateurs>
+
+     <Composants principaux>
+       - TabControl : navigation entre les deux sections.
+       - ScrollViewer : défilement du contenu.
+       - ListView : affichage des droits d’accès par page.
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page90"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page90">
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- === Onglets principaux === -->
+        <TabControl x:Name="MainTabControl" Grid.Row="0" Grid.Column="0">
+
+
+            <!-- === Onglet 1 : Informations personnelles === -->
+            <TabItem x:Name="UserDetailsTabItem" Height="40">
+                <Border x:Name="UserDetailsBorder" Padding="5,20,5,20">
+                    <Grid x:Name="UserDetailsGrid" Grid.Row="0" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="Col_0" Width="300"/>
+                            <ColumnDefinition x:Name="Col_1" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition x:Name="Row_0" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_1" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_2" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_3" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_4" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_5" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_6" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_7" MinHeight="40"/>
+                            <RowDefinition x:Name="Row_8" MinHeight="40"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- First Column for Titles -->
+                        <TextBlock x:Name="IDTitle" Grid.Row="0" Grid.Column="0" Text="{DynamicResource P90_01}"/>
+                        <TextBlock x:Name="NomTitle" Grid.Row="1" Grid.Column="0" Text="{DynamicResource P90_02}"/>
+                        <TextBlock x:Name="PrenomTitle" Grid.Row="2" Grid.Column="0" Text="{DynamicResource P90_03}"/>
+                        <TextBlock x:Name="LoginTitle" Grid.Row="3" Grid.Column="0" Text="{DynamicResource P90_04}"/>
+                        <TextBlock x:Name="InitialeTitle" Grid.Row="4" Grid.Column="0" Text="{DynamicResource P90_05}"/>
+                        <TextBlock x:Name="MailProTitle" Grid.Row="5" Grid.Column="0" Text="{DynamicResource P90_06}"/>
+                        <TextBlock x:Name="MachineUserTitle" Grid.Row="6" Grid.Column="0" Text="{DynamicResource P90_07}"/>
+                        <TextBlock x:Name="MachineIDTitle" Grid.Row="7" Grid.Column="0" Text="{DynamicResource P90_08}"/>
+                        <TextBlock x:Name="MachineIPTitle" Grid.Row="8" Grid.Column="0" Text="{DynamicResource P90_09}"/>
+
+                        <!-- Second Column for Output Controls -->
+                        <TextBlock x:Name="IDData" Grid.Row="0" Grid.Column="1" Text="{Binding CurrentUser.Id}"/>
+                        <TextBlock x:Name="NomData" Grid.Row="1" Grid.Column="1" Text="{Binding CurrentUser.Nom}"/>
+                        <TextBlock x:Name="PrenomData" Grid.Row="2" Grid.Column="1" Text="{Binding CurrentUser.Prenom}"/>
+                        <TextBlock x:Name="LoginData" Grid.Row="3" Grid.Column="1" Text="{Binding CurrentUser.Login}"/>
+                        <TextBlock x:Name="InitialeData" Grid.Row="4" Grid.Column="1" Text="{Binding CurrentUser.Initial}"/>
+                        <TextBlock x:Name="MailProData" Grid.Row="5" Grid.Column="1" Text="{Binding CurrentUser.MailPro}"/>
+                        <TextBlock x:Name="MachineUserData" Grid.Row="6" Grid.Column="1" Text="{Binding DeviceUser}"/>
+                        <TextBlock x:Name="MachineIDData" Grid.Row="7" Grid.Column="1" Text="{Binding DeviceID}"/>
+                        <TextBlock x:Name="MachineIPData" Grid.Row="8" Grid.Column="1" Text="{Binding DeviceIP}"/>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+
+            <!-- === Onglet 2 : Droits d’accès === -->
+            <TabItem x:Name="UserAccessTabItem">
+                <Grid x:Name="UserAccessGrid" Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- First lines for Titles -->
+                        <Border x:Name="UserAccessBorder" Grid.Row="0" Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="UserAccessHeader01" Text="{DynamicResource P90_13}" Width="200"/>
+                                <TextBlock x:Name="UserAccessHeader02" Text="{DynamicResource P90_14}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader03" Text="{DynamicResource P90_15}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader04" Text="{DynamicResource P90_16}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader05" Text="{DynamicResource P90_17}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader06" Text="{DynamicResource P90_18}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader07" Text="{DynamicResource P90_19}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader08" Text="{DynamicResource P90_20}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader09" Text="{DynamicResource P90_21}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader10" Text="{DynamicResource P90_22}" Width="100"/>
+                                <TextBlock x:Name="UserAccessHeader11" Text="{DynamicResource P90_23}" Width="100"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- List for datas -->
+                        <ScrollViewer x:Name="UserAccessScrollViewer" Grid.Row="1" Grid.Column="0">
+                            <ListView x:Name="UserAccessListView" ItemsSource="{Binding PagesUserRightsList}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Page}" Width="200"/>
+                                            <CheckBox IsChecked="{Binding UserCanAccess}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanRead}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanUpdate}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanCreate}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanDelete}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanControl}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanValidate}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanSupervise}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanMonitor}" IsEnabled="False" Width="100"/>
+                                            <CheckBox IsChecked="{Binding UserCanAdmin}" IsEnabled="False" Width="100"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</generic:Page_Generic>

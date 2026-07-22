@@ -1,0 +1,104 @@
+﻿<!-- ============================================================
+     PAGE 10 — ACCUEIL (BatchStockRelease)
+     ============================================================
+     <Contexte> Page d’accueil de l’application, affichée après
+     authentification de l’utilisateur. Elle présente les lots à
+     traiter selon leur état d’approvisionnement. </Contexte>
+
+     <Objectif> Permettre à l’utilisateur de visualiser les lots
+     en attente de traitement, répartis selon leur type d’approvisionnement :</Objectif>
+       - <b>Chutes :</b> lots à approvisionner en barres de chutes.
+       - <b>Barres neuves :</b> lots à approvisionner en barres neuves.
+
+     <Utilisateurs cibles> Magasiniers responsables de la
+     préparation des barres avant découpe. </Utilisateurs>
+
+     <Composants principaux>
+       - Deux listes (ListView) affichant les lots selon leur état.
+       - Double ScrollViewer pour le défilement vertical.
+       - Stylisation dynamique gérée par Page_Generic.
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page10"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d" 
+                      Title="Page10">
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="43"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Première ligne -->
+        <TextBlock x:Name="BarDropTitle" Grid.Row="0" Grid.Column="0" Text="{DynamicResource P10_01}"/>
+        <TextBlock x:Name="BarNewTitle" Grid.Row="0" Grid.Column="1" Text="{DynamicResource P10_02}"/>
+
+        <!-- Deuxième ligne -->
+        <Border x:Name="BarDropBorder" Grid.Row="1" Grid.Column="0">
+            <TextBlock x:Name="BarDropHeader" Text="{DynamicResource P10_03}"/>
+        </Border>
+        <Border x:Name="BarNewBorder" Grid.Row="1" Grid.Column="1">
+            <TextBlock x:Name="BarNewHeader" Text="{DynamicResource P10_03}"/>
+        </Border>
+
+        <!-- Troisième ligne -->
+        <!-- Colonne 1 -->
+        <ScrollViewer x:Name="BarDropScrollViewer" Grid.Row="2" Grid.Column="0">
+            <ListView x:Name="BarDropListView" ItemsSource="{Binding BarDropBatchList}" SelectedItem="{Binding SelectedBarDropBatch, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ApproRupture}" Value="True">
+                                            <Setter Property="Foreground" Value="#FF3E3E"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Resources>
+                            
+                            <TextBlock Text="{Binding Designation}" Width="400"/>
+                            <TextBlock Text="{Binding NombreBarres}" Width="50"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+
+        <!-- Colonne 2 -->
+        <ScrollViewer x:Name="BarNewScrollViewer" Grid.Row="2" Grid.Column="1">
+            <ListView x:Name="BarNewListView" ItemsSource="{Binding BarNewBatchList}" SelectedItem="{Binding SelectedBarNewBatch, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ApproRupture}" Value="True">
+                                            <Setter Property="Foreground" Value="#FF3E3E"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Resources>
+                            
+                            <TextBlock Text="{Binding Designation}" Width="400"/>
+                            <TextBlock Text="{Binding NombreBarres}" Width="50"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+
+    </Grid>
+</generic:Page_Generic>

@@ -1,0 +1,90 @@
+﻿<!-- ============================================================
+     PAGE 21 — RETOUR EN STOCK DES BARRES NEUVES NON CONSOMMÉES
+     ============================================================
+     <Contexte> Cette page permet de remettre en stock des barres
+     neuves non consommées après la découpe. </Contexte>
+
+     <Objectif> L'utilisateur sélectionne une référence et une couleur.
+     Le système propose alors un emplacement de stockage pour replacer
+     la barre. </Objectif>
+
+     <Utilisateurs cibles> Magasiniers chargés de la gestion du stock. </Utilisateurs>
+
+     <Composants principaux>
+       - ComboBox : Sélection de la référence.
+       - ComboBox : Sélection de la couleur.
+       - ComboBox : Emplacement de stockage proposé.
+       - Indicateur visuel de quantité et zone d'information.
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page21"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page21">
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Première ligne -->
+        <TextBlock x:Name="PageTitleMain" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{DynamicResource P21_00}"/>
+
+        <!-- Deuxième ligne -->
+        <TextBlock x:Name="ReferenceTitle" Grid.Row="1" Grid.Column="0" Text="{DynamicResource P21_01}"/>
+        <TextBlock x:Name="CouleurTitle" Grid.Row="1" Grid.Column="1" Text="{DynamicResource P21_02}" Visibility="Hidden"/>
+        <TextBlock x:Name="ConteneurTitle" Grid.Row="1" Grid.Column="2" Text="{DynamicResource P21_03}" Visibility="Hidden"/>
+
+        <!-- Troisième ligne -->
+        <ComboBox x:Name="ReferenceComboBox" Grid.Row="2" Grid.Column="0" 
+                  ItemsSource="{Binding References}" 
+                  SelectedItem="{Binding Reference, Mode=TwoWay}" 
+                  SelectionChanged="ReferenceComboBox_SelectionChanged"
+                  Margin="0,0,20,0"/>
+        <ComboBox x:Name="CouleurComboBox" Grid.Row="2" Grid.Column="1" Visibility="Hidden"
+                  ItemsSource="{Binding Couleurs}" 
+                  SelectedItem="{Binding Couleur, Mode=TwoWay}" 
+                  SelectionChanged="CouleurComboBox_SelectionChanged"
+                  Margin="0,0,20,0"/>
+        <ComboBox x:Name="ConteneurComboBox" Grid.Row="2" Grid.Column="2" Visibility="Hidden"
+                  ItemsSource="{Binding Conteneurs}" 
+                  SelectedItem="{Binding Conteneur, Mode=TwoWay}"
+                  SelectionChanged="ConteneurComboBox_SelectionChanged"
+                  Margin="0,0,20,0"/>
+
+        <!-- Quatrième ligne -->
+        <StackPanel x:Name="QuantiteStack" Orientation="Horizontal" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,25,0,0" Visibility="Hidden">
+            <TextBlock x:Name="QuantieTitle" Text="{DynamicResource P21_04}"/>
+            <TextBlock x:Name="QuantieData" Text="{Binding Quantite}"/>
+            <Button x:Name="PlusData" Command="{Binding IncrementQuantityCommand}">
+                <TextBlock x:Name="PlusText" Text="+" />
+            </Button>
+            <Button x:Name="MinusData" Command="{Binding DecrementQuantityCommand}">
+                <TextBlock x:Name="MinusText" Text="-" />
+            </Button>
+        </StackPanel>
+        <StackPanel x:Name="StockStack" Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="0,25,0,0" Visibility="Hidden">
+            <TextBlock x:Name="StockTitle" Text="{DynamicResource P21_05}"/>
+            <TextBlock x:Name="StockData" Text="{Binding StockRecord.Quantite}"/>
+        </StackPanel>
+
+        <!-- Cinquième ligne -->
+        <StackPanel x:Name="StockLane" Orientation="Horizontal" Grid.Row="3" Grid.Column="2" Margin="0,25,0,0" Visibility="Hidden">
+            <TextBlock x:Name="LaneTitle" Text="{DynamicResource P21_06}"/>
+            <TextBlock x:Name="LaneData" Text="{Binding StockRecord.AdresseDesignation}"/>
+        </StackPanel>
+
+    </Grid>
+</generic:Page_Generic>

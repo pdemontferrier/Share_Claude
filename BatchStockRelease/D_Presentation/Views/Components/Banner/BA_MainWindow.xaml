@@ -1,0 +1,117 @@
+﻿<!--
+=====================================================================================
+Composant : BA_MainWindow.xaml
+=====================================================================================
+<b>Description :</b>
+    Ce composant définit la bannière principale de l’application, affichée en haut de
+    la fenêtre principale (MainWindow). Il regroupe plusieurs boutons globaux :
+    - Sélection de la langue (affiche le drapeau courant)
+    - Profil utilisateur (nom complet de l’utilisateur)
+    - Informations sur l’application
+    - Accès aux messages reçus / non lus
+    - Fermeture de l’application
+
+<b>Contexte :</b>
+    Intégré dans MainWindow au chargement de l’application, le composant utilise un
+    ViewModel dédié (VM_BA_MainWindow) injecté via le conteneur DI.
+    Il applique automatiquement les styles et icônes via le service IS_ControlStyler.
+
+<b>Structure visuelle :</b>
+    - StackPanel horizontal de 40px de hauteur
+    - Boutons transparents avec images/icônes liées au ViewModel
+    - Visibilité conditionnelle via convertisseurs BoolToVisibility
+
+<b>Bindings principaux :</b>
+    - Visibility → IsBannerVisible
+    - Text → UserFullName
+    - Source → LanguageIcon, MessageIcon, MessageUnreadIcon, AppCloseIcon
+    - Commands → NavigateLanguageCommand, NavigateUserCommand,
+                  NavigateMessagesCommand, NavigateAppInfoCommand, CloseAppCommand
+
+<b>Remarques :</b>
+    Ce composant est conçu pour être léger, réactif et facilement testable.
+    Il peut être réutilisé dans d’autres fenêtres si nécessaire.
+=====================================================================================
+-->
+<UserControl x:Class="BatchStockRelease.D_Presentation.Views.Components.Banner.BA_MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:localUtilities="clr-namespace:BatchStockRelease.D_Presentation.Utilities"
+             mc:Ignorable="d"
+             d:DesignHeight="40" d:DesignWidth="800"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <!-- Convertisseurs de visibilité -->
+        <localUtilities:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <localUtilities:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel x:Name="Banner"
+                Orientation="Horizontal"
+                Height="40"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                Visibility="{Binding IsBannerVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+
+        <!-- Langue -->
+        <Button x:Name="LanguageButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateLanguageCommand}">
+            <Image x:Name="LanguageIcon"
+                   VerticalAlignment="Top"
+                   HorizontalAlignment="Center"
+                   Source="{Binding LanguageIcon}"/>
+        </Button>
+
+        <!-- Nom d’utilisateur -->
+        <Button x:Name="UserFullNameButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateUserCommand}">
+            <TextBlock x:Name="UserFullName"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Padding="0,0,10,0"
+                       Text="{Binding UserFullName}"/>
+        </Button>
+
+        <!-- Informations application -->
+        <Button x:Name="AppInfo"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateAppInfoCommand}">
+            <TextBlock x:Name="AppInfoSign"/>
+        </Button>
+
+        <!-- Messages -->
+        <Button x:Name="MessageButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding NavigateMessagesCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="MessageButtonIcon"
+                       Source="{Binding MessageIcon}"
+                       Visibility="{Binding HasUnreadMessages, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                <Image x:Name="MessageNotReadButtonIcon"
+                       Source="{Binding MessageUnreadIcon}"
+                       Visibility="{Binding HasUnreadMessages, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </StackPanel>
+        </Button>
+
+        <!-- Fermeture -->
+        <Button x:Name="AppCloseButton"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{Binding CloseAppCommand}">
+            <Image x:Name="AppCloseButtonIcon"
+                   VerticalAlignment="Top"
+                   HorizontalAlignment="Center"
+                   Source="{Binding AppCloseIcon}"/>
+        </Button>
+
+    </StackPanel>
+</UserControl>

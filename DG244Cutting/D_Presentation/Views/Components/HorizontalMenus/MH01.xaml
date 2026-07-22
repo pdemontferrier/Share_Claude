@@ -1,0 +1,80 @@
+﻿<!-- ============================================================
+     MH01 — MENU HORIZONTAL ASSOCIÉ À Page01
+     ============================================================
+     Contexte : Menu horizontal de la page utilisateur (Page01).
+     Expose les quatre boutons transverses standards du socle
+     (MH_Menu bindé sur ReduceCommand au titre de la doctrine du
+     double rôle, MH_Home, MH_Previous, MH_Refresh) augmentés d'un
+     bouton spécifique métier MH_Admin ouvrant la page
+     d'administration des utilisateurs (Page04).
+
+     Objectif : Offrir un point d'accès à l'administration des
+     utilisateurs, matérialisé par le bouton MH_Admin. Ce bouton
+     déclenche la commande de navigation AdminCommand et affiche le
+     libellé multilingue propre Label_MH_Admin.
+
+     Comportement : MH01 hérite de MH_Generic (§4.15.9 du 0230) et
+     binde son DataContext sur VM_MH01 (§4.15.8 du 0230). La
+     visibilité des quatre boutons transverses est gouvernée par
+     les implémentations par défaut d'ApplyNavigationRules et
+     d'ApplySecurityRules du socle. Le bouton MH_Admin est masqué
+     par défaut (Visibility="Collapsed") et rendu visible par
+     l'override propre d'ApplySecurityRules du code-behind, sous
+     condition des droits granulaires de l'utilisateur courant. Sa
+     stylisation est portée par l'override propre d'ApplyLayout.
+     ============================================================ -->
+
+<generic:MH_Generic x:Class="DG244Cutting.D_Presentation.Views.Components.HorizontalMenus.MH01"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:generic="clr-namespace:DG244Cutting.D_Presentation.Views.Generic"
+                    mc:Ignorable="d">
+
+    <Grid x:Name="MH_Grid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MH_Grid_C1"/>
+            <ColumnDefinition x:Name="MH_Grid_C2"/>
+        </Grid.ColumnDefinitions>
+
+        <Border x:Name="MH_Border" Grid.Column="1">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Button x:Name="MH_Home" Command="{Binding HomeCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Home_Icon"/>
+                            <TextBlock x:Name="MH_Home_Text" Text="{Binding Label_MH_Home}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="MH_Previous" Command="{Binding PreviousCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Previous_Icon"/>
+                            <TextBlock x:Name="MH_Previous_Text" Text="{Binding Label_MH_Previous}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="MH_Refresh" Command="{Binding RefreshCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Refresh_Icon"/>
+                            <TextBlock x:Name="MH_Refresh_Text" Text="{Binding Label_MH_Refresh}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="MH_Admin" Command="{Binding AdminCommand}" Background="Transparent" BorderBrush="Transparent" Visibility="Collapsed">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Admin_Icon"/>
+                            <TextBlock x:Name="MH_Admin_Text" Text="{Binding Label_MH_Admin}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="MH_Menu" Command="{Binding ReduceCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Menu_Icon"/>
+                            <TextBlock x:Name="MH_Menu_Text" Text="{Binding Label_MH_Menu}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</generic:MH_Generic>

@@ -1,0 +1,118 @@
+﻿<!-- ============================================================
+     PAGE 32 — SORTIE DE STOCK DES BARRES NEUVES
+     ============================================================
+     <Contexte> Cette page permet de gérer la sortie de stock des barres
+     neuves nécessaires à un lot de découpe. </Contexte>
+
+     <Objectif> Guider le magasinier dans la préparation des barres neuves
+     à sortir, dans un ordre optimisé selon la disposition des zones de
+     stockage. </Objectif>
+
+     <Spécificité> Contrairement à la Page31 (barres de chutes), les
+     quantités à sortir peuvent être supérieures à 1. </Spécificité>
+
+     <Utilisateurs cibles> Magasiniers chargés de la préparation des barres
+     neuves avant découpe. </Utilisateurs>
+
+     <Composants principaux>
+       - ScrollViewer : liste des barres neuves à sortir.
+       - Image : profil visuel de la barre.
+       - Boutons + / - : ajustement visuel des quantités (non validants).
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page32"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page32">
+
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="Col_0" Width="300"/>
+            <ColumnDefinition x:Name="Col_1" MinWidth="300" MaxWidth="400"/>
+            <ColumnDefinition x:Name="Col_2" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="Row_0" MinHeight="40"/>
+            <RowDefinition x:Name="Row_1" MinHeight="40"/>
+            <RowDefinition x:Name="Row_2" MinHeight="40"/>
+            <RowDefinition x:Name="Row_3" MinHeight="40"/>
+            <RowDefinition x:Name="Row_4" MinHeight="40"/>
+            <RowDefinition x:Name="Row_5" MinHeight="40"/>
+            <RowDefinition x:Name="Row_6" MinHeight="40"/>
+            <RowDefinition x:Name="Row_7" MinHeight="40"/>
+            <RowDefinition x:Name="Row_8" MinHeight="40"/>
+            <RowDefinition x:Name="Row_9" MinHeight="40"/>
+            <RowDefinition x:Name="Row_10" MinHeight="40"/>
+        </Grid.RowDefinitions>
+
+        <!-- First Column for Titles -->
+        <TextBlock x:Name="PageTitle" Grid.Row="0" Grid.Column="1" Text="{DynamicResource P32_00}" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="DestinationTitle" Grid.Row="1" Grid.Column="0" Text="{DynamicResource P32_01}"/>
+        <TextBlock x:Name="EmplacementTitle" Grid.Row="2" Grid.Column="0" Text="{DynamicResource P32_02}"/>
+        <TextBlock x:Name="BarrCodeTitle" Grid.Row="3" Grid.Column="0" Text="{DynamicResource P32_03}"/>
+        <TextBlock x:Name="ReferenceTitle" Grid.Row="4" Grid.Column="0" Text="{DynamicResource P32_04}"/>
+        <TextBlock x:Name="DesignationTitle" Grid.Row="5" Grid.Column="0" Text="{DynamicResource P32_05}"/>
+        <TextBlock x:Name="CouleurTitle" Grid.Row="6" Grid.Column="0" Text="{DynamicResource P32_06}"/>
+        <TextBlock x:Name="LongueurTitle" Grid.Row="7" Grid.Column="0" Text="{DynamicResource P32_07}"/>
+        <TextBlock x:Name="QuantiteTitle" Grid.Row="8" Grid.Column="0" Text="{DynamicResource P32_08}"/>
+        <TextBlock x:Name="StockTitle" Grid.Row="9" Grid.Column="0" Text="{DynamicResource P32_09}"/>
+        <TextBlock x:Name="NombreTitle" Grid.Row="10" Grid.Column="0" Text="{DynamicResource P32_10}"/>
+
+        <!-- Second Column for Input Controls -->
+        <!-- Empty -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="LotSeperatorData" Text="Lot num. : "/>
+            <TextBlock x:Name="ChariotData" Text="{Binding DecoupeBarreDetails.IdDecoupeLot}"/>
+            <TextBlock x:Name="Categorie2SeperatorData" Text=" - "/>
+            <TextBlock x:Name="Categorie2Data" Text="{Binding DecoupeBarreDetails.ApproChariotDesignation}"/>
+            <TextBlock x:Name="Categorie4SeperatorData" Text=" - "/>
+            <TextBlock x:Name="Categorie4Data" Text="{Binding DecoupeBarreDetails.Categorie4}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="ZoneData" Text="{Binding DecoupeBarreDetails.ApproZoneDesignation}"/>
+            <TextBlock x:Name="AdresseSeperatorData" Text=" - "/>
+            <TextBlock x:Name="AdresseData" Text="{Binding DecoupeBarreDetails.ApproAdresseDesignation}"/>
+            <TextBlock x:Name="ConteneurSeperatorData" Text=" - "/>
+            <TextBlock x:Name="ConteneurData" Text="{Binding DecoupeBarreDetails.ApproConteneur}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+            <TextBlock x:Name="BarrCodeData" Text="{Binding DecoupeBarreDetails.CodeBarre}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+            <TextBlock x:Name="ReferenceData" Text="{Binding DecoupeBarreDetails.Reference}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+            <TextBlock x:Name="DesignationData" Text="{Binding DecoupeBarreDetails.Designation}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+            <TextBlock x:Name="CouleurData" Text="{Binding DecoupeBarreDetails.Couleur}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
+            <TextBlock x:Name="LongueurData" Text="{Binding DecoupeBarreDetails.LongueurBarre, StringFormat={}{0:N0}}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1">
+            <TextBlock x:Name="SommeData" Text="{Binding QuantiteMax}"/>
+            <TextBlock x:Name="QuantiteSeperatorData" Text=" - "/>
+            <TextBlock x:Name="QuantieData" Text="{Binding Quantite}" Margin="0,0,10,0"/>
+            <Button x:Name="PlusData" Command="{Binding IncrementQuantityCommand}">
+                <TextBlock x:Name="PlusText" Text="+" />
+            </Button>
+            <Button x:Name="MinusData" Command="{Binding DecrementQuantityCommand}">
+                <TextBlock x:Name="MinusText" Text="-" />
+            </Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="9" Grid.Column="1">
+            <TextBlock x:Name="StockData" Text="{Binding DecoupeBarreDetails.QuantiteStock}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.Column="1">
+            <TextBlock x:Name="NombreData" Text="{Binding ReleaseNumber}"/>
+        </StackPanel>
+        <Border x:Name="ReferenceVueBorder" Grid.Row="3" Grid.Column="2" Grid.RowSpan="8" Background="Transparent" Padding="10" BorderBrush="#0c9bea" BorderThickness="1">
+            <Image x:Name="ReferenceVueImage" Source="{Binding ReferenceVueUri}" Stretch="Uniform"/>
+        </Border>
+    </Grid>
+</generic:Page_Generic> 
