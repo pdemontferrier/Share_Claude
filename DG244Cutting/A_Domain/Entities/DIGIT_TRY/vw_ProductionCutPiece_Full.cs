@@ -80,7 +80,7 @@ public partial class vw_ProductionCutPiece_Full
     /// </summary>
     public bool PSIsNewBarSupplied { get; set; }
 
-    public bool PSIsBarOutOfStok { get; set; }
+    public bool PSIsBarOutOfStock { get; set; }
 
     /// <summary>
     /// Source : [ProductionSeries] - Champ [IsCuttingStarted] - Indique si une des decoupes de la serie a ete realisee. False = non commencee, True = commencee.

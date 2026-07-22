@@ -86,7 +86,7 @@ public partial class ProductionSeries
     /// <summary>
     /// Indique si la serie est en rupture de stock de barres. False = stock disponible, True = rupture.
     /// </summary>
-    public bool IsBarOutOfStok { get; set; }
+    public bool IsBarOutOfStock { get; set; }
 
     /// <summary>
     /// Indique si une des decoupes de la serie a ete realisee. False = non commencee, True = commencee.

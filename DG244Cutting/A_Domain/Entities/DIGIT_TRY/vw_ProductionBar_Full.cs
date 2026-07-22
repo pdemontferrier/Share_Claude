@@ -80,7 +80,7 @@ public partial class vw_ProductionBar_Full
     /// </summary>
     public bool PSIsNewBarSupplied { get; set; }
 
-    public bool PSIsBarOutOfStok { get; set; }
+    public bool PSIsBarOutOfStock { get; set; }
 
     /// <summary>
     /// Source : [ProductionSeries] - Champ [IsCuttingStarted] - Une des découpes de la série a été réalisée.
