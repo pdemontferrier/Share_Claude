@@ -46,9 +46,19 @@ public partial class vw_CuttingScrapStock_Full
     public int ARIdScrapLocationHorizontal { get; set; }
 
     /// <summary>
+    /// Source : [CuttingScrapLocation] - Champ [Designation] - Désignation de l’emplacement horizontal par défaut des chutes.
+    /// </summary>
+    public string? CSLHDesignation { get; set; }
+
+    /// <summary>
     /// Source : [ArticleReference] - Champ [IdScrapLocationVertical] - Emplacement vertical par défaut des chutes.
     /// </summary>
     public int ARIdScrapLocationVertical { get; set; }
+
+    /// <summary>
+    /// Source : [CuttingScrapLocation] - Champ [Designation] - Désignation de l’emplacement vertical par défaut des chutes.
+    /// </summary>
+    public string? CSLVDesignation { get; set; }
 
     /// <summary>
     /// Source : [ArticleReference] - Champ [IdSupplier] - Fournisseur associé à la référence (optionnel).
@@ -89,6 +99,16 @@ public partial class vw_CuttingScrapStock_Full
     /// Source : [ArticleReference] - Champ [CodeArticleCuttingMachine] - Code article machine de découpe. Source Feld_10_330.
     /// </summary>
     public string? ARCodeArticleCuttingMachine { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [BarWidthMm] - Largeur de la barre en millimètres issu du champ Tempor_Import.Feld_10_051.
+    /// </summary>
+    public decimal? ARBarWidthMm { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [BarHeightMm] - Hauteur de la barre en millimètres issu du champ Tempor_Import.Feld_10_075.
+    /// </summary>
+    public decimal? ARBarHeightMm { get; set; }
 
     /// <summary>
     /// Source : [ArticleReference] - Champ [MinScrapLength] - Longueur minimale de chute réutilisable.
