@@ -1,0 +1,3 @@
+D:\3_Dev_Projects\Dev_104\09_Deployment\01_LeitTemporImport\LeitTemporImport.pdb
+D:\3_Dev_Projects\Dev_104\09_Deployment\01_LeitTemporImport\Microsoft.Data.SqlClient.SNI.dll
+D:\3_Dev_Projects\Dev_104\09_Deployment\01_LeitTemporImport\LeitTemporImport.exe

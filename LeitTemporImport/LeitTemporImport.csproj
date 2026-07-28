@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+	<TargetFramework>net8.0-windows</TargetFramework>
+    <AssemblyName>LeitTemporImport</AssemblyName>
+    <RootNamespace>LeitTemporImport</RootNamespace>
+	<ApplicationIcon>launch_exe.ico</ApplicationIcon>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Data.OleDb" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="A_Domain\DTOs\Business\" />
+    <Folder Include="A_Domain\DTOs\User\" />
+    <Folder Include="A_Domain\Interfaces\UseCases\App\" />
+    <Folder Include="B_UseCases\DataProviders\Business\" />
+    <Folder Include="B_UseCases\DataProviders\User\" />
+    <Folder Include="B_UseCases\UseCases\App\" />
+    <Folder Include="D_Presentation\" />
+  </ItemGroup>
+
+</Project>

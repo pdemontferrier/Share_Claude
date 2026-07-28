@@ -1,0 +1,46 @@
+﻿***********************************************************
+* Scripts pour le mappage de la base de données DIGIT_TRY *
+***********************************************************
+
+
+
+dotnet ef dbcontext scaffold "Server=localhost,1433;Database=DIGIT_TRY_TEST;User Id=ADMINDIGIT;Password=XWe4g56wX:-MHhUCB;TrustServerCertificate=True" `
+Microsoft.EntityFrameworkCore.SqlServer `
+--project ".\LeitTemporImport\LeitTemporImport.csproj" `
+--context DigitTryDbContext `
+--context-dir C_Infrastructure/Persistence/DIGIT_TRY `
+--output-dir C_Infrastructure/Persistence.DIGIT_TRY/Entities `
+--context-namespace LeitTemporImport.C_Infrastructure.Persistence.DIGIT_TRY.Context `
+--namespace LeitTemporImport.C_Infrastructure.Persistence.DIGIT_TRY.Entities `
+--use-database-names `
+--no-onconfiguring `
+--force
+
+
+
+dotnet ef dbcontext scaffold "Server=localhost,1433;Database=DIGIT_TRY_PROD;User Id=ADMINDIGIT;Password=XWe4g56wX:-MHhUCB;TrustServerCertificate=True" `
+Microsoft.EntityFrameworkCore.SqlServer `
+--project ".\LeitTemporImport\LeitTemporImport.csproj" `
+--context DigitTryDbContext `
+--context-dir C_Infrastructure/Persistence/DIGIT_TRY `
+--output-dir C_Infrastructure/Persistence.DIGIT_TRY/Entities `
+--context-namespace LeitTemporImport.C_Infrastructure.Persistence.DIGIT_TRY.Context `
+--namespace LeitTemporImport.C_Infrastructure.Persistence.DIGIT_TRY.Entities `
+--use-database-names `
+--no-onconfiguring `
+--force
+
+
+
+
+dotnet ef dbcontext scaffold "Server=ATRYA225\ATRYA;Database=DIGIT_TRY_TEST;User Id=ADMINDIGIT;Password=XWe4g56wX:-MHhUCB;TrustServerCertificate=True" `
+Microsoft.EntityFrameworkCore.SqlServer `
+--project ".\LeitTemporImport\LeitTemporImport.csproj" `
+--context DigitTryDbContext `
+--context-dir C_Infrastructure/Persistence/DIGIT_TRY `
+--output-dir C_Infrastructure/Persistence.DIGIT_TRY/Entities `
+--context-namespace LeitTemporImport.C_Infrastructure.Persistence.DIGIT_TRY.Context `
+--namespace LeitTemporImport.C_Infrastructure.Persistence.DIGIT_TRY.Entities `
+--use-database-names `
+--no-onconfiguring `
+--force
