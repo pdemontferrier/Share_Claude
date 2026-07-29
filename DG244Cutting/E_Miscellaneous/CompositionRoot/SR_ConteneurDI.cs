@@ -431,6 +431,8 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             services.AddSingleton<VM_MH12>();
             services.AddSingleton<VM_MH13>();
             services.AddSingleton<VM_MH20>();
+            services.AddSingleton<VM_MH21>();
+            services.AddSingleton<VM_MH22>();
             services.AddSingleton<VM_MH30>();
             services.AddSingleton<VM_MH40>();
             services.AddSingleton<VM_MH50>();
@@ -454,6 +456,8 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             services.AddSingleton<VM_Page12>();
             services.AddSingleton<VM_Page13>();
             services.AddSingleton<VM_Page20>();
+            services.AddSingleton<VM_Page21>();
+            services.AddSingleton<VM_Page22>();
             services.AddSingleton<VM_Page30>();
             services.AddSingleton<VM_Page40>();
             services.AddSingleton<VM_Page50>();

@@ -3234,4 +3234,6 @@ public partial class Tempor_Import
     public DateTime? UpdatedAt { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public virtual ICollection<Tempor_Import_Feld_12> Tempor_Import_Feld_12s { get; set; } = new List<Tempor_Import_Feld_12>();
 }

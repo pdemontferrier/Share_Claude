@@ -383,4 +383,6 @@ public partial class ProductionCutPiece
     public virtual ProductionFrameSash IdProductionFrameSashNavigation { get; set; } = null!;
 
     public virtual SpatialPosition? IdSpatialPositionNavigation { get; set; }
+
+    public virtual ICollection<ProductionMachiningWork> ProductionMachiningWorks { get; set; } = new List<ProductionMachiningWork>();
 }

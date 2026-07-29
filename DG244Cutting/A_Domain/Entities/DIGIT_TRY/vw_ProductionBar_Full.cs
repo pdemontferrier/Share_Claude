@@ -80,6 +80,9 @@ public partial class vw_ProductionBar_Full
     /// </summary>
     public bool PSIsNewBarSupplied { get; set; }
 
+    /// <summary>
+    /// Source : [ProductionSeries] - Champ [IsBarOutOfStock] - Série en rupture de stock de barres (False/True).
+    /// </summary>
     public bool PSIsBarOutOfStock { get; set; }
 
     /// <summary>
@@ -187,8 +190,14 @@ public partial class vw_ProductionBar_Full
     /// </summary>
     public string? ARCodeArticleCuttingMachine { get; set; }
 
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [BarWidthMm] - Largeur de la barre en mm. Source Tempor_Import.Feld_10_051.
+    /// </summary>
     public decimal? ARBarWidthMm { get; set; }
 
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [BarHeightMm] - Hauteur de la barre en mm. Source Tempor_Import.Feld_10_075.
+    /// </summary>
     public decimal? ARBarHeightMm { get; set; }
 
     /// <summary>

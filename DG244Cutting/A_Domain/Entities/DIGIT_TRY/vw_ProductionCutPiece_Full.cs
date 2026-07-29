@@ -80,6 +80,9 @@ public partial class vw_ProductionCutPiece_Full
     /// </summary>
     public bool PSIsNewBarSupplied { get; set; }
 
+    /// <summary>
+    /// Source : [ProductionSeries] - Champ [IsBarOutOfStock] - Série en rupture de stock de barres (False/True).
+    /// </summary>
     public bool PSIsBarOutOfStock { get; set; }
 
     /// <summary>
@@ -628,6 +631,16 @@ public partial class vw_ProductionCutPiece_Full
     public string? SPPosition { get; set; }
 
     /// <summary>
+    /// Source : [ArticleCategoryMapping] - Champ [Id] - Identifiant technique unique de la categorie de piece.
+    /// </summary>
+    public short? ACMId { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleCategoryMapping] - Champ [Description] - Designation metier de la categorie de piece.
+    /// </summary>
+    public string? ACMDescription { get; set; }
+
+    /// <summary>
     /// Source : [ProductionCutPiece] - Champ [IdArticleInternal] - Identifiant de l’article interne associé à la pièce à découper.
     /// </summary>
     public int? PCPIdArticleInternal { get; set; }
@@ -957,6 +970,9 @@ public partial class vw_ProductionCutPiece_Full
     /// </summary>
     public bool PCPIsBarSupplied { get; set; }
 
+    /// <summary>
+    /// Source : [ProductionCutPiece] - Champ [IsBarOutOfStock] - Indique si la barre est en rupture de stock.
+    /// </summary>
     public bool PCPIsBarOutOfStock { get; set; }
 
     /// <summary>
