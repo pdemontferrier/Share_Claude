@@ -141,7 +141,7 @@
         /// <summary>URI de l'icône Modifier.</summary>
         public static readonly Uri MH_Modify_Source = new(IconsBase + "RE_textEditor.png", UriKind.Absolute);
 
-        /// <summary>URI de l'icône Modifier.</summary>
+        /// <summary>URI de l'icône pour accéder à la gestion du stock de chutes.</summary>
         public static readonly Uri MH_CuttingScrapStock_Source = new(IconsBase + "RE_dollarRound.png", UriKind.Absolute);
 
 
