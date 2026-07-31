@@ -77,6 +77,16 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
     ///   cinq handlers privés correspondants. La composition est
     ///   unique et centralisée ; aucun ViewModel dérivé ne
     ///   recompose ces commandes.</description></item>
+    ///   <item><description>Exposer aux ViewModels dérivés la
+    ///   dépendance <see cref="IU_Navigation"/> par le champ
+    ///   <c>protected readonly</c> <see cref="_navigation"/>, au
+    ///   titre de l'EA-05, en parité stricte avec l'exposition
+    ///   portée par <c>MH_Generic</c> côté Vue. Les dérivés
+    ///   consomment la surface d'écriture du contrat pour leurs
+    ///   commandes de navigation contextuelle, chacune formant un
+    ///   couple indissociable avec le conditionnement de
+    ///   visibilité du bouton correspondant porté par le
+    ///   <c>MHxx</c> associé.</description></item>
     ///   <item><description>Déléguer chacune des cinq commandes
     ///   à <see cref="IU_Navigation"/> via le filet de sécurité
     ///   <c>ExecuteSafeAsync</c> hérité de
@@ -123,8 +133,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
     ///   <see cref="Label_MH_Refresh"/>) via une surcharge
     ///   nominative de <see cref="LoadLabels"/> héritée de
     ///   <see cref="VM_Generic"/>. La surcharge résout les quatre
-    ///   clés legacy <c>MH_Ti_01</c>, <c>MH_Ti_04</c>,
-    ///   <c>MH_Ti_02</c>, <c>MH_Ti_03</c> via
+    ///   clés legacy <c>MH_Ti_01</c>,<c>MH_Ti_02</c>, 
+    ///   <c>MH_Ti_03</c>, <c>MH_Ti_04</c> via
     ///   <see cref="IS_Dictionary"/> hérité de
     ///   <see cref="VM_Generic"/>. Cette factorisation est le
     ///   pendant côté libellés de la factorisation déjà réalisée
@@ -172,13 +182,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
     ///   horizontal spécifique (boutons d'action contextuels d'une
     ///   page particulière) sont déclarées et instanciées par les
     ///   ViewModels dérivés concrets.</description></item>
-    ///   <item><description>N'expose pas <see cref="IU_Navigation"/>
-    ///   aux dérivés : la dépendance est <c>private</c> dans la
-    ///   présente classe, ce qui cantonne l'exception
-    ///   architecturale d'accès direct à
-    ///   <see cref="IU_Navigation"/> par un ViewModel (cf. §4.15.8
-    ///   du 0230) au seul niveau de la classe de
-    ///   base.</description></item>
+    ///   <item><description>Ne consomme pas elle-même la surface
+    ///   d'écriture d'<see cref="IU_Navigation"/> au-delà des cinq
+    ///   handlers privés des commandes transverses standards. La
+    ///   navigation contextuelle vers une page déterminée relève
+    ///   des ViewModels dérivés concrets, qui consomment à cette
+    ///   fin la dépendance exposée en <c>protected</c> au titre de
+    ///   l'EA-05 (cf. §4.15.8 du 0230).</description></item>
     ///   <item><description>Ne réimplémente pas
     ///   <c>INotifyPropertyChanged</c> ni les helpers
     ///   <c>OnPropertyChanged</c> et <c>SetProperty</c> : ils sont
@@ -265,24 +275,45 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
     /// n'est pas redéclaré ici.</para>
     ///
     /// <para>Exception architecturale documentée — EA-05 (accès
-    /// direct à <see cref="IU_Navigation"/> par un ViewModel) :</para>
+    /// direct à <see cref="IU_Navigation"/> par le couple
+    /// générique de la famille MH) :</para>
     ///
     /// <para>Cette classe injecte directement
     /// <see cref="IU_Navigation"/>, alors que R-4.12.2 réserve les
-    /// décisions de navigation aux UseCases et que la doctrine
-    /// générale déconseille l'accès direct des ViewModels aux
-    /// UseCases de navigation (ils passent normalement par
-    /// <c>IS_UseCaseInvoker</c> au titre de l'EA-11). Cette
-    /// exception est délibérée et strictement cantonnée aux cinq
-    /// commandes transverses standards du menu horizontal : leur
-    /// sémantique purement navigationnelle (sans décision métier
-    /// propre) justifie la délégation directe à
-    /// <see cref="IU_Navigation"/> sans intermédiation par un
-    /// UseCase métier ni par <c>IS_UseCaseInvoker</c>. La
-    /// dépendance est stockée en <c>private</c> pour interdire
-    /// toute propagation de cette dérogation aux dérivés. Cf.
-    /// §4.15.8 du 0230 pour la formalisation complète de cette
-    /// exception architecturale.</para>
+    /// décisions de navigation aux UseCases et qu'I-4.10.9 interdit
+    /// l'injection directe d'une interface <c>IU_</c> ou <c>IQ_</c>
+    /// au constructeur d'un composant de <c>D_Presentation</c>, la
+    /// consommation transitant normalement par
+    /// <c>IS_UseCaseInvoker</c> au titre de l'EA-11.</para>
+    ///
+    /// <para>Fondement de la dérogation : La médiation par
+    /// <c>IS_UseCaseInvoker</c> a pour fonction propre et unique la
+    /// matérialisation de la portée Scoped par création d'un
+    /// <c>IServiceScope</c> distinct à chaque invocation
+    /// (R-4.10.12). <c>UC_Navigation</c> étant enregistré Singleton
+    /// et ne consommant aucune dépendance scoped (P4-bis,
+    /// §4.10.10), cette fonction est sans objet : le scope créé ne
+    /// scope rien et l'instance résolue est l'instance unique de
+    /// l'application. La condition de portée DI est nécessaire à
+    /// toute dérogation d'injection directe ; elle n'est pas
+    /// suffisante, l'admission demeurant subordonnée à
+    /// l'inscription nominative de l'exception à l'inventaire de
+    /// §4.15.10 du 0230.</para>
+    ///
+    /// <para>Périmètre : La dérogation couvre les deux classes du
+    /// couple générique de la famille MH — la présente classe côté
+    /// ViewModel et <c>MH_Generic</c> côté Vue — et s'étend à leurs
+    /// dérivés respectifs. Le bornage porte sur la nature de
+    /// l'usage et non sur la visibilité du champ : surface
+    /// d'écriture du contrat côté ViewModel, lecture seule des
+    /// propriétés d'état et des onze prédicats <c>CanXxx</c> côté
+    /// Vue au titre de R-4.12.19. Le confinement à la famille MH
+    /// est structurel : <see cref="VM_Page_Generic"/> est sœur de
+    /// la présente classe sous <see cref="VM_Generic"/> et non sa
+    /// dérivée, aucun <c>VM_Pagexx</c> n'accédant au champ par
+    /// construction de la hiérarchie. Cf. §4.15.8 du 0230 pour la
+    /// formalisation complète de cette exception
+    /// architecturale.</para>
     /// </remarks>
     public abstract class VM_MH_Generic : VM_Generic
     {
@@ -371,25 +402,52 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         #region === Dépendances privées ===
 
         /// <summary>
-        /// UseCase de navigation, consommé exclusivement par les
-        /// cinq handlers privés de la présente classe pour
-        /// déléguer les commandes transverses standards.
+        /// UseCase de navigation, consommé par les cinq handlers
+        /// privés de la présente classe pour déléguer les commandes
+        /// transverses standards, et exposé en <c>protected</c> aux
+        /// ViewModels dérivés pour leurs commandes de navigation
+        /// contextuelle.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Singleton injecté par le conteneur DI
         /// au constructeur, au titre de l'exception architecturale
-        /// EA-05 (accès direct à <see cref="IU_Navigation"/> par un
-        /// ViewModel) documentée en remarque de classe. La
-        /// visibilité <c>private</c> est délibérée et impérative :
-        /// elle cantonne l'EA-05 au seul niveau de la présente
-        /// classe de base et interdit à tout ViewModel dérivé
-        /// d'accéder directement à <see cref="IU_Navigation"/>.
-        /// Tout besoin d'un dérivé d'invoquer une opération de
-        /// navigation passe par les cinq commandes transverses
-        /// exposées via les propriétés publiques, ou par un
-        /// UseCase métier propre.</para>
+        /// EA-05 (accès direct à <see cref="IU_Navigation"/> par le
+        /// couple générique de la famille MH) documentée en
+        /// remarque de classe.</para>
+        /// <para>Visibilité <c>protected</c> : Elle est délibérée
+        /// et place la présente classe en parité stricte avec
+        /// <c>MH_Generic</c>, qui expose la même dépendance en
+        /// <c>protected</c> à ses propres dérivés depuis l'origine.
+        /// Le périmètre de l'EA-05 n'est pas borné par la
+        /// visibilité du champ mais par la nature de l'usage admis
+        /// de part et d'autre du couple générique : surface
+        /// d'écriture du contrat côté ViewModel, lecture seule des
+        /// prédicats côté Vue.</para>
+        /// <para>Usage admis par les dérivés : L'intégralité de la
+        /// surface d'écriture du contrat, soit les six opérations
+        /// asynchrones et l'opération synchrone
+        /// <c>ClearNavigationHistory</c>, au premier chef
+        /// <see cref="IU_Navigation.NavigateToPageAsync"/> pour la
+        /// navigation contextuelle vers une page déterminée. Toute
+        /// commande de navigation contextuelle d'un
+        /// <c>VM_MHxx</c> forme un couple indissociable avec le
+        /// conditionnement de visibilité du bouton correspondant
+        /// sur <c>CanNavigate(pageName)</c>, porté par l'override
+        /// d'<c>ApplyNavigationRules</c> du <c>MHxx</c> associé,
+        /// conformément à R-4.13.14 et à I-4.13.14 du 0231.
+        /// L'invocation demeure soumise aux obligations transverses
+        /// de la famille : filet <c>ExecuteSafeAsync</c> (R-4.7.18,
+        /// R-4.7.19), CallChain construite via
+        /// <c>BuildFirstCallChain</c> (R-4.5.5, R-4.5.7),
+        /// propagation du <c>CancellationToken</c>
+        /// (R-4.6.13).</para>
+        /// <para>Usage non admis : Toute autre interface
+        /// <c>IU_</c> ou <c>IQ_</c>, dont la consommation par un
+        /// dérivé transite exclusivement par
+        /// <c>IS_UseCaseInvoker</c> au titre de l'EA-11
+        /// (I-4.10.9).</para>
         /// </remarks>
-        private readonly IU_Navigation _navigation;
+        protected readonly IU_Navigation _navigation;
 
         #endregion
 
@@ -647,9 +705,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// mécanique multilingue factorisée. Injecté en Singleton
         /// par le conteneur DI.</param>
         /// <param name="navigation">UseCase de navigation, consommé
-        /// exclusivement par les cinq handlers privés de la
-        /// présente classe. Injecté en Singleton par le conteneur
-        /// DI au titre de l'EA-05.</param>
+        /// par les cinq handlers privés de la présente classe et
+        /// exposé en <c>protected</c> aux ViewModels dérivés pour
+        /// leurs commandes de navigation contextuelle. Injecté en
+        /// Singleton par le conteneur DI au titre de
+        /// l'EA-05.</param>
         /// <exception cref="ArgumentNullException">Levée si
         /// <paramref name="navigation"/> est <see langword="null"/>.
         /// Les gardes sur les trois autres paramètres sont portées
@@ -807,8 +867,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// <see cref="Label_MH_Previous"/> et
         /// <see cref="Label_MH_Refresh"/> par résolution des
         /// quatre clés legacy
-        /// <c>MH_Ti_01</c>, <c>MH_Ti_04</c>, <c>MH_Ti_02</c>,
-        /// <c>MH_Ti_03</c> via <see cref="IS_Dictionary"/> hérité
+        /// <c>MH_Ti_01</c>, <c>MH_Ti_02</c>, <c>MH_Ti_03</c>,
+        /// <c>MH_Ti_04</c> via <see cref="IS_Dictionary"/> hérité
         /// de <see cref="VM_Generic"/>.
         /// </summary>
         /// <param name="callChain">CallChain de l'opération
