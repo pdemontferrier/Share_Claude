@@ -13,7 +13,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
     /// <see cref="DG244Cutting.D_Presentation.ViewModels.Pages.VM_Page04"/>
     /// de l'application DG244Cutting, exposant à la vue
     /// <see cref="DG244Cutting.D_Presentation.Views.Components.HorizontalMenus.MH04"/>
-    /// les cinq commandes transverses standards héritées du socle
+    /// les quatre commandes transverses standards héritées du socle
     /// <see cref="VM_MH_Generic"/>, augmentées de quatre commandes
     /// d'action métier propres — <see cref="NewCommand"/>,
     /// <see cref="AddCommand"/>, <see cref="ModifyCommand"/> et
@@ -50,26 +50,43 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
     ///
     /// <para>Responsabilités :</para>
     ///
-    /// <para>Exposer les quatre commandes d'action
-    /// <see cref="NewCommand"/>, <see cref="AddCommand"/>,
-    /// <see cref="ModifyCommand"/>, <see cref="SaveCommand"/> et les
-    /// quatre libellés observables associés, en sus des membres
-    /// transverses hérités. Relayer chaque action vers le contrat
-    /// <see cref="IV_Page04"/> dans le filet de sécurité hérité
-    /// <see cref="VM_Generic.ExecuteSafeAsync"/> et sous garde
-    /// d'anti-réentrance <see cref="VM_MH_Generic.IsProcessing"/>.
-    /// Alimenter les libellés propres par surcharge nominative de
-    /// <see cref="LoadLabels"/>.</para>
+    /// <list type="bullet">
+    ///   <item><description>Exposer au binding XAML les quatre
+    ///   commandes d'action <see cref="NewCommand"/>,
+    ///   <see cref="AddCommand"/>, <see cref="ModifyCommand"/> et
+    ///   <see cref="SaveCommand"/>, en sus des membres transverses
+    ///   hérités.</description></item>
+    ///   <item><description>Exposer au binding XAML les quatre
+    ///   libellés observables associés
+    ///   <see cref="Label_MH_New"/>, <see cref="Label_MH_Add"/>,
+    ///   <see cref="Label_MH_Modify"/> et
+    ///   <see cref="Label_MH_Save"/>.</description></item>
+    ///   <item><description>Relayer chaque action vers le contrat
+    ///   <see cref="IV_Page04"/> dans le filet de sécurité hérité
+    ///   <see cref="VM_Generic.ExecuteSafeAsync"/> et sous garde
+    ///   d'anti-réentrance
+    ///   <see cref="VM_MH_Generic.IsProcessing"/>.</description></item>
+    ///   <item><description>Alimenter les libellés propres par
+    ///   surcharge nominative de
+    ///   <see cref="LoadLabels"/>.</description></item>
+    /// </list>
     ///
     /// <para>Non-responsabilités :</para>
     ///
-    /// <para>N'effectue aucun traitement métier propre : les quatre
-    /// commandes sont de purs relais vers <see cref="IV_Page04"/>, la
-    /// logique métier étant portée par l'implémenteur du contrat. Ne
-    /// consomme aucun UseCase métier via <c>IS_UseCaseInvoker</c>
-    /// (EA-11 non mobilisée). Ne déclenche aucune navigation.
-    /// N'évalue ni ne résout les droits d'accès, délégués à la vue et
-    /// à <see cref="IU_Navigation"/>.</para>
+    /// <list type="bullet">
+    ///   <item><description>N'effectue aucun traitement métier
+    ///   propre : les quatre commandes sont de purs relais vers
+    ///   <see cref="IV_Page04"/>, la logique métier étant portée par
+    ///   l'implémenteur du contrat.</description></item>
+    ///   <item><description>Ne consomme aucun UseCase métier via
+    ///   <c>IS_UseCaseInvoker</c> (EA-11 non
+    ///   mobilisée).</description></item>
+    ///   <item><description>Ne déclenche aucune
+    ///   navigation.</description></item>
+    ///   <item><description>N'évalue ni ne résout les droits
+    ///   d'accès, délégués à la vue et à
+    ///   <see cref="IU_Navigation"/>.</description></item>
+    /// </list>
     ///
     /// <para>Note sur les exceptions architecturales :</para>
     ///
@@ -492,11 +509,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// <see cref="VM_MH_Generic.IsProcessing"/>) et par le filet de
         /// sécurité hérité <see cref="VM_Generic.ExecuteSafeAsync"/>
         /// alimenté par une CallChain initiale construite via
-        /// <c>BuildFirstCallChain</c>. Le jeton d'annulation transmis au
-        /// relais est <see cref="System.Threading.CancellationToken.None"/>
-        /// (explicite). Le traitement terminal des erreurs est délégué au
-        /// filet ; aucun cas d'échec métier propre n'est traité
-        /// ici.</para>
+        /// <c>BuildFirstCallChain</c>. Le bloc <c>try</c>/<c>finally</c>
+        /// ne capture rien : aucun <c>try</c>/<c>catch</c> local n'est
+        /// posé en sus du filet hérité, et le traitement terminal des
+        /// erreurs lui est intégralement délégué ; aucun cas d'échec
+        /// métier propre n'est traité ici.</para>
+        /// <para>Jeton d'annulation :
+        /// <see cref="CancellationToken.None"/> est passé explicitement
+        /// en argument, tant au filet qu'à l'opération relayée. Le
+        /// contrat de commande WPF exposé par
+        /// <see cref="UT_RelayCommandArg0Async"/> ne véhicule aucun
+        /// jeton, de sorte qu'aucune annulation coopérative n'est
+        /// disponible au présent handler.</para>
         /// </remarks>
         private async Task ExecuteNewAsync()
         {
@@ -507,7 +531,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
                 await ExecuteSafeAsync(callChain, async () =>
                 {
                     await _page04.EnterCreate(callChain, CancellationToken.None);
-                });
+                }, CancellationToken.None);
             }
             finally
             {
@@ -524,9 +548,14 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// <remarks>
         /// <para>Contexte : Même patron que <see cref="ExecuteNewAsync"/>
         /// (<c>BeginProcessing</c> / <c>try</c> / <c>ExecuteSafeAsync</c>
-        /// / <c>finally</c> / <c>EndProcessing</c>), avec jeton
-        /// <see cref="System.Threading.CancellationToken.None"/>
-        /// explicite. Aucun cas d'échec métier propre.</para>
+        /// / <c>finally</c> / <c>EndProcessing</c>). Aucun cas d'échec
+        /// métier propre.</para>
+        /// <para>Jeton d'annulation :
+        /// <see cref="CancellationToken.None"/> est passé explicitement
+        /// en argument, tant au filet qu'à l'opération relayée, le
+        /// contrat de commande WPF exposé par
+        /// <see cref="UT_RelayCommandArg0Async"/> ne véhiculant aucun
+        /// jeton — cf. <see cref="ExecuteNewAsync"/>.</para>
         /// </remarks>
         private async Task ExecuteAddAsync()
         {
@@ -537,7 +566,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
                 await ExecuteSafeAsync(callChain, async () =>
                 {
                     await _page04.AddAsync(callChain, CancellationToken.None);
-                });
+                }, CancellationToken.None);
             }
             finally
             {
@@ -552,10 +581,15 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// <returns>Tâche asynchrone représentant l'exécution du
         /// relais.</returns>
         /// <remarks>
-        /// <para>Contexte : Même patron que <see cref="ExecuteNewAsync"/>,
-        /// avec jeton
-        /// <see cref="System.Threading.CancellationToken.None"/>
-        /// explicite. Aucun cas d'échec métier propre.</para>
+        /// <para>Contexte : Même patron que
+        /// <see cref="ExecuteNewAsync"/>. Aucun cas d'échec métier
+        /// propre.</para>
+        /// <para>Jeton d'annulation :
+        /// <see cref="CancellationToken.None"/> est passé explicitement
+        /// en argument, tant au filet qu'à l'opération relayée, le
+        /// contrat de commande WPF exposé par
+        /// <see cref="UT_RelayCommandArg0Async"/> ne véhiculant aucun
+        /// jeton — cf. <see cref="ExecuteNewAsync"/>.</para>
         /// </remarks>
         private async Task ExecuteModifyAsync()
         {
@@ -566,7 +600,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
                 await ExecuteSafeAsync(callChain, async () =>
                 {
                     await _page04.EnterEdit(callChain, CancellationToken.None);
-                });
+                }, CancellationToken.None);
             }
             finally
             {
@@ -581,10 +615,15 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// <returns>Tâche asynchrone représentant l'exécution du
         /// relais.</returns>
         /// <remarks>
-        /// <para>Contexte : Même patron que <see cref="ExecuteNewAsync"/>,
-        /// avec jeton
-        /// <see cref="System.Threading.CancellationToken.None"/>
-        /// explicite. Aucun cas d'échec métier propre.</para>
+        /// <para>Contexte : Même patron que
+        /// <see cref="ExecuteNewAsync"/>. Aucun cas d'échec métier
+        /// propre.</para>
+        /// <para>Jeton d'annulation :
+        /// <see cref="CancellationToken.None"/> est passé explicitement
+        /// en argument, tant au filet qu'à l'opération relayée, le
+        /// contrat de commande WPF exposé par
+        /// <see cref="UT_RelayCommandArg0Async"/> ne véhiculant aucun
+        /// jeton — cf. <see cref="ExecuteNewAsync"/>.</para>
         /// </remarks>
         private async Task ExecuteSaveAsync()
         {
@@ -595,7 +634,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
                 await ExecuteSafeAsync(callChain, async () =>
                 {
                     await _page04.SaveAsync(callChain, CancellationToken.None);
-                });
+                }, CancellationToken.None);
             }
             finally
             {

@@ -10,14 +10,16 @@ namespace DG244Cutting.D_Presentation.Views.Components.HorizontalMenus
     /// Vue WPF du menu horizontal <c>MH04</c> de l'application
     /// DG244Cutting, associé à la
     /// <see cref="DG244Cutting.D_Presentation.Views.Pages.Page04"/>,
-    /// exposant les cinq boutons transverses standards du socle
-    /// <see cref="VM_MH_Generic"/> (dont <c>MH_Menu</c> bindé sur
-    /// <c>ReduceCommand</c>), augmentés de quatre boutons d'action
-    /// métier propres <c>MH_New</c>, <c>MH_Add</c>, <c>MH_Modify</c>,
-    /// <c>MH_Save</c> bindés respectivement sur <c>NewCommand</c>,
-    /// <c>AddCommand</c>, <c>ModifyCommand</c> et <c>SaveCommand</c>,
-    /// dont la stylisation et la visibilité conditionnée sont portées
-    /// par les overrides propres <see cref="ApplyLayout"/> et
+    /// exposant quatre boutons transverses standards bindés
+    /// respectivement sur <c>ReduceCommand</c>, <c>HomeCommand</c>,
+    /// <c>PreviousCommand</c> et <c>RefreshCommand</c> du socle
+    /// <see cref="VM_MH_Generic"/>, augmentés de quatre boutons
+    /// d'action métier propres <c>MH_New</c>, <c>MH_Add</c>,
+    /// <c>MH_Modify</c>, <c>MH_Save</c> bindés respectivement sur
+    /// <c>NewCommand</c>, <c>AddCommand</c>, <c>ModifyCommand</c> et
+    /// <c>SaveCommand</c>, dont la stylisation et la visibilité
+    /// conditionnée sont portées par les overrides propres
+    /// <see cref="ApplyLayout"/> et
     /// <see cref="ApplySecurityRules"/>.
     /// </summary>
     /// <remarks>
@@ -38,24 +40,46 @@ namespace DG244Cutting.D_Presentation.Views.Components.HorizontalMenus
     ///
     /// <para>Responsabilités :</para>
     ///
-    /// <para>Résoudre l'instance Singleton du ViewModel associé et
-    /// l'affecter au
-    /// <see cref="System.Windows.FrameworkElement.DataContext"/>.
-    /// Étendre le socle par deux overrides de points d'extension :
-    /// <see cref="ApplyLayout"/> (stylisation des quatre boutons
-    /// d'action) et <see cref="ApplySecurityRules"/> (visibilité
-    /// conditionnée des quatre boutons d'action selon les droits de
-    /// création et de modification).</para>
+    /// <list type="bullet">
+    ///   <item><description>Résoudre l'instance Singleton du
+    ///   ViewModel associé et l'affecter au
+    ///   <see cref="System.Windows.FrameworkElement.DataContext"/>.</description></item>
+    ///   <item><description>Styliser les quatre boutons d'action
+    ///   métier au montage par l'override propre
+    ///   d'<see cref="ApplyLayout"/>, en complément de la
+    ///   stylisation des boutons transverses portée par le
+    ///   socle.</description></item>
+    ///   <item><description>Conditionner la visibilité de ces
+    ///   quatre boutons aux droits granulaires de création et de
+    ///   modification de l'utilisateur courant sur la page hôte,
+    ///   par l'override propre
+    ///   d'<see cref="ApplySecurityRules"/>.</description></item>
+    /// </list>
     ///
     /// <para>Non-responsabilités :</para>
     ///
-    /// <para>Ne porte aucune logique métier ni aucun accès aux
-    /// données : l'évaluation des droits est déléguée à
-    /// <see cref="IU_Navigation"/> et le relais des actions au
-    /// ViewModel. Ne surcharge aucun des quatre autres points
-    /// d'extension du socle (<c>OnResized</c>,
-    /// <c>ApplyNavigationRules</c>, <c>OnLoadedAsync</c>,
-    /// <c>OnUnloadedAsync</c>).</para>
+    /// <list type="bullet">
+    ///   <item><description>Ne porte aucune logique métier ni aucun
+    ///   accès aux données : l'évaluation des droits est déléguée à
+    ///   <see cref="IU_Navigation"/> et le relais des actions au
+    ///   ViewModel.</description></item>
+    ///   <item><description>N'override pas
+    ///   <c>ApplyNavigationRules</c> : les quatre boutons d'action
+    ///   sont des actions sur la page hôte et non des navigations
+    ///   contextuelles, aucun prédicat
+    ///   <see cref="IU_Navigation.CanNavigate"/> n'est donc à
+    ///   évaluer et l'override serait vide. La répartition entre
+    ///   les deux points d'extension est gouvernée par la nature du
+    ///   prédicat consulté (§4.13.4.2 du 0230) et non par une règle
+    ///   uniforme.</description></item>
+    ///   <item><description>N'override aucun des trois autres
+    ///   points d'extension du socle (<c>OnResized</c>,
+    ///   <c>OnLoadedAsync</c>, <c>OnUnloadedAsync</c>) : le menu n'a
+    ///   ni ajustement dimensionnel propre, ni chargement
+    ///   asynchrone post-montage — <see cref="VM_MH04"/> n'override
+    ///   pas <c>LoadAsync</c> —, ni ressource à
+    ///   libérer.</description></item>
+    /// </list>
     ///
     /// <para>Note sur les exceptions architecturales :</para>
     ///
@@ -271,6 +295,20 @@ namespace DG244Cutting.D_Presentation.Views.Components.HorizontalMenus
         /// d'édition, porté par les gardes <c>CanExecute</c> des
         /// commandes du ViewModel) : un bouton peut être visible mais
         /// désactivé (§3.11 du 0230).</para>
+        /// <para>Choix du point d'extension : Le conditionnement est
+        /// porté ici et non par <c>ApplyNavigationRules</c>, la
+        /// répartition entre les deux points d'extension étant
+        /// gouvernée par la nature du prédicat consulté et non par
+        /// celle du facteur (§4.13.4.2 du 0230) :
+        /// <see cref="IU_Navigation.CanCreate"/> et
+        /// <see cref="IU_Navigation.CanUpdate"/> sont des prédicats
+        /// de droits applicatifs granulaires, à l'exclusion des trois
+        /// prédicats de navigation. Aucun override
+        /// d'<c>ApplyNavigationRules</c> n'est requis : les quatre
+        /// boutons sont des actions sur la page hôte et non des
+        /// navigations contextuelles, de sorte qu'aucun
+        /// <see cref="IU_Navigation.CanNavigate"/> n'est à évaluer et
+        /// que l'override serait vide.</para>
         /// </remarks>
         protected override void ApplySecurityRules(string callChain)
         {

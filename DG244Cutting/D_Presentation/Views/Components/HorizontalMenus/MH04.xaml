@@ -1,79 +1,36 @@
-﻿<!--
-=====================================================================================
-Composant : MH04.xaml
-=====================================================================================
-Description :
-    Vue WPF du menu horizontal MH04 de l'application DG244Cutting, état déployé
-    associé à la page d'administration des comptes utilisateurs (Page04). Expose
-    les cinq commandes transverses standards du socle (MH_Menu bindé sur
-    ReduceCommand au titre de la doctrine du double rôle, MH_Home, MH_Previous,
-    MH_Refresh) augmentées de quatre boutons d'action métier propres (MH_New,
-    MH_Add, MH_Modify, MH_Save) relayés vers le contrat IV_Page04 par le
-    ViewModel VM_MH04.
+﻿<!-- ============================================================
+     MH04 — MENU HORIZONTAL ASSOCIÉ À Page04
+     ============================================================
+     Contexte : Menu horizontal de la page d'administration des
+     comptes utilisateurs (Page04). Expose les quatre boutons
+     transverses standards du socle (MH_Menu bindé sur
+     ReduceCommand au titre de la doctrine du double rôle,
+     MH_Home, MH_Previous, MH_Refresh) augmentés de quatre
+     boutons d'action métier MH_New, MH_Add, MH_Modify et
+     MH_Save.
 
-Contexte :
-    Composant de la famille MH de la couche D_Presentation, héritant de
-    MH_Generic (§4.15.9 du 0230) et bindant son DataContext sur VM_MH04
-    (§4.15.8 du 0230). Variante (2) doctrinale standard, cas riche : quatre
-    boutons d'action additionnels dont la visibilité est conditionnée par les
-    droits granulaires de l'utilisateur courant (override propre
-    d'ApplySecurityRules du code-behind) et dont la stylisation est portée par
-    l'override propre d'ApplyLayout. Le pilotage des actions passe par le
-    contrat IV_Page04 injecté dans VM_MH04 (découplage A_Domain de type
-    IS_Navigation), sans consommation d'IS_UseCaseInvoker / EA-11.
+     Objectif : Offrir à l'opérateur habilité quatre points
+     d'action sur la page courante — entrer en création,
+     ajouter, entrer en édition, enregistrer —, relayés vers le
+     contrat IV_Page04 par VM_MH04. Deux axes orthogonaux
+     gouvernent ces boutons : la visibilité tient aux droits,
+     l'activation à l'état d'édition de la page ; un bouton peut
+     être visible mais désactivé.
 
-Structure visuelle :
-    - Élément racine generic:MH_Generic (héritage MH_Generic).
-    - Grid x:Name="MH_Grid" avec deux colonnes MH_Grid_C1 et MH_Grid_C2
-      (contrat XAML du socle).
-    - Border x:Name="MH_Border" en colonne 1, contenant un Grid interne
-      structuré en trois StackPanels horizontaux :
-        (a) groupe transverse gauche (MH_Home, MH_Previous, MH_Refresh),
-            aligné à gauche ;
-        (b) groupe d'action central distinct (MH_New, MH_Add, MH_Modify,
-            MH_Save), centré, masqué par défaut (Visibility="Collapsed") et
-            rendu visible au chargement par l'override d'ApplySecurityRules ;
-        (c) groupe transverse droit (MH_Menu), aligné à droite.
-    - Chaque bouton contient un StackPanel Orientation="Vertical" avec un
-      Image x:Name="MH_Xxx_Icon" et un TextBlock x:Name="MH_Xxx_Text", modèle
-      requis par la stylisation Find<T> du code-behind (override d'ApplyLayout
-      et helpers StyleCommonButtons du socle).
-
-Bindings principaux :
-    - Command MH_Home       →  HomeCommand
-    - Command MH_Previous   →  PreviousCommand
-    - Command MH_Refresh    →  RefreshCommand
-    - Command MH_Menu       →  ReduceCommand
-        Doctrine du double rôle §4.13.3.3 du 0230 : à l'état déployé, le bouton
-        d'angle MH_Menu réduit le menu horizontal.
-    - Command MH_New        →  NewCommand      (relais vers IV_Page04.EnterCreate)
-    - Command MH_Add        →  AddCommand      (relais vers IV_Page04.AddAsync)
-    - Command MH_Modify     →  ModifyCommand   (relais vers IV_Page04.EnterEdit)
-    - Command MH_Save       →  SaveCommand     (relais vers IV_Page04.SaveAsync)
-    - Text MH_Home_Text     →  Label_MH_Home
-    - Text MH_Previous_Text →  Label_MH_Previous
-    - Text MH_Refresh_Text  →  Label_MH_Refresh
-    - Text MH_Menu_Text     →  Label_MH_Menu
-    - Text MH_New_Text      →  Label_MH_New
-    - Text MH_Add_Text      →  Label_MH_Add
-    - Text MH_Modify_Text   →  Label_MH_Modify
-    - Text MH_Save_Text     →  Label_MH_Save
-
-Remarques techniques :
-    - Aucune chaîne UI en dur (I-4.11.1 du 0231) : tous les libellés sont bindés
-      sur des propriétés observables du ViewModel VM_MH04.
-    - Aucune propriété visuelle inline au-delà de Background="Transparent" et
-      BorderBrush="Transparent" (parité avec l'étalon §3.1.2) ; la stylisation
-      (couleurs, polices, dimensions, icônes) est appliquée au Loaded par le
-      code-behind via IS_ControlStyler (override d'ApplyLayout et helpers du
-      socle).
-    - Deux axes distincts et orthogonaux : la VISIBILITÉ des quatre boutons
-      d'action est gouvernée par l'override d'ApplySecurityRules du code-behind
-      (droits granulaires) ; leur ACTIVATION est gouvernée par les gardes
-      CanExecute des commandes (état d'édition de Page04 lu via IV_Page04). Un
-      bouton peut être visible mais désactivé (§3.11 du 0230).
-=====================================================================================
--->
+     Comportement : MH04 hérite de MH_Generic (§4.15.9 du 0230)
+     et binde son DataContext sur VM_MH04 (§4.15.8 du 0230). La
+     visibilité des quatre boutons transverses est gouvernée par
+     les implémentations par défaut d'ApplyNavigationRules et
+     d'ApplySecurityRules du socle. Les quatre boutons métier
+     sont masqués à la déclaration (Visibility="Collapsed") et
+     révélés au Loaded par l'override propre d'ApplySecurityRules
+     du code-behind, qui évalue les droits métier granulaires
+     CanCreate et CanUpdate sur la page hôte ; la répartition
+     entre les deux points d'extension étant gouvernée par la
+     nature du prédicat consulté (§4.13.4.2 du 0230), aucun
+     override d'ApplyNavigationRules n'est requis. Leur
+     stylisation est portée par l'override propre d'ApplyLayout.
+     ============================================================ -->
 
 <generic:MH_Generic x:Class="DG244Cutting.D_Presentation.Views.Components.HorizontalMenus.MH04"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
