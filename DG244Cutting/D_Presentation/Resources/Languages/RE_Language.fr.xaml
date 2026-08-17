@@ -42,7 +42,7 @@
     <sys:String x:Key="MH_Ti_20">Utilisateur</sys:String>
     <sys:String x:Key="MH_Ti_21">Retour</sys:String>
     <sys:String x:Key="MH_Ti_22">Intégration</sys:String>
-    <sys:String x:Key="MH_Ti_23">Stock de chutes</sys:String>
+    <sys:String x:Key="MH_Ti_23">Stock chutes</sys:String>
     <sys:String x:Key="MH_Ti_24">Non défini</sys:String>
     <sys:String x:Key="MH_Ti_25">Non défini</sys:String>
     <sys:String x:Key="MH_Ti_26">Non défini</sys:String>

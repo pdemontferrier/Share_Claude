@@ -41,83 +41,133 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
     ///
     /// <para>Responsabilités :</para>
     ///
-    /// <para>Exposer la commande de navigation
-    /// <see cref="AdminCommand"/> et le libellé observable
-    /// <see cref="Label_MH_Admin"/>, en sus des membres transverses
-    /// hérités. Déléguer l'ouverture de Page04 au UseCase de
-    /// navigation <see cref="IU_Navigation"/> (EA-05), dans le filet
-    /// de sécurité hérité <see cref="VM_Generic.ExecuteSafeAsync"/> et
-    /// sous garde d'anti-réentrance
-    /// <see cref="VM_MH_Generic.IsProcessing"/>. Alimenter le libellé
-    /// propre par surcharge nominative de
-    /// <see cref="LoadLabels"/>.</para>
+    /// <list type="bullet">
+    ///   <item><description>Exposer au binding XAML la commande
+    ///   <see cref="AdminCommand"/> de navigation contextuelle vers
+    ///   la page d'administration des utilisateurs, composée au
+    ///   constructeur et câblée sur le handler privé
+    ///   <see cref="ExecuteAdminAsync"/> avec garde d'anti-réentrance
+    ///   sur <see cref="VM_MH_Generic.IsProcessing"/>.</description></item>
+    ///   <item><description>Exposer au binding XAML la propriété
+    ///   observable <see cref="Label_MH_Admin"/>, libellé du bouton
+    ///   dans la culture active.</description></item>
+    ///   <item><description>Alimenter ce libellé propre par surcharge
+    ///   de <see cref="VM_MH_Generic.LoadLabels"/>, en préservant
+    ///   l'alimentation des quatre libellés transverses portés par le
+    ///   socle.</description></item>
+    ///   <item><description>Déclencher, au constructeur et en dernière
+    ///   instruction, l'orchestration multilingue héritée via
+    ///   <see cref="VM_Generic.InitializeLabels"/>.</description></item>
+    /// </list>
     ///
     /// <para>Non-responsabilités :</para>
     ///
-    /// <para>N'effectue aucun traitement métier et ne consomme aucun
-    /// UseCase métier via <c>IS_UseCaseInvoker</c> (EA-11 non
-    /// mobilisée) : la commande <see cref="AdminCommand"/> est à
-    /// parité de nature avec les cinq commandes transverses du socle.
-    /// Ne résout ni n'évalue les droits d'accès, délégués à
-    /// <see cref="IU_Navigation"/> et à la vue.</para>
+    /// <list type="bullet">
+    ///   <item><description>Ne modifie aucun état métier : aucune
+    ///   entité, aucun Repository, aucun Command Handler, aucun Query
+    ///   Handler, aucune transactionnalité n'est mobilisé. Aucun
+    ///   UseCase métier n'est consommé via <c>IS_UseCaseInvoker</c>
+    ///   (EA-11 non mobilisée).</description></item>
+    ///   <item><description>Ne redéclare aucun membre hérité : ni les
+    ///   cinq commandes transverses standards, ni
+    ///   <see cref="VM_MH_Generic.IsProcessing"/>, ni les quatre
+    ///   propriétés observables de libellés transverses, ni le champ
+    ///   <c>_navigation</c>, qui est le champ <c>protected
+    ///   readonly</c> hérité du socle.</description></item>
+    ///   <item><description>Ne conditionne pas la visibilité du bouton
+    ///   correspondant : ce conditionnement est porté côté Vue par
+    ///   <c>MH01</c>, dont l'override d'<c>ApplyNavigationRules</c>
+    ///   évalue le droit d'accès à la page cible et l'override
+    ///   d'<c>ApplySecurityRules</c> le droit d'administration sur la
+    ///   page hôte. La commande est indissociablement liée au premier
+    ///   au titre de R-4.13.14 du 0231.</description></item>
+    ///   <item><description>Ne compose aucun message d'erreur propre :
+    ///   le traitement terminal des erreurs est intégralement délégué
+    ///   au filet <c>ExecuteSafeAsync</c> hérité de
+    ///   <see cref="VM_Generic"/>.</description></item>
+    ///   <item><description>N'implémente aucune cérémonie multilingue
+    ///   locale : aucun abonnement propre à l'état applicatif, aucun
+    ///   marshalling, aucune logique de repli locale, la mécanique
+    ///   étant intégralement factorisée par
+    ///   <see cref="VM_Generic"/>.</description></item>
+    /// </list>
     ///
     /// <para>Note sur les exceptions architecturales :</para>
     ///
-    /// <para>Mobilise l'EA-05 (consommation de
-    /// <see cref="IU_Navigation"/> par un ViewModel via le filet de
-    /// sécurité), déjà portée par le socle
-    /// <see cref="VM_MH_Generic"/> pour ses cinq commandes
-    /// transverses. Le champ <c>_navigation</c> du socle étant
-    /// <c>private</c>, le présent dérivé retient sa propre référence à
-    /// la même instance Singleton — reçue par son constructeur et
-    /// aujourd'hui transmise à <c>base(...)</c> — dans un champ privé
-    /// propre, pour la rendre accessible au handler
-    /// <see cref="AdminCommand"/>. L'EA-11 n'est pas mobilisée.</para>
+    /// <para>Le handler <see cref="ExecuteAdminAsync"/> invoque
+    /// directement <see cref="IU_Navigation"/> par le champ
+    /// <c>protected readonly</c> <c>_navigation</c> hérité de
+    /// <see cref="VM_MH_Generic"/>, au titre de l'EA-05 (accès direct
+    /// à <see cref="IU_Navigation"/> par le couple générique de la
+    /// famille MH et ses dérivés). Cette consommation déroge à
+    /// R-4.12.2 et à I-4.12.2 du 0231, qui réservent aux UseCases la
+    /// décision de navigation. Le périmètre de l'EA-05 ouvre aux
+    /// dérivés la surface d'écriture du contrat, au premier chef
+    /// <see cref="IU_Navigation.NavigateToPageAsync"/> pour la
+    /// navigation contextuelle vers une page déterminée. Aucune
+    /// médiation par <c>IS_UseCaseInvoker</c> n'est mobilisée :
+    /// <c>UC_Navigation</c> est enregistré Singleton et ne consomme
+    /// aucune dépendance scoped, ce qui rend sans objet la fonction
+    /// propre de cette médiation (R-4.10.12 du 0231, principe P4-bis
+    /// de §4.10.10 du 0230). Aucune redéclaration ni injection propre
+    /// de <see cref="IU_Navigation"/> n'est opérée : le point
+    /// d'injection demeure unique et localisé au socle.</para>
     ///
     /// <para>Structure des régions :</para>
     ///
     /// <para>La classe applique la structure normative à cinq régions
-    /// standard (§4.4.2 du 0230), augmentée de l'extension §4.4.3
-    /// <c>=== Propriétés publiques ===</c> qui porte les deux membres
-    /// exposés propres <see cref="AdminCommand"/> et
-    /// <see cref="Label_MH_Admin"/>. La région Méthodes protégées est
-    /// absente conformément à R-4.4.10 du 0231 (la classe n'expose
-    /// aucune méthode <c>protected</c> propre : la surcharge
-    /// <see cref="LoadLabels"/> est <c>protected override</c> et non
-    /// une méthode <c>protected</c> propre). L'extension
-    /// <c>=== Événements / Délégués / Indexeurs ===</c> n'est pas
-    /// présente. Soit six régions au total :</para>
+    /// standard (§4.4.2 du 0230) augmentée de deux extensions
+    /// §4.4.3 : <c>=== Propriétés publiques ===</c>, présente car la
+    /// classe expose des propriétés publiques propres et placée avant
+    /// le constructeur conformément à R-4.4.9 du 0231 ; et
+    /// <c>=== Méthodes protégées ===</c>, présente au titre de
+    /// R-4.4.10 du 0231 car la classe expose une méthode
+    /// <c>protected</c> — la règle rendant la région obligatoire dès
+    /// lors qu'au moins une méthode à portée <c>protected</c> est
+    /// exposée, qu'elle soit non virtuelle, <c>virtual</c>,
+    /// <c>override</c> ou <c>abstract</c> —, et insérée entre la
+    /// région Méthodes publiques et la région Méthodes privées.
+    /// L'extension <c>=== Événements / Délégués / Indexeurs ===</c>
+    /// n'est pas présente : <see cref="VM_MH01"/> n'expose aucun
+    /// événement propre, l'événement <c>PropertyChanged</c> étant
+    /// porté par <see cref="VM_Generic"/> au titre d'INPC et hérité
+    /// par transitivité. Soit sept régions au total :</para>
     ///
     /// <list type="number">
     ///   <item><description><c>=== Propriétés privées ===</c> :
     ///   porte le champ backing <c>_label_mh_admin</c> du libellé
     ///   propre.</description></item>
     ///   <item><description><c>=== Dépendances privées ===</c> :
-    ///   porte la référence propre <c>_navigation</c>
-    ///   (<see cref="IU_Navigation"/>, EA-05), rétention de la même
-    ///   instance Singleton transmise à <c>base(...)</c>, rendue
-    ///   accessible au handler propre.</description></item>
+    ///   présente mais vide, marqueur <c>// A compléter</c>. Aucune
+    ///   dépendance propre n'est injectée par le présent
+    ///   ViewModel ; les quatre dépendances du constructeur sont
+    ///   intégralement déléguées à <c>base(...)</c>, et la
+    ///   consommation d'<see cref="IU_Navigation"/> s'opère par le
+    ///   champ <c>protected readonly</c> hérité du socle au titre
+    ///   d'EA-05.</description></item>
     ///   <item><description><c>=== Propriétés publiques ===</c>
     ///   (extension §4.4.3) : porte la commande de navigation
-    ///   <see cref="AdminCommand"/> et le libellé observable
-    ///   <see cref="Label_MH_Admin"/>.</description></item>
+    ///   contextuelle <see cref="AdminCommand"/> et le libellé
+    ///   observable <see cref="Label_MH_Admin"/>.</description></item>
     ///   <item><description><c>=== Constructeur ===</c> :
     ///   constructeur <c>public</c> à quatre paramètres (signature
-    ///   inchangée), délégation à <see cref="VM_MH_Generic"/> via
-    ///   <c>base(...)</c>, puis rétention de <c>_navigation</c>,
-    ///   composition d'<see cref="AdminCommand"/>, et invocation
+    ///   inchangée), délégation intégrale à
+    ///   <see cref="VM_MH_Generic"/> via <c>base(...)</c> sans
+    ///   rétention locale, composition
+    ///   d'<see cref="AdminCommand"/>, et invocation
     ///   d'<see cref="VM_Generic.InitializeLabels"/> en dernière
     ///   instruction (R-4.11.8 du 0231).</description></item>
     ///   <item><description><c>=== Méthodes publiques ===</c> :
-    ///   porte la surcharge nominative
-    ///   <see cref="LoadLabels"/> qui alimente le libellé propre après
-    ///   appel de <c>base.LoadLabels(callChain)</c> en première
-    ///   instruction. Aucun override de
-    ///   <see cref="VM_MH_Generic.LoadAsync"/>, le composant n'ayant
-    ///   pas de donnée métier à charger.</description></item>
+    ///   présente mais vide, marqueur <c>// A compléter</c>. Aucun
+    ///   override de <see cref="VM_MH_Generic.LoadAsync"/>, le
+    ///   présent ViewModel n'ayant aucune donnée à charger au
+    ///   montage du menu horizontal.</description></item>
+    ///   <item><description><c>=== Méthodes protégées ===</c>
+    ///   (extension §4.4.3) : override propre de
+    ///   <see cref="VM_MH_Generic.LoadLabels"/>.</description></item>
     ///   <item><description><c>=== Méthodes privées ===</c> :
-    ///   porte le handler <see cref="ExecuteAdminAsync"/> de la
-    ///   commande de navigation propre.</description></item>
+    ///   handler <see cref="ExecuteAdminAsync"/> de la commande de
+    ///   navigation contextuelle.</description></item>
     /// </list>
     /// </remarks>
     public class VM_MH01 : VM_MH_Generic
@@ -127,30 +177,25 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// <summary>
         /// Champ de stockage du libellé multilingue propre
         /// <see cref="Label_MH_Admin"/>, initialisé à la chaîne vide
-        /// et alimenté par la surcharge <see cref="LoadLabels"/> via
-        /// la résolution de la clé <c>MH_Ti_18</c>. Les mutations
-        /// passent par <c>SetProperty</c> hérité de
-        /// <see cref="VM_Generic"/> pour émettre la notification
-        /// <c>PropertyChanged</c>.
+        /// et alimenté par l'override propre de
+        /// <see cref="LoadLabels"/> via la résolution de la clé
+        /// <c>MH_Ti_19</c>. Les mutations passent par
+        /// <c>SetProperty</c> hérité de <see cref="VM_Generic"/> pour
+        /// émettre la notification <c>PropertyChanged</c>.
         /// </summary>
+        /// <remarks>
+        /// <para>Contexte : Modifié exclusivement par
+        /// <see cref="LoadLabels"/> au premier appel et à chaque
+        /// changement d'<c>AppCultureCode</c>. Jamais
+        /// <see langword="null"/>.</para>
+        /// </remarks>
         private string _label_mh_admin = string.Empty;
 
         #endregion
 
         #region === Dépendances privées ===
 
-        /// <summary>
-        /// Référence propre au UseCase de navigation
-        /// <see cref="IU_Navigation"/> (EA-05), rétention de la même
-        /// instance Singleton reçue par le constructeur et transmise à
-        /// <c>base(...)</c>. Le champ homonyme du socle
-        /// <see cref="VM_MH_Generic"/> étant <c>private</c>, cette
-        /// rétention rend la dépendance accessible au handler propre
-        /// <see cref="ExecuteAdminAsync"/>. Consommée exclusivement au
-        /// travers du filet de sécurité hérité
-        /// <see cref="VM_Generic.ExecuteSafeAsync"/>.
-        /// </summary>
-        private readonly IU_Navigation _navigation;
+        // A compléter
 
         #endregion
 
@@ -161,21 +206,40 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// d'administration des utilisateurs (Page04).
         /// </summary>
         /// <remarks>
-        /// <para>Contexte : Commande à parité de nature avec les cinq
+        /// <para>Contexte : Commande de la troisième catégorie de
+        /// R-3.13.5 du 0231 — bouton de navigation contextuelle,
+        /// conduisant vers une page déterminée sans déclencher aucun
+        /// traitement métier. À parité de nature avec les cinq
         /// commandes transverses du socle
-        /// <see cref="VM_MH_Generic"/> — elle déclenche une navigation
-        /// et non un traitement métier. Instance de
+        /// <see cref="VM_MH_Generic"/>, dont elle ne masque ni ne
+        /// redéclare aucun membre. Instance de
         /// <see cref="UT_RelayCommandArg0Async"/> composée au
-        /// constructeur, câblée sur le handler privé
-        /// <see cref="ExecuteAdminAsync"/> avec une garde
-        /// <c>CanExecute</c> fixée à <c>!IsProcessing</c>
-        /// (anti-réentrance identique aux commandes du socle).</para>
-        /// <para>Sortie : ouverture de Page04 déléguée à
-        /// <see cref="IU_Navigation.NavigateToPageAsync"/>. Aucun cas
-        /// d'échec métier propre : la résolution d'accès et le
-        /// traitement terminal des erreurs sont délégués au UseCase de
-        /// navigation et au filet
-        /// <see cref="VM_Generic.ExecuteSafeAsync"/>.</para>
+        /// constructeur et jamais réaffectée, câblée sur le handler
+        /// privé <see cref="ExecuteAdminAsync"/> avec un prédicat
+        /// <c>CanExecute</c> fixé à la négation
+        /// d'<see cref="VM_MH_Generic.IsProcessing"/>, garantissant
+        /// l'anti-réentrance à l'identique des commandes du
+        /// socle.</para>
+        /// <para>Effets observables : navigation de la Page01 vers la
+        /// Page04 et empilement du contexte de retour, permettant le
+        /// retour à la page utilisateur par le bouton
+        /// <c>MH_Previous</c> du menu horizontal de la page de
+        /// destination. Aucun effet sur l'état métier de
+        /// l'application.</para>
+        /// <para>Couple indissociable : La présente commande forme
+        /// avec le conditionnement de visibilité du bouton
+        /// <c>MH_Admin</c>, porté par l'override
+        /// d'<c>ApplyNavigationRules</c> de <c>MH01</c>, un couple
+        /// indissociable au titre de R-4.13.14 du 0231. Le nom de
+        /// page consommé de part et d'autre est strictement
+        /// identique. L'exposition de l'une sans l'autre constitue
+        /// une non-conformité à I-4.13.14.</para>
+        /// <para>Cas d'échec métier : Aucun cas propre. Le droit
+        /// d'accès est traité en amont par le masquage du bouton
+        /// côté Vue ; toute exception levée à l'exécution est
+        /// capturée, journalisée et notifiée par le filet
+        /// <c>ExecuteSafeAsync</c> hérité de
+        /// <see cref="VM_Generic"/>.</para>
         /// </remarks>
         public ICommand AdminCommand { get; }
 
@@ -184,12 +248,22 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// le <c>TextBlock</c> du bouton <c>MH_Admin</c> de la vue.
         /// </summary>
         /// <remarks>
-        /// <para>Contexte : Libellé observable alimenté par la clé
-        /// multilingue <c>MH_Ti_18</c> au travers de la surcharge
-        /// <see cref="LoadLabels"/>. Le setter est <c>private</c> :
-        /// la propriété n'est mutée qu'en interne, via
-        /// <c>SetProperty</c> hérité de <see cref="VM_Generic"/> pour
-        /// émettre la notification <c>PropertyChanged</c>.</para>
+        /// <para>Contexte : Propriété observable alimentée par la
+        /// résolution de la clé <c>MH_Ti_19</c> au travers de
+        /// l'override propre de <see cref="LoadLabels"/>. Le setter
+        /// est <c>private</c> : la propriété n'est mutée qu'en
+        /// interne, via <c>SetProperty</c> hérité de
+        /// <see cref="VM_Generic"/> pour émettre la notification
+        /// <c>PropertyChanged</c>.</para>
+        /// <para>Valeur : Chaîne résolue du dictionnaire actif, ou
+        /// chaîne de repli si la clé est absente de la culture
+        /// courante. Chaîne vide avant le premier appel à
+        /// <see cref="LoadLabels"/> orchestré par
+        /// <see cref="VM_Generic.InitializeLabels"/> ; jamais
+        /// <see langword="null"/>.</para>
+        /// <para>Rechargement : La valeur est reconstruite à chaque
+        /// changement de culture active, par la mécanique multilingue
+        /// factorisée par <see cref="VM_Generic"/>.</para>
         /// </remarks>
         public string Label_MH_Admin
         {
@@ -205,33 +279,61 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// Initialise une nouvelle instance de <see cref="VM_MH01"/>.
         /// </summary>
         /// <remarks>
+        /// <para>Contexte :</para>
+        ///
+        /// <para>Constructeur <c>public</c> à quatre paramètres,
+        /// reproduisant strictement la signature du constructeur
+        /// <c>protected</c> de <see cref="VM_MH_Generic"/>. Le
+        /// présent ViewModel n'injecte aucune dépendance propre en
+        /// sus des quatre dépendances de base : la consommation
+        /// d'<see cref="IU_Navigation"/> par le handler de la
+        /// commande de navigation contextuelle s'opère par le champ
+        /// <c>protected readonly</c> hérité du socle au titre
+        /// d'EA-05, sans rétention locale.</para>
+        ///
         /// <para>Séquence d'initialisation :</para>
         ///
-        /// <para>Délègue d'abord à <see cref="VM_MH_Generic"/> via
-        /// <c>base(...)</c> (validation des quatre dépendances,
-        /// composition des cinq commandes transverses). Retient
-        /// ensuite la référence de navigation dans le champ propre
-        /// <c>_navigation</c>, compose la commande de navigation propre
-        /// <see cref="AdminCommand"/> (garde <c>!IsProcessing</c>),
-        /// puis invoque <see cref="VM_Generic.InitializeLabels"/> en
-        /// DERNIÈRE instruction (R-4.11.8 du 0231) afin de déclencher
-        /// l'alimentation des libellés — les quatre transverses via
-        /// <c>base.LoadLabels</c> et le libellé propre
-        /// <see cref="Label_MH_Admin"/> via la surcharge
-        /// <see cref="LoadLabels"/>.</para>
+        /// <list type="number">
+        ///   <item><description>Délégation intégrale à
+        ///   <see cref="VM_MH_Generic"/> via
+        ///   <c>base(dictionary, logAndNotify, app, navigation)</c>,
+        ///   qui prend en charge l'affectation des quatre
+        ///   dépendances, les gardes
+        ///   <see cref="ArgumentNullException"/> correspondantes et
+        ///   la composition des cinq commandes transverses
+        ///   standards.</description></item>
+        ///   <item><description>Composition de
+        ///   <see cref="AdminCommand"/> via
+        ///   <see cref="UT_RelayCommandArg0Async"/>, câblée sur
+        ///   <see cref="ExecuteAdminAsync"/> avec le prédicat
+        ///   d'anti-réentrance.</description></item>
+        ///   <item><description>Invocation de
+        ///   <see cref="VM_Generic.InitializeLabels"/> en DERNIÈRE
+        ///   instruction (R-4.11.8 du 0231), déclenchant le premier
+        ///   appel synchrone à <see cref="LoadLabels"/> par
+        ///   dispatching virtuel — soit l'alimentation des quatre
+        ///   libellés transverses du socle puis celle de
+        ///   <see cref="Label_MH_Admin"/> — ainsi que le branchement
+        ///   de l'abonnement INPC à la culture
+        ///   active.</description></item>
+        /// </list>
         ///
         /// <para>Filet de sécurité :</para>
         ///
         /// <para>La validation non-nulle des quatre paramètres est
-        /// portée par la chaîne <c>base(...)</c> ; à l'entrée du corps
-        /// du présent constructeur, <paramref name="navigation"/> est
-        /// donc nécessairement non <see langword="null"/>, ce qui rend
-        /// la rétention directe sûre.</para>
+        /// intégralement portée par la chaîne <c>base(...)</c> ;
+        /// aucune garde locale redondante n'est ajoutée. Le présent
+        /// constructeur ne retenant aucune référence propre, il
+        /// n'introduit aucun point de défaillance
+        /// supplémentaire.</para>
         /// </remarks>
         /// <param name="dictionary">Service d'accès au dictionnaire
         /// multilingue, transmis à <see cref="VM_MH_Generic"/> via
-        /// <c>base(...)</c>. Injecté en Singleton par le conteneur
-        /// DI.</param>
+        /// <c>base(...)</c> et consommé par l'override propre de
+        /// <see cref="LoadLabels"/> au travers du champ
+        /// <c>protected readonly</c> <c>_dictionary</c> hérité de
+        /// <see cref="VM_Generic"/>. Injecté en Singleton par le
+        /// conteneur DI.</param>
         /// <param name="logAndNotify">Orchestrateur du traitement
         /// terminal des erreurs, transmis à
         /// <see cref="VM_MH_Generic"/> via <c>base(...)</c>.
@@ -247,12 +349,14 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// accède directement, conformément à I-4.11.11 du 0231.
         /// Injecté en Singleton par le conteneur DI.</param>
         /// <param name="navigation">UseCase de navigation, transmis
-        /// à <see cref="VM_MH_Generic"/> via <c>base(...)</c> et
-        /// retenu par le présent dérivé dans son champ propre
-        /// <c>_navigation</c> (même instance Singleton). Consommé par
-        /// les cinq handlers hérités du socle et par le handler propre
-        /// <see cref="ExecuteAdminAsync"/> au titre de l'EA-05.
-        /// Injecté en Singleton par le conteneur DI.</param>
+        /// à <see cref="VM_MH_Generic"/> via <c>base(...)</c> sans
+        /// rétention locale. Consommé par les cinq handlers privés
+        /// hérités du socle de la famille VM_MH et par le handler
+        /// propre <see cref="ExecuteAdminAsync"/>, au titre de
+        /// l'EA-05 ; l'accès du présent dérivé s'opère par le champ
+        /// <c>protected readonly</c> <c>_navigation</c> hérité, sans
+        /// redéclaration ni injection propre. Injecté en Singleton
+        /// par le conteneur DI.</param>
         /// <exception cref="ArgumentNullException">Levée par la
         /// chaîne <c>base(...)</c> si l'un des quatre paramètres est
         /// <see langword="null"/>.</exception>
@@ -263,8 +367,6 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
             IU_Navigation navigation)
             : base(dictionary, logAndNotify, app, navigation)
         {
-            _navigation = navigation;
-
             AdminCommand = new UT_RelayCommandArg0Async(
                 ExecuteAdminAsync, () => !IsProcessing);
 
@@ -275,33 +377,51 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
 
         #region === Méthodes publiques ===
 
+        // A compléter
+
+        #endregion
+
+        #region === Méthodes protégées ===
+
         /// <summary>
         /// Alimente les libellés multilingues du menu horizontal :
-        /// les quatre libellés transverses du socle puis le libellé
-        /// propre <see cref="Label_MH_Admin"/>.
+        /// les quatre libellés transverses portés par le socle, puis
+        /// le libellé propre <see cref="Label_MH_Admin"/>.
         /// </summary>
         /// <param name="callChain">CallChain courante propagée par la
-        /// mécanique multilingue héritée
-        /// (<see cref="VM_Generic.InitializeLabels"/> au premier appel,
-        /// puis à chaque changement de langue), transmise telle quelle
-        /// à <c>base.LoadLabels</c> et à
+        /// mécanique multilingue héritée — par
+        /// <see cref="VM_Generic.InitializeLabels"/> au premier appel,
+        /// puis à chaque changement de culture active —, transmise
+        /// telle quelle à <c>base.LoadLabels</c> et à
         /// <see cref="IS_Dictionary.GetText"/>.</param>
         /// <remarks>
-        /// <para>Contexte : Surcharge nominative de
+        /// <para>Contexte : Surcharge propre de
         /// <see cref="VM_MH_Generic.LoadLabels"/>. L'appel à
         /// <c>base.LoadLabels(callChain)</c> est IMPÉRATIVEMENT la
         /// première instruction du corps, afin de préserver
         /// l'alimentation des quatre libellés transverses du socle
         /// (<c>MH_Ti_01</c> à <c>MH_Ti_04</c>) : leur omission
-        /// constituerait une non-conformité au contrat de la mécanique
-        /// multilingue de la famille MH. Le libellé propre est ensuite
-        /// résolu depuis la clé <c>MH_Ti_18</c>.</para>
+        /// constituerait une non-conformité au contrat de la
+        /// mécanique multilingue de la famille MH, dont le socle
+        /// porte du traitement à préserver, à la différence de
+        /// l'implémentation par défaut de
+        /// <see cref="VM_Generic"/>.</para>
+        /// <para>Résolution : Le libellé propre est résolu depuis la
+        /// clé <c>MH_Ti_19</c>. Une affectation par ligne, sans
+        /// boucle dynamique. Aucune affectation locale des quatre
+        /// libellés transverses n'est opérée.</para>
+        /// <para>Filet de sécurité : Aucun <c>try</c>/<c>catch</c>
+        /// local n'est posé et aucune logique de repli locale n'est
+        /// admise. Le filet est porté exclusivement par le service de
+        /// dictionnaire, qui journalise en interne toute anomalie et
+        /// résout par une valeur de repli sans propager d'exception
+        /// au présent ViewModel (R-4.11.8 du 0231).</para>
         /// </remarks>
         protected override void LoadLabels(string callChain)
         {
             base.LoadLabels(callChain);
 
-            Label_MH_Admin = _dictionary.GetText(callChain, "MH_Ti_18");
+            Label_MH_Admin = _dictionary.GetText(callChain, "MH_Ti_19");
         }
 
         #endregion
@@ -314,20 +434,41 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// utilisateurs (Page04), sur le patron strictement identique
         /// aux cinq handlers transverses du socle.
         /// </summary>
-        /// <returns>Tâche asynchrone représentant l'exécution de la
-        /// navigation.</returns>
+        /// <returns>Une tâche représentant l'exécution asynchrone de
+        /// la navigation.</returns>
         /// <remarks>
         /// <para>Contexte : Encadre l'invocation de
         /// <see cref="IU_Navigation.NavigateToPageAsync"/> par le
-        /// pattern <c>BeginProcessing</c> / <c>try</c> / <c>finally</c>
-        /// / <c>EndProcessing</c> (garantissant la remise à
-        /// <see langword="false"/> de
-        /// <see cref="VM_MH_Generic.IsProcessing"/>) et par le filet
-        /// de sécurité hérité <see cref="VM_Generic.ExecuteSafeAsync"/>
-        /// alimenté par une CallChain initiale construite via
-        /// <c>BuildFirstCallChain</c>. Le traitement terminal des
-        /// erreurs est intégralement délégué au filet ; aucun cas
-        /// d'échec métier propre n'est traité ici.</para>
+        /// pattern <c>BeginProcessing</c> / <c>try</c> /
+        /// <c>finally</c> / <c>EndProcessing</c>, garantissant la
+        /// remise à <see langword="false"/> de
+        /// <see cref="VM_MH_Generic.IsProcessing"/> en toute
+        /// circonstance, et par le filet de sécurité hérité
+        /// <see cref="VM_Generic.ExecuteSafeAsync"/> alimenté par une
+        /// CallChain initiale construite via
+        /// <c>BuildFirstCallChain</c>. Le bloc <c>try</c>/
+        /// <c>finally</c> ne capture rien : aucun
+        /// <c>try</c>/<c>catch</c> local n'est posé en sus du filet
+        /// hérité, et le traitement terminal des erreurs lui est
+        /// intégralement délégué.</para>
+        /// <para>Consommation d'<see cref="IU_Navigation"/> : Opérée
+        /// par le champ <c>protected readonly</c> <c>_navigation</c>
+        /// hérité de <see cref="VM_MH_Generic"/> au titre de l'EA-05,
+        /// sans rétention locale, sans injection propre, sans
+        /// médiation par <c>IS_UseCaseInvoker</c> et sans UseCase
+        /// métier intermédiaire — la commande étant purement
+        /// navigationnelle.</para>
+        /// <para>Jeton d'annulation :
+        /// <see cref="CancellationToken.None"/> est passé
+        /// explicitement en argument, tant au filet qu'à l'opération
+        /// de navigation. Le contrat de commande WPF exposé par
+        /// <see cref="UT_RelayCommandArg0Async"/> ne véhicule aucun
+        /// jeton, de sorte qu'aucune annulation coopérative n'est
+        /// disponible au présent handler.</para>
+        /// <para>Nom de page : Le littéral <c>"Page04"</c> est
+        /// strictement identique à celui sur lequel <c>MH01</c>
+        /// conditionne la visibilité du bouton correspondant, au
+        /// titre de R-4.13.14 du 0231.</para>
         /// </remarks>
         private async Task ExecuteAdminAsync()
         {
@@ -337,8 +478,9 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
                 string callChain = BuildFirstCallChain();
                 await ExecuteSafeAsync(callChain, async () =>
                 {
-                    await _navigation.NavigateToPageAsync(callChain, "Page04");
-                });
+                    await _navigation.NavigateToPageAsync(
+                        callChain, "Page04", CancellationToken.None);
+                }, CancellationToken.None);
             }
             finally
             {

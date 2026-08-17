@@ -5,22 +5,28 @@
      Expose les quatre boutons transverses standards du socle
      (MH_Menu bindé sur ReduceCommand au titre de la doctrine du
      double rôle, MH_Home, MH_Previous, MH_Refresh) augmentés d'un
-     bouton spécifique métier MH_Admin ouvrant la page
+     bouton de navigation contextuelle MH_Admin ouvrant la page
      d'administration des utilisateurs (Page04).
 
-     Objectif : Offrir un point d'accès à l'administration des
-     utilisateurs, matérialisé par le bouton MH_Admin. Ce bouton
-     déclenche la commande de navigation AdminCommand et affiche le
-     libellé multilingue propre Label_MH_Admin.
+     Objectif : Offrir à l'opérateur habilité un point d'accès à
+     l'administration des utilisateurs depuis sa page d'accueil,
+     matérialisé par le bouton MH_Admin. Ce bouton ne porte aucune
+     décision métier : il déclenche la commande de navigation
+     AdminCommand et affiche le libellé multilingue propre
+     Label_MH_Admin.
 
      Comportement : MH01 hérite de MH_Generic (§4.15.9 du 0230) et
      binde son DataContext sur VM_MH01 (§4.15.8 du 0230). La
      visibilité des quatre boutons transverses est gouvernée par
      les implémentations par défaut d'ApplyNavigationRules et
-     d'ApplySecurityRules du socle. Le bouton MH_Admin est masqué
-     par défaut (Visibility="Collapsed") et rendu visible par
-     l'override propre d'ApplySecurityRules du code-behind, sous
-     condition des droits granulaires de l'utilisateur courant. Sa
+     d'ApplySecurityRules du socle. Le bouton MH_Admin est masqué à
+     la déclaration (Visibility="Collapsed") et révélé au Loaded
+     par la conjonction de deux overrides propres du code-behind :
+     ApplyNavigationRules évalue le droit d'accès de l'utilisateur
+     courant à la page cible (R-4.13.14 du 0231), puis
+     ApplySecurityRules y compose le droit d'administration
+     granulaire sur la page hôte, la répartition étant gouvernée
+     par la nature du prédicat consulté (§4.13.4.2 du 0230). Sa
      stylisation est portée par l'override propre d'ApplyLayout.
      ============================================================ -->
 
