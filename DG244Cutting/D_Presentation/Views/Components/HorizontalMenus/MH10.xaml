@@ -1,19 +1,33 @@
 ﻿<!-- ============================================================
      MH10 — MENU HORIZONTAL ASSOCIÉ À Page10
      ============================================================
-     Contexte : Composant non finalisé. Objet, description et
-     contenu fonctionnel seront complétés lors du prochain fil
-     d'Extension de la class.
+     Contexte : Menu horizontal du tableau de bord de production
+     (Page10), point d'entrée du parcours nominal de découpe.
+     Expose les quatre boutons transverses standards du socle
+     (MH_Menu bindé sur ReduceCommand au titre de la doctrine du
+     double rôle, MH_Home, MH_Previous, MH_Refresh) augmentés d'un
+     bouton de navigation contextuelle MH_CuttingScrapStock ouvrant
+     la page de gestion du stock de chutes (Page30).
 
-     Objectif : Composant non finalisé. Objet, description et
-     contenu fonctionnel seront complétés lors du prochain fil
-     d'Extension de la class.
+     Objectif : Offrir à l'opérateur un accès direct et permanent
+     au stock de chutes réutilisables, hors du parcours de
+     production qui l'alimente et le consomme automatiquement. Le
+     bouton n'est pas contextuel à une sélection de série : il est
+     disponible dès l'arrivée sur la page. Il déclenche la commande
+     de navigation CuttingScrapStockCommand et affiche le libellé
+     multilingue propre Label_MH_CuttingScrapStock.
 
      Comportement : MH10 hérite de MH_Generic (§4.15.9 du 0230)
      et binde son DataContext sur VM_MH10 (§4.15.8 du 0230). La
-     visibilité des boutons est gouvernée intégralement par les
-     implémentations par défaut d'ApplyNavigationRules et
-     d'ApplySecurityRules du socle, sans aucun override propre.
+     visibilité des quatre boutons transverses est gouvernée par
+     les implémentations par défaut d'ApplyNavigationRules et
+     d'ApplySecurityRules du socle. Le bouton
+     MH_CuttingScrapStock est masqué à la déclaration
+     (Visibility="Collapsed") et révélé au Loaded par l'override
+     propre d'ApplyNavigationRules du code-behind, sous condition
+     du droit d'accès de l'utilisateur courant à la page cible
+     (R-4.13.14 du 0231). Sa stylisation est portée par l'override
+     propre d'ApplyLayout.
      ============================================================ -->
 
 <generic:MH_Generic x:Class="DG244Cutting.D_Presentation.Views.Components.HorizontalMenus.MH10"
@@ -53,6 +67,12 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="MH_CuttingScrapStock" Command="{Binding CuttingScrapStockCommand}" Background="Transparent" BorderBrush="Transparent" Visibility="Collapsed">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_CuttingScrapStock_Icon"/>
+                            <TextBlock x:Name="MH_CuttingScrapStock_Text" Text="{Binding Label_MH_CuttingScrapStock}"/>
+                        </StackPanel>
+                    </Button>
                     <Button x:Name="MH_Menu" Command="{Binding ReduceCommand}" Background="Transparent" BorderBrush="Transparent">
                         <StackPanel Orientation="Vertical">
                             <Image x:Name="MH_Menu_Icon"/>
