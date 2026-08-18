@@ -349,27 +349,32 @@ public partial class ProductionCutPiece
     public bool IsBarOutOfStock { get; set; }
 
     /// <summary>
-    /// Indique si la decoupe a ete realisee.
+    /// Indique si la découpe de la pièce a été refusée. False = non refusée, True = refusée.
+    /// </summary>
+    public bool IsCutRefused { get; set; }
+
+    /// <summary>
+    /// Indique si la découpe a été réalisée.
     /// </summary>
     public bool IsCut { get; set; }
 
     /// <summary>
-    /// Date et heure de debut de la decoupe.
+    /// Date et heure de début de la découpe.
     /// </summary>
     public DateTime? CutStartedAt { get; set; }
 
     /// <summary>
-    /// Date et heure de validation de la decoupe.
+    /// Date et heure de validation de la découpe.
     /// </summary>
     public DateTime? CutFinishedAt { get; set; }
 
     /// <summary>
-    /// Date de creation de la ligne dans le systeme local.
+    /// Date de création de la ligne dans le système local.
     /// </summary>
     public DateTime CreatedAt { get; set; }
 
     /// <summary>
-    /// Date de derniere modification dans le systeme local.
+    /// Date de dernière modification dans le système local.
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
 

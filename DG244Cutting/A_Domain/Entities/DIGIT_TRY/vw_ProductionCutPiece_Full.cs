@@ -981,6 +981,11 @@ public partial class vw_ProductionCutPiece_Full
     public bool PCPIsBarOutOfStock { get; set; }
 
     /// <summary>
+    /// Source : [ProductionCutPiece] - Champ [IsCutRefused] - Indique si la découpe de la pièce a été refusée.
+    /// </summary>
+    public bool PCPIsCutRefused { get; set; }
+
+    /// <summary>
     /// Source : [ProductionCutPiece] - Champ [IsCut] - Indique si la découpe a été réalisée.
     /// </summary>
     public bool PCPIsCut { get; set; }
