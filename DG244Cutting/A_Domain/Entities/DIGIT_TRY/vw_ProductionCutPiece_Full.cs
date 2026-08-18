@@ -61,22 +61,22 @@ public partial class vw_ProductionCutPiece_Full
     public bool PSIsProductionValidated { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsDropBarOptimized] - Indique si la serie a ete optimisee pour la decoupe sur barres de chutes. False = non optimisee, True = optimisee.
+    /// Source : [ProductionSeries] - Champ [IsDropBarOptimized] - Indique si la série a été optimisée pour la découpe sur barres de chutes. False = non optimisée, True = optimisée.
     /// </summary>
     public bool PSIsDropBarOptimized { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsDropBarSupplied] - Indique si la serie a recu l&apos;&apos;approvisionnement en barres de chutes (stock de chutes). False = non approvisionnee, True = approvisionnee.
+    /// Source : [ProductionSeries] - Champ [IsDropBarSupplied] - Indique si la série a reçu l’approvisionnement en barres de chutes (stock de chutes). False = non approvisionnée, True = approvisionnée.
     /// </summary>
     public bool PSIsDropBarSupplied { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsNewBarOptimized] - Indique si la serie a ete optimisee pour la decoupe sur barres neuves. False = non optimisee, True = optimisee.
+    /// Source : [ProductionSeries] - Champ [IsNewBarOptimized] - Indique si la série a été optimisée pour la découpe sur barres neuves. False = non optimisée, True = optimisée.
     /// </summary>
     public bool PSIsNewBarOptimized { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsNewBarSupplied] - Indique si la serie a recu l&apos;&apos;approvisionnement en barres neuves. False = non approvisionnee, True = approvisionnee.
+    /// Source : [ProductionSeries] - Champ [IsNewBarSupplied] - Indique si la série a reçu l’approvisionnement en barres neuves. False = non approvisionnée, True = approvisionnée.
     /// </summary>
     public bool PSIsNewBarSupplied { get; set; }
 
@@ -86,12 +86,12 @@ public partial class vw_ProductionCutPiece_Full
     public bool PSIsBarOutOfStock { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsCuttingStarted] - Indique si une des decoupes de la serie a ete realisee. False = non commencee, True = commencee.
+    /// Source : [ProductionSeries] - Champ [IsCuttingStarted] - Indique si une des découpes de la série a été réalisée. False = non commencée, True = commencée.
     /// </summary>
     public bool PSIsCuttingStarted { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsCuttingCompleted] - Indique si l&apos;&apos;ensemble des decoupes de la serie ont ete realisees. False = non decoupee, True = decoupee.
+    /// Source : [ProductionSeries] - Champ [IsCuttingCompleted] - Indique si l’ensemble des découpes de la série ont été réalisées. False = non découpée, True = découpée.
     /// </summary>
     public bool PSIsCuttingCompleted { get; set; }
 
@@ -271,7 +271,7 @@ public partial class vw_ProductionCutPiece_Full
     public short PCOrderPosition { get; set; }
 
     /// <summary>
-    /// Source : [ProductionChassis] - Champ [BarcodeId] - Identifiant code-barres chassis. Source : Tempor_Import.Feld_10_059.
+    /// Source : [ProductionChassis] - Champ [BarcodeId] - Identifiant code-barres châssis. Source : Tempor_Import.Feld_10_059.
     /// </summary>
     public string PCBarcodeId { get; set; } = null!;
 
@@ -396,7 +396,7 @@ public partial class vw_ProductionCutPiece_Full
     public int PFSIdProductionChassis { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [ComponentNumber] - Numéro du composant dans le chassis. Source : Tempor_Import.Wert_14.
+    /// Source : [ProductionFrameSash] - Champ [ComponentNumber] - Numéro du composant dans le châssis. Source : Tempor_Import.Wert_14.
     /// </summary>
     public short PFSComponentNumber { get; set; }
 
@@ -621,22 +621,22 @@ public partial class vw_ProductionCutPiece_Full
     public short? PCPIdSpatialPosition { get; set; }
 
     /// <summary>
-    /// Source : [SpatialPosition] - Champ [Description] - Description fonctionnelle lisible de la position ou du type de piece.
+    /// Source : [SpatialPosition] - Champ [Description] - Description fonctionnelle lisible de la position ou du type de pièce.
     /// </summary>
     public string? SPDescription { get; set; }
 
     /// <summary>
-    /// Source : [SpatialPosition] - Champ [Position] - Position spatiale normalisee (Haut, Bas, Gauche, Droite, Horizontal, Vertical, Croisillon, NA).
+    /// Source : [SpatialPosition] - Champ [Position] - Position spatiale normalisée (Haut, Bas, Gauche, Droite, Horizontal, Vertical, Croisillon, NA).
     /// </summary>
     public string? SPPosition { get; set; }
 
     /// <summary>
-    /// Source : [ArticleCategoryMapping] - Champ [Id] - Identifiant technique unique de la categorie de piece.
+    /// Source : [ArticleCategoryMapping] - Champ [Id] - Identifiant technique unique de la catégorie de pièce.
     /// </summary>
     public short? ACMId { get; set; }
 
     /// <summary>
-    /// Source : [ArticleCategoryMapping] - Champ [Description] - Designation metier de la categorie de piece.
+    /// Source : [ArticleCategoryMapping] - Champ [Description] - Désignation métier de la catégorie de pièce.
     /// </summary>
     public string? ACMDescription { get; set; }
 
@@ -656,7 +656,7 @@ public partial class vw_ProductionCutPiece_Full
     public string PCPLookCustomerOrderId { get; set; } = null!;
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [LookChassisId] - Identifiant Look3E pour le Chassis. Source : Tempor_Import.Feld_10_513.
+    /// Source : [ProductionCutPiece] - Champ [LookChassisId] - Identifiant Look3E pour le Châssis. Source : Tempor_Import.Feld_10_513.
     /// </summary>
     public string? PCPLookChassisId { get; set; }
 
@@ -676,7 +676,7 @@ public partial class vw_ProductionCutPiece_Full
     public short? PCPSideIndex { get; set; }
 
     /// <summary>
-    /// Source : [SidePosition] - Champ [Description] - Designation lisible de la position laterale pour affichage et reporting.
+    /// Source : [SidePosition] - Champ [Description] - Désignation lisible de la position latérale pour affichage et reporting.
     /// </summary>
     public string? SP1SideIndexDescription { get; set; }
 
@@ -731,7 +731,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPBarReference { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [BarReference] + [ProfileColorCodeInOut] - Colonne calculee : concatenation &apos;BarReference | ProfileColorCodeInOut&apos;. BarReference : Référence de la barre. Source : Tempor_Import.Feld_9. ProfileColorCodeInOut : Code couleur profil intérieur/extérieur. Source : Tempor_Import.Feld_10_026.
+    /// Source : [ProductionCutPiece] - Champ [BarReference] + [ProfileColorCodeInOut] - Colonne calculée : concaténation de BarReference et ProfileColorCodeInOut. BarReference : Référence de la barre. Source : Tempor_Import.Feld_9. ProfileColorCodeInOut : Code couleur profil intérieur/extérieur. Source : Tempor_Import.Feld_10_026.
     /// </summary>
     public string PCPReferenceColor { get; set; } = null!;
 
@@ -951,22 +951,22 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPAssociatedArticleReferenceLeft { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [CutPositionInBar] - Position de la decoupe au sein de la barre (ordre de coupe).
+    /// Source : [ProductionCutPiece] - Champ [CutPositionInBar] - Position de la découpe au sein de la barre (ordre de coupe).
     /// </summary>
     public int? PCPCutPositionInBar { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [IsOptimizedTemp] - Indicateur temporaire d&apos;&apos;optimisation de la decoupe (usage transitoire, en parallele de IsOptimized).
+    /// Source : [ProductionCutPiece] - Champ [IsOptimizedTemp] - Indicateur temporaire d’optimisation de la découpe (usage transitoire, en parallèle de IsOptimized).
     /// </summary>
     public bool PCPIsOptimizedTemp { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [IsOptimized] - Indique si la decoupe a ete selectionnee par le processus d&apos;&apos;optimisation.
+    /// Source : [ProductionCutPiece] - Champ [IsOptimized] - Indique si la découpe a été sélectionnée par le processus d’optimisation.
     /// </summary>
     public bool PCPIsOptimized { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [IsBarSupplied] - Indique si la barre necessaire a la decoupe a ete approvisionnee.
+    /// Source : [ProductionCutPiece] - Champ [IsBarSupplied] - Indique si la barre nécessaire à la découpe a été approvisionnée.
     /// </summary>
     public bool PCPIsBarSupplied { get; set; }
 
@@ -976,17 +976,17 @@ public partial class vw_ProductionCutPiece_Full
     public bool PCPIsBarOutOfStock { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [IsCut] - Indique si la decoupe a ete realisee.
+    /// Source : [ProductionCutPiece] - Champ [IsCut] - Indique si la découpe a été réalisée.
     /// </summary>
     public bool PCPIsCut { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [CutStartedAt] - Date et heure de debut de la decoupe.
+    /// Source : [ProductionCutPiece] - Champ [CutStartedAt] - Date et heure de début de la découpe.
     /// </summary>
     public DateTime? PCPCutStartedAt { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [CutFinishedAt] - Date et heure de validation de la decoupe.
+    /// Source : [ProductionCutPiece] - Champ [CutFinishedAt] - Date et heure de validation de la découpe.
     /// </summary>
     public DateTime? PCPCutFinishedAt { get; set; }
 
