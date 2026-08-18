@@ -432,13 +432,14 @@ namespace DG244Cutting.D_Presentation.Views.Components.HorizontalMenus
         /// future.</para>
         /// <para>Choix du point d'extension : Seul le prédicat de
         /// droit applicatif granulaire
-        /// <see cref="IU_Navigation.CanAdmin"/> est évalué ici, la
-        /// méthode porteuse de l'évaluation étant déterminée par la
-        /// nature du prédicat consulté (§4.13.4.2 du 0230). Le
-        /// prédicat de navigation n'est PAS réévalué : il est
-        /// consommé depuis le champ de mémorisation
-        /// <c>_canNavigateToAdminPage</c> affecté par
-        /// <see cref="ApplyNavigationRules"/>.</para>
+        /// <see cref="IU_Navigation.CanAdmin"/> est évalué ici, sur la
+        /// page hôte lue via
+        /// <see cref="IU_Navigation.CurrentPageName"/>, la méthode
+        /// porteuse de l'évaluation étant déterminée par la nature du
+        /// prédicat consulté (§4.13.4.2 du 0230). Le prédicat de
+        /// navigation n'est PAS réévalué : il est consommé depuis le
+        /// champ de mémorisation <c>_canNavigateToAdminPage</c>
+        /// affecté par <see cref="ApplyNavigationRules"/>.</para>
         /// <para>Dépendance à l'ordre d'invocation : La présente
         /// composition suppose que le socle invoque
         /// <see cref="ApplyNavigationRules"/> avant
@@ -450,7 +451,11 @@ namespace DG244Cutting.D_Presentation.Views.Components.HorizontalMenus
         /// <para>Visibilité résultante : Le bouton <c>MH_Admin</c>
         /// est visible si et seulement si l'utilisateur courant
         /// dispose à la fois du droit d'accès à <c>Page04</c> et du
-        /// droit d'administration sur <c>Page01</c>.</para>
+        /// droit d'administration sur la page hôte, identifiée à
+        /// l'exécution par
+        /// <see cref="IU_Navigation.CurrentPageName"/> (soit
+        /// <c>Page01</c> par parité numérique <c>MH01</c> ⟺
+        /// <c>Page01</c>).</para>
         /// <para>Résolution partielle : Si le bouton est
         /// introuvable, aucune action n'est effectuée ; une trace de
         /// diagnostic est émise par <c>Find&lt;T&gt;</c> depuis
@@ -460,9 +465,11 @@ namespace DG244Cutting.D_Presentation.Views.Components.HorizontalMenus
         {
             base.ApplySecurityRules(callChain);
 
+            string page = _navigation.CurrentPageName;
+
             SetButtonVisibility(
                 "MH_Admin",
-                _canNavigateToAdminPage && _navigation.CanAdmin("Page01"));
+                _canNavigateToAdminPage && _navigation.CanAdmin(page));
         }
 
         #endregion
