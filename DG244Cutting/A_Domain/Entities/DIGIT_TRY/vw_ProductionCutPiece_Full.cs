@@ -951,12 +951,17 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPAssociatedArticleReferenceLeft { get; set; }
 
     /// <summary>
+    /// Source : [ArticleReference] - Champ [SortOrder] - Ordre d’affichage de la référence article dans les listes.
+    /// </summary>
+    public short? ARSortOrder { get; set; }
+
+    /// <summary>
     /// Source : [ProductionCutPiece] - Champ [CutPositionInBar] - Position de la découpe au sein de la barre (ordre de coupe).
     /// </summary>
     public int? PCPCutPositionInBar { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [IsOptimizedTemp] - Indicateur temporaire d’optimisation de la découpe (usage transitoire, en parallèle de IsOptimized).
+    /// Source : [ProductionCutPiece] - Champ [IsOptimizedTemp] - Indicateur temporaire d’optimisation, en parallèle de IsOptimized.
     /// </summary>
     public bool PCPIsOptimizedTemp { get; set; }
 
