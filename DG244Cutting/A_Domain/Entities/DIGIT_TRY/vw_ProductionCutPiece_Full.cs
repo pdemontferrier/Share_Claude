@@ -641,6 +641,11 @@ public partial class vw_ProductionCutPiece_Full
     public string? ACMDescription { get; set; }
 
     /// <summary>
+    /// Source : [ArticleCategoryMapping] - Champ [DescriptionDetailed] - Catégorie de pièce détaillée.
+    /// </summary>
+    public string? ACMDescriptionDetailed { get; set; }
+
+    /// <summary>
     /// Source : [ProductionCutPiece] - Champ [IdArticleInternal] - Identifiant de l’article interne associé à la pièce à découper.
     /// </summary>
     public int? PCPIdArticleInternal { get; set; }

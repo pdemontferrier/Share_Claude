@@ -76,9 +76,14 @@ public partial class vw_CuttingScrapStock_Full
     public string ARDesignation { get; set; } = null!;
 
     /// <summary>
-    /// Source : [ArticleReference] - Champ [FamilyCategory] - Catégorie famille. Source Tempor_Import.Feld_40.
+    /// Source : [ArticleReference] - Champ [FamilyCategoryPrincipal] - Catégorie métier principale.
     /// </summary>
-    public string? ARFamilyCategory { get; set; }
+    public string? ARFamilyCategoryPrincipal { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [FamilyCategorySecondary] - Catégorie famille. Source Feld_40.
+    /// </summary>
+    public string? ARFamilyCategorySecondary { get; set; }
 
     /// <summary>
     /// Source : [ArticleReference] - Champ [CodeFamily] - Code famille. Source Tempor_Import.Feld_16.
@@ -101,12 +106,12 @@ public partial class vw_CuttingScrapStock_Full
     public string? ARCodeArticleCuttingMachine { get; set; }
 
     /// <summary>
-    /// Source : [ArticleReference] - Champ [BarWidthMm] - Largeur de la barre en millimètres issu du champ Tempor_Import.Feld_10_051.
+    /// Source : [ArticleReference] - Champ [BarWidthMm] - Largeur de la barre en mm. Source Tempor_Import.Feld_10_051.
     /// </summary>
     public decimal? ARBarWidthMm { get; set; }
 
     /// <summary>
-    /// Source : [ArticleReference] - Champ [BarHeightMm] - Hauteur de la barre en millimètres issu du champ Tempor_Import.Feld_10_075.
+    /// Source : [ArticleReference] - Champ [BarHeightMm] - Hauteur de la barre en mm. Source Tempor_Import.Feld_10_075.
     /// </summary>
     public decimal? ARBarHeightMm { get; set; }
 
@@ -161,7 +166,7 @@ public partial class vw_CuttingScrapStock_Full
     public int CSSIdArticleInternal { get; set; }
 
     /// <summary>
-    /// Source : [CuttingScrapStock] - Champ [IdCuttingScrapLocation] - Identifie l’emplacement dédié aux chutes (CuttingScrapLocation) où est rangée la chute.
+    /// Source : [CuttingScrapStock] - Champ [IdCuttingScrapLocation] - Emplacement dédié où est rangée la chute.
     /// </summary>
     public int? CSSIdCuttingScrapLocation { get; set; }
 
@@ -171,7 +176,7 @@ public partial class vw_CuttingScrapStock_Full
     public string? CSLDesignation { get; set; }
 
     /// <summary>
-    /// Source : [CuttingScrapStock] - Champ [IdOperator] - Utilisateur ayant réalisé l’action d’enregistrement ou de modification.
+    /// Source : [CuttingScrapStock] - Champ [IdOperator] - Utilisateur ayant réalisé l’enregistrement ou la modification.
     /// </summary>
     public int? CSSIdOperator { get; set; }
 
@@ -211,7 +216,7 @@ public partial class vw_CuttingScrapStock_Full
     public string? CSSBarcode { get; set; }
 
     /// <summary>
-    /// Source : [CuttingScrapStock] - Champ [WaitForIntegration] - Indique si la chute est en attente d’intégration dans le système.
+    /// Source : [CuttingScrapStock] - Champ [WaitForIntegration] - Indique si la chute attend son intégration.
     /// </summary>
     public bool CSSWaitForIntegration { get; set; }
 
@@ -226,12 +231,12 @@ public partial class vw_CuttingScrapStock_Full
     public string? CSSOrigin { get; set; }
 
     /// <summary>
-    /// Source : [CuttingScrapStock] - Champ [IsInInventory] - Indique si la chute est actuellement comptabilisée dans l’inventaire.
+    /// Source : [CuttingScrapStock] - Champ [IsInInventory] - Indique si la chute est comptabilisée dans l’inventaire.
     /// </summary>
     public bool CSSIsInInventory { get; set; }
 
     /// <summary>
-    /// Source : [CuttingScrapStock] - Champ [InventoryDate] - Date de la dernière opération d’inventaire concernant cette chute.
+    /// Source : [CuttingScrapStock] - Champ [InventoryDate] - Date de la dernière opération d’inventaire sur cette chute.
     /// </summary>
     public DateTime? CSSInventoryDate { get; set; }
 

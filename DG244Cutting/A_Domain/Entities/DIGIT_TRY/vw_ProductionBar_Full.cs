@@ -166,9 +166,14 @@ public partial class vw_ProductionBar_Full
     public string ARDesignation { get; set; } = null!;
 
     /// <summary>
-    /// Source : [ArticleReference] - Champ [FamilyCategory] - Catégorie famille. Source Tempor_Import.Feld_40.
+    /// Source : [ArticleReference] - Champ [FamilyCategoryPrincipal] - Catégorie métier principale.
     /// </summary>
-    public string? ARFamilyCategory { get; set; }
+    public string? ARFamilyCategoryPrincipal { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [FamilyCategorySecondary] - Catégorie famille. Source Feld_40.
+    /// </summary>
+    public string? ARFamilyCategorySecondary { get; set; }
 
     /// <summary>
     /// Source : [ArticleReference] - Champ [CodeFamily] - Code famille. Source Tempor_Import.Feld_16.

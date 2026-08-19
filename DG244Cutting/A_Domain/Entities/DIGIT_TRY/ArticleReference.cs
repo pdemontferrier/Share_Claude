@@ -69,9 +69,14 @@ public partial class ArticleReference
     public string Designation { get; set; } = null!;
 
     /// <summary>
-    /// Catégorie famille de la référence article, issue du champ Tempor_Import.Feld_40.
+    /// Catégorie métier principale, résolue depuis Tempor_Import.Feld_6 via ArticleCategoryMapping.
     /// </summary>
-    public string? FamilyCategory { get; set; }
+    public string? FamilyCategoryPrincipal { get; set; }
+
+    /// <summary>
+    /// Catégorie famille secondaire de la référence article, issue du champ Tempor_Import.Feld_40.
+    /// </summary>
+    public string? FamilyCategorySecondary { get; set; }
 
     /// <summary>
     /// Code famille de la référence article, issu du champ Tempor_Import.Feld_16.
@@ -124,7 +129,7 @@ public partial class ArticleReference
     public int MaxVerticalLength { get; set; }
 
     /// <summary>
-    /// Ordre d&apos;affichage de la référence dans les listes.
+    /// Ordre d’affichage de la référence dans les listes.
     /// </summary>
     public short SortOrder { get; set; }
 

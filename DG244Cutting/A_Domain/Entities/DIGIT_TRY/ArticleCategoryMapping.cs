@@ -24,9 +24,14 @@ public partial class ArticleCategoryMapping
     public string Source_Feld_40 { get; set; } = null!;
 
     /// <summary>
-    /// Designation metier normalisee de la categorie de piece.
+    /// Designation metier normalisee de la categorie de piece issue de Feld_6.
     /// </summary>
     public string Description { get; set; } = null!;
+
+    /// <summary>
+    /// Designation metier detaillee de la categorie de piece, issue du couple Feld_6 / Feld_40.
+    /// </summary>
+    public string DescriptionDetailed { get; set; } = null!;
 
     /// <summary>
     /// Ordre d’affichage de la categorie (valeur par defaut 1).
