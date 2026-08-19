@@ -597,7 +597,7 @@
     <sys:String x:Key="P11_33">Barre utilisée</sys:String>
     <sys:String x:Key="P11_34">Barre en rupture</sys:String>
     <sys:String x:Key="P11_35">Barre refusée</sys:String>
-    <sys:String x:Key="P11_36">Non défini</sys:String>
+    <sys:String x:Key="P11_36">Motif refus</sys:String>
     <sys:String x:Key="P11_37">Non défini</sys:String>
     <sys:String x:Key="P11_38">Non défini</sys:String>
     <sys:String x:Key="P11_39">Non défini</sys:String>
