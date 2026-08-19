@@ -16,12 +16,12 @@ public partial class vw_ProductionCutPiece_Full
     public int PSIdSerialNumber { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IdRec] - Identifiant unique AX (RECID). Permet d’assurer le lien avec la ligne AX originale.
+    /// Source : [ProductionSeries] - Champ [IdRec] - Identifiant unique AX (RECID). Lien avec la ligne AX originale.
     /// </summary>
     public long PSIdRec { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [RecVersion] - Version du record dans AX. Correspond au champ AX: RECVERSION (utilisé pour le contrôle de concurrence dans AX).
+    /// Source : [ProductionSeries] - Champ [RecVersion] - Version du record dans AX (contrôle de concurrence AX).
     /// </summary>
     public int PSRecVersion { get; set; }
 
@@ -31,52 +31,52 @@ public partial class vw_ProductionCutPiece_Full
     public string PSDescription { get; set; } = null!;
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [ProductionStartDate] - Date de début de la production. Correspond au champ AX: EEEA_SERIALPLANDATE.
+    /// Source : [ProductionSeries] - Champ [ProductionStartDate] - Date de début de production. Champ AX: EEEA_SERIALPLANDATE.
     /// </summary>
     public DateTime? PSProductionStartDate { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [ProductionEndDate] - Date de fin de production. Correspond au champ AX: ATWIN_PRODUCTIONENDDATE.
+    /// Source : [ProductionSeries] - Champ [ProductionEndDate] - Date de fin de production. Champ AX: ATWIN_PRODUCTIONENDDATE.
     /// </summary>
     public DateTime? PSProductionEndDate { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [ProductionEndDay] - Code couleur de l’étiquette, calculé depuis le jour de fin de production. Référence ProductionColorLabelType. 0 = Violet si date absente.
+    /// Source : [ProductionSeries] - Champ [ProductionEndDay] - Code couleur étiquette. 0 = Violet si date absente.
     /// </summary>
     public short PSProductionEndDay { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [SerieCreatedAt] - Date de création initiale de la série. Correspond au champ AX: CREATEDDATETIME.
+    /// Source : [ProductionSeries] - Champ [SerieCreatedAt] - Date de création initiale de la série. Champ AX: CREATEDDATETIME.
     /// </summary>
     public DateTime? PSSerieCreatedAt { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsImported] - Indique si les données métier associées à la série ont été importées depuis un fichier Leitxx.mdb. False = non importée, True = importée.
+    /// Source : [ProductionSeries] - Champ [IsImported] - Données importées depuis un fichier Leitxx.mdb (False/True).
     /// </summary>
     public bool PSIsImported { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsProductionValidated] - Indique si la série a été validée pour lancement. False = à valider, True = validée.
+    /// Source : [ProductionSeries] - Champ [IsProductionValidated] - Série validée pour lancement (False/True).
     /// </summary>
     public bool PSIsProductionValidated { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsDropBarOptimized] - Indique si la série a été optimisée pour la découpe sur barres de chutes. False = non optimisée, True = optimisée.
+    /// Source : [ProductionSeries] - Champ [IsDropBarOptimized] - Série optimisée pour découpe sur barres de chutes.
     /// </summary>
     public bool PSIsDropBarOptimized { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsDropBarSupplied] - Indique si la série a reçu l’approvisionnement en barres de chutes (stock de chutes). False = non approvisionnée, True = approvisionnée.
+    /// Source : [ProductionSeries] - Champ [IsDropBarSupplied] - Série approvisionnée en barres de chutes.
     /// </summary>
     public bool PSIsDropBarSupplied { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsNewBarOptimized] - Indique si la série a été optimisée pour la découpe sur barres neuves. False = non optimisée, True = optimisée.
+    /// Source : [ProductionSeries] - Champ [IsNewBarOptimized] - Série optimisée pour découpe sur barres neuves.
     /// </summary>
     public bool PSIsNewBarOptimized { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsNewBarSupplied] - Indique si la série a reçu l’approvisionnement en barres neuves. False = non approvisionnée, True = approvisionnée.
+    /// Source : [ProductionSeries] - Champ [IsNewBarSupplied] - Série approvisionnée en barres neuves.
     /// </summary>
     public bool PSIsNewBarSupplied { get; set; }
 
@@ -86,12 +86,12 @@ public partial class vw_ProductionCutPiece_Full
     public bool PSIsBarOutOfStock { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsCuttingStarted] - Indique si une des découpes de la série a été réalisée. False = non commencée, True = commencée.
+    /// Source : [ProductionSeries] - Champ [IsCuttingStarted] - Une des découpes de la série a été réalisée.
     /// </summary>
     public bool PSIsCuttingStarted { get; set; }
 
     /// <summary>
-    /// Source : [ProductionSeries] - Champ [IsCuttingCompleted] - Indique si l’ensemble des découpes de la série ont été réalisées. False = non découpée, True = découpée.
+    /// Source : [ProductionSeries] - Champ [IsCuttingCompleted] - Ensemble des découpes de la série réalisées.
     /// </summary>
     public bool PSIsCuttingCompleted { get; set; }
 
@@ -151,7 +151,7 @@ public partial class vw_ProductionCutPiece_Full
     public DateOnly? COProductionStartDate { get; set; }
 
     /// <summary>
-    /// Source : [CustomerOrder] - Champ [ProductionStartWeek] - Semaine début production (AAWW ex 2503=2025 sem 03). Source : Tempor_Import.Feld_10_243.
+    /// Source : [CustomerOrder] - Champ [ProductionStartWeek] - Semaine de début production au format AAWW. Source Feld_10_243.
     /// </summary>
     public int? COProductionStartWeek { get; set; }
 
@@ -161,7 +161,7 @@ public partial class vw_ProductionCutPiece_Full
     public DateOnly? COProductionEndDate { get; set; }
 
     /// <summary>
-    /// Source : [CustomerOrder] - Champ [ProductionEndWeek] - Semaine fin production (AAWW ex 2503=2025 sem 03). Source : Tempor_Import.Feld_10_054.
+    /// Source : [CustomerOrder] - Champ [ProductionEndWeek] - Semaine fin production (AAWW ex 2503=2025 sem 03). Source Feld_10_054.
     /// </summary>
     public int? COProductionEndWeek { get; set; }
 
@@ -316,22 +316,22 @@ public partial class vw_ProductionCutPiece_Full
     public short? PCFrameHeightIncludingRV { get; set; }
 
     /// <summary>
-    /// Source : [ProductionChassis] - Champ [OuterWidthIncludingRV] - Largeur extérieure incluant RV. Source : Tempor_Import.Feld_10_079.
+    /// Source : [ProductionChassis] - Champ [OuterWidthIncludingRV] - Largeur extérieure incluant RV. Source Feld_10_079.
     /// </summary>
     public short? PCOuterWidthIncludingRV { get; set; }
 
     /// <summary>
-    /// Source : [ProductionChassis] - Champ [OuterHeightIncludingRV] - Hauteur extérieure incluant RV. Source : Tempor_Import.Feld_10_080.
+    /// Source : [ProductionChassis] - Champ [OuterHeightIncludingRV] - Hauteur extérieure incluant RV. Source Feld_10_080.
     /// </summary>
     public short? PCOuterHeightIncludingRV { get; set; }
 
     /// <summary>
-    /// Source : [ProductionChassis] - Champ [WidthWithCorrectionAndMiterTip] - Largeur avec correction et coupe à la pointe. Source : Tempor_Import.Feld_10_245.
+    /// Source : [ProductionChassis] - Champ [WidthWithCorrectionAndMiterTip] - Largeur corrigée, coupe à la pointe. Source Feld_10_245.
     /// </summary>
     public decimal? PCWidthWithCorrectionAndMiterTip { get; set; }
 
     /// <summary>
-    /// Source : [ProductionChassis] - Champ [HeightWithCorrectionAndMiterTip] - Hauteur avec correction et coupe à la pointe. Source : Tempor_Import.Feld_10_246.
+    /// Source : [ProductionChassis] - Champ [HeightWithCorrectionAndMiterTip] - Hauteur corrigée, coupe à pointe. Source Feld_10_246.
     /// </summary>
     public short? PCHeightWithCorrectionAndMiterTip { get; set; }
 
@@ -371,7 +371,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCSlidingTypeDetailed { get; set; }
 
     /// <summary>
-    /// Source : [ProductionChassis] - Champ [OpeningTypeAbbreviation] - Abréviation type d’ouverture. Source : Tempor_Import.Feld_10_034.
+    /// Source : [ProductionChassis] - Champ [OpeningTypeAbbreviation] - Abréviation type d’ouverture. Source Feld_10_034.
     /// </summary>
     public string? PCOpeningTypeAbbreviation { get; set; }
 
@@ -416,32 +416,32 @@ public partial class vw_ProductionCutPiece_Full
     public string? PFSOpeningTypeText { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [OpeningDirectionIndicator] - Indicateur de sens d’ouverture. Source : Tempor_Import.Feld_10_045.
+    /// Source : [ProductionFrameSash] - Champ [OpeningDirectionIndicator] - Indicateur de sens d’ouverture. Source Feld_10_045.
     /// </summary>
     public string? PFSOpeningDirectionIndicator { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [SpecialOpeningTypeCode] - Code type d’ouverture spécifique. Source : Tempor_Import.Feld_10_125.
+    /// Source : [ProductionFrameSash] - Champ [SpecialOpeningTypeCode] - Code type d’ouverture spécifique. Source Feld_10_125.
     /// </summary>
     public string? PFSSpecialOpeningTypeCode { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [AdjacentFramePartToSash] - Partie de cadre adjacente à l’ouvrant. Source : Tempor_Import.Feld_10_224.
+    /// Source : [ProductionFrameSash] - Champ [AdjacentFramePartToSash] - Partie de cadre adjacente à l’ouvrant. Source Feld_10_224.
     /// </summary>
     public string? PFSAdjacentFramePartToSash { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [FrameSashWidthTenths] - Largeur cadre/ouvrant en dixièmes. Source : Tempor_Import.Feld_10_229.
+    /// Source : [ProductionFrameSash] - Champ [FrameSashWidthTenths] - Largeur cadre/ouvrant en dixièmes. Source Feld_10_229.
     /// </summary>
     public decimal? PFSFrameSashWidthTenths { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [FrameSashHeightTenths] - Hauteur cadre/ouvrant en dixièmes. Source : Tempor_Import.Feld_10_230.
+    /// Source : [ProductionFrameSash] - Champ [FrameSashHeightTenths] - Hauteur cadre/ouvrant en dixièmes. Source Feld_10_230.
     /// </summary>
     public decimal? PFSFrameSashHeightTenths { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [FrameThresholdCounterProfile] - Contre-profil cadre/seuil. Source : Tempor_Import.Feld_10_221.
+    /// Source : [ProductionFrameSash] - Champ [FrameThresholdCounterProfile] - Contre-profil cadre/seuil. Source Feld_10_221.
     /// </summary>
     public string? PFSFrameThresholdCounterProfile { get; set; }
 
@@ -456,22 +456,22 @@ public partial class vw_ProductionCutPiece_Full
     public short? PFSReinforcementLength { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [ReinforcementLength1NoGrid] - Longueur de renfort 1 sans trame. Source : Tempor_Import.Feld_10_583.
+    /// Source : [ProductionFrameSash] - Champ [ReinforcementLength1NoGrid] - Longueur de renfort 1 sans trame. Source Feld_10_583.
     /// </summary>
     public short? PFSReinforcementLength1NoGrid { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [ReinforcementLength2NoGrid] - Longueur de renfort 2 sans trame. Source : Tempor_Import.Feld_10_584.
+    /// Source : [ProductionFrameSash] - Champ [ReinforcementLength2NoGrid] - Longueur de renfort 2 sans trame. Source Feld_10_584.
     /// </summary>
     public short? PFSReinforcementLength2NoGrid { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [DisplayColorInside] - Couleur d’affichage intérieure. Source : Tempor_Import.Feld_10_585.
+    /// Source : [ProductionFrameSash] - Champ [DisplayColorInside] - Couleur d’affichage intérieure. Source Feld_10_585.
     /// </summary>
     public string? PFSDisplayColorInside { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [DisplayColorOutside] - Couleur d’affichage extérieure. Source : Tempor_Import.Feld_10_586.
+    /// Source : [ProductionFrameSash] - Champ [DisplayColorOutside] - Couleur d’affichage extérieure. Source Feld_10_586.
     /// </summary>
     public string? PFSDisplayColorOutside { get; set; }
 
@@ -506,12 +506,12 @@ public partial class vw_ProductionCutPiece_Full
     public string? PFSSealVariantCode { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [BeadSystemInnerSeal] - Joint intérieur issu du système de parcloses. Source : Tempor_Import.Feld_10_294.
+    /// Source : [ProductionFrameSash] - Champ [BeadSystemInnerSeal] - Joint intérieur issu du système de parcloses. Source Feld_10_294.
     /// </summary>
     public string? PFSBeadSystemInnerSeal { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [PositionDataSealColor] - Couleur du joint issue des données de position. Source : Tempor_Import.Feld_10_489.
+    /// Source : [ProductionFrameSash] - Champ [PositionDataSealColor] - Couleur joint des données de position. Source Feld_10_489.
     /// </summary>
     public string? PFSPositionDataSealColor { get; set; }
 
@@ -541,7 +541,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? PFSGlazingText { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [GlazingBeadsPerSashFrame] - Parcloses par ouvrant/cadre. Source : Tempor_Import.Feld_10_137.
+    /// Source : [ProductionFrameSash] - Champ [GlazingBeadsPerSashFrame] - Parcloses par ouvrant/cadre. Source Feld_10_137.
     /// </summary>
     public string? PFSGlazingBeadsPerSashFrame { get; set; }
 
@@ -556,7 +556,7 @@ public partial class vw_ProductionCutPiece_Full
     public decimal? PFSBeadsWidth { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [HardwareSystemText] - Texte pour le système de ferrures. Source : Tempor_Import.Feld_10_014.
+    /// Source : [ProductionFrameSash] - Champ [HardwareSystemText] - Texte pour le système de ferrures. Source Feld_10_014.
     /// </summary>
     public string? PFSHardwareSystemText { get; set; }
 
@@ -571,22 +571,22 @@ public partial class vw_ProductionCutPiece_Full
     public string? PFSHandlePosition { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [SashHardwareIndicator] - Indicateur de ferrure d’ouvrant sinon global. Source : Tempor_Import.Feld_10_187.
+    /// Source : [ProductionFrameSash] - Champ [SashHardwareIndicator] - Indicateur ferrure ouvrant sinon global. Source Feld_10_187.
     /// </summary>
     public string? PFSSashHardwareIndicator { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [MechanismCode] - Code de mécanisme (boîtier/entraînement). Source : Tempor_Import.Feld_10_215.
+    /// Source : [ProductionFrameSash] - Champ [MechanismCode] - Code de mécanisme (boîtier/entraînement). Source Feld_10_215.
     /// </summary>
     public string? PFSMechanismCode { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [HardwareRabbetWidthTenths] - Largeur feuillure de ferrure en dixièmes. Source : Tempor_Import.Feld_10_231.
+    /// Source : [ProductionFrameSash] - Champ [HardwareRabbetWidthTenths] - Largeur feuillure ferrure en dixièmes. Source Feld_10_231.
     /// </summary>
     public decimal? PFSHardwareRabbetWidthTenths { get; set; }
 
     /// <summary>
-    /// Source : [ProductionFrameSash] - Champ [HardwareRabbetHeightTenths] - Hauteur feuillure de ferrure en dixièmes. Source : Tempor_Import.Feld_10_232.
+    /// Source : [ProductionFrameSash] - Champ [HardwareRabbetHeightTenths] - Hauteur feuillure ferrure en dixièmes. Source Feld_10_232.
     /// </summary>
     public decimal? PFSHardwareRabbetHeightTenths { get; set; }
 
@@ -616,7 +616,7 @@ public partial class vw_ProductionCutPiece_Full
     public int PCPIdProductionFrameSash { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [IdSpatialPosition] - Identifiant de la position spatiale dans le châssis. Source : Tempor_Import.Feld_6.
+    /// Source : [ProductionCutPiece] - Champ [IdSpatialPosition] - Identifiant de la position spatiale dans le châssis. Source Feld_6.
     /// </summary>
     public short? PCPIdSpatialPosition { get; set; }
 
@@ -626,7 +626,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? SPDescription { get; set; }
 
     /// <summary>
-    /// Source : [SpatialPosition] - Champ [Position] - Position spatiale normalisée (Haut, Bas, Gauche, Droite, Horizontal, Vertical, Croisillon, NA).
+    /// Source : [SpatialPosition] - Champ [Position] - Position spatiale normalisée (Haut, Bas, Gauche, Droite, Croisillon, NA).
     /// </summary>
     public string? SPPosition { get; set; }
 
@@ -651,12 +651,177 @@ public partial class vw_ProductionCutPiece_Full
     public int? PCPIdArticleInternal { get; set; }
 
     /// <summary>
+    /// Source : [ArticleReference] - Champ [Id] - Clé primaire de la référence article.
+    /// </summary>
+    public int? ARId { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdArticleCategory1] - Catégorie principale de l’article (Catégorie 1).
+    /// </summary>
+    public short? ARIdArticleCategory1 { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleCategory1] - Champ [Designation] - Désignation de la catégorie principale de l’article.
+    /// </summary>
+    public string? AC1Designation { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdArticleCategory2] - Catégorie secondaire de l’article (Catégorie 2).
+    /// </summary>
+    public short? ARIdArticleCategory2 { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleCategory2] - Champ [Designation] - Désignation de la catégorie secondaire de l’article.
+    /// </summary>
+    public string? AC2Designation { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdArticleCategory3] - Catégorie tertiaire de l’article (Catégorie 3).
+    /// </summary>
+    public short? ARIdArticleCategory3 { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleCategory3] - Champ [Designation] - Désignation de la catégorie tertiaire de l’article.
+    /// </summary>
+    public string? AC3Designation { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdCuttingMachine] - Machine de découpe associée à la référence.
+    /// </summary>
+    public int? ARIdCuttingMachine { get; set; }
+
+    /// <summary>
+    /// Source : [CuttingMachine] - Champ [MachineCode] - Code unique de la machine de découpe associée.
+    /// </summary>
+    public string? CMMachineCode { get; set; }
+
+    /// <summary>
+    /// Source : [CuttingMachine] - Champ [Designation] - Désignation de la machine de découpe associée.
+    /// </summary>
+    public string? CMDesignation { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdArticleIdentificationType] - Type d’identification (pièce, barre, carton…).
+    /// </summary>
+    public short? ARIdArticleIdentificationType { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdArticleStorageUnit] - Unité de stockage (mètre, pièce, carton…).
+    /// </summary>
+    public int? ARIdArticleStorageUnit { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdScrapLocationHorizontal] - Emplacement horizontal par défaut des chutes.
+    /// </summary>
+    public int? ARIdScrapLocationHorizontal { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdScrapLocationVertical] - Emplacement vertical par défaut des chutes.
+    /// </summary>
+    public int? ARIdScrapLocationVertical { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [IdSupplier] - Fournisseur associé à la référence (optionnel).
+    /// </summary>
+    public int? ARIdSupplier { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [Reference] - Code alphanumérique unique. Source Tempor_Import.CodeNat.
+    /// </summary>
+    public string? ARReference { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [Designation] - Désignation de la référence. Source Tempor_Import.Feld_10_100.
+    /// </summary>
+    public string? ARDesignation { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [FamilyCategoryPrincipal] - Catégorie métier principale.
+    /// </summary>
+    public string? ARFamilyCategoryPrincipal { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [FamilyCategorySecondary] - Catégorie famille. Source Feld_40.
+    /// </summary>
+    public string? ARFamilyCategorySecondary { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [CodeFamily] - Code famille. Source Tempor_Import.Feld_16.
+    /// </summary>
+    public string? ARCodeFamily { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [CodeArticleReference] - Code article de référence. Source Tempor_Import.Feld_4.
+    /// </summary>
+    public string? ARCodeArticleReference { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [CodeArticle] - Code article principal. Source Tempor_Import.Feld_41.
+    /// </summary>
+    public string? ARCodeArticle { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [CodeArticleCuttingMachine] - Code article machine de découpe. Source Feld_10_330.
+    /// </summary>
+    public string? ARCodeArticleCuttingMachine { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [BarWidthMm] - Largeur de la barre en mm. Source Tempor_Import.Feld_10_051.
+    /// </summary>
+    public decimal? ARBarWidthMm { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [BarHeightMm] - Hauteur de la barre en mm. Source Tempor_Import.Feld_10_075.
+    /// </summary>
+    public decimal? ARBarHeightMm { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [MinScrapLength] - Longueur minimale de chute réutilisable.
+    /// </summary>
+    public decimal? ARMinScrapLength { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [MaxVerticalLength] - Longueur verticale maximale supportée par le stockage.
+    /// </summary>
+    public int? ARMaxVerticalLength { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleReference] - Champ [SortOrder] - Ordre d’affichage de la référence article dans les listes.
+    /// </summary>
+    public short? ARSortOrder { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleInternal] - Champ [Id] - Identifiant interne unique de l’article interne (PK).
+    /// </summary>
+    public int? AIId { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleInternal] - Champ [IdArticleReference] - Identifiant de la référence article (FK ArticleReference.Id).
+    /// </summary>
+    public int? AIIdArticleReference { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleInternal] - Champ [IdColorRalFinish] - Identifiant couleur/finition (FK ColorRalFinish.Id).
+    /// </summary>
+    public string? AIIdColorRalFinish { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleInternal] - Champ [StandardBarLengthMm] - Longueur de stockage de référence de l’article (mm).
+    /// </summary>
+    public double? AIStandardBarLengthMm { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleInternal] - Champ [ManageScraps] - Article interne géré avec suivi des chutes.
+    /// </summary>
+    public bool? AIManageScraps { get; set; }
+
+    /// <summary>
     /// Source : [ProductionCutPiece] - Champ [IdProductionBar] - Identifiant de la barre de production associée à la découpe.
     /// </summary>
     public int? PCPIdProductionBar { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [LookCustomerOrderId] - Identifiant Look3E pour la Commande Client. Source. Source : Tempor_Import.Feld_10_205.
+    /// Source : [ProductionCutPiece] - Champ [LookCustomerOrderId] - Identifiant Look3E de la commande client. Source Feld_10_205.
     /// </summary>
     public string PCPLookCustomerOrderId { get; set; } = null!;
 
@@ -666,7 +831,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPLookChassisId { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [LookCutPieceId] - Identifiant Look3E pour la pièce à découper. Source : Tempor_Import.Feld_23.
+    /// Source : [ProductionCutPiece] - Champ [LookCutPieceId] - Identifiant Look3E pour la pièce à découper. Source Feld_23.
     /// </summary>
     public string? PCPLookCutPieceId { get; set; }
 
@@ -676,7 +841,7 @@ public partial class vw_ProductionCutPiece_Full
     public string PCPCutBarcode { get; set; } = null!;
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [SideIndex] - Indice côté (0 bas,1 gauche,2 haut,3 droite). Source : Tempor_Import.Feld_10_020.
+    /// Source : [ProductionCutPiece] - Champ [SideIndex] - Indice côté (0 bas,1 gauche,2 haut,3 droite). Source Feld_10_020.
     /// </summary>
     public short? PCPSideIndex { get; set; }
 
@@ -686,7 +851,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? SP1SideIndexDescription { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [ComponentPieceNumber] - Numéro de pièce dans le composant. Source : Tempor_Import.Feld_10_114.
+    /// Source : [ProductionCutPiece] - Champ [ComponentPieceNumber] - Numéro de pièce dans le composant. Source Feld_10_114.
     /// </summary>
     public short? PCPComponentPieceNumber { get; set; }
 
@@ -696,12 +861,12 @@ public partial class vw_ProductionCutPiece_Full
     public short? PCPChassisPieceNumber { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [CustomerOrderLineNumber] - Numéro de ligne de commande client. Source : Tempor_Import.Feld_10_227.
+    /// Source : [ProductionCutPiece] - Champ [CustomerOrderLineNumber] - Numéro de ligne de commande client. Source Feld_10_227.
     /// </summary>
     public short? PCPCustomerOrderLineNumber { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [PositionPieceNumber] - Numéro de pièce dans la position. Source : Tempor_Import.Feld_10_006.
+    /// Source : [ProductionCutPiece] - Champ [PositionPieceNumber] - Numéro de pièce dans la position. Source Feld_10_006.
     /// </summary>
     public short? PCPPositionPieceNumber { get; set; }
 
@@ -711,12 +876,12 @@ public partial class vw_ProductionCutPiece_Full
     public short? PCPSequentialPieceNumber { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [PartialSeriesSequentialPieceNumber] - Numéro séquentiel dans la série partielle. Source : Tempor_Import.Feld_10_277.
+    /// Source : [ProductionCutPiece] - Champ [PartialSeriesSequentialPieceNumber] - N° séquentiel en série partielle. Feld_10_277.
     /// </summary>
     public short? PCPPartialSeriesSequentialPieceNumber { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [CustomerOrderLineNumber2] - Numéro de ligne commande client (variante). Source : Tempor_Import.Feld_10_239.
+    /// Source : [ProductionCutPiece] - Champ [CustomerOrderLineNumber2] - Numéro ligne commande client (variante). Source Feld_10_239.
     /// </summary>
     public short? PCPCustomerOrderLineNumber2 { get; set; }
 
@@ -726,7 +891,7 @@ public partial class vw_ProductionCutPiece_Full
     public int? PCPBarFamilyCode { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [BarProductCodeToPrint] - Code produit à imprimer sur la barre. Source : Tempor_Import.CodeNat.
+    /// Source : [ProductionCutPiece] - Champ [BarProductCodeToPrint] - Code produit à imprimer sur la barre. Source CodeNat.
     /// </summary>
     public string? PCPBarProductCodeToPrint { get; set; }
 
@@ -736,7 +901,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPBarReference { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [BarReference] + [ProfileColorCodeInOut] - Colonne calculée : concaténation de BarReference et ProfileColorCodeInOut. BarReference : Référence de la barre. Source : Tempor_Import.Feld_9. ProfileColorCodeInOut : Code couleur profil intérieur/extérieur. Source : Tempor_Import.Feld_10_026.
+    /// Colonne calculée : concaténation de PCPBarReference et PCPProfileColorCodeInOut, séparées par une barre verticale.
     /// </summary>
     public string PCPReferenceColor { get; set; } = null!;
 
@@ -746,7 +911,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPBarProductFamilyName { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [BarColorCodeInOut] - Code couleur barre intérieur/extérieur. Source : Tempor_Import.Feld_8.
+    /// Source : [ProductionCutPiece] - Champ [BarColorCodeInOut] - Code couleur barre intérieur/extérieur. Source Feld_8.
     /// </summary>
     public string? PCPBarColorCodeInOut { get; set; }
 
@@ -786,7 +951,7 @@ public partial class vw_ProductionCutPiece_Full
     public int? PCPDiePitch { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [OptimizationMinLength] - Longueur minimale pour optimisation. Source : Tempor_Import.Wert_38.
+    /// Source : [ProductionCutPiece] - Champ [OptimizationMinLength] - Longueur minimale pour optimisation. Source Wert_38.
     /// </summary>
     public int? PCPOptimizationMinLength { get; set; }
 
@@ -831,12 +996,12 @@ public partial class vw_ProductionCutPiece_Full
     public decimal? PCPProfileLength { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [ProfileLengthIncludingFOD] - Longueur du profil avec FOD. Source : Tempor_Import.Feld_10_565.
+    /// Source : [ProductionCutPiece] - Champ [ProfileLengthIncludingFOD] - Longueur du profil avec FOD. Source Feld_10_565.
     /// </summary>
     public decimal? PCPProfileLengthIncludingFOD { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [DaylightLengthWithAngleAndCorrection] - Longueur jour avec angle et correction. Source : Tempor_Import.Feld_10_267.
+    /// Source : [ProductionCutPiece] - Champ [DaylightLengthWithAngleAndCorrection] - Longueur jour avec correction. Feld_10_267.
     /// </summary>
     public int? PCPDaylightLengthWithAngleAndCorrection { get; set; }
 
@@ -861,7 +1026,7 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPProfileColorOutside { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [ProfileColorCodeInOut] - Code couleur profil intérieur/extérieur. Source : Tempor_Import.Feld_10_026.
+    /// Source : [ProductionCutPiece] - Champ [ProfileColorCodeInOut] - Code couleur profil intérieur/extérieur. Source Feld_10_026.
     /// </summary>
     public string? PCPProfileColorCodeInOut { get; set; }
 
@@ -931,12 +1096,12 @@ public partial class vw_ProductionCutPiece_Full
     public string? PCPConnectionProfileCode { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [DrainageCodeUsedForCalculation] - Code d’évacuation pour calcul. Source : Tempor_Import.Feld_10_181.
+    /// Source : [ProductionCutPiece] - Champ [DrainageCodeUsedForCalculation] - Code d’évacuation pour calcul. Source Feld_10_181.
     /// </summary>
     public string? PCPDrainageCodeUsedForCalculation { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [TotalQuantityForPosition] - Quantité totale pour la position. Source : Tempor_Import.Feld_10_133.
+    /// Source : [ProductionCutPiece] - Champ [TotalQuantityForPosition] - Quantité totale pour la position. Source Feld_10_133.
     /// </summary>
     public short? PCPTotalQuantityForPosition { get; set; }
 
@@ -946,19 +1111,14 @@ public partial class vw_ProductionCutPiece_Full
     public short? PCPTotalElementsCount { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [AssociatedArticleReferenceRight] - Référence article associée à droite. Source : Tempor_Import.Feld_10_346.
+    /// Source : [ProductionCutPiece] - Champ [AssociatedArticleReferenceRight] - Référence article associée à droite. Feld_10_346.
     /// </summary>
     public string? PCPAssociatedArticleReferenceRight { get; set; }
 
     /// <summary>
-    /// Source : [ProductionCutPiece] - Champ [AssociatedArticleReferenceLeft] - Référence article associée à gauche. Source : Tempor_Import.Feld_10_347.
+    /// Source : [ProductionCutPiece] - Champ [AssociatedArticleReferenceLeft] - Référence article associée, gauche. Source Feld_10_347.
     /// </summary>
     public string? PCPAssociatedArticleReferenceLeft { get; set; }
-
-    /// <summary>
-    /// Source : [ArticleReference] - Champ [SortOrder] - Ordre d’affichage de la référence article dans les listes.
-    /// </summary>
-    public short? ARSortOrder { get; set; }
 
     /// <summary>
     /// Source : [ProductionCutPiece] - Champ [CutPositionInBar] - Position de la découpe au sein de la barre (ordre de coupe).

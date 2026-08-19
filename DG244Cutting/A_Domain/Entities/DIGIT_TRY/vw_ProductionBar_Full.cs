@@ -106,9 +106,19 @@ public partial class vw_ProductionBar_Full
     public short ARIdArticleCategory1 { get; set; }
 
     /// <summary>
+    /// Source : [ArticleCategory1] - Champ [Designation] - Désignation de la catégorie principale de l’article.
+    /// </summary>
+    public string? AC1Designation { get; set; }
+
+    /// <summary>
     /// Source : [ArticleReference] - Champ [IdArticleCategory2] - Catégorie secondaire de l’article (Catégorie 2).
     /// </summary>
     public short ARIdArticleCategory2 { get; set; }
+
+    /// <summary>
+    /// Source : [ArticleCategory2] - Champ [Designation] - Désignation de la catégorie secondaire de l’article.
+    /// </summary>
+    public string? AC2Designation { get; set; }
 
     /// <summary>
     /// Source : [ArticleReference] - Champ [IdArticleCategory3] - Catégorie tertiaire de l’article (Catégorie 3).
@@ -116,9 +126,24 @@ public partial class vw_ProductionBar_Full
     public short ARIdArticleCategory3 { get; set; }
 
     /// <summary>
+    /// Source : [ArticleCategory3] - Champ [Designation] - Désignation de la catégorie tertiaire de l’article.
+    /// </summary>
+    public string? AC3Designation { get; set; }
+
+    /// <summary>
     /// Source : [ArticleReference] - Champ [IdCuttingMachine] - Machine de découpe associée à la référence.
     /// </summary>
     public int ARIdCuttingMachine { get; set; }
+
+    /// <summary>
+    /// Source : [CuttingMachine] - Champ [MachineCode] - Code unique de la machine de découpe associée.
+    /// </summary>
+    public string? CMMachineCode { get; set; }
+
+    /// <summary>
+    /// Source : [CuttingMachine] - Champ [Designation] - Désignation de la machine de découpe associée.
+    /// </summary>
+    public string? CMDesignation { get; set; }
 
     /// <summary>
     /// Source : [ArticleReference] - Champ [IdArticleIdentificationType] - Type d’identification (pièce, barre, carton…).
