@@ -596,11 +596,31 @@
     <sys:String x:Key="P11_32">Barre validée</sys:String>
     <sys:String x:Key="P11_33">Barre utilisée</sys:String>
     <sys:String x:Key="P11_34">Barre en rupture</sys:String>
-    <sys:String x:Key="P11_35">Non défini</sys:String>
+    <sys:String x:Key="P11_35">Barre refusée</sys:String>
     <sys:String x:Key="P11_36">Non défini</sys:String>
     <sys:String x:Key="P11_37">Non défini</sys:String>
     <sys:String x:Key="P11_38">Non défini</sys:String>
     <sys:String x:Key="P11_39">Non défini</sys:String>
+    <sys:String x:Key="P11_40">Non défini</sys:String>
+    <sys:String x:Key="P11_41">Non défini</sys:String>
+    <sys:String x:Key="P11_42">Non défini</sys:String>
+    <sys:String x:Key="P11_43">Non défini</sys:String>
+    <sys:String x:Key="P11_44">Non défini</sys:String>
+    <sys:String x:Key="P11_45">Non défini</sys:String>
+    <sys:String x:Key="P11_46">Non défini</sys:String>
+    <sys:String x:Key="P11_47">Non défini</sys:String>
+    <sys:String x:Key="P11_48">Non défini</sys:String>
+    <sys:String x:Key="P11_49">Non défini</sys:String>
+    <sys:String x:Key="P11_50">Non défini</sys:String>
+    <sys:String x:Key="P11_51">Non défini</sys:String>
+    <sys:String x:Key="P11_52">Non défini</sys:String>
+    <sys:String x:Key="P11_53">Non défini</sys:String>
+    <sys:String x:Key="P11_54">Non défini</sys:String>
+    <sys:String x:Key="P11_55">Non défini</sys:String>
+    <sys:String x:Key="P11_56">Non défini</sys:String>
+    <sys:String x:Key="P11_57">Non défini</sys:String>
+    <sys:String x:Key="P11_58">Non défini</sys:String>
+    <sys:String x:Key="P11_59">Non défini</sys:String>
 
     <!-- Page 12    -->
     <sys:String x:Key="P12_00">Page 12</sys:String>
