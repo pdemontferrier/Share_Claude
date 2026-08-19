@@ -61,7 +61,7 @@ public partial class UserApp
     /// <summary>
     /// Adresse e-mail professionnelle de l’utilisateur.
     /// </summary>
-    public string EmailProfessional { get; set; } = null!;
+    public string? EmailProfessional { get; set; }
 
     /// <summary>
     /// Adresse e-mail personnelle de l’utilisateur.
