@@ -607,9 +607,9 @@
     <sys:String x:Key="P11_43">Barre appro.</sys:String>
     <sys:String x:Key="P11_44">Découpe faite</sys:String>
     <sys:String x:Key="P11_45">Découpe refusée</sys:String>
-    <sys:String x:Key="P11_46">Etat d'avancement :</sys:String>
-    <sys:String x:Key="P11_47">Rupture de stock :</sys:String>
-    <sys:String x:Key="P11_48">Non défini</sys:String>
+    <sys:String x:Key="P11_46">Découpe commencée:</sys:String>
+    <sys:String x:Key="P11_47">Découpe terminée :</sys:String>
+    <sys:String x:Key="P11_48">Rupture de stock :</sys:String>
     <sys:String x:Key="P11_49">Non défini</sys:String>
     <sys:String x:Key="P11_50">Non défini</sys:String>
     <sys:String x:Key="P11_51">Non défini</sys:String>
