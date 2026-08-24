@@ -957,8 +957,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// propagation d'exception au présent
         /// ViewModel.</para>
         /// </remarks>
-        protected override void LoadLabels(string callChain)
+        protected override void LoadLabels(string caller)
         {
+            string callChain = $"{caller} > {nameof(LoadLabels)}";
+
             Label_MH_Menu = _dictionary.GetText(callChain, "MH_Ti_01");
             Label_MH_Previous = _dictionary.GetText(callChain, "MH_Ti_02");
             Label_MH_Refresh = _dictionary.GetText(callChain, "MH_Ti_03");

@@ -528,15 +528,16 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// <para>Patron de surcharge normatif :</para>
         /// <example>
         /// <code>
-        /// protected override void LoadLabels(string callChain)
+        /// protected override void LoadLabels(string caller)
         /// {
+        ///     string callChain = $"{caller} > {nameof(LoadLabels)}";
+        ///     
         ///     Title = _dictionary.GetText(callChain, "Pxx_Ti_01");
-        ///     Description = _dictionary.GetText(callChain, "Pxx_Ti_02");
         /// }
         /// </code>
         /// </example>
         /// </remarks>
-        protected virtual void LoadLabels(string callChain)
+        protected virtual void LoadLabels(string caller)
         {
             // Implémentation par défaut vide. Les ViewModels dérivés
             // qui affichent des libellés multilingues override cette
