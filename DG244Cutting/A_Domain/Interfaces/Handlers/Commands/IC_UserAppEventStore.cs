@@ -35,6 +35,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Commands
     /// </remarks>
     public interface IC_UserAppEventStore
     {
+        #region === Méthodes publiques ===
+
         /// <summary>
         /// Inscrit un enregistrement Event Store contextualisé dans le DbContext partagé.
         /// </summary>
@@ -78,5 +80,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Commands
             int tableId,
             string data,
             CancellationToken ct = default);
+
+    #endregion
     }
 }

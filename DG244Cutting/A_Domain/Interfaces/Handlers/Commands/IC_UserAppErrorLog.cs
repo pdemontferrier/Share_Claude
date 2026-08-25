@@ -54,6 +54,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Commands
     /// </remarks>
     public interface IC_UserAppErrorLog
     {
+        #region === Méthodes publiques ===
+
         /// <summary>
         /// Persiste immédiatement un enregistrement de log d'erreur dans un DbContext EF Core
         /// indépendant de toute transaction UseCase en cours.
@@ -98,5 +100,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Commands
         /// l'exécution.
         /// </exception>
         Task HandleAddAndSaveAsync(string caller, UserAppErrorLog entity, CancellationToken ct = default);
+
+        #endregion
     }
 }

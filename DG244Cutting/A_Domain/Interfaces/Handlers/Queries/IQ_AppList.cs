@@ -27,6 +27,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
     /// </summary>
     public interface IQ_AppList : IQ_Generic<AppList>
     {
+        #region === Méthodes publiques ===
+
         /// <summary>
         /// <para>Description</para>
         /// <para>
@@ -70,5 +72,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
         /// pendant l’exécution.
         /// </exception>
         Task<bool> HandleAppAccessibilityAsync(string caller, int appId, CancellationToken ct = default);
+
+        #endregion
     }
 }
