@@ -460,17 +460,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// quatre libellés transverses du socle puis les quatre libellés
         /// d'action propres.
         /// </summary>
-        /// <param name="callChain">CallChain courante propagée par la
-        /// mécanique multilingue héritée
-        /// (<see cref="VM_Generic.InitializeLabels"/> au premier appel,
-        /// puis à chaque changement de langue), transmise telle quelle à
-        /// <c>base.LoadLabels</c> et à
+        /// <param name="caller">CallChain reçue de la mécanique
+        /// multilingue héritée — par
+        /// <see cref="VM_Generic.InitializeLabels"/> au premier appel,
+        /// puis à chaque changement de culture active —, transmise
+        /// telle quelle à <c>base.LoadLabels</c> et enrichie localement
+        /// du segment <c>LoadLabels</c> pour la résolution des clés via
         /// <see cref="IS_Dictionary.GetText"/>.</param>
         /// <remarks>
         /// <para>Contexte : Surcharge nominative de
         /// <see cref="VM_MH_Generic.LoadLabels"/>. L'appel à
-        /// <c>base.LoadLabels(callChain)</c> est IMPÉRATIVEMENT la
-        /// première instruction du corps, afin de préserver
+        /// <c>base.LoadLabels(caller)</c> est IMPÉRATIVEMENT la
+        /// première instruction fonctionnelle du corps, afin de préserver
         /// l'alimentation des quatre libellés transverses du socle
         /// (<c>MH_Ti_01</c> à <c>MH_Ti_04</c>) : leur omission
         /// constituerait une non-conformité au contrat de la mécanique
@@ -480,9 +481,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// <c>MH_Ti_06</c> (Ajouter), <c>MH_Ti_08</c> (Modifier) et
         /// <c>MH_Ti_09</c> (Enregistrer).</para>
         /// </remarks>
-        protected override void LoadLabels(string callChain)
+        protected override void LoadLabels(string caller)
         {
-            base.LoadLabels(callChain);
+            string callChain = $"{caller} > {nameof(LoadLabels)}";
+
+            base.LoadLabels(caller);
 
             Label_MH_New = _dictionary.GetText(callChain, "MH_Ti_05");
             Label_MH_Add = _dictionary.GetText(callChain, "MH_Ti_06");

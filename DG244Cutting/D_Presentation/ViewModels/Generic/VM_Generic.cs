@@ -356,9 +356,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// asynchrone et capture les exceptions selon le pipeline
         /// normatif à cinq captures.
         /// </summary>
-        /// <param name="callChain">CallChain de l'opération
-        /// englobante, transmise au pipeline de journalisation et
-        /// de notification.</param>
+        /// <param name="caller">CallChain de l'opération englobante,
+        /// enrichie localement du segment ExecuteSafeAsync avant
+        /// transmission au pipeline de journalisation et de
+        /// notification.</param>
         /// <param name="action">Action asynchrone à exécuter sous
         /// la protection du filet.</param>
         /// <param name="ct">Token d'annulation coopérative propagé
@@ -410,10 +411,12 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// même du ViewModel avant d'atteindre un UseCase.</para>
         /// </remarks>
         protected async Task ExecuteSafeAsync(
-            string callChain,
+            string caller,
             Func<Task> action,
             CancellationToken ct = default)
         {
+            string callChain = $"{caller} > {nameof(ExecuteSafeAsync)}";
+
             try
             {
                 await action();
@@ -510,10 +513,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// observables de libellés à partir de
         /// <see cref="_dictionary"/>.
         /// </summary>
-        /// <param name="callChain">CallChain transmise par
+        /// <param name="caller">CallChain transmise par
         /// l'orchestrateur (premier appel via
         /// <see cref="InitializeLabels"/>, appels ultérieurs via
-        /// <see cref="OnAppPropertyChangedHandler"/>).</param>
+        /// <see cref="OnAppPropertyChangedHandler"/>), enrichie
+        /// localement du segment LoadLabels.</param>
         /// <remarks>
         /// <para>Contexte : Méthode <c>protected virtual</c>
         /// déclarée au niveau de <see cref="VM_Generic"/> pour

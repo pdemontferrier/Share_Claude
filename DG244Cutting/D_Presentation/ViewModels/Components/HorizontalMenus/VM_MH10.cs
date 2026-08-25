@@ -390,17 +390,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// le libellé propre
         /// <see cref="Label_MH_CuttingScrapStock"/>.
         /// </summary>
-        /// <param name="callChain">CallChain courante propagée par la
-        /// mécanique multilingue héritée — par
+        /// <param name="caller">CallChain reçue de la mécanique
+        /// multilingue héritée — par
         /// <see cref="VM_Generic.InitializeLabels"/> au premier appel,
         /// puis à chaque changement de culture active —, transmise
-        /// telle quelle à <c>base.LoadLabels</c> et à
+        /// telle quelle à <c>base.LoadLabels</c> et enrichie localement
+        /// du segment <c>LoadLabels</c> pour la résolution des clés via
         /// <see cref="IS_Dictionary.GetText"/>.</param>
         /// <remarks>
         /// <para>Contexte : Surcharge propre de
         /// <see cref="VM_MH_Generic.LoadLabels"/>. L'appel à
-        /// <c>base.LoadLabels(callChain)</c> est IMPÉRATIVEMENT la
-        /// première instruction du corps, afin de préserver
+        /// <c>base.LoadLabels(caller)</c> est IMPÉRATIVEMENT la
+        /// première instruction fonctionnelle du corps, afin de préserver
         /// l'alimentation des quatre libellés transverses du socle :
         /// leur omission constituerait une non-conformité au contrat
         /// de la mécanique multilingue de la famille MH, dont le
@@ -418,9 +419,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Components.HorizontalMenus
         /// résout par une valeur de repli sans propager d'exception
         /// au présent ViewModel (R-4.11.8 du 0231).</para>
         /// </remarks>
-        protected override void LoadLabels(string callChain)
+        protected override void LoadLabels(string caller)
         {
-            base.LoadLabels(callChain);
+            string callChain = $"{caller} > {nameof(LoadLabels)}";
+
+            base.LoadLabels(caller);
 
             Label_MH_CuttingScrapStock = _dictionary.GetText(callChain, "MH_Ti_23");
         }

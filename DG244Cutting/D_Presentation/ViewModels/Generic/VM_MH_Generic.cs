@@ -174,7 +174,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
     ///   <see cref="LoadLabels"/> qui aboutit — par dispatching
     ///   virtuel — sur l'override porté par la présente classe (et
     ///   éventuellement sur un override additionnel propre au
-    ///   dérivé qui appellera <c>base.LoadLabels(callChain)</c>
+    ///   dérivé qui appellera <c>base.LoadLabels(caller)</c>
     ///   en première instruction conformément à §3.14.4 du
     ///   0230).</description></item>
     ///   <item><description>Ne déclare aucune commande
@@ -871,7 +871,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// <c>MH_Ti_04</c> via <see cref="IS_Dictionary"/> hérité
         /// de <see cref="VM_Generic"/>.
         /// </summary>
-        /// <param name="callChain">CallChain de l'opération
+        /// <param name="caller">CallChain de l'opération
         /// englobante, propagée à
         /// <c>IS_Dictionary.GetText</c> pour la traçabilité de
         /// l'exécution.</param>
@@ -887,10 +887,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// <see cref="VM_Generic"/>.</para>
         ///
         /// <para>Absence d'appel à
-        /// <c>base.LoadLabels(callChain)</c> : L'implémentation
+        /// <c>base.LoadLabels(caller)</c> : L'implémentation
         /// par défaut de <c>VM_Generic.LoadLabels</c> ne porte
         /// aucun traitement. L'appel à
-        /// <c>base.LoadLabels(callChain)</c> n'apporterait qu'un
+        /// <c>base.LoadLabels(caller)</c> n'apporterait qu'un
         /// bruit inutile et est délibérément omis, conformément à
         /// la pratique standard d'override lorsque la base ne
         /// porte aucun traitement, alignée sur le patron de
@@ -903,14 +903,14 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// des libellés propres en sus des quatre libellés
         /// transverses surcharge à son tour
         /// <see cref="LoadLabels"/> et appelle obligatoirement
-        /// <c>base.LoadLabels(callChain)</c> en première
-        /// instruction du corps, afin de préserver l'alimentation
+        /// <c>base.LoadLabels(caller)</c> est IMPÉRATIVEMENT la
+        /// première instruction fonctionnelle du corps, afin de préserver l'alimentation
         /// des quatre <c>Label_MH_*</c> portée par la présente
         /// classe. L'omission de cet appel aurait pour
         /// conséquence des libellés transverses non chargés
         /// (chaînes vides), ce qui constituerait une régression
         /// visuelle directe. Cette obligation d'appel à
-        /// <c>base.LoadLabels(callChain)</c> est la conséquence
+        /// <c>base.LoadLabels(caller)</c> est la conséquence
         /// directe du fait que la base
         /// <see cref="VM_MH_Generic"/>.<see cref="LoadLabels"/>
         /// porte désormais du traitement à préserver,
@@ -921,7 +921,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// surchargée pour la première fois au niveau du concret
         /// <c>VM_PageXX</c> (la base
         /// <c>VM_Generic.LoadLabels</c> est vide, l'appel à
-        /// <c>base.LoadLabels(callChain)</c> est délibérément
+        /// <c>base.LoadLabels(caller)</c> est délibérément
         /// omis dans <c>VM_Page98.LoadLabels</c> et
         /// <c>VM_Page99.LoadLabels</c>). Côté MH,
         /// <c>LoadLabels</c> est surchargée pour la première fois
@@ -929,7 +929,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Generic
         /// (chargement des quatre libellés transverses) ; un
         /// éventuel <c>VM_MHxx</c> riche surchargeant à son tour
         /// <c>LoadLabels</c> doit appeler
-        /// <c>base.LoadLabels(callChain)</c> en première
+        /// <c>base.LoadLabels(caller)</c> en première
         /// instruction. Cette asymétrie est inévitable et
         /// doctrinalement justifiée par le rôle de factorisation
         /// transverse confié au socle de la famille MH ; elle se
