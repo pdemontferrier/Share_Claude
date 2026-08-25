@@ -142,7 +142,7 @@
         public static readonly Uri MH_Modify_Source = new(IconsBase + "RE_textEditor.png", UriKind.Absolute);
 
         /// <summary>URI de l'icône pour accéder à la gestion du stock de chutes.</summary>
-        public static readonly Uri MH_CuttingScrapStock_Source = new(IconsBase + "RE_dollarRound.png", UriKind.Absolute);
+        public static readonly Uri MH_CuttingScrapStock_Source = new(IconsBase + "RE_cuttingScrapStock.png", UriKind.Absolute);
 
 
         // --------- Source générale ---------
@@ -164,6 +164,9 @@
 
         /// <summary>URI de l'icône de validation cerclée.</summary>
         public static readonly Uri IconCheckedCircle_Source = new(IconsBase + "RE_checkedCircle.png", UriKind.Absolute);
+
+        /// <summary>URI de l'icône du stock de chutes.</summary>
+        public static readonly Uri IconCuttingScrpStock_Source = new(IconsBase + "RE_cuttingScrapStock.png", UriKind.Absolute);
 
         /// <summary>URI de l'icône de tableau de bord.</summary>
         public static readonly Uri IconDashboard_Source = new(IconsBase + "RE_dashboard.png", UriKind.Absolute);
