@@ -289,7 +289,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <c>ApplyLayout</c> → <c>OnResized</c> → <c>OnLoadedAsync</c>.
         /// Le caractère synchrone est imposé par la signature du point
         /// d'extension de <see cref="Page_Generic"/> (§4.15.7 du 0230).
-        /// La <paramref name="caller"/> reçue est construite par le
+        /// La <paramref name="callChain"/> reçue est construite par le
         /// handler sous la forme
         /// <c>Page11 &gt; OnLoadedHandler &gt; ApplyLayout</c>.</para>
         ///
@@ -352,7 +352,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// proscrivent explicitement l'opérateur null-forgiving
         /// (<c>!</c>) pour franchir ce pont.</para>
         ///
-        /// <para>Appel à <c>base.ApplyLayout(caller)</c> en première
+        /// <para>Appel à <c>base.ApplyLayout(callChain)</c> en première
         /// instruction : L'implémentation par défaut de
         /// <see cref="Page_Generic.ApplyLayout"/> ne porte aucun
         /// traitement. L'appel est néanmoins conservé en geste de
@@ -373,12 +373,12 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <c>Page_Generic.OnLoadedHandler</c>, qui la trace sans la
         /// propager au framework WPF.</para>
         /// </remarks>
-        /// <param name="caller">CallChain transmise par
+        /// <param name="callChain">CallChain transmise par
         /// <c>Page_Generic.OnLoadedHandler</c> sous la forme
         /// <c>Page11 &gt; OnLoadedHandler &gt; ApplyLayout</c>.</param>
-        protected override void ApplyLayout(string caller)
+        protected override void ApplyLayout(string callChain)
         {
-            base.ApplyLayout(caller);
+            base.ApplyLayout(callChain);
 
             if (Find<Grid>("PageGrid") is Grid pageGrid) _controlStyler.StylePage(pageGrid);
             if (Find<TabControl>("MainTabControl") is TabControl mainTabControl) _controlStyler.StyleTabControl(mainTabControl);
@@ -434,7 +434,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// troisième et dernière position de la séquence de montage
         /// <c>ApplyLayout</c> → <c>OnResized</c> → <c>OnLoadedAsync</c>,
         /// une fois la stylisation invariante et l'ajustement dimensionnel
-        /// appliqués. La <paramref name="caller"/> reçue est construite
+        /// appliqués. La <paramref name="callChain"/> reçue est construite
         /// par le handler sous la forme
         /// <c>Page11 &gt; OnLoadedHandler &gt; OnLoadedAsync</c>.</para>
         ///
@@ -450,7 +450,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <c>BuildFirstCallChain</c>, conformément au patron de surcharge
         /// de §4.15.6.</para>
         ///
-        /// <para>Appel à <c>base.OnLoadedAsync(caller, ct)</c> en première
+        /// <para>Appel à <c>base.OnLoadedAsync(callChain, ct)</c> en première
         /// instruction : L'implémentation par défaut de
         /// <see cref="Page_Generic.OnLoadedAsync"/> retourne
         /// <c>Task.CompletedTask</c> et ne porte aucun traitement.
@@ -465,7 +465,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// contre les défaillances inattendues du framework
         /// WPF.</para>
         /// </remarks>
-        /// <param name="caller">CallChain transmise par
+        /// <param name="callChain">CallChain transmise par
         /// <c>Page_Generic.OnLoadedHandler</c> sous la forme
         /// <c>Page11 &gt; OnLoadedHandler &gt; OnLoadedAsync</c>, propagée
         /// telle quelle au hook du ViewModel.</param>
@@ -475,12 +475,12 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <returns>Une tâche représentant l'exécution asynchrone du
         /// chargement délégué au ViewModel.</returns>
         protected override async Task OnLoadedAsync(
-            string caller,
+            string callChain,
             CancellationToken ct = default)
         {
-            await base.OnLoadedAsync(caller, ct);
+            await base.OnLoadedAsync(callChain, ct);
 
-            await _viewModel.LoadAsync(caller, ct);
+            await _viewModel.LoadAsync(callChain, ct);
         }
 
         /// <summary>
@@ -495,7 +495,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <c>OnSizeChangedHandler</c> à chaque redimensionnement
         /// ultérieur de la page. Le caractère synchrone est imposé par la
         /// signature du point d'extension (§4.15.7 du 0230). La
-        /// <paramref name="caller"/> reçue est construite par le handler
+        /// <paramref name="callChain"/> reçue est construite par le handler
         /// concerné sous la forme
         /// <c>Page11 &gt; {handler} &gt; OnResized</c>.</para>
         ///
@@ -519,7 +519,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <c>ScrollViewer</c>, sa fiche de synthèse tenant intégralement
         /// dans la hauteur disponible.</para>
         ///
-        /// <para>Appel à <c>base.OnResized(caller)</c> en première
+        /// <para>Appel à <c>base.OnResized(callChain)</c> en première
         /// instruction : L'implémentation par défaut de
         /// <see cref="Page_Generic.OnResized"/> ne porte aucun traitement.
         /// L'appel est conservé en geste de robustesse vis-à-vis de toute
@@ -533,14 +533,14 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// être levée serait capturée par le filet ultime du handler
         /// appelant de <see cref="Page_Generic"/>.</para>
         /// </remarks>
-        /// <param name="caller">CallChain transmise par
+        /// <param name="callChain">CallChain transmise par
         /// <c>Page_Generic.OnLoadedHandler</c> (au montage initial) ou
         /// <c>OnSizeChangedHandler</c> (à chaque redimensionnement
         /// ultérieur) sous la forme
         /// <c>Page11 &gt; {handler} &gt; OnResized</c>.</param>
-        protected override void OnResized(string caller)
+        protected override void OnResized(string callChain)
         {
-            base.OnResized(caller);
+            base.OnResized(callChain);
 
             double tabControlHeight = _window.MainWindowHeight - 220;
 

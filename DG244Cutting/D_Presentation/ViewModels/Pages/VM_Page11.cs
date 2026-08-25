@@ -848,11 +848,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="ProductionSeries"/> via
         /// <see cref="IS_UseCaseInvoker"/> (EA-11).
         /// </summary>
-        /// <param name="caller">CallChain construite par l'orchestrateur
+        /// <param name="callChain">CallChain construite par l'orchestrateur
         /// appelant côté <c>Page_Generic</c> au format normatif
         /// <c>{_callee} &gt; OnLoadedHandler &gt; OnLoadedAsync</c> et
         /// propagée telle quelle par le code-behind via
-        /// <c>_viewModel.LoadAsync(caller, ct)</c>. Le paramètre est reçu
+        /// <c>_viewModel.LoadAsync(callChain, ct)</c>. Le paramètre est reçu
         /// par contrat du hook au socle
         /// <see cref="VM_Page_Generic"/> mais n'est pas consommé par le
         /// corps du présent override : une CallChain interne distincte
@@ -934,7 +934,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// (<c>innerCallChain</c>) via
         /// <see cref="VM_Generic.BuildFirstCallChain"/> hérité, plutôt
         /// que de consommer la CallChain reçue en paramètre. Le paramètre
-        /// <paramref name="caller"/> reçu du hook est utile à des fins de
+        /// <paramref name="callChain"/> reçu du hook est utile à des fins de
         /// traçabilité amont, mais la CallChain consommée par le filet et
         /// par le délégué d'invocation est celle reconstruite localement,
         /// garantissant que le format normatif
@@ -992,7 +992,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// §4.7.3 du 0230. Aucune journalisation ni
         /// notification.</exception>
         public override async Task LoadAsync(
-            string caller,
+            string callChain,
             CancellationToken ct = default)
         {
             string innerCallChain = BuildFirstCallChain();

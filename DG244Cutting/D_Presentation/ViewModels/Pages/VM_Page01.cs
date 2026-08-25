@@ -233,7 +233,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   peuplant les 18 propriétés <c>Label_P01_NN</c> via
     ///   <see cref="VM_Generic._dictionary"/>, une affectation par
     ///   ligne dans l'ordre numérique croissant des clés, sans appel à
-    ///   <c>base.LoadLabels(callChain)</c>.</description></item>
+    ///   <c>base.LoadLabels(caller)</c>.</description></item>
     ///   <item><description><c>=== Méthodes privées ===</c> : présente
     ///   mais vide, marqueur <c>// A compléter</c>.</description></item>
     /// </list>
