@@ -9,9 +9,10 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     /// Vue WPF de la page de consultation détaillée d'une série de
     /// production <c>Page11</c> de l'application DG244Cutting, présentant
     /// dans un <c>TabControl</c> à cinq onglets la fiche de synthèse de la
-    /// série (premier onglet) et quatre onglets d'accueil destinés aux
-    /// tableaux des commandes clients, des châssis, des barres optimisées
-    /// et des découpes.
+    /// série (premier onglet), le tableau des commandes clients qui
+    /// composent la série (deuxième onglet) et trois onglets d'accueil
+    /// destinés aux tableaux des châssis, des barres optimisées et des
+    /// découpes.
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Composant de la famille Page de la couche
@@ -32,19 +33,22 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   <item><description>Résoudre <see cref="VM_Page11"/> au
     ///   constructeur et l'affecter au
     ///   <see cref="System.Windows.FrameworkElement.DataContext"/> pour
-    ///   activer les dix-neuf bindings déclarés par
+    ///   activer les vingt-huit bindings déclarés par
     ///   <c>Page11.xaml</c>.</description></item>
     ///   <item><description>Appliquer au <c>Loaded</c> la stylisation
-    ///   invariante des quatorze contrôles XAML nommés stylisables via le
-    ///   service <c>IS_ControlStyler</c> hérité de
+    ///   invariante des trente-et-un contrôles XAML nommés stylisables via
+    ///   le service <c>IS_ControlStyler</c> hérité de
     ///   <see cref="Page_Generic"/>.</description></item>
     ///   <item><description>Ajuster au <c>Loaded</c> puis à chaque
     ///   <c>SizeChanged</c> la hauteur du <c>TabControl</c> à la hauteur
-    ///   de fenêtre courante lue sur <c>ISE_Window</c>.</description></item>
+    ///   de fenêtre courante lue sur <c>ISE_Window</c>, et celle du
+    ///   <c>ScrollViewer</c> du deuxième onglet par dérivation de la
+    ///   précédente.</description></item>
     ///   <item><description>Amorcer au <c>Loaded</c> le chargement
-    ///   asynchrone des sept caractéristiques de la fiche de synthèse par
-    ///   invocation de <see cref="VM_Page11.LoadAsync"/>, au titre de
-    ///   l'ancrage canonique <c>OnLoadedAsync</c> →
+    ///   asynchrone des sept caractéristiques de la fiche de synthèse et
+    ///   du tableau des commandes clients de la série par invocation de
+    ///   <see cref="VM_Page11.LoadAsync"/>, au titre de l'ancrage
+    ///   canonique <c>OnLoadedAsync</c> →
     ///   <c>LoadAsync</c>.</description></item>
     /// </list>
     ///
@@ -69,7 +73,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   ressource de page, non du code-behind.</description></item>
     ///   <item><description>Aucun chargement de libellé multilingue
     ///   depuis la présente vue ni depuis son XAML, conformément à
-    ///   I-4.11.10 du 0231 : les douze libellés sont chargés exclusivement
+    ///   I-4.11.10 du 0231 : les seize libellés sont chargés exclusivement
     ///   par l'override de <c>LoadLabels</c> de
     ///   <see cref="VM_Page11"/>.</description></item>
     ///   <item><description>Aucune injection ni résolution directe d'un
@@ -228,10 +232,14 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///   <see cref="System.Windows.FrameworkElement.DataContext"/>.</description></item>
         ///   <item><description>Affectation de
         ///   <see cref="System.Windows.FrameworkElement.DataContext"/> à
-        ///   <see cref="_viewModel"/> pour activer les dix-neuf bindings
-        ///   déclarés par <c>Page11.xaml</c> : douze libellés
-        ///   multilingues et sept caractéristiques de la
-        ///   série.</description></item>
+        ///   <see cref="_viewModel"/> pour activer les vingt-huit
+        ///   bindings déclarés par <c>Page11.xaml</c> : seize libellés
+        ///   multilingues, sept caractéristiques de la série et la
+        ///   collection des commandes clients portés par le
+        ///   <c>DataContext</c> de page, plus quatre bindings de données
+        ///   de commande portés par l'élément courant du gabarit
+        ///   d'éléments de la <c>ListView</c> du deuxième
+        ///   onglet.</description></item>
         /// </list>
         ///
         /// <para>Le constructeur de <see cref="Page_Generic"/> est invoqué
@@ -274,11 +282,14 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <summary>
         /// Redéfinit le point d'extension
         /// <see cref="Page_Generic.ApplyLayout"/> pour appliquer la
-        /// stylisation invariante des quatorze contrôles XAML nommés
+        /// stylisation invariante des trente-et-un contrôles XAML nommés
         /// stylisables de la page : la <c>Grid</c> de page, le
         /// <c>TabControl</c> principal, les cinq onglets et leurs
         /// en-têtes, le <c>Border</c> de la fiche de synthèse, les sept
-        /// intitulés et les quatre <c>TextBlock</c> de donnée.
+        /// intitulés et les quatre <c>TextBlock</c> de donnée du premier
+        /// onglet, le <c>Border</c> d'en-têtes, le <c>ScrollViewer</c>,
+        /// les quatre <c>TextBlock</c> d'en-tête et la <c>ListView</c> du
+        /// deuxième onglet.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Méthode invoquée par le handler privé
@@ -325,7 +336,53 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///   colonne 1 de la fiche, dont la largeur est portée par la
         ///   seconde <c>ColumnDefinition</c>
         ///   étoilée.</description></item>
+        ///   <item><description><c>StyleBorderHeader</c> sur le
+        ///   <c>Border</c> d'en-têtes du tableau des commandes
+        ///   <c>OrdersHeaderBorder</c>, du deuxième onglet.</description></item>
+        ///   <item><description><c>StyleScrollViewer</c> sur le
+        ///   <c>ScrollViewer</c> <c>OrdersScrollViewer</c>, en invocation
+        ///   variadique unique portant en outre le <c>Border</c>
+        ///   d'en-têtes et les quatre <c>TextBlock</c> d'en-tête
+        ///   <c>OrdersHeader01</c> à
+        ///   <c>OrdersHeader04</c>.</description></item>
+        ///   <item><description><c>StyleListView</c> sur la
+        ///   <c>ListView</c> <c>OrdersListView</c>, qui porte le rendu
+        ///   des quatre <c>TextBlock</c> non nommés de son gabarit
+        ///   d'éléments.</description></item>
         /// </list>
+        ///
+        /// <para>Bloc <c>StyleScrollViewer</c> variadique : Le contrat
+        /// <c>IS_ControlStyler.StyleScrollViewer</c> expose un premier
+        /// paramètre non-nullable — le <c>ScrollViewer</c> lui-même —
+        /// suivi de douze paramètres nullables optionnels : un
+        /// <c>TextBlock</c> de titre, un <c>Border</c> de bandeau et onze
+        /// <c>TextBlock</c> d'en-têtes. Le bloc dédié conditionne
+        /// l'invocation à la seule résolution du <c>ScrollViewer</c>
+        /// (garde <c>is</c>) ; la résolution du <c>Border</c> et des
+        /// quatre en-têtes est portée dans des variables locales typées
+        /// <c>Border?</c> et <c>TextBlock?</c> passées directement en
+        /// argument — le contrat acceptant le <c>null</c> sur ces
+        /// paramètres, la garde <c>is</c> par paramètre n'est pas requise
+        /// et l'invocation reste unique. Le paramètre de titre est passé
+        /// à <see langword="null"/>, le tableau ne portant pas de titre
+        /// propre ; les paramètres <c>headerText05</c> à
+        /// <c>headerText11</c> restent à leur valeur par défaut, le
+        /// tableau ne comptant que quatre colonnes. Le
+        /// <c>OrdersHeaderBorder</c>, par ailleurs stylisé hors de ce
+        /// bloc par <c>StyleBorderHeader</c>, y est résolu une seconde
+        /// fois dans la portée locale dédiée — le helper
+        /// <see cref="Page_Generic.Find{T}(string)"/>, idempotent et de
+        /// coût négligeable, absorbe sans cérémonie cette double
+        /// résolution, qui préserve la lisibilité et l'autonomie du
+        /// bloc.</para>
+        ///
+        /// <para>Absence délibérée de stylisation des deux <c>Grid</c>
+        /// internes : Les <c>Grid</c> <c>SeriesDetailsGrid</c> et
+        /// <c>OrdersGrid</c> sont nommés sans être résolus ni stylisés.
+        /// Le contrat <c>IS_ControlStyler</c> n'expose aucune méthode de
+        /// stylisation de <c>Grid</c> interne — <c>StylePage</c> ne
+        /// s'adresse qu'à la <c>Grid</c> racine de page. L'omission est
+        /// délibérée et documentée, non un oubli.</para>
         ///
         /// <para>Absence délibérée de stylisation des trois cases à
         /// cocher : Les trois <c>CheckBox</c> de la colonne 1 de la fiche
@@ -419,14 +476,36 @@ namespace DG244Cutting.D_Presentation.Views.Pages
             if (Find<TextBlock>("DescriptionData") is TextBlock descriptionData) _controlStyler.StyleTextBlockData(descriptionData);
             if (Find<TextBlock>("ProductionStartDateData") is TextBlock productionStartDateData) _controlStyler.StyleTextBlockData(productionStartDateData);
             if (Find<TextBlock>("ProductionEndDateData") is TextBlock productionEndDateData) _controlStyler.StyleTextBlockData(productionEndDateData);
+
+            // Tableau des commandes de l'onglet 2 — Border d'en-têtes
+            if (Find<Border>("OrdersHeaderBorder") is Border ordersHeaderBorder) _controlStyler.StyleBorderHeader(ordersHeaderBorder);
+
+            // Bloc StyleScrollViewer variadique : résolution typée des quatre en-têtes en variables
+            // locales optionnelles, invocation unique conditionnée à la résolution du ScrollViewer.
+            if (Find<ScrollViewer>("OrdersScrollViewer") is ScrollViewer ordersScrollViewer)
+            {
+                Border? headerBorderForScrollViewer = Find<Border>("OrdersHeaderBorder");
+                TextBlock? h01 = Find<TextBlock>("OrdersHeader01");
+                TextBlock? h02 = Find<TextBlock>("OrdersHeader02");
+                TextBlock? h03 = Find<TextBlock>("OrdersHeader03");
+                TextBlock? h04 = Find<TextBlock>("OrdersHeader04");
+
+                _controlStyler.StyleScrollViewer(
+                    ordersScrollViewer,
+                    null,
+                    headerBorderForScrollViewer,
+                    h01, h02, h03, h04);
+            }
+
+            if (Find<ListView>("OrdersListView") is ListView ordersListView) _controlStyler.StyleListView(ordersListView);
         }
 
         /// <summary>
         /// Redéfinit le point d'extension
         /// <see cref="Page_Generic.OnLoadedAsync"/> pour amorcer le
         /// chargement asynchrone des sept caractéristiques de la fiche de
-        /// synthèse par invocation de
-        /// <see cref="VM_Page11.LoadAsync"/>.
+        /// synthèse et du tableau des commandes clients de la série par
+        /// invocation de <see cref="VM_Page11.LoadAsync"/>.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Méthode invoquée par le handler privé
@@ -486,7 +565,9 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <summary>
         /// Redéfinit le point d'extension
         /// <see cref="Page_Generic.OnResized"/> pour ajuster la hauteur du
-        /// <c>TabControl</c> principal à la hauteur de fenêtre courante.
+        /// <c>TabControl</c> principal à la hauteur de fenêtre courante,
+        /// et celle du <c>ScrollViewer</c> du deuxième onglet par
+        /// dérivation de la précédente.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Méthode invoquée par le handler privé
@@ -512,12 +593,18 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// menu horizontal ; sa valeur reprend le précédent uniforme des
         /// pages <c>Page01</c> et <c>Page03</c>.</para>
         ///
-        /// <para>Constante unique : À la différence de <c>Page01</c> et
-        /// <c>Page03</c> qui calculent en outre une hauteur de
-        /// <c>ScrollViewer</c> dérivée, la présente page ne porte qu'une
-        /// seule grandeur ajustée — l'onglet 1 ne comportant aucun
+        /// <para>Deux grandeurs ajustées : La hauteur du
+        /// <c>ScrollViewer</c> <c>OrdersScrollViewer</c> du deuxième
+        /// onglet est dérivée de celle du <c>TabControl</c> par
+        /// soustraction d'une réserve de <c>93</c> unités, couvrant la
+        /// hauteur du bandeau d'en-têtes de colonnes et les marges
+        /// internes de l'onglet. Cette réserve reprend celle de l'étalon
+        /// <c>Page01</c>, la géométrie verticale des deux onglets en
+        /// tableau étant identique. Le premier onglet ne porte aucun
         /// <c>ScrollViewer</c>, sa fiche de synthèse tenant intégralement
-        /// dans la hauteur disponible.</para>
+        /// dans la hauteur disponible ; les trois derniers onglets sont
+        /// sans contenu. Aucune autre grandeur n'est
+        /// ajustée.</para>
         ///
         /// <para>Appel à <c>base.OnResized(callChain)</c> en première
         /// instruction : L'implémentation par défaut de
@@ -543,9 +630,12 @@ namespace DG244Cutting.D_Presentation.Views.Pages
             base.OnResized(callChain);
 
             double tabControlHeight = _window.MainWindowHeight - 220;
+            double scrollViewerHeight = tabControlHeight - 93;
 
             if (Find<TabControl>("MainTabControl") is TabControl mainTabControl)
                 mainTabControl.Height = tabControlHeight;
+            if (Find<ScrollViewer>("OrdersScrollViewer") is ScrollViewer ordersScrollViewer)
+                ordersScrollViewer.Height = scrollViewerHeight;
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using DG244Cutting.A_Domain.Entities.DIGIT_TRY;
+﻿using System.Collections.ObjectModel;
+using DG244Cutting.A_Domain.Entities.DIGIT_TRY;
 using DG244Cutting.A_Domain.Interfaces.Handlers.Generic;
 using DG244Cutting.A_Domain.Interfaces.Services.Presentation;
 using DG244Cutting.A_Domain.Interfaces.Settings.App;
@@ -12,10 +13,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// ViewModel de la page de consultation détaillée d'une série de
     /// production <c>Page11</c> de l'application DG244Cutting, exposant à
     /// la vue les libellés multilingues des cinq onglets de la page, les
-    /// sept intitulés de la fiche de synthèse du premier onglet et les
-    /// sept caractéristiques de la série désignée par le contexte de
-    /// sélection applicatif, relues en base à l'entrée sur la page via un
-    /// Query Handler générique invoqué selon l'EA-11.
+    /// sept intitulés de la fiche de synthèse du premier onglet, les
+    /// quatre intitulés de colonnes du tableau des commandes du deuxième
+    /// onglet, les sept caractéristiques de la série désignée par le
+    /// contexte de sélection applicatif et la collection des commandes
+    /// clients rattachées à cette série, les unes et les autres relues en
+    /// base à l'entrée sur la page via un Query Handler générique invoqué
+    /// selon l'EA-11.
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Composant de la famille VM_Page de la couche
@@ -36,14 +40,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>Objectif : Exposer à la vue
     /// <see cref="DG244Cutting.D_Presentation.Views.Pages.Page11"/> :</para>
     /// <list type="bullet">
-    ///   <item><description>12 propriétés observables
+    ///   <item><description>16 propriétés observables
     ///   <c>Label_P11_NN</c> liées aux clés homonymes du dictionnaire
     ///   actif : <see cref="Label_P11_01"/> à <see cref="Label_P11_05"/>
     ///   pour les cinq en-têtes d'onglets (série, commandes, châssis,
     ///   barres, découpes), <see cref="Label_P11_06"/> à
     ///   <see cref="Label_P11_09"/> et <see cref="Label_P11_46"/> à
     ///   <see cref="Label_P11_48"/> pour les sept intitulés de la fiche
-    ///   de synthèse du premier onglet. Toutes ces propriétés sont
+    ///   de synthèse du premier onglet, <see cref="Label_P11_10"/> à
+    ///   <see cref="Label_P11_13"/> pour les quatre intitulés de colonnes
+    ///   du tableau des commandes du deuxième onglet (numéro de commande,
+    ///   désignation de projet, indice de sous-série, point de vente
+    ///   client principal). Toutes ces propriétés sont
     ///   alimentées par la mécanique multilingue factorisée par
     ///   <see cref="VM_Generic"/> : premier chargement au constructeur
     ///   via <see cref="VM_Generic.InitializeLabels"/>, rechargement
@@ -67,20 +75,36 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   production positionne au fil de son déroulement ; ils sont
     ///   rendus côté Vue sous forme de cases à cocher
     ///   désactivées.</description></item>
+    ///   <item><description>1 collection observable
+    ///   <see cref="SeriesCustomerOrders"/> portant les commandes
+    ///   clients rattachées à la série consultée, triées par numéro de
+    ///   commande puis par indice de série partielle. Elle est la source
+    ///   du tableau du deuxième onglet, lequel restitue la composition
+    ///   commerciale de la série — quelles commandes y entrent, sous
+    ///   quelle désignation de projet, pour quel point de vente client et
+    ///   selon quel découpage en sous-séries. Son alimentation est portée
+    ///   par <see cref="LoadAsync"/> à l'ouverture de la page, en même
+    ///   temps que la fiche de synthèse et non à l'activation de
+    ///   l'onglet. Elle n'est pas un libellé multilingue et n'est pas
+    ///   rechargée au changement de langue, son contenu ne dépendant pas
+    ///   de la culture active.</description></item>
     /// </list>
     ///
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
-    ///   <item><description>Exposer les 12 propriétés observables
+    ///   <item><description>Exposer les 16 propriétés observables
     ///   <c>Label_P11_NN</c> et les 7 propriétés observables de données
     ///   en accès public en lecture, écriture privée via le helper
-    ///   hérité <c>SetProperty&lt;T&gt;</c>.</description></item>
+    ///   hérité <c>SetProperty&lt;T&gt;</c>, ainsi que la collection
+    ///   observable <see cref="SeriesCustomerOrders"/> en accès public en
+    ///   lecture seule, mutée en place par
+    ///   <see cref="LoadAsync"/>.</description></item>
     ///   <item><description>Redéfinir
-    ///   <see cref="VM_Generic.LoadLabels"/> pour résoudre les 12 clés
-    ///   <c>P11_01</c> à <c>P11_05</c>, <c>P11_06</c> à <c>P11_09</c> et
-    ///   <c>P11_46</c> à <c>P11_48</c> via
-    ///   <see cref="VM_Generic._dictionary"/> hérité et affecter les
-    ///   valeurs résolues aux 12 propriétés <c>Label_P11_NN</c>,
+    ///   <see cref="VM_Generic.LoadLabels"/> pour résoudre les 16 clés
+    ///   <c>P11_01</c> à <c>P11_05</c>, <c>P11_06</c> à <c>P11_09</c>,
+    ///   <c>P11_10</c> à <c>P11_13</c> et <c>P11_46</c> à <c>P11_48</c>
+    ///   via <see cref="VM_Generic._dictionary"/> hérité et affecter les
+    ///   valeurs résolues aux 16 propriétés <c>Label_P11_NN</c>,
     ///   conformément à R-4.11.8 du 0231.</description></item>
     ///   <item><description>Redéfinir
     ///   <see cref="VM_Page_Generic.LoadAsync"/> pour lire l'identifiant
@@ -89,8 +113,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   production sans suivi de modification par invocation du Query
     ///   Handler générique <see cref="IQ_Generic{T}"/> de
     ///   <see cref="ProductionSeries"/> via
-    ///   <see cref="IS_UseCaseInvoker"/>, et alimenter les 7 propriétés
-    ///   de données, en encapsulation par le filet hérité
+    ///   <see cref="IS_UseCaseInvoker"/>, alimenter les 7 propriétés
+    ///   de données, puis lire par la même voie les commandes clients
+    ///   rattachées à la série — hors commandes marquées supprimées — et
+    ///   alimenter la collection <see cref="SeriesCustomerOrders"/> après
+    ///   tri en mémoire, le tout en encapsulation par le filet hérité
     ///   <see cref="VM_Generic.ExecuteSafeAsync"/> (§4.7.3 du 0230). Le
     ///   hook est invoqué depuis le code-behind de <c>Page11</c> au point
     ///   d'extension <c>OnLoadedAsync</c> exposé par
@@ -204,18 +231,21 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>La classe applique la structure normative à cinq régions
     /// standard (§4.4.2) complétée par deux extensions (R-4.4.10 du
     /// 0231) : l'extension <c>=== Propriétés publiques ===</c> au titre
-    /// des 19 propriétés observables exposées, et l'extension
+    /// des 23 propriétés observables à champ support et de la collection
+    /// observable exposées, et l'extension
     /// <c>=== Méthodes protégées ===</c> au titre de l'override
     /// <see cref="LoadLabels"/>. Soit sept régions au total :</para>
     ///
     /// <list type="number">
     ///   <item><description><c>=== Propriétés privées ===</c> :
-    ///   19 champs supports des propriétés observables (12 champs
+    ///   23 champs supports des propriétés observables (16 champs
     ///   supports de libellés <c>_label_p11_NN</c> et 7 champs supports
     ///   de données <c>_idSerialNumber</c>, <c>_description</c>,
     ///   <c>_productionStartDate</c>, <c>_productionEndDate</c>,
     ///   <c>_isCuttingStarted</c>, <c>_isCuttingCompleted</c>,
-    ///   <c>_isBarOutOfStock</c>).</description></item>
+    ///   <c>_isBarOutOfStock</c>). La collection observable
+    ///   <see cref="SeriesCustomerOrders"/> ne porte pas de champ support
+    ///   et n'est pas comptée dans cet effectif.</description></item>
     ///   <item><description><c>=== Dépendances privées ===</c> :
     ///   2 champs <c>private readonly</c> stockant les dépendances
     ///   propres au dérivé, affectés au constructeur après les gardes
@@ -223,9 +253,14 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   (<see cref="IS_UseCaseInvoker"/>) et <c>_seUseCase</c>
     ///   (<see cref="ISE_UseCase"/>).</description></item>
     ///   <item><description><c>=== Propriétés publiques ===</c>
-    ///   (extension §4.4.3) : 19 propriétés observables exposées en accès
+    ///   (extension §4.4.3) : 23 propriétés observables exposées en accès
     ///   public en lecture, écriture privée via
-    ///   <c>SetProperty&lt;T&gt;</c>.</description></item>
+    ///   <c>SetProperty&lt;T&gt;</c>, plus la collection observable
+    ///   <see cref="SeriesCustomerOrders"/> exposée <c>{ get; }</c> en
+    ///   lecture seule avec instanciation en place, au titre de la
+    ///   dérogation assumée au patron <c>SetProperty&lt;T&gt;</c> de
+    ///   l'item VM-P9 dont la portée est scalaire — soit 24 propriétés
+    ///   publiques au total.</description></item>
     ///   <item><description><c>=== Constructeur ===</c> : constructeur
     ///   <c>public</c> à cinq paramètres, délégation à
     ///   <see cref="VM_Page_Generic"/> via
@@ -241,7 +276,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   <see cref="System.Threading.CancellationToken"/>).</description></item>
     ///   <item><description><c>=== Méthodes protégées ===</c>
     ///   (extension §4.4.3) : override <see cref="LoadLabels"/> peuplant
-    ///   les 12 propriétés <c>Label_P11_NN</c> via
+    ///   les 16 propriétés <c>Label_P11_NN</c> via
     ///   <see cref="VM_Generic._dictionary"/>, une affectation par ligne
     ///   dans l'ordre numérique croissant des clés, sans appel à
     ///   <c>base.LoadLabels(caller)</c>.</description></item>
@@ -285,6 +320,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
 
         /// <summary>Champ support de <see cref="Label_P11_09"/> (clé <c>P11_09</c>).</summary>
         private string _label_p11_09 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_10"/> (clé <c>P11_10</c>).</summary>
+        private string _label_p11_10 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_11"/> (clé <c>P11_11</c>).</summary>
+        private string _label_p11_11 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_12"/> (clé <c>P11_12</c>).</summary>
+        private string _label_p11_12 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_13"/> (clé <c>P11_13</c>).</summary>
+        private string _label_p11_13 = string.Empty;
 
         /// <summary>Champ support de <see cref="Label_P11_46"/> (clé <c>P11_46</c>).</summary>
         private string _label_p11_46 = string.Empty;
@@ -374,10 +421,14 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// structurelle de l'injection directe d'un contrat <c>IU_</c> ou
         /// <c>IQ_</c> dans un composant de <c>D_Presentation</c>,
         /// indépendamment de toute question de captive dependency.
-        /// Conformité I-4.10.10 du 0231. Le Query Handler générique
-        /// <see cref="IQ_Generic{T}"/> de
-        /// <see cref="ProductionSeries"/> est invoqué dans
-        /// <see cref="LoadAsync"/> via cette voie unique.</para>
+        /// Conformité I-4.10.10 du 0231. Les deux Query Handlers
+        /// génériques <see cref="IQ_Generic{T}"/> mobilisés par
+        /// <see cref="LoadAsync"/> — celui de
+        /// <see cref="ProductionSeries"/> pour la fiche de synthèse,
+        /// celui de <see cref="CustomerOrder"/> pour le tableau des
+        /// commandes — sont invoqués par cette voie unique, en deux
+        /// invocations distinctes dotées chacune de leur propre
+        /// <c>IServiceScope</c>.</para>
         /// </remarks>
         private readonly IS_UseCaseInvoker _useCaseInvoker;
 
@@ -472,6 +523,34 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         {
             get => _label_p11_09;
             private set => SetProperty(ref _label_p11_09, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_10</c>, intitulé de la colonne du numéro de commande dans le tableau des commandes du deuxième onglet.</summary>
+        public string Label_P11_10
+        {
+            get => _label_p11_10;
+            private set => SetProperty(ref _label_p11_10, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_11</c>, intitulé de la colonne de la désignation de projet dans le tableau des commandes du deuxième onglet.</summary>
+        public string Label_P11_11
+        {
+            get => _label_p11_11;
+            private set => SetProperty(ref _label_p11_11, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_12</c>, intitulé de la colonne de l'indice de sous-série dans le tableau des commandes du deuxième onglet.</summary>
+        public string Label_P11_12
+        {
+            get => _label_p11_12;
+            private set => SetProperty(ref _label_p11_12, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_13</c>, intitulé de la colonne du point de vente client principal dans le tableau des commandes du deuxième onglet.</summary>
+        public string Label_P11_13
+        {
+            get => _label_p11_13;
+            private set => SetProperty(ref _label_p11_13, value);
         }
 
         /// <summary>Libellé multilingue associé à la clé <c>P11_46</c>, intitulé de l'indicateur de découpe commencée dans la fiche de synthèse du premier onglet.</summary>
@@ -701,6 +780,83 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             private set => SetProperty(ref _isBarOutOfStock, value);
         }
 
+        /// <summary>
+        /// Collection observable des commandes clients rattachées à la
+        /// série de production consultée, triée par ordre ascendant de
+        /// <see cref="CustomerOrder.IdOrder"/> puis de
+        /// <see cref="CustomerOrder.PartialSeriesIndex"/>.
+        /// </summary>
+        /// <value>
+        /// Collection observable de <see cref="CustomerOrder"/>
+        /// instanciée à la construction du présent ViewModel à une
+        /// collection vide, puis alimentée par <see cref="LoadAsync"/>
+        /// par <c>Clear()</c> suivi d'autant d'<c>Add(...)</c> que
+        /// d'éléments triés. La référence de collection n'est jamais
+        /// réaffectée et n'est jamais <see langword="null"/>,
+        /// conformément au patron idiomatique des collections
+        /// observables exposées en lecture seule par les ViewModels WPF.
+        /// </value>
+        /// <remarks>
+        /// <para>Contexte : Propriété bindable consommée par la vue
+        /// <see cref="DG244Cutting.D_Presentation.Views.Pages.Page11"/>
+        /// (deuxième onglet, <c>ListView</c> <c>OrdersListView</c>,
+        /// attribut <c>ItemsSource="{Binding SeriesCustomerOrders}"</c>).
+        /// L'<c>ItemTemplate</c> de la <c>ListView</c> consomme par
+        /// binding les quatre propriétés
+        /// <see cref="CustomerOrder.IdOrder"/>,
+        /// <see cref="CustomerOrder.ProjectDesignation"/>,
+        /// <see cref="CustomerOrder.PartialSeriesIndex"/> et
+        /// <see cref="CustomerOrder.MainSalesPointName"/>, dont les
+        /// intitulés de colonnes sont portés par
+        /// <see cref="Label_P11_10"/> à
+        /// <see cref="Label_P11_13"/>.</para>
+        ///
+        /// <para>Composition commerciale de la série : Une série de
+        /// production est constituée par regroupement de commandes
+        /// clients ; une même commande peut être scindée en plusieurs
+        /// sous-séries lorsque son volume dépasse la capacité d'une
+        /// série, ce que traduit l'indice de série partielle porté par
+        /// chaque enregistrement. La collection restitue ce découpage et
+        /// permet de rattacher la série à son origine commerciale. Elle
+        /// est purement descriptive : la notion de progression n'existant
+        /// pas au niveau de la commande, aucun indicateur d'avancement
+        /// n'y figure.</para>
+        ///
+        /// <para>Exposition directe de l'entité de domaine : La
+        /// collection expose directement les entités
+        /// <see cref="CustomerOrder"/> retournées par le Query Handler
+        /// générique, sans projection en objet de transfert
+        /// intermédiaire. Choix doctrinal admissible au présent stade du
+        /// projet, à parité avec l'étalon
+        /// <c>VM_Page01.PagesUserRights</c> ; toute évolution vers une
+        /// projection dédiée relèverait d'un mode Refactoring
+        /// distinct.</para>
+        ///
+        /// <para>Dérogation au patron <c>SetProperty&lt;T&gt;</c> de
+        /// l'item VM-P9 : La propriété est exposée <c>{ get; }</c> en
+        /// lecture seule avec instanciation en place via <c>= new();</c>,
+        /// sans champ support séparé ni accesseur en écriture privée. Ce
+        /// patron idiomatique des collections observables WPF est
+        /// admissible au titre de la portée scalaire de VM-P9, qui
+        /// adresse les propriétés observables scalaires ; la notification
+        /// des éléments ajoutés ou retirés est portée par
+        /// <see cref="ObservableCollection{T}"/> elle-même au titre de
+        /// <see cref="System.Collections.Specialized.INotifyCollectionChanged"/>.
+        /// La collection est nommée d'après son contenu et non d'après
+        /// son type, sur le modèle de l'étalon.</para>
+        ///
+        /// <para>Alimentation : Exclusivement par
+        /// <see cref="LoadAsync"/> via <c>Clear()</c> suivi d'autant
+        /// d'<c>Add(...)</c> que nécessaire, après tri en mémoire des
+        /// résultats du Query Handler. Cette propriété n'est pas affectée
+        /// par <see cref="LoadLabels"/> et n'est pas rechargée par le
+        /// handler interne d'abonnement INPC de
+        /// <see cref="VM_Generic"/> : son contenu ne dépend pas de la
+        /// langue active. Son état initial est vide, et il le demeure
+        /// lorsque la série n'est pas trouvée en base.</para>
+        /// </remarks>
+        public ObservableCollection<CustomerOrder> SeriesCustomerOrders { get; } = new();
+
         #endregion
 
         #region === Constructeur ===
@@ -750,7 +906,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   CallChain initiale via
         ///   <see cref="VM_Generic.BuildFirstCallChain"/>, premier appel
         ///   synchrone à l'override <see cref="LoadLabels"/> peuplant les
-        ///   12 propriétés <c>Label_P11_NN</c> avant le premier binding
+        ///   16 propriétés <c>Label_P11_NN</c> avant le premier binding
         ///   WPF de la vue, et branchement de l'abonnement INPC interne à
         ///   <see cref="ISE_App"/> pour la prise en compte du changement
         ///   de langue dynamique (R-4.11.8 et R-4.11.9 du
@@ -784,7 +940,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <param name="dictionary">Service d'accès au dictionnaire
         /// multilingue, transmis à <see cref="VM_Page_Generic"/> via
         /// <c>base(...)</c>. Mobilisé par <see cref="LoadLabels"/> pour
-        /// la résolution des 12 clés de la page. Injecté en Singleton par
+        /// la résolution des 16 clés de la page. Injecté en Singleton par
         /// le conteneur DI.</param>
         /// <param name="logAndNotify">Orchestrateur du traitement
         /// terminal des erreurs, transmis à
@@ -802,9 +958,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// directement, conformément à I-4.11.11 du 0231. Injecté en
         /// Singleton par le conteneur DI.</param>
         /// <param name="useCaseInvoker">Composant Singleton porteur
-        /// d'EA-11, unique voie d'invocation du Query Handler générique
-        /// <see cref="IQ_Generic{T}"/> de
-        /// <see cref="ProductionSeries"/> depuis le présent ViewModel.
+        /// d'EA-11, unique voie d'invocation des Query Handlers
+        /// génériques <see cref="IQ_Generic{T}"/> de
+        /// <see cref="ProductionSeries"/> et de
+        /// <see cref="CustomerOrder"/> depuis le présent ViewModel.
         /// Injecté en Singleton par le conteneur DI.</param>
         /// <param name="seUseCase">Setting Singleton portant la cascade
         /// de sélection métier, dont l'identifiant de la série de
@@ -843,9 +1000,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="VM_Page_Generic.LoadAsync"/> pour alimenter les
         /// sept caractéristiques de la fiche de synthèse à partir de
         /// l'enregistrement de série désigné par le contexte de sélection
-        /// applicatif, relu sans suivi de modification par invocation du
-        /// Query Handler générique <see cref="IQ_Generic{T}"/> de
-        /// <see cref="ProductionSeries"/> via
+        /// applicatif, puis la collection
+        /// <see cref="SeriesCustomerOrders"/> à partir des commandes
+        /// clients rattachées à cette même série, les unes et les autres
+        /// relues sans suivi de modification par invocation des Query
+        /// Handlers génériques <see cref="IQ_Generic{T}"/> de
+        /// <see cref="ProductionSeries"/> et de
+        /// <see cref="CustomerOrder"/> via
         /// <see cref="IS_UseCaseInvoker"/> (EA-11).
         /// </summary>
         /// <param name="callChain">CallChain construite par l'orchestrateur
@@ -865,12 +1026,14 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// code-behind appelant. Propagé à
         /// <see cref="VM_Generic.ExecuteSafeAsync"/>, à
         /// <see cref="IS_UseCaseInvoker.InvokeAsync{TUseCase, TResult}(System.Func{TUseCase, System.Threading.CancellationToken, System.Threading.Tasks.Task{TResult}}, System.Threading.CancellationToken)"/>
-        /// et, par le délégué, au Query Handler
-        /// <see cref="IQ_Generic{T}.HandleGetByIdAsNoTrackingAsync"/>.
+        /// et, par les délégués, aux Query Handlers
+        /// <see cref="IQ_Generic{T}.HandleGetByIdAsNoTrackingAsync"/> et
+        /// <see cref="IQ_Generic{T}.HandleGetFilteredAsNoTrackingAsync"/>.
         /// Valeur par défaut : <see langword="default"/>.</param>
         /// <returns>Une tâche représentant l'exécution asynchrone du
         /// chargement des sept propriétés de données de la fiche de
-        /// synthèse.</returns>
+        /// synthèse et de la collection des commandes clients de la
+        /// série.</returns>
         /// <remarks>
         /// <para>Contexte : Override du hook canonique
         /// <see cref="VM_Page_Generic.LoadAsync"/> déclaré
@@ -882,8 +1045,9 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// constructeur d'un côté, données fonctionnelles asynchrones au
         /// <c>Loaded</c> de la page de l'autre.</para>
         ///
-        /// <para>Objectif : Alimenter en trois temps coordonnés les sept
-        /// propriétés de données :</para>
+        /// <para>Objectif : Alimenter en cinq temps coordonnés les sept
+        /// propriétés de données de la fiche de synthèse puis la
+        /// collection des commandes clients :</para>
         /// <list type="number">
         ///   <item><description>Lecture de l'identifiant de série retenu
         ///   dans <see cref="ISE_UseCase.IdSeriesSelected"/>, stocké en
@@ -910,6 +1074,24 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   champs homonymes de l'entité relue, chacune émettant sa
         ///   notification INPC par le helper hérité
         ///   <c>SetProperty&lt;T&gt;</c>.</description></item>
+        ///   <item><description>Lecture filtrée des commandes clients
+        ///   rattachées à la même série par invocation du Query Handler
+        ///   générique <see cref="IQ_Generic{T}"/> de
+        ///   <see cref="CustomerOrder"/> via
+        ///   <see cref="IS_UseCaseInvoker"/>, méthode
+        ///   <see cref="IQ_Generic{T}.HandleGetFilteredAsNoTrackingAsync"/>,
+        ///   sur le prédicat conjuguant l'égalité de
+        ///   <see cref="CustomerOrder.IdProductionSeries"/> à
+        ///   l'identifiant de série retenu et l'exclusion des
+        ///   enregistrements marqués supprimés.</description></item>
+        ///   <item><description>Tri en mémoire du résultat par ordre
+        ///   ascendant de <see cref="CustomerOrder.IdOrder"/> puis de
+        ///   <see cref="CustomerOrder.PartialSeriesIndex"/>, et
+        ///   alimentation de <see cref="SeriesCustomerOrders"/> par
+        ///   <c>Clear()</c> suivi d'autant d'<c>Add(...)</c> que
+        ///   d'éléments triés. Le tri est porté en mémoire plutôt qu'au
+        ///   niveau de la source, conformément au modèle en vigueur dans
+        ///   le projet.</description></item>
         /// </list>
         ///
         /// <para>Précondition non vérifiée :
@@ -927,7 +1109,22 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// propriétés conservent leurs valeurs d'initialisation et la
         /// fiche s'affiche vide. Aucune notification n'est émise, aucune
         /// exception n'est levée : le cas est une issue fonctionnelle
-        /// admise, non une anomalie.</para>
+        /// admise, non une anomalie. La sortie anticipée court-circuite
+        /// également le chargement des commandes clients, qui lui est
+        /// postérieur : <see cref="SeriesCustomerOrders"/> conserve son
+        /// état antérieur et le tableau du deuxième onglet reste vide.
+        /// Le comportement est cohérent — sans série, il n'y a pas de
+        /// commande à présenter.</para>
+        ///
+        /// <para>Cas de liste vide : Lorsque la lecture filtrée ne rend
+        /// aucune commande, le contrat générique retourne une liste vide
+        /// et non <see langword="null"/> ; le <c>Clear()</c> s'exécute,
+        /// aucun <c>Add(...)</c> ne suit, et le tableau s'affiche vide
+        /// sans message ni traitement particulier. Ce cas n'est pas
+        /// attendu fonctionnellement — une série n'existant que par
+        /// regroupement de commandes, elle en comporte au moins une par
+        /// propriété structurelle du modèle — mais il constitue une
+        /// issue fonctionnelle admise et non une anomalie.</para>
         ///
         /// <para>Patron de surcharge normatif (§4.15.6 du 0230) :
         /// L'override construit une CallChain interne
@@ -945,21 +1142,26 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// entrée sur la page et à chaque rechargement manuel déclenché
         /// depuis le menu horizontal, sans flag de mémoire d'état. Chaque
         /// appel produit une nouvelle relecture complète de
-        /// l'enregistrement et une nouvelle alimentation des sept
-        /// propriétés — coût négligeable, la lecture portant sur un
-        /// enregistrement unique par clé primaire.</para>
+        /// l'enregistrement, une nouvelle alimentation des sept
+        /// propriétés et une reconstruction intégrale de
+        /// <see cref="SeriesCustomerOrders"/> par <c>Clear()</c> suivi de
+        /// la boucle d'<c>Add(...)</c> — coût négligeable, la première
+        /// lecture portant sur un enregistrement unique par clé primaire
+        /// et la seconde sur les quelques lignes de commandes d'une
+        /// série.</para>
         ///
         /// <para>Filet de sécurité : L'invocation est encapsulée par le
         /// filet hérité <see cref="VM_Generic.ExecuteSafeAsync"/> (§4.7.3
         /// du 0230). Aucun try/catch local n'est posé : les défaillances
         /// métier (<c>Ex_Business</c>) et infrastructure
-        /// (<c>Ex_Infrastructure</c>) éventuellement levées par le Query
-        /// Handler sont absorbées par
+        /// (<c>Ex_Infrastructure</c>) éventuellement levées par l'un ou
+        /// l'autre des deux Query Handlers sont absorbées par
         /// <see cref="VM_Generic.ExecuteSafeAsync"/> selon le pipeline
         /// canonique et traitées terminalement par
         /// <see cref="IU_LogAndNotify"/>. En cas de défaillance, les sept
-        /// propriétés restent dans leur état antérieur, l'alimentation
-        /// étant postérieure à l'invocation dans le corps de la
+        /// propriétés et <see cref="SeriesCustomerOrders"/> restent dans
+        /// leur état antérieur, l'alimentation étant dans les deux cas
+        /// postérieure à l'invocation dans le corps de la
         /// lambda.</para>
         ///
         /// <para>Invariants : Aucune écriture en base ; lecture sans
@@ -968,17 +1170,20 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// en chaîne.</para>
         ///
         /// <para>Mode d'invocation : Conformément à §4.10.10 du 0230,
-        /// l'invocation du Query Handler générique
-        /// <see cref="IQ_Generic{T}"/> de
-        /// <see cref="ProductionSeries"/> est portée par
+        /// les deux invocations de Query Handler générique
+        /// <see cref="IQ_Generic{T}"/> sont portées par
         /// <see cref="IS_UseCaseInvoker"/> qui matérialise un
-        /// <c>IServiceScope</c> distinct pour l'invocation, y résout
+        /// <c>IServiceScope</c> distinct par invocation, y résout
         /// l'implémentation du contrat
-        /// (<c>QH_Generic&lt;ProductionSeries&gt;</c>) et l'exécute via
-        /// le délégué fourni, puis dispose le scope. Le présent ViewModel
-        /// n'injecte pas directement le contrat
-        /// <see cref="IQ_Generic{T}"/>, conformément à I-4.10.10 du
-        /// 0231.</para>
+        /// (<c>QH_Generic&lt;ProductionSeries&gt;</c> pour la première,
+        /// <c>QH_Generic&lt;CustomerOrder&gt;</c> pour la seconde) et
+        /// l'exécute via le délégué fourni, puis dispose le scope. Les
+        /// deux invocations sont séquentielles et indépendantes, la
+        /// seconde consommant la variable locale d'identifiant de série
+        /// déjà lue en tête de lambda plutôt qu'un état issu de la
+        /// première. Le présent ViewModel n'injecte pas directement le
+        /// contrat <see cref="IQ_Generic{T}"/>, conformément à I-4.10.10
+        /// du 0231.</para>
         ///
         /// <para>Retours signalables : Aucun.
         /// <see cref="LoadAsync"/> ne signale rien à son appelant, le
@@ -1021,6 +1226,22 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
                 IsCuttingStarted = series.IsCuttingStarted;
                 IsCuttingCompleted = series.IsCuttingCompleted;
                 IsBarOutOfStock = series.IsBarOutOfStock;
+
+                var orders = await _useCaseInvoker
+                    .InvokeAsync<IQ_Generic<CustomerOrder>, List<CustomerOrder>>(
+                        (handler, innerCt) => handler.HandleGetFilteredAsNoTrackingAsync(
+                            innerCallChain,
+                            o => o.IdProductionSeries == idSeries && !o.IsDeleted,
+                            innerCt),
+                        ct);
+
+                var sortedOrders = orders
+                    .OrderBy(o => o.IdOrder)
+                    .ThenBy(o => o.PartialSeriesIndex)
+                    .ToList();
+
+                SeriesCustomerOrders.Clear();
+                foreach (var order in sortedOrders) SeriesCustomerOrders.Add(order);
             }, ct);
         }
 
@@ -1030,10 +1251,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
 
         /// <summary>
         /// Redéfinit le point d'extension
-        /// <see cref="VM_Generic.LoadLabels"/> pour charger les douze
+        /// <see cref="VM_Generic.LoadLabels"/> pour charger les seize
         /// libellés multilingues affichés par la page <c>Page11</c> —
-        /// cinq en-têtes d'onglets et sept intitulés de la fiche de
-        /// synthèse — depuis le dictionnaire de langue actif et les
+        /// cinq en-têtes d'onglets, sept intitulés de la fiche de
+        /// synthèse et quatre intitulés de colonnes du tableau des
+        /// commandes — depuis le dictionnaire de langue actif et les
         /// affecter aux propriétés observables
         /// <c>Label_P11_NN</c> correspondantes.
         /// </summary>
@@ -1048,17 +1270,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="ISE_App.AppCultureCode"/>, avec marshalling
         /// Dispatcher défensif vers le thread UI.</para>
         ///
-        /// <para>Objectif : Garantir que les douze propriétés
+        /// <para>Objectif : Garantir que les seize propriétés
         /// <c>Label_P11_NN</c> sont synchronisées avec la langue active
         /// du dictionnaire, tant au moment de l'instanciation du
         /// ViewModel que lors de tout changement ultérieur de langue
-        /// dynamique au cours de la session. Les douze clés sont
+        /// dynamique au cours de la session. Les seize clés sont
         /// résolues par une affectation par ligne, dans l'ordre
         /// numérique croissant — <c>P11_01</c> à <c>P11_05</c> pour les
         /// en-têtes d'onglets, <c>P11_06</c> à <c>P11_09</c> pour les
-        /// quatre premiers intitulés de la fiche, <c>P11_46</c> à
-        /// <c>P11_48</c> pour les trois intitulés d'indicateurs — sans
-        /// boucle dynamique.</para>
+        /// quatre premiers intitulés de la fiche, <c>P11_10</c> à
+        /// <c>P11_13</c> pour les quatre intitulés de colonnes du tableau
+        /// des commandes, <c>P11_46</c> à <c>P11_48</c> pour les trois
+        /// intitulés d'indicateurs — sans boucle dynamique.</para>
         ///
         /// <para>Absence d'appel à <c>base.LoadLabels(caller)</c> :
         /// L'implémentation par défaut de
@@ -1102,6 +1325,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             Label_P11_07 = _dictionary.GetText(callChain, "P11_07");
             Label_P11_08 = _dictionary.GetText(callChain, "P11_08");
             Label_P11_09 = _dictionary.GetText(callChain, "P11_09");
+            Label_P11_10 = _dictionary.GetText(callChain, "P11_10");
+            Label_P11_11 = _dictionary.GetText(callChain, "P11_11");
+            Label_P11_12 = _dictionary.GetText(callChain, "P11_12");
+            Label_P11_13 = _dictionary.GetText(callChain, "P11_13");
             Label_P11_46 = _dictionary.GetText(callChain, "P11_46");
             Label_P11_47 = _dictionary.GetText(callChain, "P11_47");
             Label_P11_48 = _dictionary.GetText(callChain, "P11_48");
