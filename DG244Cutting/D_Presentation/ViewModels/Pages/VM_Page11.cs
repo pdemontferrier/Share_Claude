@@ -244,7 +244,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   les 12 propriétés <c>Label_P11_NN</c> via
     ///   <see cref="VM_Generic._dictionary"/>, une affectation par ligne
     ///   dans l'ordre numérique croissant des clés, sans appel à
-    ///   <c>base.LoadLabels(callChain)</c>.</description></item>
+    ///   <c>base.LoadLabels(caller)</c>.</description></item>
     ///   <item><description><c>=== Méthodes privées ===</c> : présente
     ///   mais vide, marqueur <c>// A compléter</c>.</description></item>
     /// </list>
@@ -1060,7 +1060,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <c>P11_48</c> pour les trois intitulés d'indicateurs — sans
         /// boucle dynamique.</para>
         ///
-        /// <para>Absence d'appel à <c>base.LoadLabels(callChain)</c> :
+        /// <para>Absence d'appel à <c>base.LoadLabels(caller)</c> :
         /// L'implémentation par défaut de
         /// <see cref="VM_Generic.LoadLabels"/> ne porte aucun traitement.
         /// L'appel n'apporterait qu'un bruit inutile et est délibérément
