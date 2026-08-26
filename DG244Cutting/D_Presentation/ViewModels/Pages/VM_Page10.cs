@@ -401,23 +401,16 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// et du statut de la série, selon une règle ordonnée.
         /// </summary>
         /// <remarks>
-        /// <para>Règle ordonnée : chutes non approvisionnées →
-        /// <c>Page11</c> ; barres neuves non approvisionnées →
-        /// <c>Page12</c> ; série réalisée → <c>Page13</c> ; sinon découpe
-        /// en cours ou validation de la première barre → <c>Page20</c>.
-        /// L'ordre chutes → barres neuves étant garanti métier, le cas
-        /// chutes approvisionnées et barres neuves non approvisionnées est
-        /// structurellement impossible ; l'ordre des tests est néanmoins
-        /// écrit pour rester correct si l'invariant était violé.</para>
+        /// <para>
+        /// Règle ordonnée : série réalisée → <c>Page11</c> ; 
+        ///                  sinon → <c>Page20</c>.</para>
         /// </remarks>
         /// <param name="dto">Série dont la page cible est résolue.</param>
         /// <returns>Nom logique de la page cible.</returns>
         private static string ResolveTargetPage(DTO_ProductionSeriesItem dto)
         {
-            if (!dto.IsDropBarSupplied) return "Page11";
-            if (!dto.IsNewBarSupplied) return "Page12";
-            if (dto.Status == En_ProductionSeriesStatus.Completed) return "Page13";
-            return "Page11";
+            if (dto.Status == En_ProductionSeriesStatus.Completed) return "Page11";
+            return "Page11";  // "Page20"
         }
 
         #endregion

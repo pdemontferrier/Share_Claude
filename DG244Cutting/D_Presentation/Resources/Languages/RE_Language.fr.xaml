@@ -575,11 +575,11 @@
     <sys:String x:Key="P11_11">Désignation</sys:String>
     <sys:String x:Key="P11_12">Sous-série</sys:String>
     <sys:String x:Key="P11_13">Client principal</sys:String>
-    <sys:String x:Key="P11_14">Position série</sys:String>
-    <sys:String x:Key="P11_15">Position commande</sys:String>
+    <sys:String x:Key="P11_14">Pos.</sys:String>
+    <sys:String x:Key="P11_15">Position client</sys:String>
     <sys:String x:Key="P11_16">Code Barre</sys:String>
-    <sys:String x:Key="P11_17">Quantité</sys:String>
-    <sys:String x:Key="P11_18">Famille produit</sys:String>
+    <sys:String x:Key="P11_17">Qua.</sys:String>
+    <sys:String x:Key="P11_18">Famille</sys:String>
     <sys:String x:Key="P11_19">Hauteur</sys:String>
     <sys:String x:Key="P11_20">Largeur</sys:String>
     <sys:String x:Key="P11_21">Couleur</sys:String>

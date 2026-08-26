@@ -6,10 +6,11 @@ Description :
     Vue WPF de la page de consultation détaillée d'une série de production Page11 de
     l'application DG244Cutting. Présente, dans un TabControl à cinq onglets, la fiche
     de synthèse de la série (Onglet 1, "Série"), le tableau des commandes clients qui
-    composent la série (Onglet 2, "Commandes") et trois onglets d'accueil destinés aux
-    tableaux des châssis (Onglet 3), des barres optimisées (Onglet 4) et des découpes
-    (Onglet 5). Ces trois derniers onglets sont créés sans contenu ; leur remplissage
-    relève de fils ultérieurs.
+    composent la série (Onglet 2, "Commandes"), le tableau des châssis qui la
+    composent physiquement (Onglet 3, "Chassis") et deux onglets d'accueil destinés
+    aux tableaux des barres optimisées (Onglet 4) et des découpes (Onglet 5). Ces deux
+    derniers onglets sont créés sans contenu ; leur remplissage relève de fils
+    ultérieurs.
 
 Contexte :
     Page atteinte par un opérateur d'atelier de découpe depuis le tableau de bord des
@@ -33,7 +34,11 @@ Structure visuelle :
       visuelle est portée par les cinq en-têtes d'onglets.
     - TabControl MainTabControl à cinq TabItems, dont la hauteur est ajustée au Loaded
       puis à chaque SizeChanged par l'override OnResized du code-behind, lequel dérive
-      de cette hauteur celle du ScrollViewer OrdersScrollViewer de l'Onglet 2 :
+      de cette hauteur celle des ScrollViewer OrdersScrollViewer de l'Onglet 2 et
+      FramesScrollViewer de l'Onglet 3, à géométrie verticale identique. Le TabControl
+      porte par ailleurs un abonnement programmatique à SelectionChanged, posé au
+      constructeur du code-behind, qui déclenche le chargement du tableau de l'Onglet 3
+      à l'activation de celui-ci :
         · SeriesTabItem (Header bindé sur Label_P11_01 via le TextBlock
           SeriesTabHeader) — contient un Border SeriesDetailsBorder englobant un Grid
           SeriesDetailsGrid à 2 colonnes (300, *) et 7 lignes (MinHeight=40).
@@ -59,22 +64,39 @@ Structure visuelle :
           PartialSeriesIndex et MainSalesPointName, aux mêmes largeurs. Aucune
           sélection n'est exploitée ; aucun SelectedItem n'est lié.
         · FramesTabItem (Header bindé sur Label_P11_03 via le TextBlock
-          FramesTabHeader) — corps vide.
+          FramesTabHeader) — contient un Grid FramesGrid à 1 colonne (*) et 2 lignes
+          (MinHeight=40 ; Height=auto), dont l'unique enfant est un StackPanel
+          empilant un Border d'en-têtes FramesHeaderBorder et un ScrollViewer
+          FramesScrollViewer. Le Border englobe un StackPanel horizontal de
+          11 TextBlocks d'en-tête (FramesHeader01..11) bindés sur Label_P11_14..24, de
+          largeur uniforme 50. Le ScrollViewer porte la ListView FramesListView, dont
+          l'ItemsSource est bindé sur SeriesProductionChassis et dont l'ItemTemplate
+          rend chaque DTO_VwProductionChassisFull_P11 en un StackPanel horizontal de
+          11 TextBlocks non nommés bindés sur PCSeriesPosition, PCCustomerPosition,
+          PCBarcodeId, PCQuantity, PCWindowSystemCode, PCElementHeight,
+          PCElementWidth, PCColorNameIntExt, PCWindowText, PCSlidingTypeDetailed et
+          PCOpeningTypeText, aux mêmes largeurs. L'onglet est purement descriptif :
+          aucun indicateur d'avancement, la notion de progression n'existant pas au
+          niveau du châssis. Aucune sélection n'est exploitée ; aucun SelectedItem
+          n'est lié.
         · BarsTabItem (Header bindé sur Label_P11_04 via le TextBlock BarsTabHeader)
           — corps vide.
         · CuttingsTabItem (Header bindé sur Label_P11_05 via le TextBlock
           CuttingsTabHeader) — corps vide.
 
 Bindings principaux :
-    24 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
-    4 bindings par l'élément CustomerOrder courant du gabarit d'éléments de la
-    ListView de l'Onglet 2 — soit 28 bindings au total.
+    36 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
+    15 bindings par l'élément courant des gabarits d'éléments des deux ListView —
+    4 par l'élément CustomerOrder de l'Onglet 2 et 11 par l'élément
+    DTO_VwProductionChassisFull_P11 de l'Onglet 3 — soit 51 bindings au total.
 
     Portés par le DataContext de page :
-    - 16 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
+    - 27 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
       TabItem), Label_P11_06..09 et Label_P11_46..48 (sept intitulés de la fiche de
       synthèse de l'Onglet 1), Label_P11_10..13 (quatre intitulés de colonnes du
-      tableau des commandes de l'Onglet 2). Propriétés observables string exposées par
+      tableau des commandes de l'Onglet 2), Label_P11_14..24 (onze intitulés de
+      colonnes du tableau des châssis de l'Onglet 3). Propriétés observables string
+      exposées par
       VM_Page11, miroirs des libellés associés aux clés homonymes du dictionnaire de
       langue actif. Rechargées automatiquement à tout changement de langue dynamique
       par abonnement INPC à ISE_App.AppCultureCode dans VM_Generic (R-4.11.9 du 0231).
@@ -85,16 +107,29 @@ Bindings principaux :
       le point d'extension OnLoadedAsync du code-behind. En cas d'enregistrement
       introuvable, elles conservent leurs valeurs d'initialisation et la fiche
       s'affiche vide.
-    - 1 binding de collection : SeriesCustomerOrders sur l'ItemsSource de la ListView
-      OrdersListView. Collection observable alimentée par le même override LoadAsync,
-      après lecture filtrée sur la série retenue et tri en mémoire. Elle n'est pas
-      rechargée au changement de langue, son contenu ne dépendant pas de la culture
-      active. En cas de série introuvable ou de liste vide, le tableau s'affiche vide.
+    - 2 bindings de collection : SeriesCustomerOrders sur l'ItemsSource de la ListView
+      OrdersListView, et SeriesProductionChassis sur celui de la ListView
+      FramesListView. La première est alimentée par l'override LoadAsync, après
+      lecture filtrée sur la série retenue et tri en mémoire ; la seconde par la
+      méthode publique additionnelle LoadChassisAsync, invoquée non pas au montage de
+      la page mais à l'activation de l'Onglet 3, et rejouée à chaque activation
+      ultérieure. Ni l'une ni l'autre n'est
+      rechargée au changement de langue, leur contenu ne dépendant pas de la culture
+      active. En cas de série introuvable ou de liste vide, le tableau concerné
+      s'affiche vide.
 
-    Portés par l'élément CustomerOrder du gabarit d'éléments :
-    - 4 bindings de données de commande : IdOrder, ProjectDesignation,
+    Portés par l'élément courant des gabarits d'éléments :
+    - 4 bindings de données de commande (Onglet 2) : IdOrder, ProjectDesignation,
       PartialSeriesIndex et MainSalesPointName, résolus sur l'élément courant de la
       collection et non sur le DataContext de page.
+    - 11 bindings de données de châssis (Onglet 3) : PCSeriesPosition,
+      PCCustomerPosition, PCBarcodeId, PCQuantity, PCWindowSystemCode,
+      PCElementHeight, PCElementWidth, PCColorNameIntExt, PCWindowText,
+      PCSlidingTypeDetailed et PCOpeningTypeText, résolus de même sur l'élément
+      courant de la collection. Les cinq champs de service de l'objet de transport
+      (PSId, PCId, COIdOrder, COPartialSeriesIndex, PCOrderPosition) ne sont pas
+      bindés : les trois derniers portent les critères d'ordonnancement appliqués en
+      mémoire par le ViewModel et ne sont jamais affichés.
 
 Remarques techniques :
     - Aucune chaîne UI en dur (I-4.11.1 du 0231) : tout texte affiché est issu d'un
@@ -106,7 +141,10 @@ Remarques techniques :
       porte aucun texte UI.
     - Mode=OneWay explicite sur les deux liaisons de date : UT_DateFormatConverter
       lève NotSupportedException sur ConvertBack, par contrainte technique du
-      converter lui-même.
+      converter lui-même. Aucun Mode explicite n'est posé sur les onze liaisons du
+      tableau des châssis de l'Onglet 3, à parité avec les quatre TextBlocks du
+      gabarit d'éléments de l'Onglet 2 : la contrainte technique du converter est
+      absente ici, et le mode par défaut suffit.
     - Les trois CheckBox de la colonne 1 ne sont pas stylisées par le code-behind.
       Le contrat IS_ControlStyler n'expose aucune méthode dédiée à ce type de
       contrôle ; les trois cases conservent le rendu par défaut du framework WPF.
@@ -118,7 +156,21 @@ Remarques techniques :
       aucune TargetNullValue, aucune FallbackValue, aucun convertisseur n'est posé.
       Un marqueur littéral constituerait une chaîne UI en dur, prohibée par I-4.11.1
       du 0231.
-    - Les quatre TextBlocks du gabarit d'éléments de OrdersListView ne sont pas
+    - Les huit colonnes nullables du tableau des châssis (PCCustomerPosition,
+      PCWindowSystemCode, PCElementHeight, PCElementWidth, PCColorNameIntExt,
+      PCWindowText, PCSlidingTypeDetailed, PCOpeningTypeText) suivent le même
+      précédent : cellule vide en l'absence de valeur, sans TargetNullValue,
+      FallbackValue ni convertisseur.
+    - Aucun convertisseur de troncature n'est posé sur les onze colonnes de
+      l'Onglet 3, malgré l'étroitesse des colonnes au regard des trois libellés
+      descriptifs. La largeur uniforme de 50 est une valeur de départ délibérée ;
+      l'ajustement fin est renvoyé au contrôle visuel et relèvera d'un fil ultérieur.
+    - Vocabulaire des identifiants : la présente vue nomme l'onglet et ses contrôles
+      Frames, en cohérence avec l'en-tête FramesTabItem déjà en place ; le ViewModel
+      nomme la matière Chassis, en cohérence avec le type transporté et le contrat
+      consommé. Cette scission est délibérée, chaque côté restant cohérent avec son
+      propre référent ; elle ne constitue pas une divergence à corriger.
+    - Les TextBlocks des gabarits d'éléments des deux ListView ne sont pas
       nommés : instanciés par le DataTemplate à chaque élément, ils ne sont pas
       résolubles par FindName et leur rendu relève de StyleListView appliqué à la
       ListView elle-même.
@@ -126,22 +178,28 @@ Remarques techniques :
       d'IS_ControlStyler (StylePage, StyleTabControl, StyleTabItem, StyleBorder,
       StyleBorderHeader, StyleTextBlockTitle, StyleTextBlockData, StyleScrollViewer,
       StyleListView) et par le calcul dimensionnel d'OnResized (MainTabControl, dont
-      la hauteur est ajustée directement, et OrdersScrollViewer, dont la hauteur en
-      est dérivée) — toute modification casserait la stylisation ou le
+      la hauteur est ajustée directement, OrdersScrollViewer et FramesScrollViewer,
+      dont les hauteurs en sont dérivées) — toute modification casserait la
+      stylisation ou le
       redimensionnement appliqués au Loaded et au SizeChanged par le code-behind.
-      Les Grids SeriesDetailsGrid et OrdersGrid sont nommés sans être stylisés : le
-      contrat n'expose aucune méthode de stylisation de Grid interne.
+      MainTabControl porte en outre l'abonnement programmatique à SelectionChanged
+      posé au constructeur du code-behind.
+      Les Grids SeriesDetailsGrid, OrdersGrid et FramesGrid sont nommés sans être
+      stylisés : le contrat n'expose aucune méthode de stylisation de Grid interne.
     - La stylisation visuelle (couleurs, polices, dimensions, mise en forme) est
       intégralement appliquée au Loaded par le code-behind via IS_ControlStyler dans
       l'override ApplyLayout ; aucun style WPF n'est défini ici. Les valeurs
       dimensionnelles portées par le présent XAML sont la géométrie de la Grid de
       fiche de l'Onglet 1 (largeurs de colonnes, hauteurs minimales de lignes), le
       Padding vertical du Border de fiche, la géométrie de la Grid de l'Onglet 2 et
-      les quatre largeurs de colonnes du tableau des commandes, portées en dur sur
+      les quatre largeurs de colonnes du tableau des commandes, ainsi que la
+      géométrie de la Grid de l'Onglet 3 et les onze largeurs de colonnes du tableau
+      des châssis, portées en dur sur
       les en-têtes comme sur le gabarit d'éléments à parité avec l'étalon Page01.
       Aucune ressource sys:Double ni constante de centralisation n'est introduite.
-      Les quatre colonnes totalisent 500 unités et tiennent dans la largeur
-      disponible : aucun défilement horizontal n'est prévu.
+      Les quatre colonnes de l'Onglet 2 totalisent 500 unités et les onze colonnes de
+      l'Onglet 3 totalisent 550 unités ; les unes et les autres tiennent dans la
+      largeur disponible : aucun défilement horizontal n'est prévu.
     - Aucun chargement de libellé depuis ce fichier ni depuis son code-behind
       (I-4.11.10 du 0231) ; les libellés sont chargés exclusivement par l'override
       LoadLabels de VM_Page11.
@@ -235,9 +293,9 @@ Remarques techniques :
                         <Border x:Name="OrdersHeaderBorder">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Name="OrdersHeader01" Text="{Binding Label_P11_10}" Width="100"/>
-                                <TextBlock x:Name="OrdersHeader02" Text="{Binding Label_P11_11}" Width="150"/>
+                                <TextBlock x:Name="OrdersHeader02" Text="{Binding Label_P11_11}" Width="300"/>
                                 <TextBlock x:Name="OrdersHeader03" Text="{Binding Label_P11_12}" Width="100"/>
-                                <TextBlock x:Name="OrdersHeader04" Text="{Binding Label_P11_13}" Width="150"/>
+                                <TextBlock x:Name="OrdersHeader04" Text="{Binding Label_P11_13}" Width="300"/>
                             </StackPanel>
                         </Border>
 
@@ -248,9 +306,9 @@ Remarques techniques :
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding IdOrder}"             Width="100"/>
-                                            <TextBlock Text="{Binding ProjectDesignation}"  Width="150"/>
+                                            <TextBlock Text="{Binding ProjectDesignation}"  Width="300"/>
                                             <TextBlock Text="{Binding PartialSeriesIndex}"  Width="100"/>
-                                            <TextBlock Text="{Binding MainSalesPointName}"  Width="150"/>
+                                            <TextBlock Text="{Binding MainSalesPointName}"  Width="300"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -261,12 +319,64 @@ Remarques techniques :
             </TabItem>
 
             <!-- ============================================================ -->
-            <!-- Onglet 3 — Châssis (corps à produire)                        -->
+            <!-- Onglet 3 — Châssis de la série                               -->
             <!-- ============================================================ -->
             <TabItem x:Name="FramesTabItem">
                 <TabItem.Header>
                     <TextBlock x:Name="FramesTabHeader" Text="{Binding Label_P11_03}"/>
                 </TabItem.Header>
+
+                <Grid x:Name="FramesGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- En-têtes de colonnes -->
+                        <Border x:Name="FramesHeaderBorder">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="FramesHeader01" Text="{Binding Label_P11_14}" Width="40"/>
+                                <TextBlock x:Name="FramesHeader02" Text="{Binding Label_P11_15}" Width="200"/>
+                                <TextBlock x:Name="FramesHeader03" Text="{Binding Label_P11_16}" Width="100"/>
+                                <TextBlock x:Name="FramesHeader04" Text="{Binding Label_P11_17}" Width="40"/>
+                                <TextBlock x:Name="FramesHeader05" Text="{Binding Label_P11_18}" Width="120"/>
+                                <TextBlock x:Name="FramesHeader06" Text="{Binding Label_P11_19}" Width="80"/>
+                                <TextBlock x:Name="FramesHeader07" Text="{Binding Label_P11_20}" Width="80"/>
+                                <TextBlock x:Name="FramesHeader08" Text="{Binding Label_P11_21}" Width="300"/>
+                                <TextBlock x:Name="FramesHeader09" Text="{Binding Label_P11_22}" Width="400"/>
+                                <TextBlock x:Name="FramesHeader10" Text="{Binding Label_P11_23}" Width="200"/>
+                                <TextBlock x:Name="FramesHeader11" Text="{Binding Label_P11_24}" Width="200"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Liste des châssis qui composent la série -->
+                        <ScrollViewer x:Name="FramesScrollViewer">
+                            <ListView x:Name="FramesListView" ItemsSource="{Binding SeriesProductionChassis}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding PCSeriesPosition}"      Width="40"/>
+                                            <TextBlock Text="{Binding PCCustomerPosition}"    Width="200"/>
+                                            <TextBlock Text="{Binding PCBarcodeId}"           Width="100"/>
+                                            <TextBlock Text="{Binding PCQuantity}"            Width="40"/>
+                                            <TextBlock Text="{Binding PCWindowSystemCode}"    Width="120"/>
+                                            <TextBlock Text="{Binding PCElementHeight}"       Width="80"/>
+                                            <TextBlock Text="{Binding PCElementWidth}"        Width="80"/>
+                                            <TextBlock Text="{Binding PCColorNameIntExt}"     Width="300"/>
+                                            <TextBlock Text="{Binding PCWindowText}"          Width="400"/>
+                                            <TextBlock Text="{Binding PCSlidingTypeDetailed}" Width="200"/>
+                                            <TextBlock Text="{Binding PCOpeningTypeText}"     Width="200"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
             </TabItem>
 
             <!-- ============================================================ -->
