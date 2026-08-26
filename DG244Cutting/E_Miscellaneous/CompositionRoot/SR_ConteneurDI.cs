@@ -161,6 +161,13 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             // Sa dépendance est IDbContextFactory (Singleton) ; aucune captive dependency.
             services.AddSingleton<IR_UserAppErrorLog, CR_UserAppErrorLog>();
 
+            // CR spécialisé Patron 2 sur la vue vw_ProductionBar_Full — projection SQL des
+            // dix-huit champs sur quatre-vingt-deux, pour le quatrième onglet de la Page11.
+            // Portée déterminée par la dépendance au DbContext partagé (P4-bis) -> Scoped.
+            // La résolution du type abstrait DbContext vers DigitTryDbContext est déjà en place
+            // (cf. RDI_PersistenceGestStock, point (2)) : aucun ajout n'est requis ici.
+            services.AddScoped<IR_VwProductionBarFull, CR_VwProductionBarFull>();
+
             // CR spécialisé Patron 2 sur la vue vw_ProductionChassis_Full — projection SQL des
             // seize champs du troisième onglet de la Page11.
             // Portée déterminée par la dépendance au DbContext partagé (P4-bis) -> Scoped.
