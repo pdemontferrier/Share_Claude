@@ -18,7 +18,9 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Presentation
         void StyleScrollViewer(ScrollViewer scrollViewer, TextBlock? titleText = null, Border? headerBorder = null,
                 TextBlock? headerText01 = null, TextBlock? headerText02 = null, TextBlock? headerText03 = null, TextBlock? headerText04 = null,
                 TextBlock? headerText05 = null, TextBlock? headerText06 = null, TextBlock? headerText07 = null, TextBlock? headerText08 = null,
-                TextBlock? headerText09 = null, TextBlock? headerText10 = null, TextBlock? headerText11 = null);
+                TextBlock? headerText09 = null, TextBlock? headerText10 = null, TextBlock? headerText11 = null, TextBlock? headerText12 = null,
+                TextBlock? headerText13 = null, TextBlock? headerText14 = null, TextBlock? headerText15 = null, TextBlock? headerText16 = null,
+                TextBlock? headerText17 = null, TextBlock? headerText18 = null, TextBlock? headerText19 = null, TextBlock? headerText20 = null);
         void StyleListView(ListView listView);
         void StyleDataGrid(DataGrid dataGrid, SolidColorBrush? rowForeground = null);
         void StyleAppInfoDoc(FlowDocument AppInfoDoc);

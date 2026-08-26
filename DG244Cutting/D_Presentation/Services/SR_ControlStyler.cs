@@ -32,9 +32,12 @@ namespace DG244Cutting.D_Presentation.Services
         public void StyleScrollViewer(ScrollViewer scrollViewer, TextBlock? titleText = null, Border? headerBorder = null,
                                 TextBlock? headerText01 = null, TextBlock? headerText02 = null, TextBlock? headerText03 = null, TextBlock? headerText04 = null,
                                 TextBlock? headerText05 = null, TextBlock? headerText06 = null, TextBlock? headerText07 = null, TextBlock? headerText08 = null,
-                                TextBlock? headerText09 = null, TextBlock? headerText10 = null, TextBlock? headerText11 = null)
+                                TextBlock? headerText09 = null, TextBlock? headerText10 = null, TextBlock? headerText11 = null, TextBlock? headerText12 = null,
+                                TextBlock? headerText13 = null, TextBlock? headerText14 = null, TextBlock? headerText15 = null, TextBlock? headerText16 = null,
+                                TextBlock? headerText17 = null, TextBlock? headerText18 = null, TextBlock? headerText19 = null, TextBlock? headerText20 = null)
                                 => ControlStyler.StyleScrollViewer(scrollViewer, titleText, headerBorder, headerText01, headerText02, headerText03, headerText04,
-                                    headerText05, headerText06, headerText07, headerText08, headerText09, headerText10, headerText11);
+                                    headerText05, headerText06, headerText07, headerText08, headerText09, headerText10, headerText11, headerText12, headerText13,
+                                    headerText14, headerText15, headerText16, headerText17, headerText18, headerText19, headerText20);
         public void StyleListView(ListView listView) => ControlStyler.StyleListView(listView);
         public void StyleDataGrid(DataGrid dataGrid, SolidColorBrush? rowForeground = null) => ControlStyler.StyleDataGrid(dataGrid, rowForeground);
         public void StyleAppInfoDoc(FlowDocument AppInfoDoc) => ControlStyler.StyleAppInfoDoc(AppInfoDoc);
