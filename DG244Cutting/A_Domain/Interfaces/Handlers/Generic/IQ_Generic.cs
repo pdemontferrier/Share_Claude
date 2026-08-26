@@ -37,6 +37,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
     /// </typeparam>
     public interface IQ_Generic<T> where T : class
     {
+        #region === Méthodes publiques ===
+
         /// <summary>
         /// Retourne l'entité correspondant à l'identifiant spécifié, ou <see langword="null"/> si absente.
         /// </summary>
@@ -327,5 +329,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
         Task<bool> HandleAnyByPredicateAsync(string caller, Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+
+        #endregion
     }
 }

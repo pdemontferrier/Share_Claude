@@ -148,6 +148,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             services.AddScoped<IQ_UserAppSession, QH_UserAppSession>();
 
             // Queries spécialisées — Repository spécialisé — lecture via le DbContext partagé -> Scoped.
+            services.AddScoped<IQ_VwProductionBarFull, QH_VwProductionBarFull>();
             services.AddScoped<IQ_VwProductionChassisFull, QH_VwProductionChassisFull>();
 
         }

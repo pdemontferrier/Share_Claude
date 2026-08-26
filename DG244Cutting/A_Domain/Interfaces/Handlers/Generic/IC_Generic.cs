@@ -53,6 +53,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
     /// </typeparam>
     public interface IC_Generic<T> where T : class
     {
+        #region === Méthodes publiques ===
+
         /// <summary>
         /// Inscrit une entité en création dans le contexte EF Core, positionne <c>CreatedAt</c>
         /// à la date UTC courante, et enregistre l'événement correspondant dans l'Event Store.
@@ -184,5 +186,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
         Task HandleSoftDeleteAsync(string caller, int id, CancellationToken ct = default);
+
+        #endregion
     }
 }
