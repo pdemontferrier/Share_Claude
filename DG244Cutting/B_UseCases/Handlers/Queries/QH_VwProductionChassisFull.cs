@@ -25,7 +25,7 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
     /// <para>
     /// Objectif : exposer à la couche des cas d'usage la composition physique d'une série de
     /// production, à raison d'une ligne par châssis, réduite aux seize champs utiles au troisième
-    /// onglet de la Page11. Le consommateur prévu est un service métier <c>SR_</c>, qui applique
+    /// onglet de la Page11. Le consommateur prévu est un viewModel <c>VM_Page11</c>, qui applique
     /// le tri et la mise en forme et qui atteint la présente classe par son seul contrat.
     /// </para>
     /// <para>

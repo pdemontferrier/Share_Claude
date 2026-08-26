@@ -417,7 +417,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             if (!dto.IsDropBarSupplied) return "Page11";
             if (!dto.IsNewBarSupplied) return "Page12";
             if (dto.Status == En_ProductionSeriesStatus.Completed) return "Page13";
-            return "Page20";
+            return "Page11";
         }
 
         #endregion

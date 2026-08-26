@@ -206,9 +206,9 @@ Remarques techniques :
                         <TextBlock x:Name="ProductionEndDateData"    Grid.Row="3" Grid.Column="1" Text="{Binding ProductionEndDate, Converter={StaticResource DateFormatConverter}, Mode=OneWay}"/>
 
                         <!-- Colonne 1 — Indicateurs d'avancement, en lecture seule -->
-                        <CheckBox x:Name="CuttingStartedCheckBox"    Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsCuttingStarted}"   IsEnabled="False"/>
-                        <CheckBox x:Name="CuttingCompletedCheckBox"  Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsCuttingCompleted}" IsEnabled="False"/>
-                        <CheckBox x:Name="BarOutOfStockCheckBox"     Grid.Row="6" Grid.Column="1" IsChecked="{Binding IsBarOutOfStock}"    IsEnabled="False"/>
+                        <CheckBox x:Name="CuttingStartedCheckBox"    Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsCuttingStarted, Mode=OneWay}"   IsEnabled="False"/>
+                        <CheckBox x:Name="CuttingCompletedCheckBox"  Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsCuttingCompleted, Mode=OneWay}" IsEnabled="False"/>
+                        <CheckBox x:Name="BarOutOfStockCheckBox"     Grid.Row="6" Grid.Column="1" IsChecked="{Binding IsBarOutOfStock, Mode=OneWay}"    IsEnabled="False"/>
                     </Grid>
                 </Border>
             </TabItem>

@@ -550,6 +550,7 @@
         <Resource Include="D_Presentation\Resources\Icons\RE_cancelCircle.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
         <Resource Include="D_Presentation\Resources\Icons\RE_checked.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
         <Resource Include="D_Presentation\Resources\Icons\RE_checkedCircle.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+        <Resource Include="D_Presentation\Resources\Icons\RE_cuttingScrapStock.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
         <Resource Include="D_Presentation\Resources\Icons\RE_dashboard.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
         <Resource Include="D_Presentation\Resources\Icons\RE_documentEdit.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
         <Resource Include="D_Presentation\Resources\Icons\RE_documentPrint.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
