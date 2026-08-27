@@ -114,9 +114,10 @@ namespace DG244Cutting.A_Domain.Interfaces.Repositories.DIGIT_TRY
     /// </para>
     /// <para>
     /// Cette conséquence est assumée. L'extension du contrat générique est la forme canonique de
-    /// la famille (§3.2 du 0232-CR) ; la contrainte du socle n'exige qu'un type référence, ce que
-    /// la vue satisfait ; l'héritage est valide à la compilation. La restriction porte sur l'usage
-    /// et non sur la structure, et elle est portée par le présent avertissement.
+    /// la famille (Patron 2 « Extension par dérivation », §4.15.2 du 0230) ; la contrainte du
+    /// socle n'exige qu'un type référence, ce que la vue satisfait ; l'héritage est valide à la
+    /// compilation. La restriction porte sur l'usage et non sur la structure, et elle est portée
+    /// par le présent avertissement.
     /// </para>
     /// </remarks>
     public interface IR_VwProductionChassisFull : IR_Generic<vw_ProductionChassis_Full>
