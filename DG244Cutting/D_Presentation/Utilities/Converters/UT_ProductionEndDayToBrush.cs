@@ -97,22 +97,22 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
         private static readonly Brush _brushViolet = CreateFrozen(Color.FromRgb(133, 14, 88));
 
         /// <summary>Fond du code 1 (Bleu).</summary>
-        private static readonly Brush _brushBleu = CreateFrozen(Colors.Blue);
+        private static readonly Brush _brushBlue = CreateFrozen(Colors.Blue);
 
         /// <summary>Fond du code 2 (Orange).</summary>
         private static readonly Brush _brushOrange = CreateFrozen(Color.FromRgb(255, 103, 20));
 
         /// <summary>Fond du code 3 (Jaune).</summary>
-        private static readonly Brush _brushJaune = CreateFrozen(Color.FromRgb(227, 179, 12));
+        private static readonly Brush _brushYellow = CreateFrozen(Color.FromRgb(227, 179, 12));
 
         /// <summary>Fond du code 4 (Rouge).</summary>
-        private static readonly Brush _brushRouge = CreateFrozen(Colors.Red);
+        private static readonly Brush _brushRed = CreateFrozen(Colors.Red);
 
         /// <summary>Fond du code 5 (Rose).</summary>
-        private static readonly Brush _brushRose = CreateFrozen(Color.FromRgb(255, 174, 201));
+        private static readonly Brush _brushPink = CreateFrozen(Color.FromRgb(255, 174, 201));
 
         /// <summary>Fond du code 6 (Ocre).</summary>
-        private static readonly Brush _brushOcre = CreateFrozen(Color.FromRgb(242, 147, 36));
+        private static readonly Brush _brushOcher = CreateFrozen(Color.FromRgb(242, 147, 36));
 
         #endregion
 
@@ -185,12 +185,12 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
             return code switch
             {
                 0 => _brushViolet,
-                1 => _brushBleu,
+                1 => _brushBlue,
                 2 => _brushOrange,
-                3 => _brushJaune,
-                4 => _brushRouge,
-                5 => _brushRose,
-                6 => _brushOcre,
+                3 => _brushYellow,
+                4 => _brushRed,
+                5 => _brushPink,
+                6 => _brushOcher,
                 _ => Brushes.Transparent,
             };
         }
