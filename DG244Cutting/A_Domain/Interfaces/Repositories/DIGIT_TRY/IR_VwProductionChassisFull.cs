@@ -148,8 +148,9 @@ namespace DG244Cutting.A_Domain.Interfaces.Repositories.DIGIT_TRY
         /// </param>
         /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <returns>
-        /// Liste des châssis projetés de la série demandée. Liste vide si la série ne comporte
-        /// aucun châssis : ce résultat est nominal et ne constitue pas une erreur.
+        /// Liste des châssis projetés de la série demandée, jamais <see langword="null"/>, dans un
+        /// ordre indéterminé. Liste vide si la série ne comporte aucun châssis : ce résultat est
+        /// nominal et ne constitue pas une erreur.
         /// </returns>
         /// <exception cref="Ex_Business">
         /// Levée si l'identifiant de série fourni est inférieur ou égal à zéro

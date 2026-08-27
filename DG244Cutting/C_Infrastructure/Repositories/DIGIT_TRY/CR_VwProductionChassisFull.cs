@@ -81,6 +81,12 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     ///     champ : la projection est une recopie terme à terme, types et nullabilité inclus.
     ///   </description></item>
     ///   <item><description>
+    ///     N'applique aucun filtrage sur un indicateur de suppression logique et ne recourt pas à
+    ///     <c>IgnoreQueryFilters</c> : aucun filtre global n'est configuré sur le contexte de
+    ///     données, et la vue n'expose aucun indicateur de ce type parmi ses colonnes, alors que
+    ///     sa table pilote <c>ProductionChassis</c> en porte un.
+    ///   </description></item>
+    ///   <item><description>
     ///     Ne journalise pas et ne notifie pas : ces responsabilités appartiennent aux couches
     ///     amont (§3.6, §4.8 du 0230).
     ///   </description></item>
@@ -97,10 +103,21 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     {
         #region === Propriétés privées ===
 
-        // Aucune propriété privée spécifique. Le nom du composant utilisé dans la CallChain est
-        // résolu localement par GetType().Name, conformément à l'exemple canonique §3.2 du
-        // 0232-CR : le champ _callee de CR_Generic<T> est déclaré private et n'est donc pas
-        // accessible depuis la présente classe dérivée.
+        /// <summary>
+        /// Nom du composant courant, résolu dynamiquement pour la construction de la CallChain.
+        /// </summary>
+        /// <remarks>
+        /// Ce champ double, sans le remplacer, le champ homonyme de <see cref="CR_Generic{T}"/> :
+        /// ce dernier est déclaré <c>private</c> dans le socle et n'est donc pas accessible depuis
+        /// une classe dérivée, <c>CR_Generic&lt;T&gt;</c> n'exposant que <c>_context</c> à sa
+        /// surface protégée (R-4.15.4 du 0231, §4.15.2 du 0230). Sa déclaration en région
+        /// <c>=== Propriétés privées ===</c> et son initialisation en constructeur sont
+        /// obligatoires pour toute classe participant à la CallChain (R-4.4.4, R-4.4.5, R-4.5.5 et
+        /// R-4.5.6 du 0231). §4.15.4 du 0230 tire explicitement la même conséquence pour la
+        /// famille sœur des Query Handlers : le dérivé re-déclare <c>_callee</c> et ré-injecte
+        /// <c>_classifier</c> pour son propre bloc de capture.
+        /// </remarks>
+        private readonly string _callee;
 
         #endregion
 
@@ -115,10 +132,14 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// <remarks>
         /// Ce champ double, sans le remplacer, le champ homonyme de <see cref="CR_Generic{T}"/> :
         /// ce dernier est déclaré <c>private</c> dans le socle et n'est donc pas accessible depuis
-        /// une classe dérivée. Le paramètre reçu au constructeur est à la fois transmis à
-        /// <c>base</c>, pour l'initialisation du socle, et conservé ici, pour l'usage propre de la
-        /// présente classe. Le socle n'est pas modifié : il relève du régime de stabilité de
-        /// §3.14.3 du 0230 et de la doctrine du patrimoine fermé de §4.15.1.
+        /// une classe dérivée. <c>CR_Generic&lt;T&gt;</c> n'expose qu'un seul membre
+        /// <c>protected</c> à ses dérivés, le champ <c>_context</c> ; un Repository spécialisé qui
+        /// ajoute ses propres méthodes consomme <see cref="IS_ExClassifier"/> par injection dans
+        /// son propre constructeur (R-4.15.4 du 0231, §4.15.2 du 0230, sous-bloc « Surface
+        /// protégée pour la dérivation »). Le paramètre reçu au constructeur est à la fois
+        /// transmis à <c>base</c>, pour l'initialisation du socle, et conservé ici, pour l'usage
+        /// propre de la présente classe. Le socle n'est pas modifié : il relève du régime de
+        /// stabilité de §3.14.3 du 0230 et de la doctrine du patrimoine fermé de §4.15.1.
         /// </remarks>
         private readonly IS_ExClassifier _classifier;
 
@@ -130,7 +151,8 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// <summary>
         /// Initialise une instance de <see cref="CR_VwProductionChassisFull"/> en propageant le
         /// DbContext partagé et le classificateur d'exceptions au constructeur de la classe de
-        /// base, et en conservant localement le classificateur.
+        /// base, en conservant localement le classificateur, puis en résolvant le nom du composant
+        /// utilisé dans la CallChain.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -144,6 +166,13 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// <c>DigitTryDbContext</c> en portée Scoped ; aucun enregistrement supplémentaire n'est
         /// requis. Le contexte n'est pas stocké localement : le champ <c>_context</c> du socle est
         /// <c>protected</c> et directement utilisable.
+        /// </para>
+        /// <para>
+        /// L'ordre des opérations du corps suit R-4.4.7 du 0231 : affectation des dépendances
+        /// injectées, puis initialisation du champ <c>_callee</c> par <c>GetType().Name</c>
+        /// (R-4.5.6 du 0231). La résolution au type runtime rend le segment de CallChain exact en
+        /// cas de renommage de la classe comme en cas de dérivation ultérieure, et exclut tout
+        /// codage en dur du nom de classe (§4.5.2 du 0230).
         /// </para>
         /// </remarks>
         /// <param name="context">
@@ -162,6 +191,7 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
             : base(context, classifier)
         {
             _classifier = classifier ?? throw new ArgumentNullException(nameof(classifier));
+            _callee = GetType().Name;
         }
 
         #endregion
@@ -187,6 +217,12 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// mémoire après extraction.
         /// </para>
         /// <para>
+        /// Aucun filtrage n'est appliqué sur un indicateur de suppression logique, et aucun
+        /// recours n'est fait à <c>IgnoreQueryFilters</c> : aucun filtre global n'est configuré
+        /// sur le contexte de données, et la vue n'expose aucun indicateur de ce type parmi ses
+        /// colonnes, alors que sa table pilote <c>ProductionChassis</c> en porte un.
+        /// </para>
+        /// <para>
         /// L'appel à <c>AsNoTracking</c> est sans effet sur un type déclaré sans clé, qu'EF Core
         /// ne trace jamais, et sur une requête projetée vers un type non entité. Il est néanmoins
         /// conservé : il documente l'intention de lecture pure et aligne le corps sur l'étalon
@@ -202,8 +238,9 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// </param>
         /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <returns>
-        /// Liste des châssis projetés de la série demandée. Liste vide si la série ne comporte
-        /// aucun châssis : ce résultat est nominal et ne constitue pas une erreur.
+        /// Liste des châssis projetés de la série demandée, jamais <see langword="null"/>, dans un
+        /// ordre indéterminé. Liste vide si la série ne comporte aucun châssis : ce résultat est
+        /// nominal et ne constitue pas une erreur.
         /// </returns>
         /// <exception cref="Ex_Business">
         /// Levée si l'identifiant de série fourni est inférieur ou égal à zéro
@@ -221,7 +258,7 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
             int productionSeriesId,
             CancellationToken ct = default)
         {
-            string callChain = $"{caller} > {GetType().Name} > {nameof(GetByProductionSeriesIdForP11AsNoTrackingAsync)}";
+            string callChain = $"{caller} > {_callee} > {nameof(GetByProductionSeriesIdForP11AsNoTrackingAsync)}";
 
             try
             {
