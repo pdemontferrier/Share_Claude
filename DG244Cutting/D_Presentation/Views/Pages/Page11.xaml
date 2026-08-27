@@ -359,17 +359,17 @@ Remarques techniques :
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding PCSeriesPosition}"      Width="40"/>
-                                            <TextBlock Text="{Binding PCCustomerPosition}"    Width="200"/>
-                                            <TextBlock Text="{Binding PCBarcodeId}"           Width="100"/>
-                                            <TextBlock Text="{Binding PCQuantity}"            Width="40"/>
-                                            <TextBlock Text="{Binding PCWindowSystemCode}"    Width="120"/>
-                                            <TextBlock Text="{Binding PCElementHeight}"       Width="80"/>
-                                            <TextBlock Text="{Binding PCElementWidth}"        Width="80"/>
-                                            <TextBlock Text="{Binding PCColorNameIntExt}"     Width="300"/>
-                                            <TextBlock Text="{Binding PCWindowText}"          Width="400"/>
-                                            <TextBlock Text="{Binding PCSlidingTypeDetailed}" Width="200"/>
-                                            <TextBlock Text="{Binding PCOpeningTypeText}"     Width="200"/>
+                                            <TextBlock Text="{Binding PCSeriesPosition}"                             Width="40"/>
+                                            <TextBlock Text="{Binding PCCustomerPosition}"                           Width="200"/>
+                                            <TextBlock Text="{Binding PCBarcodeId}"                                  Width="100"/>
+                                            <TextBlock Text="{Binding PCQuantity}"                                   Width="40"/>
+                                            <TextBlock Text="{Binding PCWindowSystemCode}"                           Width="120"/>
+                                            <TextBlock Text="{Binding PCElementHeight, StringFormat={}{0:N0}}"       Width="80"/>
+                                            <TextBlock Text="{Binding PCElementWidth, StringFormat={}{0:N0}}"        Width="80"/>
+                                            <TextBlock Text="{Binding PCColorNameIntExt}"                            Width="300"/>
+                                            <TextBlock Text="{Binding PCWindowText}"                                 Width="400"/>
+                                            <TextBlock Text="{Binding PCSlidingTypeDetailed}"                        Width="200"/>
+                                            <TextBlock Text="{Binding PCOpeningTypeText}"                            Width="200"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
