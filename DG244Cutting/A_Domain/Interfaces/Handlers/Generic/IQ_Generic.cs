@@ -14,7 +14,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
     /// B_UseCases/Handlers/Generic/.
     /// </para>
     /// <para>
-    /// Positionnement CQRS : les méthodes exposées ici sont exclusivement des opérations
+    /// Objectif (positionnement CQRS) : les méthodes exposées ici sont exclusivement des opérations
     /// de lecture (Queries). Elles ne modifient jamais l'état du système et ne déclenchent
     /// aucun enregistrement Event Store. Les opérations d'écriture relèvent des Command Handlers
     /// (<c>IC_*</c>) et sont intentionnellement absentes de ce contrat.

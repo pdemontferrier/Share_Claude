@@ -8,29 +8,29 @@ using DG244Cutting.B_UseCases.Handlers.Generic;
 namespace DG244Cutting.B_UseCases.Handlers.Queries
 {
     /// <summary>
-    /// <para>Description</para>
+    /// QueryHandler (QH) dédié à l’entité <see cref="AppList"/>.
+    /// </summary>
+    /// <remarks>
     /// <para>
-    /// QueryHandler (QH) dédié à l’entité <see cref="AppList"/>. Il hérite de
+    /// Contexte : consommé en lecture par les composants amont autorisés par §4.14.9 du 0230,
+    /// via le contrat <see cref="IQ_AppList"/>. Aucun appel EF Core n’est porté
+    /// ici : le test d’existence est traduit en <c>SELECT TOP 1 1 WHERE ...</c>
+    /// côté SGBD, sans matérialisation d’entité, l’accès au DbContext étant
+    /// encapsulé dans <c>CR_Generic&lt;AppList&gt;</c> (R-4.14.11, R-4.15.12).
+    /// </para>
+    /// <para>
+    /// Il hérite de
     /// <see cref="QH_Generic{T}"/> (socle de lecture obligatoire) et y ajoute une
     /// lecture spécialisée par clé fonctionnelle, sans repository spécialisé : la
     /// vérification d’accessibilité d’une application est servie par la méthode
     /// héritée <c>HandleAnyByPredicateAsync</c>, qui délègue à
     /// <c>IR_Generic&lt;AppList&gt;.AnyByPredicateAsync</c>.
     /// </para>
-    /// <para>Contexte</para>
     /// <para>
-    /// Consommé en lecture par les composants amont autorisés par §4.14.9 du 0230,
-    /// via le contrat <see cref="IQ_AppList"/>. Aucun appel EF Core n’est porté
-    /// ici : le test d’existence est traduit en <c>SELECT TOP 1 1 WHERE ...</c>
-    /// côté SGBD, sans matérialisation d’entité, l’accès au DbContext étant
-    /// encapsulé dans <c>CR_Generic&lt;AppList&gt;</c> (R-4.14.11, R-4.15.12).
-    /// </para>
-    /// <para>Objectif</para>
-    /// <para>
-    /// Fournir une lecture CQRS traçable (CallChain) et robuste (classification
+    /// Objectif : fournir une lecture CQRS traçable (CallChain) et robuste (classification
     /// d’exceptions homogène), conforme à §4.14.5 et §4.15.4 du 0230.
     /// </para>
-    /// </summary>
+    /// </remarks>
     public class QH_AppList : QH_Generic<AppList>, IQ_AppList
     {
         #region === Propriétés privées ===
@@ -38,10 +38,13 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <summary>
         /// Nom du composant courant, résolu dynamiquement (<c>GetType().Name</c>),
         /// utilisé pour la construction de la CallChain dans les méthodes
-        /// publiques portant leur propre bloc de capture. Re-déclaré ici car le
+        /// publiques portant leur propre bloc de capture.
+        /// </summary>
+        /// <remarks>
+        /// Re-déclaré ici car le
         /// champ homonyme de <see cref="QH_Generic{T}"/> est <c>private</c>
         /// (§4.15.4, « Aucune surface protégée pour la dérivation »).
-        /// </summary>
+        /// </remarks>
         private readonly string _callee;
 
         #endregion
@@ -52,10 +55,13 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <summary>
         /// Service de classification des exceptions non contrôlées en types
         /// applicatifs normalisés (<see cref="Ex_Infrastructure"/> ou
-        /// <see cref="Ex_Unclassified"/>). Ré-injecté ici car le champ homonyme
+        /// <see cref="Ex_Unclassified"/>).
+        /// </summary>
+        /// <remarks>
+        /// Ré-injecté ici car le champ homonyme
         /// de <see cref="QH_Generic{T}"/> est <c>private</c> (§4.15.4) et
         /// indispensable au catch terminal des méthodes spécialisées.
-        /// </summary>
+        /// </remarks>
         private readonly IS_ExClassifier _classifier;
 
         #endregion
@@ -64,11 +70,14 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         #region === Constructeur ===
 
         /// <summary>
-        /// Initialise une instance de <see cref="QH_AppList"/> avec ses
-        /// dépendances opérationnelles. La première instruction est
+        /// Initialise une nouvelle instance de <see cref="QH_AppList"/> avec ses
+        /// dépendances opérationnelles.
+        /// </summary>
+        /// <remarks>
+        /// La première instruction est
         /// <c>base(repository, classifier)</c>, conformément au patron principal
         /// d’extension par dérivation (R-3.14.7, §4.15.4).
-        /// </summary>
+        /// </remarks>
         /// <param name="repository">
         /// Repository générique EF Core pour les lectures d’entités
         /// <see cref="AppList"/>. Ne doit pas être <see langword="null"/>.
@@ -98,32 +107,29 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         #region === Méthodes publiques ===
 
         /// <summary>
-        /// <para>Description</para>
-        /// <para>
         /// Retourne <see langword="true"/> si l’application identifiée par
         /// <paramref name="appId"/> est actuellement accessible et non supprimée
         /// logiquement, <see langword="false"/> sinon.
-        /// </para>
-        /// <para>Contexte</para>
+        /// </summary>
+        /// <remarks>
         /// <para>
-        /// Utilisé pour évaluer l’accessibilité d’une application avant toute
+        /// Contexte : utilisé pour évaluer l’accessibilité d’une application avant toute
         /// opération qui la concerne (ouverture de session, accès à un écran,
         /// etc.). Aucune distinction n’est exposée entre « n’existe pas » et
         /// « existe mais non accessible ».
         /// </para>
-        /// <para>Objectif</para>
         /// <para>
-        /// Fournir une lecture CQRS dédiée, traçable et robuste, sans repository
+        /// Objectif : fournir une lecture CQRS dédiée, traçable et robuste, sans repository
         /// spécialisé : le test d’existence est délégué au socle générique
         /// hérité, qui le traduit en <c>SELECT TOP 1 1 WHERE ...</c> côté SGBD
         /// sans matérialiser d’entité.
         /// </para>
-        /// <para>Tâches / Actions</para>
+        /// <para>Responsabilités :</para>
         /// <list type="bullet">
         /// <item><description>Valider la précondition structurelle sur <paramref name="appId"/> (dans le try).</description></item>
         /// <item><description>Déléguer la vérification d’existence à <c>HandleAnyByPredicateAsync</c> (socle hérité) avec le prédicat composite <c>Id == appId &amp;&amp; Accessible &amp;&amp; !IsDeleted</c>.</description></item>
         /// </list>
-        /// </summary>
+        /// </remarks>
         /// <param name="caller">CallChain amont pour la traçabilité.</param>
         /// <param name="appId">Identifiant d’application à interroger. Doit être strictement positif.</param>
         /// <param name="ct">Token d’annulation.</param>
@@ -135,6 +141,13 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <exception cref="Ex_Business">
         /// Levée (code <c>BU_ER_02</c>) si <paramref name="appId"/> est inférieur
         /// ou égal à zéro.
+        /// </exception>
+        /// <exception cref="Ex_Infrastructure">
+        /// Levée si une défaillance technique survient lors de la lecture.
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l’annulation est signalée via <paramref name="ct"/> avant ou
+        /// pendant l’exécution.
         /// </exception>
         public async Task<bool> HandleAppAccessibilityAsync(
             string caller,

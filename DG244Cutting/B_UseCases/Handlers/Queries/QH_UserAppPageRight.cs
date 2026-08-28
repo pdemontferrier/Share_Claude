@@ -8,34 +8,33 @@ using DG244Cutting.B_UseCases.Handlers.Generic;
 namespace DG244Cutting.B_UseCases.Handlers.Queries
 {
     /// <summary>
-    /// <para>Description</para>
+    /// QueryHandler (QH) dédié à l’entité <see cref="UserAppPageRight"/>.
+    /// </summary>
+    /// <remarks>
     /// <para>
-    /// QueryHandler (QH) dédié à l’entité <see cref="UserAppPageRight"/>. Il hérite de
+    /// Contexte : consommé en lecture par les ViewModels (chaîne (2)) et par les DataProviders
+    /// (chaîne (3)). Aucun appel EF Core n’est porté ici : l’<c>AsNoTracking()</c> et
+    /// l’accès au DbContext sont encapsulés dans <c>CR_Generic&lt;UserAppPageRight&gt;</c>
+    /// (R-4.14.11, R-4.15.12). Utilisateurs cibles : ViewModels (lecture simple) et
+    /// DataProviders (lecture composée).
+    /// </para>
+    /// <para>
+    /// Il hérite de
     /// <see cref="QH_Generic{T}"/> (socle de lecture obligatoire) et y ajoute une
     /// lecture spécialisée par clé fonctionnelle composite, sans repository
     /// spécialisé : la recherche par utilisateur et application est servie par la
     /// méthode héritée <c>HandleGetFilteredAsync</c>, qui délègue à
     /// <c>IR_Generic&lt;UserAppPageRight&gt;</c>.
     /// </para>
-    /// <para>Contexte</para>
     /// <para>
-    /// Consommé en lecture par les ViewModels (chaîne (2)) et par les DataProviders
-    /// (chaîne (3)). Aucun appel EF Core n’est porté ici : l’<c>AsNoTracking()</c> et
-    /// l’accès au DbContext sont encapsulés dans <c>CR_Generic&lt;UserAppPageRight&gt;</c>
-    /// (R-4.14.11, R-4.15.12).
+    /// Objectif : fournir une lecture CQRS traçable (CallChain) et robuste (classification
+    /// d’exceptions homogène), conforme à §4.14.5 et §4.15.4 du 0230.
     /// </para>
-    /// <para>Objectif</para>
-    /// <para>
-    /// Fournir une lecture CQRS traçable (CallChain) et robuste (classification
-    /// d’exceptions homogène), conforme à §4.14.5 et §4.15.4 du 023.
-    /// </para>
-    /// <para>Utilisateurs cibles</para>
-    /// <para>ViewModels (lecture simple) et DataProviders (lecture composée).</para>
-    /// <para>Tâches / Actions</para>
+    /// <para>Responsabilités :</para>
     /// <list type="bullet">
     /// <item><description>Rechercher les droits d’accès d’un utilisateur sur une application.</description></item>
     /// </list>
-    /// </summary>
+    /// </remarks>
     public class QH_UserAppPageRight : QH_Generic<UserAppPageRight>, IQ_UserAppPageRight
     {
         #region === Propriétés privées ===
@@ -48,9 +47,16 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
 
         #region === Dépendances privées ===
 
-        // _classifier est réinjecté au dérivé : la dépendance _classifier de
-        // QH_Generic<T> est private (aucune surface protected, §4.15.4) et n'est
-        // donc pas accessible depuis la classe dérivée pour son propre catch.
+        /// <summary>
+        /// Service de classification des exceptions non contrôlées en types
+        /// applicatifs normalisés (<see cref="Ex_Infrastructure"/> ou
+        /// <see cref="Ex_Unclassified"/>).
+        /// </summary>
+        /// <remarks>
+        /// Réinjecté au dérivé : la dépendance <c>_classifier</c> de
+        /// <c>QH_Generic&lt;T&gt;</c> est <c>private</c> (aucune surface protected, §4.15.4)
+        /// et n’est donc pas accessible depuis la classe dérivée pour son propre catch.
+        /// </remarks>
         private readonly IS_ExClassifier _classifier;
 
         #endregion
@@ -59,17 +65,17 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         #region === Constructeur ===
 
         /// <summary>
-        /// <para>Description</para>
-        /// <para>Construit le QueryHandler UserAppPageRight.</para>
-        /// <para>Contexte</para>
-        /// <para>Instancié via DI dans la couche B_UseCases.</para>
-        /// <para>Objectif</para>
+        /// Initialise une nouvelle instance de <see cref="QH_UserAppPageRight"/> avec ses
+        /// dépendances opérationnelles.
+        /// </summary>
+        /// <remarks>
+        /// <para>Contexte : instancié via DI dans la couche B_UseCases.</para>
         /// <para>
-        /// Transmettre le repository générique et le classifier au socle
+        /// Objectif : transmettre le repository générique et le classifier au socle
         /// <see cref="QH_Generic{T}"/> et initialiser l’identité de composant
         /// utilisée par la CallChain.
         /// </para>
-        /// </summary>
+        /// </remarks>
         /// <param name="repository">
         /// Repository générique <see cref="IR_Generic{T}"/> de l’entité
         /// <see cref="UserAppPageRight"/> (résolu par le DI vers
@@ -95,29 +101,26 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         #region === Méthodes publiques ===
 
         /// <summary>
-        /// <para>Description</para>
-        /// <para>
         /// Retourne la liste des droits d’accès (<see cref="UserAppPageRight"/>) d’un
         /// utilisateur pour une application donnée, exclusion faite des lignes
         /// logiquement supprimées, triées par code fonctionnel de page.
-        /// </para>
-        /// <para>Contexte</para>
+        /// </summary>
+        /// <remarks>
         /// <para>
-        /// Utilisé pour résoudre les autorisations page par page d’un utilisateur sur
+        /// Contexte : utilisé pour résoudre les autorisations page par page d’un utilisateur sur
         /// une application cible (device user).
         /// </para>
-        /// <para>Objectif</para>
         /// <para>
-        /// Fournir une lecture CQRS dédiée, traçable et robuste, sans repository
+        /// Objectif : fournir une lecture CQRS dédiée, traçable et robuste, sans repository
         /// spécialisé : le filtrage est délégué au socle générique hérité.
         /// </para>
-        /// <para>Tâches / Actions</para>
+        /// <para>Responsabilités :</para>
         /// <list type="bullet">
         /// <item><description>Valider les préconditions structurelles sur <paramref name="userId"/> et <paramref name="appId"/> (dans le try).</description></item>
         /// <item><description>Déléguer le filtrage à <c>HandleGetFilteredAsync</c> (socle hérité).</description></item>
         /// <item><description>Trier le résultat par <c>PageCode</c> (LINQ-to-Objects).</description></item>
         /// </list>
-        /// </summary>
+        /// </remarks>
         /// <param name="caller">CallChain amont pour la traçabilité.</param>
         /// <param name="userId">Identifiant de l’utilisateur concerné. Doit être strictement positif.</param>
         /// <param name="appId">Identifiant de l’application cible. Doit être strictement positif.</param>
@@ -129,6 +132,12 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <exception cref="Ex_Business">
         /// Levée (code <c>BU_ER_02</c>) si <paramref name="userId"/> ou
         /// <paramref name="appId"/> est inférieur ou égal à zéro.
+        /// </exception>
+        /// <exception cref="Ex_Infrastructure">
+        /// Levée si une défaillance technique survient lors de la lecture.
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l’annulation est signalée via <paramref name="ct"/> avant ou pendant l’exécution.
         /// </exception>
         public async Task<List<UserAppPageRight>> HandleGetByUserIdAppIdAsync(
             string caller,

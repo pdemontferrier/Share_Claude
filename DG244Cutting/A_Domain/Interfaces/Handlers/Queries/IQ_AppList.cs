@@ -5,40 +5,39 @@ using DG244Cutting.A_Domain.Interfaces.Handlers.Generic;
 namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
 {
     /// <summary>
-    /// <para>Description</para>
-    /// <para>
     /// Contrat du QueryHandler (IQ) dédié à l’entité <see cref="AppList"/> dans le
-    /// cadre du modèle CQRS. Hérite du socle de lecture <see cref="IQ_Generic{T}"/>
-    /// (six lectures de base, non redéclarées ici) et ajoute une lecture spécialisée
-    /// par clé fonctionnelle : l’accessibilité d’une application.
-    /// </para>
-    /// <para>Contexte</para>
+    /// cadre du modèle CQRS.
+    /// </summary>
+    /// <remarks>
     /// <para>
-    /// Consommé en lecture par les composants amont via injection du contrat
+    /// Contexte : consommé en lecture par les composants amont via injection du contrat
     /// <see cref="IQ_AppList"/>. La couche de résidence du consommateur direct est
     /// fonction des chaînes d’appel autorisées par §4.14.9 du 0230.
     /// </para>
-    /// <para>Objectif</para>
     /// <para>
-    /// Fournir une lecture CQRS dédiée, traçable (CallChain) et robuste
+    /// Hérite du socle de lecture <see cref="IQ_Generic{T}"/>
+    /// (six lectures de base, non redéclarées ici) et ajoute une lecture spécialisée
+    /// par clé fonctionnelle : l’accessibilité d’une application.
+    /// </para>
+    /// <para>
+    /// Objectif : fournir une lecture CQRS dédiée, traçable (CallChain) et robuste
     /// (classification d’exceptions homogène), sans repository spécialisé : le
     /// filtrage est délégué au socle générique hérité (sous-cas (i) de §4.14.5).
     /// </para>
-    /// </summary>
+    /// </remarks>
     public interface IQ_AppList : IQ_Generic<AppList>
     {
         #region === Méthodes publiques ===
 
         /// <summary>
-        /// <para>Description</para>
-        /// <para>
         /// Indique si l’application identifiée par <paramref name="appId"/> est
         /// actuellement accessible (champ <c>Accessible == true</c>) et non
         /// supprimée logiquement (<c>IsDeleted == false</c>).
-        /// </para>
-        /// <para>Sémantique du résultat</para>
+        /// </summary>
+        /// <remarks>
         /// <para>
-        /// La réponse est strictement binaire : <see langword="true"/> si au moins
+        /// Objectif (sémantique du résultat) : la réponse est strictement binaire :
+        /// <see langword="true"/> si au moins
         /// un enregistrement <see cref="AppList"/> satisfait conjointement les
         /// trois critères <c>Id == appId</c>, <c>Accessible == true</c> et
         /// <c>IsDeleted == false</c> ; <see langword="false"/> sinon. Aucune
@@ -46,7 +45,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
         /// « l’application existe mais n’est pas accessible » (volonté
         /// fonctionnelle assumée).
         /// </para>
-        /// </summary>
+        /// </remarks>
         /// <param name="caller">CallChain construite par le composant appelant.</param>
         /// <param name="appId">
         /// Identifiant entier de l’application à interroger. Doit être strictement
