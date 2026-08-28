@@ -17,7 +17,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Business
     /// d'une implémentation technique particulière. Elle est consommée par le
     /// ViewModel <c>VM_Page10</c> (Singleton), qui invoque le service via
     /// <c>IS_UseCaseInvoker</c> afin de franchir la frontière Singleton vers Scoped
-    /// (EA-11). L'implémentation <c>SR_GetProductionSeries</c> réside en
+    /// (EA-11). L'implémentation <c>SR_ProductionSeries_Get</c> réside en
     /// B_UseCases/Services/Business/.
     /// </para>
     ///
@@ -41,7 +41,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Services.Business
     /// <item><description>Retourner une liste plate triée de <c>DTO_ProductionSeriesItem</c>, exploitable par le ViewModel appelant.</description></item>
     /// </list>
     /// </summary>
-    public interface IS_GetProductionSeries
+    public interface IS_ProductionSeries_Get
     {
         #region === Méthodes publiques ===
 

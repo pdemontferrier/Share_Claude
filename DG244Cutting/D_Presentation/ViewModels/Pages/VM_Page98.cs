@@ -9,7 +9,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// ViewModel de la page de présentation générale <c>Page98</c> de
     /// l'application DG244Cutting, exposant à la vue les libellés
     /// multilingues de présentation de l'application et le numéro de
-    /// version courant lu via le UseCase <see cref="IU_GetApplicationVersion"/>.
+    /// version courant lu via le UseCase <see cref="IU_ApplicationVersion_Get"/>.
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Composant de la famille VM_Page de la couche
@@ -40,7 +40,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   <item><description>La propriété observable
     ///   <see cref="VersionNumber"/>, donnée fonctionnelle alimentée
     ///   par invocation du UseCase
-    ///   <see cref="IU_GetApplicationVersion"/> via le composant
+    ///   <see cref="IU_ApplicationVersion_Get"/> via le composant
     ///   <see cref="IS_UseCaseInvoker"/> (EA-11), au moment de l'appel
     ///   asynchrone <see cref="LoadAsync"/> déclenché par le
     ///   code-behind de <c>Page98</c> au point d'extension
@@ -65,7 +65,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   <see cref="VM_Page_Generic.LoadAsync"/> pour charger la
     ///   donnée fonctionnelle <see cref="VersionNumber"/> par
     ///   invocation du UseCase
-    ///   <see cref="IU_GetApplicationVersion"/> via
+    ///   <see cref="IU_ApplicationVersion_Get"/> via
     ///   <see cref="IS_UseCaseInvoker"/>, en encapsulation par le
     ///   filet hérité <see cref="VM_Generic.ExecuteSafeAsync"/>
     ///   (§4.7.3 du 0230). Le hook est invoqué depuis le code-behind
@@ -394,7 +394,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// Champ support de la propriété observable <see cref="VersionNumber"/>.
         /// Initialisé à <see cref="string.Empty"/> ; alimenté par
         /// <see cref="LoadAsync"/> à chaque entrée sur la page via
-        /// l'invocation du UseCase <see cref="IU_GetApplicationVersion"/>
+        /// l'invocation du UseCase <see cref="IU_ApplicationVersion_Get"/>
         /// par <see cref="IS_UseCaseInvoker"/>.
         /// </summary>
         /// <remarks>
@@ -860,7 +860,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <summary>
         /// Obtient le numéro de version courant de l'application
         /// DG244Cutting, alimenté par invocation du UseCase
-        /// <see cref="IU_GetApplicationVersion"/> via
+        /// <see cref="IU_ApplicationVersion_Get"/> via
         /// <see cref="IS_UseCaseInvoker"/> au moment de l'appel à
         /// <see cref="LoadAsync"/>.
         /// </summary>
@@ -881,7 +881,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// d'extension <c>OnLoadedAsync</c> exposé par
         /// <c>Page_Generic</c> (§4.15.7 du 0230).</para>
         /// <para>Origine de la valeur : Le UseCase
-        /// <see cref="IU_GetApplicationVersion"/> lit la propriété
+        /// <see cref="IU_ApplicationVersion_Get"/> lit la propriété
         /// <c>Version</c> de l'assembly d'exécution via
         /// <c>System.Reflection</c>. Cette propriété n'est pas affectée
         /// par <see cref="LoadLabels"/> (le numéro de version n'est pas
@@ -1004,7 +1004,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// Injecté en Singleton par le conteneur DI.</param>
         /// <param name="useCaseInvoker">Composant Singleton porteur
         /// d'EA-11, unique voie d'invocation du UseCase
-        /// <see cref="IU_GetApplicationVersion"/> depuis le présent
+        /// <see cref="IU_ApplicationVersion_Get"/> depuis le présent
         /// ViewModel. Injecté en Singleton par le conteneur DI.</param>
         /// <exception cref="ArgumentNullException">Levée si
         /// <paramref name="useCaseInvoker"/> est
@@ -1035,7 +1035,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="VM_Page_Generic.LoadAsync"/> pour charger la
         /// donnée fonctionnelle <see cref="VersionNumber"/> par
         /// invocation du UseCase
-        /// <see cref="IU_GetApplicationVersion"/> via
+        /// <see cref="IU_ApplicationVersion_Get"/> via
         /// <see cref="IS_UseCaseInvoker"/> (EA-11).
         /// </summary>
         /// <param name="callChain">CallChain construite par
@@ -1057,7 +1057,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="VM_Generic.ExecuteSafeAsync"/>, à
         /// <see cref="IS_UseCaseInvoker.InvokeAsync{TUseCase, TResult}(System.Func{TUseCase, System.Threading.CancellationToken, System.Threading.Tasks.Task{TResult}}, System.Threading.CancellationToken)"/>
         /// et, par le délégué, au UseCase
-        /// <see cref="IU_GetApplicationVersion"/>. Valeur par défaut :
+        /// <see cref="IU_ApplicationVersion_Get"/>. Valeur par défaut :
         /// <see langword="default"/>.</param>
         /// <returns>Une tâche représentant l'exécution asynchrone du
         /// chargement de <see cref="VersionNumber"/>.</returns>
@@ -1075,7 +1075,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <para>Objectif : Alimenter la propriété observable
         /// <see cref="VersionNumber"/> avec le numéro de version
         /// courant de l'application, lu via le UseCase
-        /// <see cref="IU_GetApplicationVersion"/>.</para>
+        /// <see cref="IU_ApplicationVersion_Get"/>.</para>
         ///
         /// <para>Patron de surcharge normatif (§4.15.6 du 0230) :
         /// L'override construit une CallChain interne
@@ -1121,13 +1121,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///
         /// <para>Mode d'invocation : Conformément à §4.10.10 du 0230,
         /// l'invocation du UseCase
-        /// <see cref="IU_GetApplicationVersion"/> est portée par
+        /// <see cref="IU_ApplicationVersion_Get"/> est portée par
         /// <see cref="IS_UseCaseInvoker"/> qui matérialise un
         /// <c>IServiceScope</c> distinct pour l'invocation, y résout
         /// l'implémentation du contrat et l'exécute via le délégué
         /// fourni, puis dispose le scope. Le présent ViewModel
         /// n'injecte pas directement le contrat
-        /// <see cref="IU_GetApplicationVersion"/>, conformément à
+        /// <see cref="IU_ApplicationVersion_Get"/>, conformément à
         /// I-4.10.10 du 0231.</para>
         /// </remarks>
         /// <exception cref="OperationCanceledException">
@@ -1145,7 +1145,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             await ExecuteSafeAsync(innerCallChain, async () =>
             {
                 VersionNumber = await _useCaseInvoker
-                    .InvokeAsync<IU_GetApplicationVersion, string>(
+                    .InvokeAsync<IU_ApplicationVersion_Get, string>(
                         (useCase, innerCt) => useCase.ExecuteAsync(innerCallChain, innerCt),
                         ct);
             }, ct);

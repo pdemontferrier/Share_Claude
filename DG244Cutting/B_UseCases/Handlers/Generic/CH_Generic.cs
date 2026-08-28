@@ -102,7 +102,8 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
         #region === Constructeur ===
 
         /// <summary>
-        /// Initialise une instance de <see cref="CH_Generic{T}"/> avec ses dépendances opérationnelles.
+        /// Initialise une nouvelle instance de <see cref="CH_Generic{T}"/> avec ses
+        /// dépendances opérationnelles.
         /// </summary>
         /// <param name="repository">
         /// Repository générique EF Core pour les mutations d'entités <typeparamref name="T"/>.
@@ -133,7 +134,21 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
 
         #region === Méthodes publiques ===
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Inscrit une entité en création dans le contexte EF Core, positionne <c>CreatedAt</c>
+        /// à la date UTC courante, et enregistre l'événement correspondant dans l'Event Store.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Le champ <c>CreatedAt</c> est positionné automatiquement si la propriété existe sur
+        /// le type <typeparamref name="T"/>. Le champ <c>UpdatedAt</c> n'est intentionnellement
+        /// pas renseigné à la création. Le champ <c>IsDeleted</c> conserve sa valeur par défaut
+        /// (<see langword="false"/> / <c>0</c> en base de données).
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant, transmise pour enrichissement et traçabilité.</param>
+        /// <param name="entity">Entité de type <typeparamref name="T"/> à créer. Ne doit pas être <see langword="null"/>.</param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <exception cref="Ex_Business">
         /// Levée si l'entité fournie est <see langword="null"/> (code <c>BU_ER_01</c>).
         /// </exception>
@@ -171,7 +186,20 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
             catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Inscrit une entité en mise à jour dans le contexte EF Core, positionne <c>UpdatedAt</c>
+        /// à la date UTC courante, et enregistre l'événement correspondant dans l'Event Store.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Le champ <c>CreatedAt</c> n'est jamais altéré lors d'une mise à jour.
+        /// Le champ <c>IsDeleted</c> n'est pas forcé : toute décision relative à ce champ
+        /// appartient à la logique métier du UseCase appelant.
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="entity">Entité de type <typeparamref name="T"/> à mettre à jour. Ne doit pas être <see langword="null"/>.</param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <exception cref="Ex_Business">
         /// Levée si l'entité fournie est <see langword="null"/> (code <c>BU_ER_01</c>).
         /// </exception>
@@ -209,7 +237,21 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
             catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Inscrit un ensemble d'entités en mise à jour dans le contexte EF Core, positionne
+        /// <c>UpdatedAt</c> à la date UTC courante sur chacune, et enregistre un événement
+        /// Event Store pour chaque entité de manière séquentielle.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Les enregistrements Event Store sont produits séquentiellement afin de garantir la
+        /// cohérence des opérations sur le DbContext partagé, qui n'est pas thread-safe.
+        /// Le champ <c>CreatedAt</c> n'est jamais altéré lors d'une mise à jour en masse.
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="entities">Collection d'entités de type <typeparamref name="T"/> à mettre à jour. Ne doit pas être <see langword="null"/>.</param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <exception cref="Ex_Business">
         /// Levée si la collection fournie est <see langword="null"/> (code <c>BU_ER_01</c>).
         /// </exception>
@@ -258,7 +300,20 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
             catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Supprime physiquement l'entité correspondant à l'identifiant spécifié et enregistre
+        /// l'événement correspondant dans l'Event Store, si l'entité existe.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Si aucune entité ne correspond à l'identifiant fourni, la méthode retourne sans erreur
+        /// et sans enregistrement Event Store : il n'y a pas de mutation à tracer.
+        /// Pour une suppression logique, utiliser <see cref="HandleSoftDeleteAsync"/> à la place.
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="id">Identifiant de l'entité à supprimer physiquement. Doit être strictement positif.</param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <exception cref="Ex_Business">
         /// Levée si l'identifiant fourni est inférieur ou égal à zéro (code <c>BU_ER_02</c>).
         /// </exception>
@@ -298,7 +353,30 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
             catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Réalise la suppression logique (soft delete) de l'entité correspondant à l'identifiant
+        /// spécifié, et enregistre l'événement correspondant dans l'Event Store si l'entité existe.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Cette méthode ne supprime jamais physiquement l'enregistrement en base de données.
+        /// Elle positionne le champ <c>IsDeleted</c> à <see langword="true"/> et le champ
+        /// <c>UpdatedAt</c> à la date UTC courante sur l'entité, puis délègue la persistance
+        /// au repository via une mise à jour.
+        /// </para>
+        /// <para>
+        /// Si aucune entité ne correspond à l'identifiant fourni, la méthode retourne sans erreur
+        /// et sans enregistrement Event Store : il n'y a pas de mutation à tracer.
+        /// </para>
+        /// <para>
+        /// Si le type <typeparamref name="T"/> ne possède pas de propriété <c>IsDeleted</c>
+        /// accessible en écriture, une <see cref="Ex_Business"/> est levée (code <c>BU_ER_03</c>) :
+        /// le soft delete n'est pas applicable à cette entité.
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="id">Identifiant de l'entité à marquer comme supprimée logiquement. Doit être strictement positif.</param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <exception cref="Ex_Business">
         /// Levée si l'identifiant fourni est inférieur ou égal à zéro (code <c>BU_ER_02</c>),
         /// ou si le type <typeparamref name="T"/> ne possède pas de propriété <c>IsDeleted</c>
@@ -384,7 +462,6 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
         /// pour constituer le champ <c>AppCallChain</c> de l'enregistrement Event Store.
         /// </param>
         /// <param name="entity">Entité dont la mutation vient d'être inscrite dans le change tracker.</param>
-        /// <param name="commandMethod">Nom de la méthode publique appelante, stocké dans <c>AppCommandMethod</c>.</param>
         /// <param name="ct">Jeton d'annulation propagé depuis la méthode publique appelante.</param>
         private async Task LogEventAsync(string caller, T entity, CancellationToken ct)
         {

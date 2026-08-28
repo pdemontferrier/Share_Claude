@@ -113,7 +113,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   présent code-behind.</description></item>
     ///   <item><description>Invoquer directement un UseCase ou un
     ///   QueryHandler — la consommation de
-    ///   <c>IU_GetApplicationVersion</c> est intégralement portée par
+    ///   <c>IU_ApplicationVersion_Get</c> est intégralement portée par
     ///   <see cref="VM_Page98"/> via le service
     ///   <c>IS_UseCaseInvoker</c> (EA-11) au titre du mode d'invocation
     ///   normatif depuis <c>D_Presentation</c> (§4.10.10 du 0230).
@@ -460,7 +460,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// déclaré au socle
         /// <see cref="DG244Cutting.D_Presentation.ViewModels.Generic.VM_Page_Generic"/>,
         /// §4.15.6 du 0230). Cet override invoque lui-même le UseCase
-        /// <c>IU_GetApplicationVersion</c> via le service
+        /// <c>IU_ApplicationVersion_Get</c> via le service
         /// <c>IS_UseCaseInvoker</c> (EA-11) au titre du mode
         /// d'invocation normatif des UseCases depuis
         /// <c>D_Presentation</c> (§4.10.10 du 0230). Les 55 propriétés

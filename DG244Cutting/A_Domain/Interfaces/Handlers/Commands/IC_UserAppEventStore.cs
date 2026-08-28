@@ -17,10 +17,10 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Commands
     /// appelée directement depuis un Service métier, un UseCase ou un ViewModel.
     /// </para>
     /// <para>
-    /// Séparation des paramètres : outre la CallChain, les paramètres <paramref name="handlerCommand"/>
-    /// et <paramref name="commandMethod"/> sont maintenus comme champs distincts afin de permettre
+    /// Séparation des paramètres : outre la CallChain, la désignation de la table métier et
+    /// l'identifiant de l'enregistrement muté sont maintenus comme champs distincts afin de permettre
     /// des requêtes SQL directes sur la table Event Store sans nécessiter d'analyse syntaxique de
-    /// la CallChain (ex. : <c>WHERE AppHandlerCommand = 'CH_Order'</c>).
+    /// la CallChain (ex. : <c>WHERE TableDesignation = 'Order'</c>).
     /// </para>
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
@@ -41,11 +41,16 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Commands
         /// Inscrit un enregistrement Event Store contextualisé dans le DbContext partagé.
         /// </summary>
         /// <remarks>
-        /// L'enregistrement produit est automatiquement enrichi avec le contexte applicatif courant
-        /// (identité utilisateur, poste, adresse IP, horodatage) via <c>IQ_AppContext</c> dans
-        /// l'implémentation. L'écriture s'effectue dans la même transaction que la mutation métier
+        /// <para>
+        /// Contexte : l'écriture s'effectue dans la même transaction que la mutation métier
         /// qu'elle accompagne, garantissant la solidarité transactionnelle définie en section 3.8
         /// du référentiel normatif.
+        /// </para>
+        /// <para>
+        /// Objectif : l'enregistrement produit est automatiquement enrichi avec le contexte applicatif
+        /// courant (identité utilisateur, poste, adresse IP, horodatage) via <c>IS_AppContext</c>
+        /// dans l'implémentation.
+        /// </para>
         /// </remarks>
         /// <param name="caller">
         /// CallChain complète construite jusqu'au Command Handler métier ayant déclenché la mutation.
@@ -81,6 +86,6 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Commands
             string data,
             CancellationToken ct = default);
 
-    #endregion
+        #endregion
     }
 }

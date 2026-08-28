@@ -189,7 +189,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             services.AddSingleton<IS_Hashing, SR_Hashing>();            // aucune dépendance.
 
             // Business
-            services.AddScoped<IS_GetProductionSeries, SR_GetProductionSeries>();
+            services.AddScoped<IS_ProductionSeries_Get, SR_ProductionSeries_Get>();
 
             // Infrastructure
             services.AddSingleton<ISet<string>>(new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -313,11 +313,11 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             //   IU_LogAndNotify), non transactionnel par construction -> Singleton (P4-bis,
             //   §4.10.10).
             services.AddSingleton<IU_DigitTryDb_TestConnection, UC_DigitTryDb_TestConnection>();
-            // UC_GetApplicationVersion : lecture transverse du numéro de version applicatif
+            // UC_ApplicationVersion_Get : lecture transverse du numéro de version applicatif
             //   par accès direct à Assembly.GetExecutingAssembly (EA propre tracée au remarks
             //   de classe), sans dépendance Scoped ni accès au DbContext partagé -> Singleton
             //   (P4-bis, §4.10.10).
-            services.AddSingleton<IU_GetApplicationVersion, UC_GetApplicationVersion>();
+            services.AddSingleton<IU_ApplicationVersion_Get, UC_ApplicationVersion_Get>();
             // UC_Language_Apply : orchestrateur du changement de langue de l'application
             //   (chargement du dictionnaire XAML, persistance du code culture, synchronisation
             //   du drapeau et des cibles CultureInfo .NET) — dépendances Singleton uniquement

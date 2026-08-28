@@ -82,7 +82,7 @@ Bindings principaux :
       ISE_App.AppCultureCode porté par VM_Generic, avec marshalling Dispatcher
       défensif (R-4.11.9 du 0231). Le rechargement à chaque changement de langue
       dynamique est assuré par le handler interne de VM_Generic. La propriété
-      VersionNumber est alimentée par invocation du UseCase IU_GetApplicationVersion
+      VersionNumber est alimentée par invocation du UseCase IU_ApplicationVersion_Get
       via IS_UseCaseInvoker (EA-11) dans la surcharge LoadAsync de VM_Page98
       (override du hook canonique de VM_Page_Generic §4.15.6 du 0230), déclenchée
       au Loaded par le code-behind via la surcharge OnLoadedAsync (§4.15.7 du

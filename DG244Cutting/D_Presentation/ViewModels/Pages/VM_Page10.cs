@@ -92,7 +92,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>Note EA : Ce ViewModel consomme
     /// <see cref="IS_UseCaseInvoker"/> (EA-11) pour franchir la frontière
     /// Singleton vers Scoped, tant pour la lecture des séries
-    /// (<see cref="IS_GetProductionSeries"/>, Scoped) que pour la
+    /// (<see cref="IS_ProductionSeries_Get"/>, Scoped) que pour la
     /// navigation (<see cref="IU_Navigation"/>), résolues via l'invocateur
     /// dans un scope dédié. Le <see cref="ISE_UseCase"/> (Singleton) est
     /// en revanche injecté en direct. Conformément à la doctrine P4-bis,
@@ -124,7 +124,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// Invocateur générique de UseCases, résolvant chaque composant
         /// dans un scope DI dédié et appliquant le filet transactionnel
         /// commun. Consommé pour la lecture des séries
-        /// (<see cref="IS_GetProductionSeries"/>) et la navigation
+        /// (<see cref="IS_ProductionSeries_Get"/>) et la navigation
         /// (<see cref="IU_Navigation"/>) au titre de l'EA-11.
         /// </summary>
         private readonly IS_UseCaseInvoker _useCaseInvoker;
@@ -299,7 +299,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             await ExecuteSafeAsync(innerCallChain, async () =>
             {
                 var list = await _useCaseInvoker
-                    .InvokeAsync<IS_GetProductionSeries, List<DTO_ProductionSeriesItem>>(
+                    .InvokeAsync<IS_ProductionSeries_Get, List<DTO_ProductionSeriesItem>>(
                         (service, innerCt) => service.GetProductionSeriesAsync(
                             innerCallChain, innerCt),
                         ct);

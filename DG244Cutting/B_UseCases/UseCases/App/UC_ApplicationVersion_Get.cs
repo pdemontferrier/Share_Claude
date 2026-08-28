@@ -11,7 +11,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Contexte : Ce UseCase implémente le contrat <see cref="IU_GetApplicationVersion"/>.
+    /// Contexte : Ce UseCase implémente le contrat <see cref="IU_ApplicationVersion_Get"/>.
     /// Il est consommé en chaîne (1) directe par <c>VM_Page98.LoadDataAsync</c>
     /// pour alimentation d'une propriété observable <c>VersionNumber</c> bindée à
     /// la vue <c>Page98</c>. Il ne participe à aucune chaîne UC → UC normalisée
@@ -62,8 +62,8 @@ namespace DG244Cutting.B_UseCases.UseCases.App
     /// la connaissance du présent fil (invariant 15 de §2.1 du 0232-UC).
     /// </para>
     /// </remarks>
-    /// <seealso cref="IU_GetApplicationVersion"/>
-    public class UC_GetApplicationVersion : IU_GetApplicationVersion
+    /// <seealso cref="IU_ApplicationVersion_Get"/>
+    public class UC_ApplicationVersion_Get : IU_ApplicationVersion_Get
     {
         #region === Propriétés privées ===
 
@@ -93,7 +93,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         #region === Constructeur ===
 
         /// <summary>
-        /// Initialise une nouvelle instance de <see cref="UC_GetApplicationVersion"/>.
+        /// Initialise une nouvelle instance de <see cref="UC_ApplicationVersion_Get"/>.
         /// </summary>
         /// <param name="logAndNotify">
         /// Contrat du UseCase de traitement terminal des erreurs. Ne doit pas
@@ -102,7 +102,7 @@ namespace DG244Cutting.B_UseCases.UseCases.App
         /// <exception cref="ArgumentNullException">
         /// Levée si <paramref name="logAndNotify"/> est <see langword="null"/>.
         /// </exception>
-        public UC_GetApplicationVersion(IU_LogAndNotify logAndNotify)
+        public UC_ApplicationVersion_Get(IU_LogAndNotify logAndNotify)
         {
             _logAndNotify = logAndNotify ?? throw new ArgumentNullException(nameof(logAndNotify));
             _callee = GetType().Name;

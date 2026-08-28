@@ -132,7 +132,55 @@ namespace DG244Cutting.B_UseCases.Handlers.Commands
 
         #region === Méthodes publiques ===
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Persiste immédiatement un enregistrement de log d'erreur dans un DbContext EF Core
+        /// indépendant de toute transaction UseCase en cours.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Contexte : appelée exclusivement depuis <c>SR_ErrorLogger</c>, après que l'entité
+        /// <see cref="UserAppErrorLog"/> a été entièrement construite à partir du contexte
+        /// applicatif et de l'exception normalisée.
+        /// </para>
+        /// <para>
+        /// Objectif : persister le log d'erreur de manière atomique et isolée. La persistance
+        /// est réalisée dans un DbContext de courte durée, commité avant le retour de la
+        /// méthode, indépendamment de toute transaction externe ouverte dans le scope DI
+        /// courant.
+        /// </para>
+        /// <para>
+        /// Nommage délibéré : le suffixe <c>AndSave</c> signale explicitement que cette méthode
+        /// gère elle-même la persistance (SaveChanges), contrairement aux méthodes
+        /// <c>HandleAddAsync</c> de <see cref="IC_Generic{T}"/> qui délèguent le
+        /// SaveChanges au UseCase orchestrateur via la transaction partagée.
+        /// </para>
+        /// <para>Responsabilités :</para>
+        /// <list type="bullet">
+        ///   <item><description>Valider la présence de l'entité reçue avant toute délégation.</description></item>
+        ///   <item><description>Déléguer la persistance immédiate à <see cref="IR_UserAppErrorLog"/>.</description></item>
+        ///   <item><description>Requalifier les exceptions non contrôlées via <see cref="IS_ExClassifier"/>.</description></item>
+        /// </list>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant, transmise pour
+        /// enrichissement et traçabilité.</param>
+        /// <param name="entity">
+        /// Entité <see cref="UserAppErrorLog"/> entièrement construite par <c>SR_ErrorLogger</c>,
+        /// prête à être persistée. Ne doit pas être <see langword="null"/>.
+        /// </param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière
+        /// coopérative.</param>
+        /// <exception cref="Ex_Business">
+        /// Levée si <paramref name="entity"/> est <see langword="null"/> (code
+        /// <c>BU_ER_01</c>).
+        /// </exception>
+        /// <exception cref="Ex_Infrastructure">
+        /// Levée si une défaillance technique survient lors de la persistance (code
+        /// <c>IN_ER_06</c>).
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant
+        /// l'exécution.
+        /// </exception>
         public async Task HandleAddAndSaveAsync(
             string caller,
             UserAppErrorLog entity,
@@ -157,6 +205,13 @@ namespace DG244Cutting.B_UseCases.Handlers.Commands
             catch (OperationCanceledException) { throw; }
             catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
         }
+
+        #endregion
+
+
+        #region === Méthodes privées ===
+
+        // A compléter
 
         #endregion
     }

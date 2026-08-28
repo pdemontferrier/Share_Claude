@@ -75,7 +75,8 @@ namespace DG244Cutting.B_UseCases.Handlers.Commands
         #region === Constructeur ===
 
         /// <summary>
-        /// Initialise une instance de <see cref="CH_UserAppEventStore"/> avec ses dépendances opérationnelles.
+        /// Initialise une nouvelle instance de <see cref="CH_UserAppEventStore"/> avec ses
+        /// dépendances opérationnelles.
         /// </summary>
         /// <param name="repository">
         /// Repository de persistance des enregistrements de l'Event Store.
@@ -114,11 +115,16 @@ namespace DG244Cutting.B_UseCases.Handlers.Commands
         /// Inscrit un enregistrement Event Store contextualisé dans le DbContext partagé.
         /// </summary>
         /// <remarks>
-        /// L'enregistrement produit est automatiquement enrichi avec le contexte applicatif courant
-        /// (identité utilisateur, poste, adresse IP, horodatage) via <c>IQ_AppContext</c> dans
-        /// l'implémentation. L'écriture s'effectue dans la même transaction que la mutation métier
+        /// <para>
+        /// Contexte : l'écriture s'effectue dans la même transaction que la mutation métier
         /// qu'elle accompagne, garantissant la solidarité transactionnelle définie en section 3.8
         /// du référentiel normatif.
+        /// </para>
+        /// <para>
+        /// Objectif : l'enregistrement produit est automatiquement enrichi avec le contexte applicatif
+        /// courant (identité utilisateur, poste, adresse IP, horodatage) via
+        /// <see cref="IS_AppContext"/>.
+        /// </para>
         /// </remarks>
         /// <param name="caller">
         /// CallChain complète construite jusqu'au Command Handler métier ayant déclenché la mutation.

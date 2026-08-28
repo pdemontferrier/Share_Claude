@@ -12,7 +12,7 @@
     /// entité persistée. Il est consommé en chaîne (1) directe par
     /// <c>VM_Page98.LoadDataAsync</c> pour alimentation d'une propriété observable
     /// <c>VersionNumber</c> bindée à la vue <c>Page98</c>. Implémenté par
-    /// <see cref="UC_GetApplicationVersion"/>.
+    /// <see cref="UC_ApplicationVersion_Get"/>.
     /// </para>
     /// <para>
     /// Objectif : Exposer un point d'entrée unique et stable pour la lecture du
@@ -31,7 +31,7 @@
     ///   <item><description>N'expose aucun type technique de persistance (entité EF Core, IQueryable, DbContext).</description></item>
     /// </list>
     /// </remarks>
-    public interface IU_GetApplicationVersion
+    public interface IU_ApplicationVersion_Get
     {
         /// <summary>
         /// Produit le numéro de version courant de l'application DG244Cutting sous

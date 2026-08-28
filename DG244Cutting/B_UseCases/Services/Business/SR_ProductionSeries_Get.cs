@@ -50,11 +50,11 @@ namespace DG244Cutting.B_UseCases.Services.Business
     /// <item><description>Trier la liste plate selon les trois critères successifs et la retourner.</description></item>
     /// <item><description>Classifier toute exception non prévue via <see cref="IS_ExClassifier"/>.</description></item>
     /// </list>
-    /// <seealso cref="IS_GetProductionSeries"/>
+    /// <seealso cref="IS_ProductionSeries_Get"/>
     /// <seealso cref="IQ_Generic{ProductionSeries}"/>
     /// <seealso cref="IS_AppContext"/>
     /// </summary>
-    public class SR_GetProductionSeries : IS_GetProductionSeries
+    public class SR_ProductionSeries_Get : IS_ProductionSeries_Get
     {
         #region === Propriétés privées ===
 
@@ -76,7 +76,7 @@ namespace DG244Cutting.B_UseCases.Services.Business
         /// Description :
         /// <para>
         /// Initialise une nouvelle instance du service
-        /// <see cref="SR_GetProductionSeries"/>.
+        /// <see cref="SR_ProductionSeries_Get"/>.
         /// </para>
         ///
         /// Contexte :
@@ -107,7 +107,7 @@ namespace DG244Cutting.B_UseCases.Services.Business
         /// <param name="appContext">Service de fourniture du contexte applicatif courant (source de la date applicative).</param>
         /// <param name="classifier">Service de classification terminale des exceptions non prévues.</param>
         /// <exception cref="ArgumentNullException">Levée si l'une des dépendances injectées est nulle.</exception>
-        public SR_GetProductionSeries(
+        public SR_ProductionSeries_Get(
             IQ_Generic<ProductionSeries> qh,
             IS_AppContext appContext,
             IS_ExClassifier classifier)

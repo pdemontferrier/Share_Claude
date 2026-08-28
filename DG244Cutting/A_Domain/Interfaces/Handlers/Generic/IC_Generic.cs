@@ -86,9 +86,11 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
         /// à la date UTC courante, et enregistre l'événement correspondant dans l'Event Store.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// Le champ <c>CreatedAt</c> n'est jamais altéré lors d'une mise à jour.
         /// Le champ <c>IsDeleted</c> n'est pas forcé : toute décision relative à ce champ
         /// appartient à la logique métier du UseCase appelant.
+        /// </para>
         /// </remarks>
         /// <param name="caller">CallChain construite par le composant appelant.</param>
         /// <param name="entity">Entité de type <typeparamref name="T"/> à mettre à jour. Ne doit pas être <see langword="null"/>.</param>
@@ -110,9 +112,11 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
         /// Event Store pour chaque entité de manière séquentielle.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// Les enregistrements Event Store sont produits séquentiellement afin de garantir la
         /// cohérence des opérations sur le DbContext partagé, qui n'est pas thread-safe.
         /// Le champ <c>CreatedAt</c> n'est jamais altéré lors d'une mise à jour en masse.
+        /// </para>
         /// </remarks>
         /// <param name="caller">CallChain construite par le composant appelant.</param>
         /// <param name="entities">Collection d'entités de type <typeparamref name="T"/> à mettre à jour. Ne doit pas être <see langword="null"/>.</param>
@@ -133,9 +137,11 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Generic
         /// l'événement correspondant dans l'Event Store, si l'entité existe.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// Si aucune entité ne correspond à l'identifiant fourni, la méthode retourne sans erreur
         /// et sans enregistrement Event Store : il n'y a pas de mutation à tracer.
         /// Pour une suppression logique, utiliser <see cref="HandleSoftDeleteAsync"/> à la place.
+        /// </para>
         /// </remarks>
         /// <param name="caller">CallChain construite par le composant appelant.</param>
         /// <param name="id">Identifiant de l'entité à supprimer physiquement. Doit être strictement positif.</param>
