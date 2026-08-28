@@ -102,21 +102,52 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
 
         #region === Méthodes publiques ===
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Insère un enregistrement de log d'erreur et le persiste immédiatement dans un contexte
+        /// EF Core indépendant de toute transaction UseCase en cours.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Comportement garanti : l'enregistrement est commité atomiquement dans son propre
+        /// contexte de courte durée, créé et disposé au sein de cette méthode. Il n'est pas
+        /// affecté par un éventuel rollback transactionnel provenant du UseCase appelant.
+        /// </para>
+        /// <para>
+        /// Nommage délibéré : le suffixe <c>AndSave</c> signale explicitement que cette méthode
+        /// persiste de manière autonome, contrairement aux méthodes <c>AddAsync</c> de
+        /// <see cref="Generic.IR_Generic{T}"/> qui délèguent la persistance au UseCase.
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant, transmise pour enrichissement et traçabilité.</param>
+        /// <param name="entity">
+        /// Entité <see cref="UserAppErrorLog"/> entièrement construite par <c>SR_ErrorLogger</c>,
+        /// prête à être persistée. Ne doit pas être <see langword="null"/>.
+        /// </param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
+        /// <exception cref="DG244Cutting.A_Domain.Common.Exceptions.Ex_Business">
+        /// Levée si l'entité fournie est <see langword="null"/> (code <c>BU_ER_01</c>).
+        /// </exception>
+        /// <exception cref="DG244Cutting.A_Domain.Common.Exceptions.Ex_Infrastructure">
+        /// Levée si une défaillance technique EF Core survient lors de la création du contexte,
+        /// de l'insertion ou de la persistance (code <c>IN_ER_06</c>).
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
+        /// </exception>
         public async Task AddAndSaveAsync(string caller, UserAppErrorLog entity, CancellationToken ct = default)
         {
             string callChain = $"{caller} > {_callee} > {nameof(AddAndSaveAsync)}";
 
-            if (entity is null)
-                throw new Ex_Business(
-                    callChain,
-                    Ex_Business.ErrorCodes.BU_ER_01,
-                    "L'entité UserAppErrorLog fournie est nulle.");
-
-            ct.ThrowIfCancellationRequested();
-
             try
             {
+                if (entity is null)
+                    throw new Ex_Business(
+                        callChain,
+                        Ex_Business.ErrorCodes.BU_ER_01,
+                        "L'entité UserAppErrorLog fournie est nulle.");
+
+                ct.ThrowIfCancellationRequested();
+
                 // Contexte de courte durée, indépendant de toute transaction UseCase en cours.
                 // L'instruction using garantit la disposition du contexte à l'issue de l'opération,
                 // qu'elle réussisse ou échoue.
