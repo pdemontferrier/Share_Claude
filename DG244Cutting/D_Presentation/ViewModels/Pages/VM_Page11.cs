@@ -18,13 +18,16 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// sept intitulés de la fiche de synthèse du premier onglet, les
     /// quatre intitulés de colonnes du tableau des commandes du deuxième
     /// onglet, les onze intitulés de colonnes du tableau des châssis du
-    /// troisième onglet, les sept caractéristiques de la série désignée
+    /// troisième onglet, les douze intitulés de colonnes propres au
+    /// tableau des barres du quatrième onglet, les sept caractéristiques
+    /// de la série désignée
     /// par le contexte de sélection applicatif, la collection des
-    /// commandes clients rattachées à cette série et la collection des
-    /// châssis qui la composent, les unes et les autres relues en base
+    /// commandes clients rattachées à cette série, la collection des
+    /// châssis qui la composent et la collection des barres retenues par
+    /// l'optimisation, les unes et les autres relues en base
     /// via un Query Handler invoqué selon l'EA-11 — à l'entrée sur la
     /// page pour la fiche de synthèse et les commandes, à l'activation
-    /// de l'onglet pour les châssis.
+    /// de l'onglet pour les châssis comme pour les barres.
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Composant de la famille VM_Page de la couche
@@ -45,7 +48,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>Objectif : Exposer à la vue
     /// <see cref="DG244Cutting.D_Presentation.Views.Pages.Page11"/> :</para>
     /// <list type="bullet">
-    ///   <item><description>27 propriétés observables
+    ///   <item><description>39 propriétés observables
     ///   <c>Label_P11_NN</c> liées aux clés homonymes du dictionnaire
     ///   actif : <see cref="Label_P11_01"/> à <see cref="Label_P11_05"/>
     ///   pour les cinq en-têtes d'onglets (série, commandes, châssis,
@@ -61,7 +64,17 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   du tableau des châssis du troisième onglet (position en série,
     ///   position en commande, code-barre, quantité, famille produit,
     ///   hauteur, largeur, couleur et trois libellés descriptifs du type
-    ///   d'ouvrant). Toutes ces propriétés sont
+    ///   d'ouvrant), <see cref="Label_P11_25"/> à
+    ///   <see cref="Label_P11_36"/> pour les douze intitulés de colonnes
+    ///   propres au tableau des barres du quatrième onglet (référence
+    ///   d'article, catégorie, longueur de barre, ordre de tri, nombre de
+    ///   découpes, longueur de reste et les six intitulés des cinq
+    ///   indicateurs d'état et du motif de refus). Les quatre autres
+    ///   intitulés de ce tableau réutilisent des clés génériques déjà
+    ///   exposées — <see cref="Label_P11_11"/>,
+    ///   <see cref="Label_P11_19"/>, <see cref="Label_P11_20"/> et
+    ///   <see cref="Label_P11_21"/> — de sorte que seize colonnes ne
+    ///   mobilisent que douze propriétés nouvelles. Toutes ces propriétés sont
     ///   alimentées par la mécanique multilingue factorisée par
     ///   <see cref="VM_Generic"/> : premier chargement au constructeur
     ///   via <see cref="VM_Generic.InitializeLabels"/>, rechargement
@@ -112,26 +125,45 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   ultérieure. Elle n'est pas un libellé multilingue et n'est pas
     ///   rechargée au changement de langue, son contenu ne dépendant pas
     ///   de la culture active.</description></item>
+    ///   <item><description>1 collection observable
+    ///   <see cref="SeriesProductionBars"/> portant les barres retenues
+    ///   par l'optimisation pour la série consultée, triées selon la
+    ///   logique d'atelier — ordre d'affichage propre à la référence
+    ///   d'article, puis chutes avant barres neuves, puis identifiant de
+    ///   barre. Elle est la source du tableau du quatrième onglet, le
+    ///   plus informatif sur l'avancement de la série : il expose
+    ///   directement les cinq indicateurs d'état que le parcours de
+    ///   production positionne au fil de son déroulement — barre neuve ou
+    ///   chute, validée, utilisée, en rupture de stock, refusée — ainsi
+    ///   que le motif de refus le cas échéant. Son alimentation est
+    ///   portée par <see cref="LoadBarsAsync"/> à l'activation de
+    ///   l'onglet et non à l'ouverture de la page, et rejouée à chaque
+    ///   activation ultérieure. Elle n'est pas un libellé multilingue et
+    ///   n'est pas rechargée au changement de langue, son contenu ne
+    ///   dépendant pas de la culture active.</description></item>
     /// </list>
     ///
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
-    ///   <item><description>Exposer les 27 propriétés observables
+    ///   <item><description>Exposer les 39 propriétés observables
     ///   <c>Label_P11_NN</c> et les 7 propriétés observables de données
     ///   en accès public en lecture, écriture privée via le helper
-    ///   hérité <c>SetProperty&lt;T&gt;</c>, ainsi que les deux
-    ///   collections observables <see cref="SeriesCustomerOrders"/> et
-    ///   <see cref="SeriesProductionChassis"/> en accès public en
+    ///   hérité <c>SetProperty&lt;T&gt;</c>, ainsi que les trois
+    ///   collections observables <see cref="SeriesCustomerOrders"/>,
+    ///   <see cref="SeriesProductionChassis"/> et
+    ///   <see cref="SeriesProductionBars"/> en accès public en
     ///   lecture seule, mutées en place respectivement par
-    ///   <see cref="LoadAsync"/> et par
-    ///   <see cref="LoadChassisAsync"/>.</description></item>
+    ///   <see cref="LoadAsync"/>, par
+    ///   <see cref="LoadChassisAsync"/> et par
+    ///   <see cref="LoadBarsAsync"/>.</description></item>
     ///   <item><description>Redéfinir
-    ///   <see cref="VM_Generic.LoadLabels"/> pour résoudre les 27 clés
+    ///   <see cref="VM_Generic.LoadLabels"/> pour résoudre les 39 clés
     ///   <c>P11_01</c> à <c>P11_05</c>, <c>P11_06</c> à <c>P11_09</c>,
-    ///   <c>P11_10</c> à <c>P11_13</c>, <c>P11_14</c> à <c>P11_24</c> et
+    ///   <c>P11_10</c> à <c>P11_13</c>, <c>P11_14</c> à <c>P11_24</c>,
+    ///   <c>P11_25</c> à <c>P11_36</c> et
     ///   <c>P11_46</c> à <c>P11_48</c>
     ///   via <see cref="VM_Generic._dictionary"/> hérité et affecter les
-    ///   valeurs résolues aux 27 propriétés <c>Label_P11_NN</c>,
+    ///   valeurs résolues aux 39 propriétés <c>Label_P11_NN</c>,
     ///   conformément à R-4.11.8 du 0231.</description></item>
     ///   <item><description>Redéfinir
     ///   <see cref="VM_Page_Generic.LoadAsync"/> pour lire l'identifiant
@@ -162,6 +194,20 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   pas un hook du socle : elle est invoquée depuis le code-behind
     ///   de <c>Page11</c> par un handler d'événement propre branché sur
     ///   le changement d'onglet actif.</description></item>
+    ///   <item><description>Exposer la méthode publique additionnelle
+    ///   <see cref="LoadBarsAsync"/> pour lire le même identifiant de
+    ///   série, obtenir la liste projetée des barres retenues par
+    ///   l'optimisation par invocation du Query Handler spécialisé
+    ///   <see cref="IQ_VwProductionBarFull"/> via
+    ///   <see cref="IS_UseCaseInvoker"/>, l'ordonner en mémoire selon la
+    ///   logique d'atelier et alimenter la collection
+    ///   <see cref="SeriesProductionBars"/>, le tout en encapsulation
+    ///   par le même filet hérité
+    ///   <see cref="VM_Generic.ExecuteSafeAsync"/>. À parité stricte avec
+    ///   <see cref="LoadChassisAsync"/>, cette méthode n'est pas un hook
+    ///   du socle : elle est invoquée depuis le code-behind
+    ///   de <c>Page11</c> par le même handler d'événement propre branché
+    ///   sur le changement d'onglet actif.</description></item>
     ///   <item><description>Déléguer à <see cref="VM_Generic"/> la
     ///   cérémonie multilingue complète (premier chargement, abonnement
     ///   INPC filtré sur <see cref="ISE_App.AppCultureCode"/>,
@@ -200,10 +246,12 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   <see cref="ISE_UseCase.IdSeriesSelected"/> est supposé porter un
     ///   identifiant valide et le cas d'un identifiant absent à
     ///   l'ouverture n'est pas envisagé. Aucune garde préalable n'est
-    ///   davantage posée par <see cref="LoadChassisAsync"/> : le contrat
-    ///   <see cref="IQ_VwProductionChassisFull"/> qualifie l'identifiant
+    ///   davantage posée par <see cref="LoadChassisAsync"/> ni par
+    ///   <see cref="LoadBarsAsync"/> : les contrats
+    ///   <see cref="IQ_VwProductionChassisFull"/> et
+    ///   <see cref="IQ_VwProductionBarFull"/> qualifient l'identifiant
     ///   nul ou négatif d'anomalie fonctionnelle devant remonter en
-    ///   <c>Ex_Business</c> <c>BU_ER_02</c> plutôt que produire une
+    ///   <c>Ex_Business</c> plutôt que produire une
     ///   lecture vide, et cette remontée est captée par le filet
     ///   hérité.</description></item>
     ///   <item><description>Aucune décision de navigation : la règle
@@ -252,8 +300,9 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// de l'exception architecturale propre du socle
     /// <see cref="VM_Generic"/> (EA-01, §4.15.5 du 0230), héritée et non
     /// re-déclarée à ce niveau ; elle est mobilisée par
-    /// <see cref="LoadAsync"/> comme par <see cref="LoadChassisAsync"/>,
-    /// qui encapsulent l'une et l'autre leur invocation par le filet
+    /// <see cref="LoadAsync"/> comme par <see cref="LoadChassisAsync"/>
+    /// et <see cref="LoadBarsAsync"/>,
+    /// qui encapsulent chacune leur invocation par le filet
     /// hérité <see cref="VM_Generic.ExecuteSafeAsync"/>. L'injection de
     /// <see cref="ISE_UseCase"/> est nominale au titre de la règle
     /// d'accès aux Settings (consommation par injection de l'interface
@@ -268,25 +317,30 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///
     /// <para>Note explicite — consommation d'<see cref="IS_UseCaseInvoker"/>
     /// hors du hook <see cref="LoadAsync"/> : Le présent ViewModel
-    /// consomme <see cref="IS_UseCaseInvoker"/> en deux points distincts.
+    /// consomme <see cref="IS_UseCaseInvoker"/> en trois points
+    /// distincts.
     /// Le premier est l'override du hook canonique
-    /// <see cref="LoadAsync"/>, forme nominale de la famille. Le second
-    /// est la méthode publique additionnelle
-    /// <see cref="LoadChassisAsync"/>, qui n'est pas un hook du socle et
-    /// n'est pas invoquée par la séquence de montage de
-    /// <c>Page_Generic</c>. Ce second point relève du sous-cas visé
+    /// <see cref="LoadAsync"/>, forme nominale de la famille. Les deux
+    /// autres sont les méthodes publiques additionnelles
+    /// <see cref="LoadChassisAsync"/> et <see cref="LoadBarsAsync"/>, qui
+    /// ne sont pas des hooks du socle et
+    /// ne sont pas invoquées par la séquence de montage de
+    /// <c>Page_Generic</c>. Ces deux points relèvent du sous-cas visé
     /// nommément par l'item VM-P22 du 0232-Page-VM — « l'exposition d'une
-    /// méthode publique additionnelle consommatrice » — et appelle à ce
-    /// titre la présente note explicite. Il ne constitue ni un second
+    /// méthode publique additionnelle consommatrice » — et appellent à ce
+    /// titre la présente note explicite. Ils ne constituent ni un second
     /// ancrage canonique ni une dérogation : l'ancrage
     /// <c>OnLoadedAsync</c> → <see cref="LoadAsync"/> demeure seul de son
     /// espèce, et la médiation par <see cref="IS_UseCaseInvoker"/> est
-    /// identique dans les deux points, avec construction locale de la
+    /// identique dans les trois points, avec construction locale de la
     /// CallChain et encapsulation par
-    /// <see cref="VM_Generic.ExecuteSafeAsync"/>. Le motif de ce second
-    /// point est le report de la lecture des châssis à l'activation de
-    /// leur onglet plutôt qu'au montage de la page, la vue source étant
-    /// large de soixante-seize colonnes.</para>
+    /// <see cref="VM_Generic.ExecuteSafeAsync"/>. Le motif de ces deux
+    /// points est le report de la lecture des châssis puis des barres à
+    /// l'activation de
+    /// leur onglet respectif plutôt qu'au montage de la page — la vue
+    /// source des châssis étant
+    /// large de soixante-seize colonnes, et le tableau des barres
+    /// n'ayant de contenu qu'une fois l'optimisation lancée.</para>
     ///
     /// <para>Absence de propriété de nom de page : Le présent ViewModel
     /// n'expose aucune propriété <c>PageName</c>. La page ne porte pas de
@@ -300,21 +354,22 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>La classe applique la structure normative à cinq régions
     /// standard (§4.4.2) complétée par deux extensions (R-4.4.10 du
     /// 0231) : l'extension <c>=== Propriétés publiques ===</c> au titre
-    /// des 34 propriétés observables à champ support et des deux
+    /// des 46 propriétés observables à champ support et des trois
     /// collections observables exposées, et l'extension
     /// <c>=== Méthodes protégées ===</c> au titre de l'override
     /// <see cref="LoadLabels"/>. Soit sept régions au total :</para>
     ///
     /// <list type="number">
     ///   <item><description><c>=== Propriétés privées ===</c> :
-    ///   34 champs supports des propriétés observables (27 champs
+    ///   46 champs supports des propriétés observables (39 champs
     ///   supports de libellés <c>_label_p11_NN</c> et 7 champs supports
     ///   de données <c>_idSerialNumber</c>, <c>_description</c>,
     ///   <c>_productionStartDate</c>, <c>_productionEndDate</c>,
     ///   <c>_isCuttingStarted</c>, <c>_isCuttingCompleted</c>,
-    ///   <c>_isBarOutOfStock</c>). Les deux collections observables
-    ///   <see cref="SeriesCustomerOrders"/> et
-    ///   <see cref="SeriesProductionChassis"/> ne portent pas de champ
+    ///   <c>_isBarOutOfStock</c>). Les trois collections observables
+    ///   <see cref="SeriesCustomerOrders"/>,
+    ///   <see cref="SeriesProductionChassis"/> et
+    ///   <see cref="SeriesProductionBars"/> ne portent pas de champ
     ///   support et ne sont pas comptées dans cet
     ///   effectif.</description></item>
     ///   <item><description><c>=== Dépendances privées ===</c> :
@@ -324,14 +379,15 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   (<see cref="IS_UseCaseInvoker"/>) et <c>_seUseCase</c>
     ///   (<see cref="ISE_UseCase"/>).</description></item>
     ///   <item><description><c>=== Propriétés publiques ===</c>
-    ///   (extension §4.4.3) : 34 propriétés observables exposées en accès
+    ///   (extension §4.4.3) : 46 propriétés observables exposées en accès
     ///   public en lecture, écriture privée via
-    ///   <c>SetProperty&lt;T&gt;</c>, plus les deux collections
-    ///   observables <see cref="SeriesCustomerOrders"/> et
-    ///   <see cref="SeriesProductionChassis"/> exposées <c>{ get; }</c> en
+    ///   <c>SetProperty&lt;T&gt;</c>, plus les trois collections
+    ///   observables <see cref="SeriesCustomerOrders"/>,
+    ///   <see cref="SeriesProductionChassis"/> et
+    ///   <see cref="SeriesProductionBars"/> exposées <c>{ get; }</c> en
     ///   lecture seule avec instanciation en place, au titre de la
     ///   dérogation assumée au patron <c>SetProperty&lt;T&gt;</c> de
-    ///   l'item VM-P9 dont la portée est scalaire — soit 36 propriétés
+    ///   l'item VM-P9 dont la portée est scalaire — soit 49 propriétés
     ///   publiques au total.</description></item>
     ///   <item><description><c>=== Constructeur ===</c> : constructeur
     ///   <c>public</c> à cinq paramètres, délégation à
@@ -345,13 +401,15 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   à trois constituants
     ///   (<see cref="VM_Generic.BuildFirstCallChain"/> interne,
     ///   <see cref="VM_Generic.ExecuteSafeAsync"/>, propagation du
-    ///   <see cref="System.Threading.CancellationToken"/>), et méthode
-    ///   publique additionnelle <see cref="LoadChassisAsync"/> appliquant
+    ///   <see cref="System.Threading.CancellationToken"/>), et deux
+    ///   méthodes publiques additionnelles
+    ///   <see cref="LoadChassisAsync"/> et <see cref="LoadBarsAsync"/>
+    ///   appliquant
     ///   les trois mêmes constituants hors du hook du
     ///   socle.</description></item>
     ///   <item><description><c>=== Méthodes protégées ===</c>
     ///   (extension §4.4.3) : override <see cref="LoadLabels"/> peuplant
-    ///   les 27 propriétés <c>Label_P11_NN</c> via
+    ///   les 39 propriétés <c>Label_P11_NN</c> via
     ///   <see cref="VM_Generic._dictionary"/>, une affectation par ligne
     ///   dans l'ordre numérique croissant des clés, sans appel à
     ///   <c>base.LoadLabels(caller)</c>.</description></item>
@@ -441,6 +499,42 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <summary>Champ support de <see cref="Label_P11_24"/> (clé <c>P11_24</c>).</summary>
         private string _label_p11_24 = string.Empty;
 
+        /// <summary>Champ support de <see cref="Label_P11_25"/> (clé <c>P11_25</c>).</summary>
+        private string _label_p11_25 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_26"/> (clé <c>P11_26</c>).</summary>
+        private string _label_p11_26 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_27"/> (clé <c>P11_27</c>).</summary>
+        private string _label_p11_27 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_28"/> (clé <c>P11_28</c>).</summary>
+        private string _label_p11_28 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_29"/> (clé <c>P11_29</c>).</summary>
+        private string _label_p11_29 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_30"/> (clé <c>P11_30</c>).</summary>
+        private string _label_p11_30 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_31"/> (clé <c>P11_31</c>).</summary>
+        private string _label_p11_31 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_32"/> (clé <c>P11_32</c>).</summary>
+        private string _label_p11_32 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_33"/> (clé <c>P11_33</c>).</summary>
+        private string _label_p11_33 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_34"/> (clé <c>P11_34</c>).</summary>
+        private string _label_p11_34 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_35"/> (clé <c>P11_35</c>).</summary>
+        private string _label_p11_35 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_36"/> (clé <c>P11_36</c>).</summary>
+        private string _label_p11_36 = string.Empty;
+
         /// <summary>Champ support de <see cref="Label_P11_46"/> (clé <c>P11_46</c>).</summary>
         private string _label_p11_46 = string.Empty;
 
@@ -529,7 +623,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// structurelle de l'injection directe d'un contrat <c>IU_</c> ou
         /// <c>IQ_</c> dans un composant de <c>D_Presentation</c>,
         /// indépendamment de toute question de captive dependency.
-        /// Conformité I-4.10.10 du 0231. Les trois Query Handlers
+        /// Conformité I-4.10.10 du 0231. Les quatre Query Handlers
         /// mobilisés par le présent ViewModel — le
         /// <see cref="IQ_Generic{T}"/> de
         /// <see cref="ProductionSeries"/> pour la fiche de synthèse et le
@@ -537,8 +631,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// le tableau des commandes, tous deux invoqués par
         /// <see cref="LoadAsync"/> ; le contrat spécialisé
         /// <see cref="IQ_VwProductionChassisFull"/> pour le tableau des
-        /// châssis, invoqué par <see cref="LoadChassisAsync"/> — sont
-        /// invoqués par cette voie unique, en trois
+        /// châssis, invoqué par <see cref="LoadChassisAsync"/> ; le
+        /// contrat spécialisé <see cref="IQ_VwProductionBarFull"/> pour le
+        /// tableau des barres, invoqué par
+        /// <see cref="LoadBarsAsync"/> — sont
+        /// invoqués par cette voie unique, en quatre
         /// invocations distinctes dotées chacune de leur propre
         /// <c>IServiceScope</c>.</para>
         /// </remarks>
@@ -556,8 +653,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <c>ISE_</c> au constructeur du composant consommateur. La
         /// consommation par le présent ViewModel se limite à la lecture
         /// de <see cref="ISE_UseCase.IdSeriesSelected"/> au sein de
-        /// <see cref="LoadAsync"/> et de
-        /// <see cref="LoadChassisAsync"/> : le ViewModel ne mute jamais la
+        /// <see cref="LoadAsync"/>, de <see cref="LoadChassisAsync"/> et
+        /// de <see cref="LoadBarsAsync"/> : le ViewModel ne mute jamais la
         /// cascade de sélection, les opérations atomiques
         /// <see cref="ISE_UseCase.SelectSeries"/>,
         /// <see cref="ISE_UseCase.SelectBar"/> et
@@ -741,6 +838,90 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         {
             get => _label_p11_24;
             private set => SetProperty(ref _label_p11_24, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_25</c>, intitulé de la colonne de la référence d'article de la barre dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_25
+        {
+            get => _label_p11_25;
+            private set => SetProperty(ref _label_p11_25, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_26</c>, intitulé de la colonne de la catégorie principale de famille d'article dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_26
+        {
+            get => _label_p11_26;
+            private set => SetProperty(ref _label_p11_26, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_27</c>, intitulé de la colonne de la longueur de la barre dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_27
+        {
+            get => _label_p11_27;
+            private set => SetProperty(ref _label_p11_27, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_28</c>, intitulé de la colonne de l'ordre d'affichage propre à la référence d'article dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_28
+        {
+            get => _label_p11_28;
+            private set => SetProperty(ref _label_p11_28, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_29</c>, intitulé de la colonne du nombre de découpes affectées à la barre dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_29
+        {
+            get => _label_p11_29;
+            private set => SetProperty(ref _label_p11_29, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_30</c>, intitulé de la colonne de la longueur de reste attendue de la barre dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_30
+        {
+            get => _label_p11_30;
+            private set => SetProperty(ref _label_p11_30, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_31</c>, intitulé de la colonne de l'indicateur de barre neuve dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_31
+        {
+            get => _label_p11_31;
+            private set => SetProperty(ref _label_p11_31, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_32</c>, intitulé de la colonne de l'indicateur de barre validée par l'opérateur dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_32
+        {
+            get => _label_p11_32;
+            private set => SetProperty(ref _label_p11_32, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_33</c>, intitulé de la colonne de l'indicateur de barre effectivement utilisée dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_33
+        {
+            get => _label_p11_33;
+            private set => SetProperty(ref _label_p11_33, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_34</c>, intitulé de la colonne de l'indicateur de barre en rupture de stock dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_34
+        {
+            get => _label_p11_34;
+            private set => SetProperty(ref _label_p11_34, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_35</c>, intitulé de la colonne de l'indicateur de barre refusée dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_35
+        {
+            get => _label_p11_35;
+            private set => SetProperty(ref _label_p11_35, value);
+        }
+
+        /// <summary>Libellé multilingue associé à la clé <c>P11_36</c>, intitulé de la colonne du motif de refus de la barre dans le tableau des barres du quatrième onglet.</summary>
+        public string Label_P11_36
+        {
+            get => _label_p11_36;
+            private set => SetProperty(ref _label_p11_36, value);
         }
 
         /// <summary>Libellé multilingue associé à la clé <c>P11_46</c>, intitulé de l'indicateur de découpe commencée dans la fiche de synthèse du premier onglet.</summary>
@@ -1129,6 +1310,103 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// </remarks>
         public ObservableCollection<DTO_VwProductionChassisFull_P11> SeriesProductionChassis { get; } = new();
 
+        /// <summary>
+        /// Collection observable des barres retenues par l'optimisation
+        /// pour la série de production consultée, triée selon la logique
+        /// d'atelier : ordre ascendant de <c>ARSortOrder</c>, puis de
+        /// <c>PBIsNewBar</c>, puis de <c>PBId</c>.
+        /// </summary>
+        /// <value>
+        /// Collection observable de
+        /// <see cref="DTO_VwProductionBarFull_P11"/> instanciée à la
+        /// construction du présent ViewModel à une collection vide, puis
+        /// alimentée par <see cref="LoadBarsAsync"/> par <c>Clear()</c>
+        /// suivi d'autant d'<c>Add(...)</c> que d'éléments triés. La
+        /// référence de collection n'est jamais réaffectée et n'est jamais
+        /// <see langword="null"/>, conformément au patron idiomatique des
+        /// collections observables exposées en lecture seule par les
+        /// ViewModels WPF.
+        /// </value>
+        /// <remarks>
+        /// <para>Contexte : Propriété bindable consommée par la vue
+        /// <see cref="DG244Cutting.D_Presentation.Views.Pages.Page11"/>
+        /// (quatrième onglet, <c>ListView</c> <c>BarsListView</c>,
+        /// attribut <c>ItemsSource="{Binding SeriesProductionBars}"</c>).
+        /// L'<c>ItemTemplate</c> de la <c>ListView</c> consomme par
+        /// binding les seize champs d'affichage de l'objet de transport,
+        /// dont les intitulés de colonnes sont portés par
+        /// <see cref="Label_P11_25"/> à <see cref="Label_P11_36"/> ainsi
+        /// que par <see cref="Label_P11_11"/>,
+        /// <see cref="Label_P11_19"/>, <see cref="Label_P11_20"/> et
+        /// <see cref="Label_P11_21"/>, réutilisés depuis les onglets
+        /// précédents pour les intitulés génériques de désignation, de
+        /// hauteur, de largeur et de couleur.</para>
+        ///
+        /// <para>Approvisionnement de la découpe : La découpe des
+        /// profilés aluminium consomme des barres issues du stock de
+        /// chutes de séries antérieures ou du stock de barres neuves. Une
+        /// étape d'optimisation détermine, pour chaque série, quelles
+        /// barres mobiliser et comment y placer les pièces à découper.
+        /// Chaque élément de la collection porte, outre les
+        /// caractéristiques de l'article et de la barre, cinq indicateurs
+        /// d'état jalonnant son parcours — barre neuve ou chute, barre
+        /// validée par l'opérateur, barre effectivement utilisée, barre
+        /// en rupture de stock, barre refusée, ce dernier cas
+        /// s'accompagnant d'un motif conservé sur l'enregistrement. Le
+        /// quatrième onglet est à ce titre le plus informatif sur
+        /// l'avancement de la série, puisqu'il expose directement les
+        /// états que le parcours de production positionne au fil de son
+        /// déroulement.</para>
+        ///
+        /// <para>Ordonnancement et exhaustivité : Le tri suit la logique
+        /// d'atelier — les barres sont groupées par profil selon l'ordre
+        /// d'affichage propre à chaque référence d'article, et au sein de
+        /// chaque profil les chutes précèdent les barres neuves,
+        /// l'atelier consommant prioritairement la matière déjà
+        /// disponible. Les barres refusées ne sont pas écartées de la
+        /// collection : elles font partie du résultat attendu, leur état
+        /// étant restitué en clair dans une colonne dédiée.</para>
+        ///
+        /// <para>Champs de service non affichés : L'objet de transport
+        /// porte, outre ses seize champs d'affichage, deux champs de
+        /// service qui ne sont jamais rendus à l'écran — <c>PSId</c> et
+        /// <c>PBId</c>, ce dernier portant le troisième critère
+        /// d'ordonnancement appliqué en mémoire par
+        /// <see cref="LoadBarsAsync"/>.</para>
+        ///
+        /// <para>Dérogation au patron <c>SetProperty&lt;T&gt;</c> de
+        /// l'item VM-P9 : La propriété est exposée <c>{ get; }</c> en
+        /// lecture seule avec instanciation en place via <c>= new();</c>,
+        /// sans champ support séparé ni accesseur en écriture privée, à
+        /// parité stricte avec <see cref="SeriesCustomerOrders"/> et
+        /// <see cref="SeriesProductionChassis"/>. Ce patron idiomatique
+        /// des collections observables WPF est admissible au titre de la
+        /// portée scalaire de VM-P9 ; la notification des éléments
+        /// ajoutés ou retirés est portée par
+        /// <see cref="ObservableCollection{T}"/> elle-même au titre de
+        /// <see cref="System.Collections.Specialized.INotifyCollectionChanged"/>.
+        /// La collection est nommée d'après son contenu et non d'après
+        /// son type.</para>
+        ///
+        /// <para>Alimentation : Exclusivement par
+        /// <see cref="LoadBarsAsync"/> via <c>Clear()</c> suivi d'autant
+        /// d'<c>Add(...)</c> que nécessaire, après tri en mémoire du lot
+        /// rendu par le Query Handler. À la différence de
+        /// <see cref="SeriesCustomerOrders"/> et à parité avec
+        /// <see cref="SeriesProductionChassis"/>, l'alimentation n'a pas
+        /// lieu à l'ouverture de la page mais à l'activation du quatrième
+        /// onglet, et elle est intégralement rejouée à chaque activation
+        /// ultérieure : aucun indicateur ne mémorise qu'une lecture a déjà
+        /// eu lieu, la donnée affichée est toujours celle de l'instant.
+        /// Cette propriété n'est pas affectée par
+        /// <see cref="LoadLabels"/> et n'est pas rechargée par le handler
+        /// interne d'abonnement INPC de <see cref="VM_Generic"/> : son
+        /// contenu ne dépend pas de la langue active. Son état initial est
+        /// vide, et il le demeure lorsque la série ne comporte aucune
+        /// barre, l'optimisation n'ayant pas encore été lancée.</para>
+        /// </remarks>
+        public ObservableCollection<DTO_VwProductionBarFull_P11> SeriesProductionBars { get; } = new();
+
         #endregion
 
         #region === Constructeur ===
@@ -1178,7 +1456,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   CallChain initiale via
         ///   <see cref="VM_Generic.BuildFirstCallChain"/>, premier appel
         ///   synchrone à l'override <see cref="LoadLabels"/> peuplant les
-        ///   27 propriétés <c>Label_P11_NN</c> avant le premier binding
+        ///   39 propriétés <c>Label_P11_NN</c> avant le premier binding
         ///   WPF de la vue, et branchement de l'abonnement INPC interne à
         ///   <see cref="ISE_App"/> pour la prise en compte du changement
         ///   de langue dynamique (R-4.11.8 et R-4.11.9 du
@@ -1212,14 +1490,15 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <param name="dictionary">Service d'accès au dictionnaire
         /// multilingue, transmis à <see cref="VM_Page_Generic"/> via
         /// <c>base(...)</c>. Mobilisé par <see cref="LoadLabels"/> pour
-        /// la résolution des 27 clés de la page. Injecté en Singleton par
+        /// la résolution des 39 clés de la page. Injecté en Singleton par
         /// le conteneur DI.</param>
         /// <param name="logAndNotify">Orchestrateur du traitement
         /// terminal des erreurs, transmis à
         /// <see cref="VM_Page_Generic"/> via <c>base(...)</c>. Mobilisé
         /// par le filet hérité
         /// <see cref="VM_Generic.ExecuteSafeAsync"/> au sein de
-        /// <see cref="LoadAsync"/> et de <see cref="LoadChassisAsync"/>.
+        /// <see cref="LoadAsync"/>, de <see cref="LoadChassisAsync"/> et
+        /// de <see cref="LoadBarsAsync"/>.
         /// Injecté en Singleton par le conteneur
         /// DI au titre de l'EA-01.</param>
         /// <param name="app">Setting Singleton de l'état applicatif
@@ -1235,14 +1514,16 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// génériques <see cref="IQ_Generic{T}"/> de
         /// <see cref="ProductionSeries"/> et de
         /// <see cref="CustomerOrder"/> ainsi que du Query Handler
-        /// spécialisé <see cref="IQ_VwProductionChassisFull"/> depuis le
+        /// spécialisés <see cref="IQ_VwProductionChassisFull"/> et
+        /// <see cref="IQ_VwProductionBarFull"/> depuis le
         /// présent ViewModel.
         /// Injecté en Singleton par le conteneur DI.</param>
         /// <param name="seUseCase">Setting Singleton portant la cascade
         /// de sélection métier, dont l'identifiant de la série de
         /// production retenue. Mobilisé en lecture seule par
-        /// <see cref="LoadAsync"/> et par
-        /// <see cref="LoadChassisAsync"/>. Injecté en Singleton par le
+        /// <see cref="LoadAsync"/>, par
+        /// <see cref="LoadChassisAsync"/> et par
+        /// <see cref="LoadBarsAsync"/>. Injecté en Singleton par le
         /// conteneur DI.</param>
         /// <exception cref="ArgumentNullException">Levée si
         /// <paramref name="useCaseInvoker"/> ou
@@ -1728,6 +2009,186 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             }, ct);
         }
 
+        /// <summary>
+        /// Charge les barres retenues par l'optimisation pour la série de
+        /// production désignée par le contexte de sélection applicatif,
+        /// les ordonne selon la logique d'atelier et alimente la
+        /// collection <see cref="SeriesProductionBars"/> liée au tableau
+        /// des barres du quatrième onglet, par lecture projetée sans suivi
+        /// de modification via le Query Handler spécialisé
+        /// <see cref="IQ_VwProductionBarFull"/> invoqué au travers
+        /// d'<see cref="IS_UseCaseInvoker"/> (EA-11).
+        /// </summary>
+        /// <param name="ct">Jeton d'annulation coopérative propagé par le
+        /// code-behind appelant. Propagé à
+        /// <see cref="VM_Generic.ExecuteSafeAsync"/>, à
+        /// <see cref="IS_UseCaseInvoker.InvokeAsync{TUseCase, TResult}(System.Func{TUseCase, System.Threading.CancellationToken, System.Threading.Tasks.Task{TResult}}, System.Threading.CancellationToken)"/>
+        /// et, par le délégué, au Query Handler
+        /// <see cref="IQ_VwProductionBarFull.HandleGetByProductionSeriesIdForP11AsNoTrackingAsync"/>.
+        /// Valeur par défaut : <see langword="default"/>.</param>
+        /// <returns>Une tâche représentant l'exécution asynchrone du
+        /// chargement de la collection des barres de la série.</returns>
+        /// <remarks>
+        /// <para>Contexte : Méthode publique additionnelle du présent
+        /// dérivé, et non redéfinition d'un hook du socle. Elle n'est pas
+        /// invoquée par la séquence de montage de <c>Page_Generic</c> mais
+        /// par le handler d'événement propre <c>OnTabSelectionChanged</c>
+        /// du code-behind de <c>Page11</c>, branché sur le changement
+        /// d'onglet actif du <c>TabControl</c> de page. À la différence de
+        /// <see cref="LoadAsync"/> et à parité avec
+        /// <see cref="LoadChassisAsync"/>, elle n'est donc pas appelée à
+        /// l'ouverture de la page mais à l'activation du quatrième onglet,
+        /// et elle est rejouée intégralement à chaque activation
+        /// ultérieure.</para>
+        ///
+        /// <para>Note explicite — consommation d'<see cref="IS_UseCaseInvoker"/>
+        /// hors du hook <see cref="LoadAsync"/> : L'exposition d'une
+        /// méthode publique additionnelle consommatrice
+        /// d'<see cref="IS_UseCaseInvoker"/> relève du sous-cas visé
+        /// nommément par l'item VM-P22 du 0232-Page-VM, déjà mobilisé et
+        /// documenté par <see cref="LoadChassisAsync"/>. Elle ne constitue
+        /// pas un second ancrage canonique : l'ancrage demeure
+        /// <c>OnLoadedAsync</c> → <see cref="LoadAsync"/>, et l'ancrage du
+        /// filet est <see cref="VM_Generic.ExecuteSafeAsync"/> (§4.7.3 du
+        /// 0230).</para>
+        ///
+        /// <para>Objectif : Restituer l'état d'approvisionnement de la
+        /// série. La découpe des profilés aluminium consomme des barres
+        /// issues du stock de chutes de séries antérieures ou du stock de
+        /// barres neuves ; une étape d'optimisation détermine, pour chaque
+        /// série, quelles barres mobiliser et comment y placer les pièces
+        /// à découper. La méthode obtient le lot correspondant, l'ordonne
+        /// et le publie dans la collection liée au tableau.</para>
+        ///
+        /// <para>Ordonnancement : Le tri est appliqué en mémoire, après
+        /// extraction, selon trois critères ascendants successifs —
+        /// <c>ARSortOrder</c>, qui groupe les barres par profil selon
+        /// l'ordre d'affichage propre à chaque référence d'article ;
+        /// <c>PBIsNewBar</c>, dont le tri croissant place les valeurs
+        /// fausses en premier, soit les chutes avant les barres neuves,
+        /// l'atelier consommant prioritairement la matière déjà
+        /// disponible ; <c>PBId</c>, qui départage les barres de même
+        /// profil et de même nature. Les barres refusées
+        /// (<c>PBIsDeleted</c>) ne sont pas filtrées : elles font partie
+        /// du résultat attendu.</para>
+        ///
+        /// <para>Identifiant de série : Il n'est pas passé en paramètre
+        /// mais lu sur <see cref="ISE_UseCase.IdSeriesSelected"/> à
+        /// l'entrée du corps de la lambda, à parité stricte avec
+        /// <see cref="LoadAsync"/> et
+        /// <see cref="LoadChassisAsync"/>.</para>
+        ///
+        /// <para>Absence de garde et de cas d'échec métier explicite :
+        /// Aucun test de nullité n'est posé sur le lot rendu, la signature
+        /// du contrat garantissant une liste non nulle. Aucune garde
+        /// préalable n'est davantage posée sur l'identifiant de série : le
+        /// contrat <see cref="IQ_VwProductionBarFull"/> qualifie
+        /// l'identifiant nul ou négatif d'anomalie fonctionnelle devant
+        /// remonter en <c>Ex_Business</c> plutôt que produire une lecture
+        /// vide, et cette remontée est captée par le filet hérité. Série
+        /// sans barre parce que l'optimisation n'a pas encore été lancée :
+        /// le Query Handler rend une liste vide, la collection est vidée
+        /// puis laissée vide et le tableau s'affiche vide, sans
+        /// message.</para>
+        ///
+        /// <para>CallChain : Une CallChain interne est reconstruite
+        /// localement via
+        /// <see cref="VM_Generic.BuildFirstCallChain"/> au format
+        /// <c>{_callee} &gt; LoadBarsAsync</c>. La méthode ne reçoit
+        /// aucune CallChain de son appelant, le handler d'événement propre
+        /// du code-behind n'en disposant d'aucune. La CallChain consommée
+        /// par le filet et par le délégué d'invocation est donc celle
+        /// reconstruite localement.</para>
+        ///
+        /// <para>Idempotence et absence de garde de réentrance : La
+        /// méthode est ré-appelable à chaque activation de l'onglet, sans
+        /// indicateur d'état mémorisant qu'une lecture a déjà eu lieu et
+        /// sans garde de réentrance. Le rechargement systématique est la
+        /// règle : la donnée affichée est toujours celle de
+        /// l'instant.</para>
+        ///
+        /// <para>Filet de sécurité : L'invocation est encapsulée par le
+        /// filet hérité <see cref="VM_Generic.ExecuteSafeAsync"/> (§4.7.3
+        /// du 0230). Aucun try/catch local n'est posé : la défaillance
+        /// métier (<c>Ex_Business</c>) et la défaillance technique EF Core
+        /// (<c>Ex_Infrastructure</c> <c>IN_ER_06</c>) levées par le Query
+        /// Handler sont absorbées selon le pipeline canonique et traitées
+        /// terminalement par <see cref="IU_LogAndNotify"/>. En cas de
+        /// défaillance, <see cref="SeriesProductionBars"/> conserve son
+        /// contenu antérieur, l'alimentation étant postérieure à
+        /// l'invocation dans le corps de la lambda. Aucune journalisation
+        /// ni notification propre n'est portée par la présente
+        /// méthode.</para>
+        ///
+        /// <para>Mode d'invocation : Conformément à §4.10.10 du 0230,
+        /// l'invocation du Query Handler est portée par
+        /// <see cref="IS_UseCaseInvoker"/>, qui matérialise un
+        /// <c>IServiceScope</c> distinct, y résout l'implémentation du
+        /// contrat (<c>QH_VwProductionBarFull</c>) et l'exécute via le
+        /// délégué fourni, puis dispose le scope. La résolution du contrat
+        /// est typée à l'invocation ; le présent ViewModel n'injecte pas
+        /// directement <see cref="IQ_VwProductionBarFull"/> et ne recourt
+        /// ni à <c>App.ServiceProvider</c> ni à l'injection d'un
+        /// <c>IServiceProvider</c>, conformément à I-4.10.10 du
+        /// 0231.</para>
+        ///
+        /// <para>Chaîne d'appel : La séquence
+        /// <c>VM_Page11</c> → <see cref="IQ_VwProductionBarFull"/> →
+        /// <c>IR_VwProductionBarFull</c> → <c>DbContext</c> est la
+        /// chaîne (2) de lecture simple au sens de §4.14.9 du 0230, forme
+        /// déjà empruntée par les trois premiers onglets, seul le contrat
+        /// variant.</para>
+        ///
+        /// <para>Invariants : Aucune écriture en base ; lecture sans
+        /// suivi de modification ; aucune initiative transactionnelle et
+        /// aucune <c>ExecutionStrategy</c> (R-4.10.1 du 0231) ; tri
+        /// appliqué après extraction et jamais au niveau de la source ;
+        /// jeton d'annulation propagé de bout en chaîne sans
+        /// réinitialisation locale. Aucune autre propriété observable
+        /// n'est touchée : les sept caractéristiques de la série et les
+        /// deux autres collections restent intactes.</para>
+        ///
+        /// <para>Retours signalables : Aucun.
+        /// <see cref="LoadBarsAsync"/> ne signale rien à son appelant, le
+        /// traitement terminal des erreurs étant intégralement porté par
+        /// <see cref="VM_Generic.ExecuteSafeAsync"/> (EA-01). Le seul
+        /// canal signalable est la notification utilisateur émise par
+        /// <see cref="IU_LogAndNotify"/>.</para>
+        /// </remarks>
+        /// <exception cref="OperationCanceledException">Propagée
+        /// silencieusement à l'appelant sur signal d'annulation
+        /// coopérative par le filet hérité
+        /// <see cref="VM_Generic.ExecuteSafeAsync"/>, conformément à
+        /// §4.7.3 du 0230. Aucune journalisation ni notification. Elle est
+        /// absorbée en aval par le filet ultime du handler d'événement
+        /// propre appelant.</exception>
+        public async Task LoadBarsAsync(CancellationToken ct = default)
+        {
+            string innerCallChain = BuildFirstCallChain();
+
+            await ExecuteSafeAsync(innerCallChain, async () =>
+            {
+                int idSeries = _seUseCase.IdSeriesSelected;
+
+                var bars = await _useCaseInvoker
+                    .InvokeAsync<IQ_VwProductionBarFull, List<DTO_VwProductionBarFull_P11>>(
+                        (handler, innerCt) => handler.HandleGetByProductionSeriesIdForP11AsNoTrackingAsync(
+                            innerCallChain,
+                            idSeries,
+                            innerCt),
+                        ct);
+
+                var sortedBars = bars
+                    .OrderBy(b => b.ARSortOrder)
+                    .ThenBy(b => b.PBIsNewBar)
+                    .ThenBy(b => b.PBId)
+                    .ToList();
+
+                SeriesProductionBars.Clear();
+                foreach (var item in sortedBars) SeriesProductionBars.Add(item);
+            }, ct);
+        }
+
         #endregion
 
         #region === Méthodes protégées ===
@@ -1735,11 +2196,12 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <summary>
         /// Redéfinit le point d'extension
         /// <see cref="VM_Generic.LoadLabels"/> pour charger les
-        /// vingt-sept libellés multilingues affichés par la page
+        /// trente-neuf libellés multilingues affichés par la page
         /// <c>Page11</c> — cinq en-têtes d'onglets, sept intitulés de la
         /// fiche de synthèse, quatre intitulés de colonnes du tableau des
-        /// commandes et onze intitulés de colonnes du tableau des
-        /// châssis — depuis le dictionnaire de langue actif et les
+        /// commandes, onze intitulés de colonnes du tableau des châssis
+        /// et douze intitulés de colonnes du tableau des barres — depuis
+        /// le dictionnaire de langue actif et les
         /// affecter aux propriétés observables
         /// <c>Label_P11_NN</c> correspondantes.
         /// </summary>
@@ -1754,20 +2216,27 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="ISE_App.AppCultureCode"/>, avec marshalling
         /// Dispatcher défensif vers le thread UI.</para>
         ///
-        /// <para>Objectif : Garantir que les vingt-sept propriétés
+        /// <para>Objectif : Garantir que les trente-neuf propriétés
         /// <c>Label_P11_NN</c> sont synchronisées avec la langue active
         /// du dictionnaire, tant au moment de l'instanciation du
         /// ViewModel que lors de tout changement ultérieur de langue
-        /// dynamique au cours de la session. Les vingt-sept clés sont
+        /// dynamique au cours de la session. Les trente-neuf clés sont
         /// résolues par une affectation par ligne, dans l'ordre
         /// numérique croissant — <c>P11_01</c> à <c>P11_05</c> pour les
         /// en-têtes d'onglets, <c>P11_06</c> à <c>P11_09</c> pour les
         /// quatre premiers intitulés de la fiche, <c>P11_10</c> à
         /// <c>P11_13</c> pour les quatre intitulés de colonnes du tableau
         /// des commandes, <c>P11_14</c> à <c>P11_24</c> pour les onze
-        /// intitulés de colonnes du tableau des châssis, <c>P11_46</c> à
+        /// intitulés de colonnes du tableau des châssis, <c>P11_25</c> à
+        /// <c>P11_36</c> pour les douze intitulés de colonnes propres au
+        /// tableau des barres, <c>P11_46</c> à
         /// <c>P11_48</c> pour les trois
-        /// intitulés d'indicateurs — sans boucle dynamique.</para>
+        /// intitulés d'indicateurs — sans boucle dynamique. Le tableau
+        /// des barres compte seize colonnes mais ne mobilise que douze
+        /// clés propres : quatre de ses intitulés réutilisent des clés
+        /// génériques déjà résolues pour les onglets précédents
+        /// (<c>P11_11</c>, <c>P11_19</c>, <c>P11_20</c> et
+        /// <c>P11_21</c>).</para>
         ///
         /// <para>Absence d'appel à <c>base.LoadLabels(caller)</c> :
         /// L'implémentation par défaut de
@@ -1826,6 +2295,18 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             Label_P11_22 = _dictionary.GetText(callChain, "P11_22");
             Label_P11_23 = _dictionary.GetText(callChain, "P11_23");
             Label_P11_24 = _dictionary.GetText(callChain, "P11_24");
+            Label_P11_25 = _dictionary.GetText(callChain, "P11_25");
+            Label_P11_26 = _dictionary.GetText(callChain, "P11_26");
+            Label_P11_27 = _dictionary.GetText(callChain, "P11_27");
+            Label_P11_28 = _dictionary.GetText(callChain, "P11_28");
+            Label_P11_29 = _dictionary.GetText(callChain, "P11_29");
+            Label_P11_30 = _dictionary.GetText(callChain, "P11_30");
+            Label_P11_31 = _dictionary.GetText(callChain, "P11_31");
+            Label_P11_32 = _dictionary.GetText(callChain, "P11_32");
+            Label_P11_33 = _dictionary.GetText(callChain, "P11_33");
+            Label_P11_34 = _dictionary.GetText(callChain, "P11_34");
+            Label_P11_35 = _dictionary.GetText(callChain, "P11_35");
+            Label_P11_36 = _dictionary.GetText(callChain, "P11_36");
             Label_P11_46 = _dictionary.GetText(callChain, "P11_46");
             Label_P11_47 = _dictionary.GetText(callChain, "P11_47");
             Label_P11_48 = _dictionary.GetText(callChain, "P11_48");

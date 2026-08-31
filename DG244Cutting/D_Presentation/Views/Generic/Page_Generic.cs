@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 using Microsoft.Extensions.DependencyInjection;
 using DG244Cutting.A_Domain.Interfaces.Services.Presentation;
+using DG244Cutting.A_Domain.Interfaces.Settings.App;
 using DG244Cutting.A_Domain.Interfaces.Settings.Presentation;
 
 namespace DG244Cutting.D_Presentation.Views.Generic
@@ -67,6 +69,13 @@ namespace DG244Cutting.D_Presentation.Views.Generic
     ///   centralisée) et <see cref="ISE_Window"/> (accès à la fenêtre
     ///   principale), stockés en champs <c>protected</c> exploitables
     ///   directement dans les surcharges des points d'extension.</description></item>
+    ///   <item><description>Poser au constructeur la culture d'affichage
+    ///   de la page via la propriété
+    ///   <see cref="FrameworkElement.Language"/>, à partir du code
+    ///   culture applicatif courant publié par
+    ///   <see cref="ISE_App.AppCultureCode"/>, de sorte que l'ensemble
+    ///   de l'arbre visuel de la page en hérite pour le formatage des
+    ///   valeurs numériques et temporelles.</description></item>
     /// </list>
     /// <para>Non-responsabilités :</para>
     /// <list type="bullet">
@@ -103,6 +112,14 @@ namespace DG244Cutting.D_Presentation.Views.Generic
     ///   antérieure ; le garbage collector libère naturellement la page
     ///   au démontage. Tout désabonnement explicite serait techniquement
     ///   inutile et compliquerait inutilement le code.</description></item>
+    ///   <item><description>Ne met pas à jour la culture d'une page déjà
+    ///   affichée : la pose de <see cref="FrameworkElement.Language"/>
+    ///   est unique, au constructeur. Aucun chemin applicatif ne permet
+    ///   une bascule de langue pendant qu'une page porteuse de données
+    ///   culture-sensibles est affichée, la bascule n'étant déclenchée
+    ///   que depuis la <c>Page02</c>. Les pages concernées sont
+    ///   reconstruites à la navigation suivante et lisent alors la
+    ///   culture à jour.</description></item>
     /// </list>
     /// <para>Changement comportemental introduit par la refonte :</para>
     /// <para>À compter de la présente refonte, <see cref="OnResized"/>
@@ -123,6 +140,34 @@ namespace DG244Cutting.D_Presentation.Views.Generic
     /// invariante (indépendante des dimensions de la fenêtre) et n'est
     /// jamais invoqué au redimensionnement, tandis que
     /// <see cref="OnResized"/> porte l'ajustement dimensionnel.</para>
+    /// <para>Culture d'affichage de l'arbre visuel :</para>
+    /// <para>WPF ne consulte pas <c>Thread.CurrentCulture</c> pour
+    /// formater ses liaisons. Le paramètre <c>culture</c> transmis à
+    /// <c>Convert</c> par le contrat
+    /// <see cref="System.Windows.Data.IValueConverter"/>, ainsi que
+    /// l'interprétation de <c>StringFormat</c>, sont dérivés de la
+    /// propriété de dépendance <see cref="FrameworkElement.Language"/>
+    /// de l'élément cible, dont la valeur d'usine est <c>en-US</c>. Les
+    /// quatre cibles <see cref="System.Globalization.CultureInfo"/>
+    /// posées par <c>UC_Language_Apply</c> sont donc sans effet sur le
+    /// rendu. La présente classe pose
+    /// <see cref="FrameworkElement.Language"/> sur l'instance de page ;
+    /// la propriété étant à héritage de valeur, une affectation unique
+    /// se propage à l'ensemble des descendants sans affectation
+    /// individuelle.</para>
+    /// <para>Invariant de séquence : la pose intervient dans le
+    /// constructeur de la classe de base, donc avant l'appel à
+    /// <c>InitializeComponent()</c> du dérivé et avant l'établissement
+    /// de la moindre liaison. Aucun formatage transitoire en culture
+    /// d'usine ne peut être observé.</para>
+    /// <para>Invariant d'antériorité :
+    /// <see cref="ISE_App.AppCultureCode"/> est nécessairement renseigné
+    /// à la construction d'une page. <c>App.Application_Startup</c>
+    /// attend l'achèvement de <c>UC_Application_OnStart</c>, dont
+    /// l'étape 2 applique la culture, avant de résoudre et d'afficher
+    /// <c>MainWindow</c>. La résolution différée de la grappe de
+    /// présentation est un choix documenté du socle, non un ordre
+    /// fortuit.</para>
     /// <para>Exception architecturale documentée — Service Locator
     /// (EA-2) :</para>
     /// <para>Cette classe résout ses dépendances via
@@ -233,6 +278,35 @@ namespace DG244Cutting.D_Presentation.Views.Generic
         /// </remarks>
         protected readonly ISE_Window _window;
 
+        /// <summary>
+        /// Setting Singleton d'accès à l'état applicatif partagé, consommé
+        /// au seul constructeur pour la lecture du code culture de la
+        /// langue applicative courante.
+        /// </summary>
+        /// <remarks>
+        /// <para>Contexte : Singleton résolu au constructeur via
+        /// <c>App.ServiceProvider.GetRequiredService</c> au titre de
+        /// l'EA-2 Service Locator, dont le périmètre est amendé pour
+        /// couvrir nominativement cette troisième résolution. La
+        /// visibilité <c>private</c> applique le défaut de R-4.4.6 :
+        /// aucun dérivé n'a vocation à lire le code culture, la culture
+        /// d'affichage étant portée par la propriété
+        /// <see cref="FrameworkElement.Language"/> de la page et héritée
+        /// par l'ensemble de son arbre visuel sans intervention des
+        /// dérivés.</para>
+        /// <para>Usage unique : Cette dépendance n'est consommée qu'une
+        /// fois, au constructeur, pour la lecture de
+        /// <see cref="ISE_App.AppCultureCode"/>. Aucun abonnement à
+        /// <see cref="ISE_App.PropertyChanged"/> n'est posé : la bascule
+        /// de langue n'est déclenchée que depuis la <c>Page02</c>, qui
+        /// n'affiche aucune donnée sensible à la culture, et les pages
+        /// porteuses de telles données sont reconstruites à la
+        /// navigation suivante. Un abonnement d'un objet transitoire à
+        /// un Singleton imposerait un désabonnement au démontage pour un
+        /// cas d'usage inexistant.</para>
+        /// </remarks>
+        private readonly ISE_App _app;
+
         #endregion
 
         #region === Constructeur ===
@@ -250,9 +324,9 @@ namespace DG244Cutting.D_Presentation.Views.Generic
         /// Locator documentée en remarque de classe (EA-2).</para>
         /// <para>Séquence d'initialisation (R-4.4.7) :</para>
         /// <list type="number">
-        ///   <item><description>Résolution et affectation des deux
-        ///   dépendances <see cref="_controlStyler"/> et
-        ///   <see cref="_window"/> via
+        ///   <item><description>Résolution et affectation des trois
+        ///   dépendances <see cref="_controlStyler"/>,
+        ///   <see cref="_window"/> et <see cref="_app"/> via
         ///   <c>App.ServiceProvider.GetRequiredService</c>. La méthode
         ///   <c>GetRequiredService</c> est utilisée (et non
         ///   <c>GetService</c>), conformément à la convention de
@@ -262,6 +336,17 @@ namespace DG244Cutting.D_Presentation.Views.Generic
         ///   <item><description>Initialisation du champ
         ///   <see cref="_callee"/> via <c>GetType().Name</c>, après
         ///   l'affectation des dépendances.</description></item>
+        ///   <item><description>Pose de
+        ///   <see cref="FrameworkElement.Language"/> sur l'instance
+        ///   courante, par conversion du code culture applicatif en
+        ///   <see cref="XmlLanguage"/> — initialisation locale au sens
+        ///   de R-4.4.7. Aucun contrôle défensif n'est posé :
+        ///   <see cref="ISE_App.AppCultureCode"/> est alimenté soit par
+        ///   <c>CultureInfo.CurrentCulture.Name</c> au démarrage, soit
+        ///   par <c>ISE_Language.GetCultureCodeFromCountryCode</c>, qui
+        ///   retombe sur <c>"en-GB"</c> pour toute entrée non
+        ///   reconnue ; dans les deux cas le tag est syntaxiquement bien
+        ///   formé.</description></item>
         ///   <item><description>Abonnement aux trois événements WPF
         ///   <see cref="FrameworkElement.Loaded"/>,
         ///   <see cref="FrameworkElement.Unloaded"/> et
@@ -284,8 +369,11 @@ namespace DG244Cutting.D_Presentation.Views.Generic
         {
             _controlStyler = App.ServiceProvider.GetRequiredService<IS_ControlStyler>();
             _window = App.ServiceProvider.GetRequiredService<ISE_Window>();
+            _app = App.ServiceProvider.GetRequiredService<ISE_App>();
 
             _callee = GetType().Name;
+
+            Language = XmlLanguage.GetLanguage(_app.AppCultureCode);
 
             Loaded += OnLoadedHandler;
             Unloaded += OnUnloadedHandler;

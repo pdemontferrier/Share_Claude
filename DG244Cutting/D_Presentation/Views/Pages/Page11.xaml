@@ -7,10 +7,10 @@ Description :
     l'application DG244Cutting. Présente, dans un TabControl à cinq onglets, la fiche
     de synthèse de la série (Onglet 1, "Série"), le tableau des commandes clients qui
     composent la série (Onglet 2, "Commandes"), le tableau des châssis qui la
-    composent physiquement (Onglet 3, "Chassis") et deux onglets d'accueil destinés
-    aux tableaux des barres optimisées (Onglet 4) et des découpes (Onglet 5). Ces deux
-    derniers onglets sont créés sans contenu ; leur remplissage relève de fils
-    ultérieurs.
+    composent physiquement (Onglet 3, "Chassis"), le tableau des barres retenues par
+    l'optimisation pour la découpe (Onglet 4, "Barres") et un onglet d'accueil destiné
+    au tableau des découpes (Onglet 5). Ce dernier onglet est créé sans contenu ; son
+    remplissage relève d'un fil ultérieur.
 
 Contexte :
     Page atteinte par un opérateur d'atelier de découpe depuis le tableau de bord des
@@ -25,20 +25,26 @@ Structure visuelle :
     - Élément racine generic:Page_Generic, héritant du socle Page_Generic (cycle de
       vie WPF, filet de sécurité ultime au bord des handlers, résolution
       d'IS_ControlStyler et d'ISE_Window via Service Locator).
-    - Ressource locale UT_DateFormatConverter (x:Key="DateFormatConverter") déclarée
-      en generic:Page_Generic.Resources, consommée par les deux bindings de date de
-      la fiche de synthèse.
+    - Quatre ressources locales déclarées en generic:Page_Generic.Resources :
+      UT_DateFormatConverter (x:Key="DateFormatConverter"), consommé par les deux
+      bindings de date de la fiche de synthèse ; UT_BarStateToBrush_P11
+      (x:Key="BarStateToBrush_P11"), UT_IsBarOutOfStockToFontStyle
+      (x:Key="IsBarOutOfStockToFontStyle") et UT_DecimalFormatConverter
+      (x:Key="DecimalFormatConverter"), consommés par le tableau des barres de
+      l'Onglet 4. Les clés reprennent strictement le nom de type privé du préfixe
+      UT_, à parité avec le précédent de Page10.
     - Grid central nommé PageGrid, conteneur unique de la page, stylé au Loaded par
       IS_ControlStyler.StylePage(PageGrid). Accueille comme unique enfant direct le
       TabControl MainTabControl. Aucun TextBlock de titre de page : l'identification
       visuelle est portée par les cinq en-têtes d'onglets.
     - TabControl MainTabControl à cinq TabItems, dont la hauteur est ajustée au Loaded
       puis à chaque SizeChanged par l'override OnResized du code-behind, lequel dérive
-      de cette hauteur celle des ScrollViewer OrdersScrollViewer de l'Onglet 2 et
-      FramesScrollViewer de l'Onglet 3, à géométrie verticale identique. Le TabControl
+      de cette hauteur celle des ScrollViewer OrdersScrollViewer de l'Onglet 2,
+      FramesScrollViewer de l'Onglet 3 et BarsScrollViewer de l'Onglet 4, à géométrie
+      verticale identique. Le TabControl
       porte par ailleurs un abonnement programmatique à SelectionChanged, posé au
       constructeur du code-behind, qui déclenche le chargement du tableau de l'Onglet 3
-      à l'activation de celui-ci :
+      ou de celui de l'Onglet 4 à l'activation de l'onglet correspondant :
         · SeriesTabItem (Header bindé sur Label_P11_01 via le TextBlock
           SeriesTabHeader) — contient un Border SeriesDetailsBorder englobant un Grid
           SeriesDetailsGrid à 2 colonnes (300, *) et 7 lignes (MinHeight=40).
@@ -57,7 +63,7 @@ Structure visuelle :
           empilant un Border d'en-têtes OrdersHeaderBorder et un ScrollViewer
           OrdersScrollViewer. Le Border englobe un StackPanel horizontal de
           4 TextBlocks d'en-tête (OrdersHeader01..04) bindés sur Label_P11_10..13, de
-          largeurs 100, 150, 100 et 150. Le ScrollViewer porte la ListView
+          largeurs 100, 300, 100 et 300. Le ScrollViewer porte la ListView
           OrdersListView, dont l'ItemsSource est bindé sur SeriesCustomerOrders et
           dont l'ItemTemplate rend chaque CustomerOrder en un StackPanel horizontal de
           4 TextBlocks non nommés bindés sur IdOrder, ProjectDesignation,
@@ -69,7 +75,8 @@ Structure visuelle :
           empilant un Border d'en-têtes FramesHeaderBorder et un ScrollViewer
           FramesScrollViewer. Le Border englobe un StackPanel horizontal de
           11 TextBlocks d'en-tête (FramesHeader01..11) bindés sur Label_P11_14..24, de
-          largeur uniforme 50. Le ScrollViewer porte la ListView FramesListView, dont
+          largeurs 40, 200, 100, 40, 120, 80, 80, 300, 400, 200 et 200. Le ScrollViewer
+          porte la ListView FramesListView, dont
           l'ItemsSource est bindé sur SeriesProductionChassis et dont l'ItemTemplate
           rend chaque DTO_VwProductionChassisFull_P11 en un StackPanel horizontal de
           11 TextBlocks non nommés bindés sur PCSeriesPosition, PCCustomerPosition,
@@ -80,22 +87,53 @@ Structure visuelle :
           niveau du châssis. Aucune sélection n'est exploitée ; aucun SelectedItem
           n'est lié.
         · BarsTabItem (Header bindé sur Label_P11_04 via le TextBlock BarsTabHeader)
-          — corps vide.
+          — contient un Grid BarsGrid à 1 colonne (*) et 2 lignes
+          (MinHeight=40 ; Height=auto), dont l'unique enfant est un StackPanel
+          empilant un Border d'en-têtes BarsHeaderBorder et un ScrollViewer
+          BarsScrollViewer. Le Border englobe un StackPanel horizontal de
+          16 TextBlocks d'en-tête (BarsHeader01..16) bindés sur Label_P11_25,
+          Label_P11_11, Label_P11_21, Label_P11_26, Label_P11_27, Label_P11_19,
+          Label_P11_20, Label_P11_28, Label_P11_29, Label_P11_30 et Label_P11_31..36,
+          de largeur uniforme 50 — quatre de ces intitulés réutilisent des libellés
+          génériques déjà exposés pour les onglets précédents (désignation, hauteur,
+          largeur, couleur). Le ScrollViewer porte la ListView BarsListView, dont
+          l'ItemsSource est bindé sur SeriesProductionBars et dont l'ItemTemplate rend
+          chaque DTO_VwProductionBarFull_P11 en un StackPanel horizontal de
+          11 TextBlocks et 5 CheckBox non nommés, aux mêmes largeurs : TextBlocks
+          bindés sur ARReference, ARDesignation, AIIdColorRalFinish,
+          ARFamilyCategoryPrincipal, PBBarLength, ARBarHeightMm, ARBarWidthMm,
+          ARSortOrder, PBCutPieceCount, PBResidueLength et PBRejectionReason ;
+          CheckBox en lecture seule (IsEnabled="False") bindées sur PBIsNewBar,
+          PBIsValidated, PBIsUsed, PBIsOutOfStock et PBIsDeleted. Les 11 TextBlocks
+          portent en outre deux liaisons de marquage visuel — Foreground via
+          BarStateToBrush_P11 et FontStyle via IsBarOutOfStockToFontStyle — que les
+          5 CheckBox ne portent pas. L'onglet est le plus informatif sur l'avancement
+          de la série : il expose directement les états que le parcours de production
+          positionne au fil de son déroulement. Aucune sélection n'est exploitée ;
+          aucun SelectedItem n'est lié.
         · CuttingsTabItem (Header bindé sur Label_P11_05 via le TextBlock
           CuttingsTabHeader) — corps vide.
 
 Bindings principaux :
-    36 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
-    15 bindings par l'élément courant des gabarits d'éléments des deux ListView —
-    4 par l'élément CustomerOrder de l'Onglet 2 et 11 par l'élément
-    DTO_VwProductionChassisFull_P11 de l'Onglet 3 — soit 51 bindings au total.
+    53 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
+    53 bindings par l'élément courant des gabarits d'éléments des trois ListView —
+    4 par l'élément CustomerOrder de l'Onglet 2, 11 par l'élément
+    DTO_VwProductionChassisFull_P11 de l'Onglet 3 et 38 par l'élément
+    DTO_VwProductionBarFull_P11 de l'Onglet 4 — soit 106 bindings au total.
 
     Portés par le DataContext de page :
-    - 27 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
+    - 43 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
       TabItem), Label_P11_06..09 et Label_P11_46..48 (sept intitulés de la fiche de
       synthèse de l'Onglet 1), Label_P11_10..13 (quatre intitulés de colonnes du
       tableau des commandes de l'Onglet 2), Label_P11_14..24 (onze intitulés de
-      colonnes du tableau des châssis de l'Onglet 3). Propriétés observables string
+      colonnes du tableau des châssis de l'Onglet 3), Label_P11_25, Label_P11_11,
+      Label_P11_21, Label_P11_26, Label_P11_27, Label_P11_19, Label_P11_20,
+      Label_P11_28, Label_P11_29, Label_P11_30 et Label_P11_31..36 (seize intitulés
+      de colonnes du tableau des barres de l'Onglet 4). Le nombre de liaisons excède
+      celui des propriétés liées : 43 liaisons portent sur 39 propriétés observables
+      distinctes, quatre libellés génériques (Label_P11_11, Label_P11_19,
+      Label_P11_20 et Label_P11_21) étant chacun lié deux fois, une fois par l'onglet
+      qui les a introduits et une fois par l'Onglet 4. Propriétés observables string
       exposées par
       VM_Page11, miroirs des libellés associés aux clés homonymes du dictionnaire de
       langue actif. Rechargées automatiquement à tout changement de langue dynamique
@@ -107,16 +145,20 @@ Bindings principaux :
       le point d'extension OnLoadedAsync du code-behind. En cas d'enregistrement
       introuvable, elles conservent leurs valeurs d'initialisation et la fiche
       s'affiche vide.
-    - 2 bindings de collection : SeriesCustomerOrders sur l'ItemsSource de la ListView
-      OrdersListView, et SeriesProductionChassis sur celui de la ListView
-      FramesListView. La première est alimentée par l'override LoadAsync, après
-      lecture filtrée sur la série retenue et tri en mémoire ; la seconde par la
+    - 3 bindings de collection : SeriesCustomerOrders sur l'ItemsSource de la ListView
+      OrdersListView, SeriesProductionChassis sur celui de la ListView
+      FramesListView, et SeriesProductionBars sur celui de la ListView BarsListView.
+      La première est alimentée par l'override LoadAsync, après
+      lecture filtrée sur la série retenue et tri en mémoire ; la deuxième par la
       méthode publique additionnelle LoadChassisAsync, invoquée non pas au montage de
-      la page mais à l'activation de l'Onglet 3, et rejouée à chaque activation
-      ultérieure. Ni l'une ni l'autre n'est
+      la page mais à l'activation de l'Onglet 3 ; la troisième par la méthode publique
+      additionnelle LoadBarsAsync, invoquée de même à l'activation de l'Onglet 4. Les
+      deux dernières sont rejouées à chaque activation
+      ultérieure. Aucune des trois n'est
       rechargée au changement de langue, leur contenu ne dépendant pas de la culture
       active. En cas de série introuvable ou de liste vide, le tableau concerné
-      s'affiche vide.
+      s'affiche vide — pour l'Onglet 4, le cas nominal d'une optimisation non encore
+      lancée.
 
     Portés par l'élément courant des gabarits d'éléments :
     - 4 bindings de données de commande (Onglet 2) : IdOrder, ProjectDesignation,
@@ -130,6 +172,18 @@ Bindings principaux :
       (PSId, PCId, COIdOrder, COPartialSeriesIndex, PCOrderPosition) ne sont pas
       bindés : les trois derniers portent les critères d'ordonnancement appliqués en
       mémoire par le ViewModel et ne sont jamais affichés.
+    - 38 bindings portés par l'élément courant du gabarit de l'Onglet 4 : 16 bindings
+      de contenu — ARReference, ARDesignation, AIIdColorRalFinish,
+      ARFamilyCategoryPrincipal, PBBarLength, ARBarHeightMm, ARBarWidthMm,
+      ARSortOrder, PBCutPieceCount, PBResidueLength, PBIsNewBar, PBIsValidated,
+      PBIsUsed, PBIsOutOfStock, PBIsDeleted et PBRejectionReason — et 22 bindings de
+      marquage visuel portés par les onze TextBlocks seulement, à raison de deux
+      chacun : Foreground via BarStateToBrush_P11 et FontStyle via
+      IsBarOutOfStockToFontStyle. La liaison de couleur est sans chemin : le
+      convertisseur reçoit le DTO entier et arbitre lui-même PBIsDeleted (rouge)
+      prioritairement sur PBIsUsed (vert). Les deux champs de service de l'objet de
+      transport (PSId, PBId) ne sont pas bindés : le second porte le troisième critère
+      d'ordonnancement appliqué en mémoire par le ViewModel et n'est jamais affiché.
 
 Remarques techniques :
     - Aucune chaîne UI en dur (I-4.11.1 du 0231) : tout texte affiché est issu d'un
@@ -137,20 +191,30 @@ Remarques techniques :
     - Aucune DynamicResource ni StaticResource pour les textes UI (I-4.11.10 du
       0231) : le chargement des libellés est porté exclusivement par le ViewModel via
       la mécanique multilingue héritée de VM_Generic. La seule StaticResource admise
-      dans le présent XAML est celle du converter UT_DateFormatConverter, qui ne
-      porte aucun texte UI.
-    - Mode=OneWay explicite sur les deux liaisons de date : UT_DateFormatConverter
-      lève NotSupportedException sur ConvertBack, par contrainte technique du
-      converter lui-même. Aucun Mode explicite n'est posé sur les onze liaisons du
+      dans le présent XAML est celle des quatre converters déclarés en ressources de
+      page, dont aucun ne porte de texte UI.
+    - Mode=OneWay explicite sur les deux liaisons de date de l'Onglet 1 et sur les
+      deux liaisons de dimension de profilé de l'Onglet 4 (ARBarHeightMm,
+      ARBarWidthMm) : UT_DateFormatConverter comme UT_DecimalFormatConverter
+      lèvent NotSupportedException sur ConvertBack, par contrainte technique du
+      converter lui-même. Mode=OneWay explicite également sur les cinq CheckBox de
+      l'Onglet 4, la page étant strictement en lecture. Aucun Mode explicite n'est
+      posé sur les onze liaisons du
       tableau des châssis de l'Onglet 3, à parité avec les quatre TextBlocks du
       gabarit d'éléments de l'Onglet 2 : la contrainte technique du converter est
-      absente ici, et le mode par défaut suffit.
-    - Les trois CheckBox de la colonne 1 ne sont pas stylisées par le code-behind.
+      absente ici, et le mode par défaut suffit. Aucun Mode explicite n'est davantage
+      posé sur les vingt-deux liaisons de marquage de l'Onglet 4 :
+      UT_BarStateToBrush_P11 et UT_IsBarOutOfStockToFontStyle rendent
+      DependencyProperty.UnsetValue sur ConvertBack et n'imposent pas la contrainte.
+    - Les trois CheckBox de la colonne 1 de l'Onglet 1 et les cinq CheckBox du
+      gabarit d'éléments de l'Onglet 4 ne sont pas stylisées par le code-behind.
       Le contrat IS_ControlStyler n'expose aucune méthode dédiée à ce type de
-      contrôle ; les trois cases conservent le rendu par défaut du framework WPF.
+      contrôle ; les huit cases conservent le rendu par défaut du framework WPF. Les
+      cinq de l'Onglet 4 vivent au surplus dans un gabarit d'éléments, donc hors de
+      portée de la résolution par nom.
       Cette absence est délibérée et documentée, non un oubli ; aucune extension du
       contrat n'est produite par le fil qui livre la présente page. Elles portent
-      IsEnabled="False", la page étant strictement en lecture.
+      toutes IsEnabled="False", la page étant strictement en lecture.
     - Les deux colonnes nullables du tableau des commandes (ProjectDesignation,
       MainSalesPointName) rendent une cellule vide lorsque la donnée est absente :
       aucune TargetNullValue, aucune FallbackValue, aucun convertisseur n'est posé.
@@ -161,45 +225,55 @@ Remarques techniques :
       PCWindowText, PCSlidingTypeDetailed, PCOpeningTypeText) suivent le même
       précédent : cellule vide en l'absence de valeur, sans TargetNullValue,
       FallbackValue ni convertisseur.
-    - Aucun convertisseur de troncature n'est posé sur les onze colonnes de
-      l'Onglet 3, malgré l'étroitesse des colonnes au regard des trois libellés
-      descriptifs. La largeur uniforme de 50 est une valeur de départ délibérée ;
+    - Les cinq colonnes nullables du tableau des barres (AIIdColorRalFinish,
+      ARFamilyCategoryPrincipal, ARBarHeightMm, ARBarWidthMm, PBRejectionReason)
+      suivent le même précédent : cellule vide en l'absence de valeur, sans
+      TargetNullValue, FallbackValue ni convertisseur de repli.
+    - Aucun convertisseur de troncature n'est posé, ni sur les onze colonnes de
+      l'Onglet 3, ni sur les seize colonnes de l'Onglet 4, malgré l'étroitesse des
+      colonnes au regard des libellés descriptifs de l'Onglet 3 et du motif de refus
+      comme de la désignation d'article de l'Onglet 4. Les largeurs portées sont des
+      valeurs de départ délibérées ;
       l'ajustement fin est renvoyé au contrôle visuel et relèvera d'un fil ultérieur.
     - Vocabulaire des identifiants : la présente vue nomme l'onglet et ses contrôles
       Frames, en cohérence avec l'en-tête FramesTabItem déjà en place ; le ViewModel
       nomme la matière Chassis, en cohérence avec le type transporté et le contrat
       consommé. Cette scission est délibérée, chaque côté restant cohérent avec son
       propre référent ; elle ne constitue pas une divergence à corriger.
-    - Les TextBlocks des gabarits d'éléments des deux ListView ne sont pas
-      nommés : instanciés par le DataTemplate à chaque élément, ils ne sont pas
+    - Les TextBlocks et CheckBox des gabarits d'éléments des trois ListView ne sont
+      pas nommés : instanciés par le DataTemplate à chaque élément, ils ne sont pas
       résolubles par FindName et leur rendu relève de StyleListView appliqué à la
       ListView elle-même.
     - Les noms d'éléments (x:Name) sont strictement ceux attendus par les signatures
       d'IS_ControlStyler (StylePage, StyleTabControl, StyleTabItem, StyleBorder,
       StyleBorderHeader, StyleTextBlockTitle, StyleTextBlockData, StyleScrollViewer,
       StyleListView) et par le calcul dimensionnel d'OnResized (MainTabControl, dont
-      la hauteur est ajustée directement, OrdersScrollViewer et FramesScrollViewer,
-      dont les hauteurs en sont dérivées) — toute modification casserait la
+      la hauteur est ajustée directement, OrdersScrollViewer, FramesScrollViewer et
+      BarsScrollViewer, dont les hauteurs en sont dérivées) — toute modification
+      casserait la
       stylisation ou le
       redimensionnement appliqués au Loaded et au SizeChanged par le code-behind.
       MainTabControl porte en outre l'abonnement programmatique à SelectionChanged
       posé au constructeur du code-behind.
-      Les Grids SeriesDetailsGrid, OrdersGrid et FramesGrid sont nommés sans être
-      stylisés : le contrat n'expose aucune méthode de stylisation de Grid interne.
+      Les Grids SeriesDetailsGrid, OrdersGrid, FramesGrid et BarsGrid sont nommés
+      sans être stylisés : le contrat n'expose aucune méthode de stylisation de Grid
+      interne.
     - La stylisation visuelle (couleurs, polices, dimensions, mise en forme) est
       intégralement appliquée au Loaded par le code-behind via IS_ControlStyler dans
       l'override ApplyLayout ; aucun style WPF n'est défini ici. Les valeurs
       dimensionnelles portées par le présent XAML sont la géométrie de la Grid de
       fiche de l'Onglet 1 (largeurs de colonnes, hauteurs minimales de lignes), le
       Padding vertical du Border de fiche, la géométrie de la Grid de l'Onglet 2 et
-      les quatre largeurs de colonnes du tableau des commandes, ainsi que la
+      les quatre largeurs de colonnes du tableau des commandes, la
       géométrie de la Grid de l'Onglet 3 et les onze largeurs de colonnes du tableau
-      des châssis, portées en dur sur
+      des châssis, ainsi que la géométrie de la Grid de l'Onglet 4 et les seize
+      largeurs de colonnes du tableau des barres, portées en dur sur
       les en-têtes comme sur le gabarit d'éléments à parité avec l'étalon Page01.
       Aucune ressource sys:Double ni constante de centralisation n'est introduite.
-      Les quatre colonnes de l'Onglet 2 totalisent 500 unités et les onze colonnes de
-      l'Onglet 3 totalisent 550 unités ; les unes et les autres tiennent dans la
-      largeur disponible : aucun défilement horizontal n'est prévu.
+      Les quatre colonnes de l'Onglet 2 totalisent 800 unités, les onze colonnes de
+      l'Onglet 3 totalisent 1760 unités et les seize colonnes de l'Onglet 4, de
+      largeur uniforme 50, totalisent 800 unités ; aucun défilement horizontal n'est
+      prévu.
     - Aucun chargement de libellé depuis ce fichier ni depuis son code-behind
       (I-4.11.10 du 0231) ; les libellés sont chargés exclusivement par l'override
       LoadLabels de VM_Page11.
@@ -217,7 +291,10 @@ Remarques techniques :
                       mc:Ignorable="d">
 
     <generic:Page_Generic.Resources>
-        <converters:UT_DateFormatConverter x:Key="DateFormatConverter" />
+        <converters:UT_DateFormatConverter         x:Key="DateFormatConverter" />
+        <converters:UT_BarStateToBrush_P11         x:Key="BarStateToBrush_P11" />
+        <converters:UT_IsBarOutOfStockToFontStyle  x:Key="IsBarOutOfStockToFontStyle" />
+        <converters:UT_DecimalFormatConverter      x:Key="DecimalFormatConverter" />
     </generic:Page_Generic.Resources>
 
     <Grid x:Name="PageGrid">
@@ -380,12 +457,96 @@ Remarques techniques :
             </TabItem>
 
             <!-- ============================================================ -->
-            <!-- Onglet 4 — Barres optimisées (corps à produire)              -->
+            <!-- Onglet 4 — Barres retenues par l'optimisation                -->
             <!-- ============================================================ -->
             <TabItem x:Name="BarsTabItem">
                 <TabItem.Header>
                     <TextBlock x:Name="BarsTabHeader" Text="{Binding Label_P11_04}"/>
                 </TabItem.Header>
+
+                <Grid x:Name="BarsGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- En-têtes de colonnes -->
+                        <Border x:Name="BarsHeaderBorder">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="BarsHeader01" Text="{Binding Label_P11_25}" Width="120"/>
+                                <TextBlock x:Name="BarsHeader02" Text="{Binding Label_P11_11}" Width="250"/>
+                                <TextBlock x:Name="BarsHeader03" Text="{Binding Label_P11_21}" Width="100"/>
+                                <TextBlock x:Name="BarsHeader04" Text="{Binding Label_P11_26}" Width="150"/>
+                                <TextBlock x:Name="BarsHeader05" Text="{Binding Label_P11_27}" Width="100"/>
+                                <TextBlock x:Name="BarsHeader06" Text="{Binding Label_P11_19}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader07" Text="{Binding Label_P11_20}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader08" Text="{Binding Label_P11_28}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader09" Text="{Binding Label_P11_29}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader10" Text="{Binding Label_P11_30}" Width="100"/>
+                                <TextBlock x:Name="BarsHeader11" Text="{Binding Label_P11_31}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader12" Text="{Binding Label_P11_32}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader13" Text="{Binding Label_P11_33}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader14" Text="{Binding Label_P11_34}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader15" Text="{Binding Label_P11_35}" Width="80"/>
+                                <TextBlock x:Name="BarsHeader16" Text="{Binding Label_P11_36}" Width="250"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Liste des barres retenues par l'optimisation pour la série -->
+                        <ScrollViewer x:Name="BarsScrollViewer">
+                            <ListView x:Name="BarsListView" ItemsSource="{Binding SeriesProductionBars}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding ARReference}"                                                                                     Width="120"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding ARDesignation}"                                                                                   Width="250"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding AIIdColorRalFinish}"                                                                              Width="100"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding ARFamilyCategoryPrincipal}"                                                                       Width="150"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding PBBarLength, StringFormat={}{0:N0}}"                                                              Width="100"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding ARBarHeightMm, Converter={StaticResource DecimalFormatConverter}, ConverterParameter=1, Mode=OneWay}" Width="80"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding ARBarWidthMm, Converter={StaticResource DecimalFormatConverter}, ConverterParameter=1, Mode=OneWay}"  Width="80"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding ARSortOrder}"                                                                                     Width="80"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding PBCutPieceCount, StringFormat={}{0:N0}}"                                                          Width="80"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <TextBlock Text="{Binding PBResidueLength, StringFormat={}{0:N0}}"                                                          Width="100"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                            <CheckBox  IsChecked="{Binding PBIsNewBar, Mode=OneWay}"     IsEnabled="False"                                              Width="80"/>
+                                            <CheckBox  IsChecked="{Binding PBIsValidated, Mode=OneWay}"  IsEnabled="False"                                              Width="80"/>
+                                            <CheckBox  IsChecked="{Binding PBIsUsed, Mode=OneWay}"       IsEnabled="False"                                              Width="80"/>
+                                            <CheckBox  IsChecked="{Binding PBIsOutOfStock, Mode=OneWay}" IsEnabled="False"                                              Width="80"/>
+                                            <CheckBox  IsChecked="{Binding PBIsDeleted, Mode=OneWay}"    IsEnabled="False"                                              Width="80"/>
+                                            <TextBlock Text="{Binding PBRejectionReason}"                                                                               Width="250"
+                                                       Foreground="{Binding Converter={StaticResource BarStateToBrush_P11}}"
+                                                       FontStyle="{Binding PBIsOutOfStock, Converter={StaticResource IsBarOutOfStockToFontStyle}}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
             </TabItem>
 
             <!-- ============================================================ -->
