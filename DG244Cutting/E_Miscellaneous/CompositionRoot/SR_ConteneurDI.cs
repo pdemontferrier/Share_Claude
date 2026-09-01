@@ -175,6 +175,13 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             // La résolution du type abstrait DbContext vers DigitTryDbContext est déjà en place
             // (cf. RDI_PersistenceGestStock, point (2)) : aucun ajout n'est requis ici.
             services.AddScoped<IR_VwProductionChassisFull, CR_VwProductionChassisFull>();
+
+            // CR spécialisé Patron 2 sur la vue vw_ProductionCutPiece_Full — projection SQL des
+            // vingt champs sur deux cent trente-trois, pour le cinquième onglet de la Page11.
+            // Portée déterminée par la dépendance au DbContext partagé (P4-bis) -> Scoped.
+            // La résolution du type abstrait DbContext vers DigitTryDbContext est déjà en place
+            // (cf. RDI_PersistenceGestStock, point (2)) : aucun ajout n'est requis ici.
+            services.AddScoped<IR_VwProductionCutPieceFull, CR_VwProductionCutPieceFull>();
         }
 
         private static void RDI_Services(IServiceCollection services)
