@@ -5,9 +5,6 @@ namespace Shared.Settings
 {
     public static class CR_CommonSettings
     {
-        // Titre de l'application
-        public static string ApplicationTitle = "Titre de l'application";
-
         // Main Window dimensions
         public static int W_MinimumWidth = 1280;
         public static int W_MinimumHeight = 720 + 35;
@@ -39,14 +36,6 @@ namespace Shared.Settings
         public static Color TitleColor = BackgroundColor_1;
         public static int TitleHeight = 70;
         public static int TitleMarginTop = 40;
-
-        // Logo
-        public static Uri LogoSource = new Uri("/Shared;component/Logo/RE_Logo.png", UriKind.Relative);
-        public static Uri LogoBWSource = new Uri("/Shared;component/Logo/RE_Logo_BW.png", UriKind.Relative);
-        public static Uri LogoWBSource = new Uri("/Shared;component/Logo/RE_Logo_WB.png", UriKind.Relative);
-        public static int LogoWidth = 160;
-        public static int LogoHeight = 60;
-        public static int LogoLeftMargin = 45;
 
         // Text
         public static Color TextColor_1 = (Color)ColorConverter.ConvertFromString("#FFFFFF"); // Withe
@@ -99,6 +88,17 @@ namespace Shared.Settings
         public static int DW_Width = 500;
         public static int DW_Height = 350;
         public static Uri DW_Icon = CR_IconsSettings.IconWarningTriangleOrange;
+
+        // Titre de l'application
+        public static string ApplicationTitle = "Titre de l'application";
+
+        // Logo
+        public static Uri LogoSource = new Uri("/Shared;component/Logo/RE_Logo.png", UriKind.Relative);
+        public static Uri LogoBWSource = new Uri("/Shared;component/Logo/RE_Logo_BW.png", UriKind.Relative);
+        public static Uri LogoWBSource = new Uri("/Shared;component/Logo/RE_Logo_WB.png", UriKind.Relative);
+        public static int LogoWidth = 160;
+        public static int LogoHeight = 60;
+        public static int LogoLeftMargin = 45;
 
         // Dossier Réseau
         public static readonly string DirectoryPathServer1 = @"\\gunder07\chronos\"; // Z:

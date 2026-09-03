@@ -13,8 +13,9 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     /// série (premier onglet), le tableau des commandes clients qui
     /// composent la série (deuxième onglet), le tableau des châssis qui la
     /// composent physiquement (troisième onglet), le tableau des barres
-    /// retenues par l'optimisation pour la découpe (quatrième onglet) et un
-    /// onglet d'accueil destiné au tableau des découpes.
+    /// retenues par l'optimisation pour la découpe (quatrième onglet) et
+    /// le tableau des découpes à réaliser pour la série (cinquième
+    /// onglet).
     /// </summary>
     /// <remarks>
     /// <para>Contexte : Composant de la famille Page de la couche
@@ -35,16 +36,17 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   <item><description>Résoudre <see cref="VM_Page11"/> au
     ///   constructeur et l'affecter au
     ///   <see cref="System.Windows.FrameworkElement.DataContext"/> pour
-    ///   activer les cent six bindings déclarés par
+    ///   activer les cent cinquante-et-un bindings déclarés par
     ///   <c>Page11.xaml</c>.</description></item>
     ///   <item><description>Appliquer au <c>Loaded</c> la stylisation
-    ///   invariante des soixante-quatre contrôles XAML nommés stylisables via
+    ///   invariante des quatre-vingt-trois contrôles XAML nommés stylisables via
     ///   le service <c>IS_ControlStyler</c> hérité de
     ///   <see cref="Page_Generic"/>.</description></item>
     ///   <item><description>Ajuster au <c>Loaded</c> puis à chaque
     ///   <c>SizeChanged</c> la hauteur du <c>TabControl</c> à la hauteur
     ///   de fenêtre courante lue sur <c>ISE_Window</c>, et celles des
-    ///   <c>ScrollViewer</c> des deuxième, troisième et quatrième onglets
+    ///   <c>ScrollViewer</c> des deuxième, troisième, quatrième et
+    ///   cinquième onglets
     ///   par dérivation de la précédente.</description></item>
     ///   <item><description>Amorcer au <c>Loaded</c> le chargement
     ///   asynchrone des sept caractéristiques de la fiche de synthèse et
@@ -54,13 +56,15 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   <c>LoadAsync</c>.</description></item>
     ///   <item><description>Amorcer à l'activation du troisième onglet le
     ///   chargement asynchrone du tableau des châssis par invocation de
-    ///   <see cref="VM_Page11.LoadChassisAsync"/>, et à l'activation du
+    ///   <see cref="VM_Page11.LoadChassisAsync"/>, à l'activation du
     ///   quatrième onglet celui du tableau des barres par invocation de
-    ///   <see cref="VM_Page11.LoadBarsAsync"/>, au moyen d'un unique
+    ///   <see cref="VM_Page11.LoadBarsAsync"/>, et à l'activation du
+    ///   cinquième onglet celui du tableau des découpes par invocation de
+    ///   <see cref="VM_Page11.LoadCutPiecesAsync"/>, au moyen d'un unique
     ///   handler
     ///   d'événement propre branché au constructeur sur le
     ///   <c>SelectionChanged</c> du <c>TabControl</c>
-    ///   principal, dont l'aiguillage compte deux
+    ///   principal, dont l'aiguillage compte trois
     ///   destinations.</description></item>
     /// </list>
     ///
@@ -90,7 +94,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   ressource de page, non du code-behind.</description></item>
     ///   <item><description>Aucun chargement de libellé multilingue
     ///   depuis la présente vue ni depuis son XAML, conformément à
-    ///   I-4.11.10 du 0231 : les trente-neuf libellés sont chargés
+    ///   I-4.11.10 du 0231 : les quarante-huit libellés sont chargés
     ///   exclusivement
     ///   par l'override de <c>LoadLabels</c> de
     ///   <see cref="VM_Page11"/>.</description></item>
@@ -154,9 +158,11 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     /// <see cref="ApplyLayout"/> : le contrat <c>IS_ControlStyler</c>
     /// n'expose aucune méthode dédiée à ce type de contrôle. Il en va de
     /// même des cinq <c>CheckBox</c> du gabarit d'éléments du tableau des
-    /// barres du quatrième onglet, qui sont au surplus instanciées par le
+    /// barres du quatrième onglet et des quatre <c>CheckBox</c> du gabarit
+    /// d'éléments du tableau des découpes du cinquième, qui sont au
+    /// surplus instanciées par le
     /// <c>DataTemplate</c> et donc hors de portée de la résolution par nom.
-    /// Les huit cases
+    /// Les douze cases
     /// conservent le rendu par défaut du framework WPF. Cette absence est
     /// délibérée et documentée ; aucune extension du contrat n'est
     /// produite.</para>
@@ -169,11 +175,12 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     /// overrides de points d'extension. Soit six régions au total :</para>
     ///
     /// <list type="number">
-    ///   <item><description><c>=== Propriétés privées ===</c> : trois
+    ///   <item><description><c>=== Propriétés privées ===</c> : quatre
     ///   constantes — <see cref="HeaderWidth"/>, largeur uniforme des cinq
     ///   en-têtes d'onglets, <see cref="FramesTabIndex"/>, indice du
-    ///   troisième onglet dans le <c>TabControl</c>, et
-    ///   <see cref="BarsTabIndex"/>, indice du quatrième
+    ///   troisième onglet dans le <c>TabControl</c>,
+    ///   <see cref="BarsTabIndex"/>, indice du quatrième onglet, et
+    ///   <see cref="CuttingsTabIndex"/>, indice du cinquième
     ///   onglet.</description></item>
     ///   <item><description><c>=== Dépendances privées ===</c> : champ
     ///   <see cref="_viewModel"/> stockant l'instance Singleton de
@@ -263,6 +270,26 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// </remarks>
         private const int BarsTabIndex = 3;
 
+        /// <summary>
+        /// Indice, dans la collection d'onglets du <c>TabControl</c>
+        /// <c>MainTabControl</c>, de l'onglet des découpes dont
+        /// l'activation déclenche le chargement du tableau.
+        /// </summary>
+        /// <remarks>
+        /// <para>Contexte : Constante consommée par la branche
+        /// correspondante de l'aiguillage de
+        /// <see cref="OnTabSelectionChanged"/>, à parité stricte de forme
+        /// et d'usage avec <see cref="FramesTabIndex"/> et
+        /// <see cref="BarsTabIndex"/>. La valeur <c>4</c> correspond à la
+        /// position de <c>CuttingsTabItem</c> dans l'ordre de déclaration
+        /// du XAML (<c>SeriesTabItem</c> 0, <c>OrdersTabItem</c> 1,
+        /// <c>FramesTabItem</c> 2, <c>BarsTabItem</c> 3,
+        /// <c>CuttingsTabItem</c> 4). La centralisation en constante
+        /// privée rend le réglage modifiable en un point unique et évite
+        /// le littéral numérique nu dans le corps du handler.</para>
+        /// </remarks>
+        private const int CuttingsTabIndex = 4;
+
         #endregion
 
         #region === Dépendances privées ===
@@ -283,8 +310,9 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <see cref="VM_Page11.LoadAsync"/> depuis
         /// <see cref="OnLoadedAsync"/>, au titre de l'ancrage canonique
         /// entre les deux socles génériques de la famille, et celles de
-        /// <see cref="VM_Page11.LoadChassisAsync"/> et de
-        /// <see cref="VM_Page11.LoadBarsAsync"/> depuis
+        /// <see cref="VM_Page11.LoadChassisAsync"/>, de
+        /// <see cref="VM_Page11.LoadBarsAsync"/> et de
+        /// <see cref="VM_Page11.LoadCutPiecesAsync"/> depuis
         /// <see cref="OnTabSelectionChanged"/> — seules
         /// invocations de membres du ViewModel admises depuis une vue,
         /// conformément à la séparation MVVM stricte.</para>
@@ -328,19 +356,23 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///   <see cref="System.Windows.FrameworkElement.DataContext"/>.</description></item>
         ///   <item><description>Affectation de
         ///   <see cref="System.Windows.FrameworkElement.DataContext"/> à
-        ///   <see cref="_viewModel"/> pour activer les cent six
-        ///   bindings déclarés par <c>Page11.xaml</c> : quarante-trois
+        ///   <see cref="_viewModel"/> pour activer les cent
+        ///   cinquante-et-un
+        ///   bindings déclarés par <c>Page11.xaml</c> : cinquante-neuf
         ///   liaisons de libellé
-        ///   multilingue, sept caractéristiques de la série et les trois
+        ///   multilingue, sept caractéristiques de la série et les quatre
         ///   collections portées par le
-        ///   <c>DataContext</c> de page — soit cinquante-trois — plus
+        ///   <c>DataContext</c> de page — soit soixante-dix — plus
         ///   quatre bindings de données
         ///   de commande portés par l'élément courant du gabarit
         ///   d'éléments de la <c>ListView</c> du deuxième onglet, onze
         ///   bindings de données de châssis portés par celui du troisième
-        ///   onglet et trente-huit bindings portés par celui du quatrième
+        ///   onglet, trente-huit bindings portés par celui du quatrième
         ///   onglet, dont seize de contenu et vingt-deux de marquage
-        ///   visuel — soit cinquante-trois également.</description></item>
+        ///   visuel, et vingt-huit bindings portés par celui du cinquième
+        ///   onglet, dont douze de contenu texte, douze de marquage et
+        ///   quatre de case à cocher — soit quatre-vingt-un
+        ///   au total.</description></item>
         ///   <item><description>Branchement du handler d'événement propre
         ///   <see cref="OnTabSelectionChanged"/> sur l'événement
         ///   <c>SelectionChanged</c> du <c>TabControl</c>
@@ -406,7 +438,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <summary>
         /// Redéfinit le point d'extension
         /// <see cref="Page_Generic.ApplyLayout"/> pour appliquer la
-        /// stylisation invariante des soixante-quatre contrôles XAML nommés
+        /// stylisation invariante des quatre-vingt-trois contrôles XAML nommés
         /// stylisables de la page : la <c>Grid</c> de page, le
         /// <c>TabControl</c> principal, les cinq onglets et leurs
         /// en-têtes, le <c>Border</c> de la fiche de synthèse, les sept
@@ -415,9 +447,12 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// les quatre <c>TextBlock</c> d'en-tête et la <c>ListView</c> du
         /// deuxième onglet, le <c>Border</c> d'en-têtes, le
         /// <c>ScrollViewer</c>, les onze <c>TextBlock</c> d'en-tête et la
-        /// <c>ListView</c> du troisième onglet, puis le <c>Border</c>
+        /// <c>ListView</c> du troisième onglet, le <c>Border</c>
         /// d'en-têtes, le <c>ScrollViewer</c>, les seize <c>TextBlock</c>
-        /// d'en-tête et la <c>ListView</c> du quatrième onglet.
+        /// d'en-tête et la <c>ListView</c> du quatrième onglet, puis le
+        /// <c>Border</c> d'en-têtes, le <c>ScrollViewer</c>, les seize
+        /// <c>TextBlock</c> d'en-tête et la <c>ListView</c> du cinquième
+        /// onglet.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Méthode invoquée par le handler privé
@@ -503,6 +538,19 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///   <c>ListView</c> <c>BarsListView</c>, qui porte le rendu
         ///   des onze <c>TextBlock</c> et cinq <c>CheckBox</c> non nommés
         ///   de son gabarit d'éléments.</description></item>
+        ///   <item><description><c>StyleBorderHeader</c> sur le
+        ///   <c>Border</c> d'en-têtes du tableau des découpes
+        ///   <c>CuttingsHeaderBorder</c>, du cinquième onglet.</description></item>
+        ///   <item><description><c>StyleScrollViewer</c> sur le
+        ///   <c>ScrollViewer</c> <c>CuttingsScrollViewer</c>, en
+        ///   invocation variadique unique portant en outre le
+        ///   <c>Border</c> d'en-têtes et les seize <c>TextBlock</c>
+        ///   d'en-tête <c>CuttingsHeader01</c> à
+        ///   <c>CuttingsHeader16</c>.</description></item>
+        ///   <item><description><c>StyleListView</c> sur la
+        ///   <c>ListView</c> <c>CuttingsListView</c>, qui porte le rendu
+        ///   des douze <c>TextBlock</c> et quatre <c>CheckBox</c> non
+        ///   nommés de son gabarit d'éléments.</description></item>
         /// </list>
         ///
         /// <para>Blocs <c>StyleScrollViewer</c> variadiques : Le contrat
@@ -511,7 +559,8 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// suivi de vingt-deux paramètres nullables optionnels : un
         /// <c>TextBlock</c> de titre, un <c>Border</c> de bandeau et vingt
         /// <c>TextBlock</c> d'en-têtes — plafond de vingt en-têtes que les
-        /// seize colonnes du quatrième onglet n'atteignent pas, aucune
+        /// seize colonnes du quatrième onglet comme celles du cinquième
+        /// n'atteignent pas, aucune
         /// extension du contrat n'étant donc requise. Chaque bloc dédié conditionne
         /// l'invocation à la seule résolution du <c>ScrollViewer</c>
         /// (garde <c>is</c>) ; la résolution du <c>Border</c> et des
@@ -520,12 +569,13 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// argument — le contrat acceptant le <c>null</c> sur ces
         /// paramètres, la garde <c>is</c> par paramètre n'est pas requise
         /// et l'invocation reste unique. Le paramètre de titre est passé
-        /// à <see langword="null"/> dans les trois blocs, aucun des trois
+        /// à <see langword="null"/> dans les quatre blocs, aucun des
+        /// quatre
         /// tableaux ne portant de titre
         /// propre ; les paramètres d'en-tête non consommés restent à leur
         /// valeur par défaut, le tableau des commandes ne comptant que
-        /// quatre colonnes, celui des châssis onze et celui des barres
-        /// seize. Les
+        /// quatre colonnes, celui des châssis onze, celui des barres
+        /// seize et celui des découpes seize. Les
         /// <c>Border</c> d'en-têtes, par ailleurs stylisés hors de ces
         /// blocs par <c>StyleBorderHeader</c>, y sont résolus une seconde
         /// fois dans la portée locale dédiée — le helper
@@ -535,16 +585,17 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// chaque bloc.</para>
         ///
         /// <para>Absence délibérée de stylisation individuelle des
-        /// <c>TextBlock</c> d'en-tête : Aucun des trente-et-un
+        /// <c>TextBlock</c> d'en-tête : Aucun des quarante-sept
         /// <c>TextBlock</c>
-        /// d'en-tête des trois tableaux ne reçoit de
+        /// d'en-tête des quatre tableaux ne reçoit de
         /// <c>StyleTextBlockHeader</c> individuel ; leur stylisation est
         /// intégralement portée par les blocs variadiques ci-dessus. Le
-        /// traitement est uniforme entre les trois onglets.</para>
+        /// traitement est uniforme entre les quatre onglets.</para>
         ///
-        /// <para>Absence délibérée de stylisation des quatre <c>Grid</c>
+        /// <para>Absence délibérée de stylisation des cinq <c>Grid</c>
         /// internes : Les <c>Grid</c> <c>SeriesDetailsGrid</c>,
-        /// <c>OrdersGrid</c>, <c>FramesGrid</c> et <c>BarsGrid</c> sont
+        /// <c>OrdersGrid</c>, <c>FramesGrid</c>, <c>BarsGrid</c> et
+        /// <c>CuttingsGrid</c> sont
         /// nommés sans être
         /// résolus ni stylisés.
         /// Le contrat <c>IS_ControlStyler</c> n'expose aucune méthode de
@@ -558,11 +609,13 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <c>BarOutOfStockCheckBox</c>) ne sont ni résolues ni stylisées.
         /// Le contrat <c>IS_ControlStyler</c> n'expose aucune méthode
         /// dédiée à ce type de contrôle. Il en va de même des cinq
-        /// <c>CheckBox</c> du gabarit d'éléments du quatrième onglet, non
+        /// <c>CheckBox</c> du gabarit d'éléments du quatrième onglet et
+        /// des quatre <c>CheckBox</c> du gabarit d'éléments du cinquième,
+        /// non
         /// nommées et instanciées par le <c>DataTemplate</c>, donc hors de
         /// portée de <see cref="Page_Generic.Find{T}(string)"/> ; leur
         /// rendu relève de <c>StyleListView</c> appliqué à la
-        /// <c>ListView</c>. Les huit cases conservent le
+        /// <c>ListView</c>. Les douze cases conservent le
         /// rendu par défaut du framework WPF. L'omission est délibérée et
         /// documentée, non un oubli ; aucune extension du contrat n'est
         /// produite.</para>
@@ -735,6 +788,41 @@ namespace DG244Cutting.D_Presentation.Views.Pages
             }
 
             if (Find<ListView>("BarsListView") is ListView barsListView) _controlStyler.StyleListView(barsListView);
+
+            // Tableau des découpes de l'onglet 5 — Border d'en-têtes
+            if (Find<Border>("CuttingsHeaderBorder") is Border cuttingsHeaderBorder) _controlStyler.StyleBorderHeader(cuttingsHeaderBorder);
+
+            // Bloc StyleScrollViewer variadique : résolution typée des seize en-têtes en variables
+            // locales optionnelles, invocation unique conditionnée à la résolution du ScrollViewer.
+            if (Find<ScrollViewer>("CuttingsScrollViewer") is ScrollViewer cuttingsScrollViewer)
+            {
+                Border? cuttingsHeaderBorderForScrollViewer = Find<Border>("CuttingsHeaderBorder");
+                TextBlock? c01 = Find<TextBlock>("CuttingsHeader01");
+                TextBlock? c02 = Find<TextBlock>("CuttingsHeader02");
+                TextBlock? c03 = Find<TextBlock>("CuttingsHeader03");
+                TextBlock? c04 = Find<TextBlock>("CuttingsHeader04");
+                TextBlock? c05 = Find<TextBlock>("CuttingsHeader05");
+                TextBlock? c06 = Find<TextBlock>("CuttingsHeader06");
+                TextBlock? c07 = Find<TextBlock>("CuttingsHeader07");
+                TextBlock? c08 = Find<TextBlock>("CuttingsHeader08");
+                TextBlock? c09 = Find<TextBlock>("CuttingsHeader09");
+                TextBlock? c10 = Find<TextBlock>("CuttingsHeader10");
+                TextBlock? c11 = Find<TextBlock>("CuttingsHeader11");
+                TextBlock? c12 = Find<TextBlock>("CuttingsHeader12");
+                TextBlock? c13 = Find<TextBlock>("CuttingsHeader13");
+                TextBlock? c14 = Find<TextBlock>("CuttingsHeader14");
+                TextBlock? c15 = Find<TextBlock>("CuttingsHeader15");
+                TextBlock? c16 = Find<TextBlock>("CuttingsHeader16");
+
+                _controlStyler.StyleScrollViewer(
+                    cuttingsScrollViewer,
+                    null,
+                    cuttingsHeaderBorderForScrollViewer,
+                    c01, c02, c03, c04, c05, c06, c07, c08,
+                    c09, c10, c11, c12, c13, c14, c15, c16);
+            }
+
+            if (Find<ListView>("CuttingsListView") is ListView cuttingsListView) _controlStyler.StyleListView(cuttingsListView);
         }
 
         /// <summary>
@@ -803,8 +891,9 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// Redéfinit le point d'extension
         /// <see cref="Page_Generic.OnResized"/> pour ajuster la hauteur du
         /// <c>TabControl</c> principal à la hauteur de fenêtre courante,
-        /// et celles des <c>ScrollViewer</c> des deuxième, troisième et
-        /// quatrième onglets par dérivation de la précédente.
+        /// et celles des <c>ScrollViewer</c> des deuxième, troisième,
+        /// quatrième et cinquième onglets par dérivation de la
+        /// précédente.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Méthode invoquée par le handler privé
@@ -830,22 +919,23 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// menu horizontal ; sa valeur reprend le précédent uniforme des
         /// pages <c>Page01</c> et <c>Page03</c>.</para>
         ///
-        /// <para>Quatre grandeurs ajustées : Les hauteurs des
+        /// <para>Cinq grandeurs ajustées : Les hauteurs des
         /// <c>ScrollViewer</c> <c>OrdersScrollViewer</c> du deuxième
-        /// onglet, <c>FramesScrollViewer</c> du troisième et
-        /// <c>BarsScrollViewer</c> du quatrième sont dérivées
+        /// onglet, <c>FramesScrollViewer</c> du troisième,
+        /// <c>BarsScrollViewer</c> du quatrième et
+        /// <c>CuttingsScrollViewer</c> du cinquième sont dérivées
         /// de celle du <c>TabControl</c> par
         /// soustraction d'une réserve de <c>93</c> unités, couvrant la
         /// hauteur du bandeau d'en-têtes de colonnes et les marges
         /// internes de l'onglet. Cette réserve reprend celle de l'étalon
-        /// <c>Page01</c> et vaut pour les trois onglets sans recalcul, leur
+        /// <c>Page01</c> et vaut pour les quatre onglets sans recalcul,
+        /// leur
         /// géométrie verticale étant identique — même <c>Grid</c> à deux
         /// lignes, même <c>StackPanel</c>, même <c>Border</c> d'en-têtes.
-        /// La valeur est calculée une fois et consommée trois fois. Le
+        /// La valeur est calculée une fois et consommée quatre fois. Le
         /// premier onglet ne porte aucun
         /// <c>ScrollViewer</c>, sa fiche de synthèse tenant intégralement
-        /// dans la hauteur disponible ; le dernier onglet est
-        /// sans contenu. Aucune autre grandeur n'est
+        /// dans la hauteur disponible. Aucune autre grandeur n'est
         /// ajustée.</para>
         ///
         /// <para>Appel à <c>base.OnResized(callChain)</c> en première
@@ -882,6 +972,8 @@ namespace DG244Cutting.D_Presentation.Views.Pages
                 framesScrollViewer.Height = scrollViewerHeight;
             if (Find<ScrollViewer>("BarsScrollViewer") is ScrollViewer barsScrollViewer)
                 barsScrollViewer.Height = scrollViewerHeight;
+            if (Find<ScrollViewer>("CuttingsScrollViewer") is ScrollViewer cuttingsScrollViewer)
+                cuttingsScrollViewer.Height = scrollViewerHeight;
         }
 
         #endregion
@@ -892,18 +984,22 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// Handler d'événement propre branché au constructeur sur
         /// l'événement <c>SelectionChanged</c> du <c>TabControl</c>
         /// <c>MainTabControl</c>, déclenchant le chargement du tableau des
-        /// châssis lorsque le troisième onglet devient l'onglet actif, et
-        /// celui du tableau des barres lorsque c'est le quatrième.
+        /// châssis lorsque le troisième onglet devient l'onglet actif,
+        /// celui du tableau des barres lorsque c'est le quatrième, et
+        /// celui du tableau des découpes lorsque c'est le cinquième.
         /// </summary>
         /// <remarks>
         /// <para>Contexte : Handler propre au présent dérivé, distinct des
         /// trois handlers privés du socle
         /// <see cref="Page_Generic"/>. Il matérialise le choix de charger
-        /// les tableaux des châssis et des barres à l'activation de leur
+        /// les tableaux des châssis, des barres et des découpes à
+        /// l'activation de leur
         /// onglet respectif plutôt
         /// qu'au montage de la page — la vue source des châssis étant large
-        /// de soixante-seize colonnes, et le tableau des barres n'ayant de
-        /// contenu qu'une fois l'optimisation lancée. Le chargement est
+        /// de soixante-seize colonnes, le tableau des barres n'ayant de
+        /// contenu qu'une fois l'optimisation lancée, et celui des
+        /// découpes étant le plus fourni en lignes de la page. Le
+        /// chargement est
         /// intégralement rejoué
         /// à chaque activation ultérieure : aucun indicateur ne mémorise
         /// qu'une lecture a déjà eu lieu et aucune garde de réentrance
@@ -941,28 +1037,33 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// <para>Aiguillage sur l'onglet devenu actif : L'indice
         /// sélectionné est comparé aux indices des onglets à chargement
         /// différé — <see cref="FramesTabIndex"/> pour les châssis,
-        /// <see cref="BarsTabIndex"/> pour les barres — et la branche par
-        /// défaut sort immédiatement lorsqu'aucun ne correspond. Les deux
+        /// <see cref="BarsTabIndex"/> pour les barres,
+        /// <see cref="CuttingsTabIndex"/> pour les découpes — et la
+        /// branche par
+        /// défaut sort immédiatement lorsqu'aucun ne correspond. Seuls les
+        /// deux
         /// premiers onglets sont
         /// chargés à l'ouverture de la page par l'ancrage canonique
         /// <c>OnLoadedAsync</c> → <c>LoadAsync</c> et n'ont rien à faire
-        /// ici ; le cinquième est sans contenu. La branche par défaut
+        /// ici. La branche par défaut
         /// neutralise du même coup le déclenchement
         /// parasite qui accompagne l'initialisation du conteneur
         /// d'onglets.</para>
         ///
-        /// <para>Note de conformité — conversion de la garde en
-        /// aiguillage : La seconde garde à sortie anticipée d'origine, qui
-        /// ne connaissait qu'une destination, est devenue un
-        /// <c>switch</c> à deux branches. Cette conversion est le vecteur
-        /// structurellement nécessaire de l'ajout d'une seconde
+        /// <para>Note de conformité — élargissement de l'aiguillage : Le
+        /// <c>switch</c>, qui comptait deux destinations, en compte
+        /// désormais trois. Cet élargissement est le vecteur
+        /// structurellement nécessaire de l'ajout d'une troisième
         /// destination, et non une correction du code existant : la
         /// clause de préservation du mode Extension (§5.2.3 du
         /// 0232-Page-VM) vise les capacités énumérées — propriétés
         /// observables, overrides, bindings XAML, dépendances injectées —
         /// et non un aiguillage privé dont l'élargissement est le vecteur
-        /// même de l'extension. Le comportement de la branche des châssis
-        /// et la garde sur l'origine de l'événement routé sont
+        /// même de l'extension. Cette lecture a été posée et documentée
+        /// par le fil qui a livré le quatrième onglet ; elle est
+        /// reconduite ici sans être rouverte. Le comportement des branches
+        /// des châssis et des barres, ainsi que la garde sur l'origine de
+        /// l'événement routé, sont
         /// invariants.</para>
         ///
         /// <para>Filet de sécurité : Le corps utile est encapsulé dans un
@@ -988,12 +1089,13 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///
         /// <para>Absence de CallChain : Aucune CallChain n'est construite
         /// ni propagée. Le handler n'en reçoit aucune du socle, et ni
-        /// <see cref="VM_Page11.LoadChassisAsync"/> ni
-        /// <see cref="VM_Page11.LoadBarsAsync"/> n'en exposent en
+        /// <see cref="VM_Page11.LoadChassisAsync"/>, ni
+        /// <see cref="VM_Page11.LoadBarsAsync"/>, ni
+        /// <see cref="VM_Page11.LoadCutPiecesAsync"/> n'en exposent en
         /// paramètre : le ViewModel reconstruit la sienne localement via
         /// <c>BuildFirstCallChain</c>, conformément au patron de surcharge
         /// de §4.15.6 du 0230. Le jeton d'annulation n'est pas davantage
-        /// passé : les deux méthodes exposent une valeur par défaut
+        /// passé : les trois méthodes exposent une valeur par défaut
         /// <c>default</c> qui s'applique.</para>
         /// </remarks>
         /// <param name="sender">Élément auquel le handler est attaché,
@@ -1014,6 +1116,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
                 {
                     case FramesTabIndex: await _viewModel.LoadChassisAsync(); break;
                     case BarsTabIndex: await _viewModel.LoadBarsAsync(); break;
+                    case CuttingsTabIndex: await _viewModel.LoadCutPiecesAsync(); break;
                     default: return;
                 }
             }

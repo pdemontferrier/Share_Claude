@@ -15,8 +15,11 @@ namespace Shared.Utilities
             page.Margin = new Thickness(CR_CommonSettings.PageMarginRight, CR_CommonSettings.PageMarginTop, CR_CommonSettings.PageMarginRight, CR_CommonSettings.PageMarginBottom);
         }
 
-        public static void StylePageOOControls(Border IdBorder, Border PasswordBorder, PasswordBox PasswordInput, Button LoginButton, TextBlock LoginButtonText)
+        public static void StylePageOOControls(Border IdentificationBorder, Border IdBorder, Border PasswordBorder, PasswordBox PasswordInput, Button LoginButton, TextBlock LoginButtonText)
         {
+            IdentificationBorder.CornerRadius = new CornerRadius(10);
+            IdentificationBorder.Padding = new Thickness(20);
+
             IdBorder.HorizontalAlignment = HorizontalAlignment.Stretch;
             IdBorder.VerticalAlignment = VerticalAlignment.Top;
             IdBorder.Height = 30;
@@ -36,10 +39,11 @@ namespace Shared.Utilities
             StyleBasicButton(LoginButton, 85);
             LoginButton.Height = 85;
             LoginButton.Margin = new Thickness(5, 0, 0, 0);
+            LoginButton.Background = new SolidColorBrush(Colors.DarkGray);
 
             LoginButtonText.FontFamily = CR_CommonSettings.ApplicationFont;
             LoginButtonText.FontSize = CR_CommonSettings.TextSize_1;
-            LoginButtonText.Foreground = new SolidColorBrush(CR_CommonSettings.TextColor_2);
+            LoginButtonText.Foreground = new SolidColorBrush(CR_CommonSettings.TextColor_1);
         }
 
         public static void StyleMH_Reduce(Border MH_Border, Button button, Uri iconUri)
@@ -164,6 +168,69 @@ namespace Shared.Utilities
             }
         }
 
+        public static void StyleDialogWindow(Border Background_1, Border? Background_2, Border TitleBorder, Image LogoImage, TextBlock TitleContent, TextBlock? MainContent)
+        {
+            // Appliquer les paramètres globaux
+            // Background_1
+            Background_1.Background = new SolidColorBrush(CR_CommonSettings.BackgroundColor_1);
+            Background_1.Opacity = CR_CommonSettings.BackgroundOpacity;
+            Background_1.Margin = new Thickness(CR_CommonSettings.BackgroundMargin);
+            Background_1.Padding = new Thickness(CR_CommonSettings.BackgroundPadding);
+
+            // Background_2
+            if (Background_2 != null)
+            {
+                Background_2.Background = new SolidColorBrush(CR_CommonSettings.BackgroundColor_2);
+                Background_2.Opacity = CR_CommonSettings.BackgroundOpacity;
+                Background_2.Margin = new Thickness(CR_CommonSettings.BackgroundMargin);
+                Background_2.Padding = new Thickness(CR_CommonSettings.BackgroundPadding);
+                Background_2.Width = CR_CommonSettings.BackgroundWidth_2;
+                Background_2.VerticalAlignment = VerticalAlignment.Stretch;
+                Background_2.HorizontalAlignment = HorizontalAlignment.Left;
+            }
+
+            // Title
+            TitleBorder.Background = new SolidColorBrush(CR_CommonSettings.TitleColor);
+            TitleBorder.BorderBrush = new SolidColorBrush(CR_CommonSettings.BorderColor);
+            TitleBorder.BorderThickness = new Thickness(CR_CommonSettings.BorderThickness);
+            TitleBorder.Opacity = CR_CommonSettings.BackgroundOpacity;
+            TitleBorder.Margin = new Thickness(0, CR_CommonSettings.TitleMarginTop, 0, 0);
+            TitleBorder.Padding = new Thickness(CR_CommonSettings.BackgroundPadding);
+            TitleBorder.Height = CR_CommonSettings.TitleHeight;
+            TitleBorder.VerticalAlignment = VerticalAlignment.Top;
+            TitleBorder.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+            // Image
+            LogoImage.Height = CR_CommonSettings.LogoHeight;
+            LogoImage.Margin = new Thickness(CR_CommonSettings.LogoLeftMargin, 3, 0, 0);
+            LogoImage.VerticalAlignment = VerticalAlignment.Top;
+            LogoImage.HorizontalAlignment = HorizontalAlignment.Left;
+            LogoImage.Stretch = Stretch.Uniform;
+            RenderOptions.SetBitmapScalingMode(LogoImage, BitmapScalingMode.HighQuality);
+            LogoImage.SnapsToDevicePixels = true;
+            LogoImage.UseLayoutRounding = true;
+
+            // AppTitle
+            TitleContent.FontFamily = CR_CommonSettings.ApplicationFontBold;
+            TitleContent.Foreground = new SolidColorBrush(CR_CommonSettings.TextColor_1);
+            TitleContent.FontSize = CR_CommonSettings.TextSize_1;
+            TitleContent.Margin = new Thickness(0, 0, 0, 0);
+            TitleContent.HorizontalAlignment = HorizontalAlignment.Center;
+            TitleContent.VerticalAlignment = VerticalAlignment.Center;
+
+            // MainContent
+            if (MainContent != null)
+            {
+                MainContent.FontFamily = CR_CommonSettings.ApplicationFontBold;
+                MainContent.Foreground = new SolidColorBrush(CR_CommonSettings.TextColor_1);
+                MainContent.FontWeight = FontWeights.Bold;
+                MainContent.FontSize = CR_CommonSettings.TextSize_1;
+                MainContent.Margin = new Thickness(0, 50, 0, 0);
+                MainContent.HorizontalAlignment = HorizontalAlignment.Center;
+                MainContent.VerticalAlignment = VerticalAlignment.Center;
+            }
+        }
+
         public static void StyleHorizontalMenuGrid(Grid grid, ColumnDefinition column1, ColumnDefinition column2, Border border, double windowWidth)
         {
             // Grid Columns
@@ -183,7 +250,9 @@ namespace Shared.Utilities
         public static void StyleScrollViewer(ScrollViewer scrollViewer, TextBlock? titleText = null, Border? headerBorder = null, 
                 TextBlock? headerText01 = null, TextBlock? headerText02 = null, TextBlock? headerText03 = null, TextBlock? headerText04 = null, 
                 TextBlock? headerText05 = null, TextBlock? headerText06 = null, TextBlock? headerText07 = null, TextBlock? headerText08 = null, 
-                TextBlock? headerText09 = null, TextBlock? headerText10 = null, TextBlock? headerText11 = null)
+                TextBlock? headerText09 = null, TextBlock? headerText10 = null, TextBlock? headerText11 = null, TextBlock? headerText12 = null,
+                TextBlock? headerText13 = null, TextBlock? headerText14 = null, TextBlock? headerText15 = null, TextBlock? headerText16 = null,
+                TextBlock? headerText17 = null, TextBlock? headerText18 = null, TextBlock? headerText19 = null, TextBlock? headerText20 = null)
         {
             if (titleText != null) StyleTextBlockTitleList(titleText);
             if (headerBorder != null) StyleBorderHeader(headerBorder);
@@ -198,6 +267,15 @@ namespace Shared.Utilities
             if (headerText09 != null) StyleTextBlockHeader(headerText09);
             if (headerText10 != null) StyleTextBlockHeader(headerText10);
             if (headerText11 != null) StyleTextBlockHeader(headerText11);
+            if (headerText12 != null) StyleTextBlockHeader(headerText12);
+            if (headerText13 != null) StyleTextBlockHeader(headerText13);
+            if (headerText14 != null) StyleTextBlockHeader(headerText14);
+            if (headerText15 != null) StyleTextBlockHeader(headerText15);
+            if (headerText16 != null) StyleTextBlockHeader(headerText16);
+            if (headerText17 != null) StyleTextBlockHeader(headerText17);
+            if (headerText18 != null) StyleTextBlockHeader(headerText18);
+            if (headerText19 != null) StyleTextBlockHeader(headerText19);
+            if (headerText20 != null) StyleTextBlockHeader(headerText20);
 
 
             var scrollViewerEventHandler = new ScrollViewerEventHandler();
@@ -249,7 +327,7 @@ namespace Shared.Utilities
 
             listView.Background = new SolidColorBrush(Colors.Transparent);
             listView.Margin = new Thickness(3);
-            listView.Padding = new Thickness(10);
+            listView.Padding = new Thickness(5);
             listView.BorderBrush = new SolidColorBrush(CR_CommonSettings.BorderColor);
             listView.BorderThickness = new Thickness(CR_CommonSettings.BorderThickness);
         }

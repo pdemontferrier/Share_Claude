@@ -8,9 +8,8 @@ Description :
     de synthèse de la série (Onglet 1, "Série"), le tableau des commandes clients qui
     composent la série (Onglet 2, "Commandes"), le tableau des châssis qui la
     composent physiquement (Onglet 3, "Chassis"), le tableau des barres retenues par
-    l'optimisation pour la découpe (Onglet 4, "Barres") et un onglet d'accueil destiné
-    au tableau des découpes (Onglet 5). Ce dernier onglet est créé sans contenu ; son
-    remplissage relève d'un fil ultérieur.
+    l'optimisation pour la découpe (Onglet 4, "Barres") et le tableau des découpes à
+    réaliser pour la série (Onglet 5, "Découpes").
 
 Contexte :
     Page atteinte par un opérateur d'atelier de découpe depuis le tableau de bord des
@@ -25,14 +24,16 @@ Structure visuelle :
     - Élément racine generic:Page_Generic, héritant du socle Page_Generic (cycle de
       vie WPF, filet de sécurité ultime au bord des handlers, résolution
       d'IS_ControlStyler et d'ISE_Window via Service Locator).
-    - Quatre ressources locales déclarées en generic:Page_Generic.Resources :
+    - Cinq ressources locales déclarées en generic:Page_Generic.Resources :
       UT_DateFormatConverter (x:Key="DateFormatConverter"), consommé par les deux
       bindings de date de la fiche de synthèse ; UT_BarStateToBrush_P11
       (x:Key="BarStateToBrush_P11"), UT_IsBarOutOfStockToFontStyle
       (x:Key="IsBarOutOfStockToFontStyle") et UT_DecimalFormatConverter
       (x:Key="DecimalFormatConverter"), consommés par le tableau des barres de
-      l'Onglet 4. Les clés reprennent strictement le nom de type privé du préfixe
-      UT_, à parité avec le précédent de Page10.
+      l'Onglet 4 ; UT_CutPieceStateToBrush_P11 (x:Key="CutPieceStateToBrush_P11"),
+      consommé par le tableau des découpes de l'Onglet 5, lequel consomme en outre
+      UT_DecimalFormatConverter. Les clés reprennent strictement le nom de type privé
+      du préfixe UT_, à parité avec le précédent de Page10.
     - Grid central nommé PageGrid, conteneur unique de la page, stylé au Loaded par
       IS_ControlStyler.StylePage(PageGrid). Accueille comme unique enfant direct le
       TabControl MainTabControl. Aucun TextBlock de titre de page : l'identification
@@ -40,18 +41,20 @@ Structure visuelle :
     - TabControl MainTabControl à cinq TabItems, dont la hauteur est ajustée au Loaded
       puis à chaque SizeChanged par l'override OnResized du code-behind, lequel dérive
       de cette hauteur celle des ScrollViewer OrdersScrollViewer de l'Onglet 2,
-      FramesScrollViewer de l'Onglet 3 et BarsScrollViewer de l'Onglet 4, à géométrie
+      FramesScrollViewer de l'Onglet 3, BarsScrollViewer de l'Onglet 4 et
+      CuttingsScrollViewer de l'Onglet 5, à géométrie
       verticale identique. Le TabControl
       porte par ailleurs un abonnement programmatique à SelectionChanged, posé au
-      constructeur du code-behind, qui déclenche le chargement du tableau de l'Onglet 3
-      ou de celui de l'Onglet 4 à l'activation de l'onglet correspondant :
+      constructeur du code-behind, qui déclenche le chargement du tableau de l'Onglet 3,
+      de celui de l'Onglet 4 ou de celui de l'Onglet 5 à l'activation de l'onglet
+      correspondant :
         · SeriesTabItem (Header bindé sur Label_P11_01 via le TextBlock
           SeriesTabHeader) — contient un Border SeriesDetailsBorder englobant un Grid
           SeriesDetailsGrid à 2 colonnes (300, *) et 7 lignes (MinHeight=40).
           Col 0 : 7 TextBlocks intitulés (SerialNumberTitle, DescriptionTitle,
           ProductionStartDateTitle, ProductionEndDateTitle, CuttingStartedTitle,
           CuttingCompletedTitle, BarOutOfStockTitle) bindés sur Label_P11_06..09 et
-          Label_P11_46..48. Col 1 : 4 TextBlocks data (SerialNumberData,
+          Label_P11_44..48. Col 1 : 4 TextBlocks data (SerialNumberData,
           DescriptionData, ProductionStartDateData, ProductionEndDateData) bindés sur
           IdSerialNumber, Description, ProductionStartDate, ProductionEndDate, puis
           3 CheckBox en lecture seule (CuttingStartedCheckBox,
@@ -94,7 +97,8 @@ Structure visuelle :
           16 TextBlocks d'en-tête (BarsHeader01..16) bindés sur Label_P11_25,
           Label_P11_11, Label_P11_21, Label_P11_26, Label_P11_27, Label_P11_19,
           Label_P11_20, Label_P11_28, Label_P11_29, Label_P11_30 et Label_P11_31..36,
-          de largeur uniforme 50 — quatre de ces intitulés réutilisent des libellés
+          de largeurs 120, 250, 100, 150, 100, 80, 80, 80, 80, 100, 80, 80, 80, 80,
+          80 et 250 — quatre de ces intitulés réutilisent des libellés
           génériques déjà exposés pour les onglets précédents (désignation, hauteur,
           largeur, couleur). Le ScrollViewer porte la ListView BarsListView, dont
           l'ItemsSource est bindé sur SeriesProductionBars et dont l'ItemTemplate rend
@@ -112,28 +116,57 @@ Structure visuelle :
           positionne au fil de son déroulement. Aucune sélection n'est exploitée ;
           aucun SelectedItem n'est lié.
         · CuttingsTabItem (Header bindé sur Label_P11_05 via le TextBlock
-          CuttingsTabHeader) — corps vide.
+          CuttingsTabHeader) — contient un Grid CuttingsGrid à 1 colonne (*) et
+          2 lignes (MinHeight=40 ; Height=auto), dont l'unique enfant est un StackPanel
+          empilant un Border d'en-têtes CuttingsHeaderBorder et un ScrollViewer
+          CuttingsScrollViewer. Le Border englobe un StackPanel horizontal de
+          16 TextBlocks d'en-tête (CuttingsHeader01..16) bindés sur Label_P11_25,
+          Label_P11_11, Label_P11_21, Label_P11_26, Label_P11_37..41, Label_P11_19,
+          Label_P11_20, Label_P11_42, Label_P11_42, Label_P11_34, Label_P11_43 et
+          Label_P11_45, de largeur uniforme 50 — sept de ces intitulés réutilisent des
+          libellés génériques déjà exposés pour les onglets précédents (référence de
+          barre, désignation, couleur, catégorie, hauteur, largeur, rupture de stock).
+          Le ScrollViewer porte la ListView CuttingsListView, dont l'ItemsSource est
+          bindé sur SeriesProductionCutPieces et dont l'ItemTemplate rend chaque
+          DTO_VwProductionCutPieceFull_P11 en un StackPanel horizontal de
+          12 TextBlocks et 4 CheckBox non nommés, aux mêmes largeurs : TextBlocks
+          bindés sur PCPBarReference, PCPProfileName, PCPBarColorCodeInOut,
+          ACMDescription, PCPCutInclinationLeft, PCPCutPivotLeft, PCPCutDimension,
+          PCPCutPivotRight, PCPCutInclinationRight, PCPProfileHeight, PCPProfileWidth
+          et PCPCutPositionInBar ; CheckBox en lecture seule (IsEnabled="False")
+          bindées sur PCPIsBarSupplied, PCPIsBarOutOfStock, PCPIsCut et
+          PCPIsCutRefused. Les 12 TextBlocks portent en outre une unique liaison de
+          marquage visuel — Foreground via CutPieceStateToBrush_P11 — que les
+          4 CheckBox ne portent pas ; aucune liaison FontStyle n'est posée sur cet
+          onglet. Les cinq colonnes 5 à 9 restituent la géométrie de coupe dans l'ordre
+          de lecture physique de la barre, de gauche à droite : cet ordre est
+          fonctionnel et doit être conservé. L'onglet est le plus fin de la page et
+          celui qui compte le plus de lignes, chaque châssis produisant plusieurs
+          découpes. Aucune sélection n'est exploitée ; aucun SelectedItem n'est lié.
 
 Bindings principaux :
-    53 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
-    53 bindings par l'élément courant des gabarits d'éléments des trois ListView —
+    70 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
+    81 bindings par l'élément courant des gabarits d'éléments des quatre ListView —
     4 par l'élément CustomerOrder de l'Onglet 2, 11 par l'élément
-    DTO_VwProductionChassisFull_P11 de l'Onglet 3 et 38 par l'élément
-    DTO_VwProductionBarFull_P11 de l'Onglet 4 — soit 106 bindings au total.
+    DTO_VwProductionChassisFull_P11 de l'Onglet 3, 38 par l'élément
+    DTO_VwProductionBarFull_P11 de l'Onglet 4 et 28 par l'élément
+    DTO_VwProductionCutPieceFull_P11 de l'Onglet 5 — soit 151 bindings au total.
 
     Portés par le DataContext de page :
-    - 43 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
-      TabItem), Label_P11_06..09 et Label_P11_46..48 (sept intitulés de la fiche de
+    - 59 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
+      TabItem), Label_P11_06..09 et Label_P11_44..48 (sept intitulés de la fiche de
       synthèse de l'Onglet 1), Label_P11_10..13 (quatre intitulés de colonnes du
       tableau des commandes de l'Onglet 2), Label_P11_14..24 (onze intitulés de
       colonnes du tableau des châssis de l'Onglet 3), Label_P11_25, Label_P11_11,
       Label_P11_21, Label_P11_26, Label_P11_27, Label_P11_19, Label_P11_20,
       Label_P11_28, Label_P11_29, Label_P11_30 et Label_P11_31..36 (seize intitulés
-      de colonnes du tableau des barres de l'Onglet 4). Le nombre de liaisons excède
-      celui des propriétés liées : 43 liaisons portent sur 39 propriétés observables
-      distinctes, quatre libellés génériques (Label_P11_11, Label_P11_19,
-      Label_P11_20 et Label_P11_21) étant chacun lié deux fois, une fois par l'onglet
-      qui les a introduits et une fois par l'Onglet 4. Propriétés observables string
+      de colonnes du tableau des barres de l'Onglet 4), Label_P11_25, Label_P11_11,
+      Label_P11_21, Label_P11_26, Label_P11_37..41, Label_P11_19, Label_P11_20,
+      Label_P11_42, Label_P11_42, Label_P11_34, Label_P11_43 et Label_P11_45 (seize
+      intitulés de colonnes du tableau des découpes de l'Onglet 5). Le nombre de
+      liaisons excède celui des propriétés liées : 59 liaisons portent sur
+      48 propriétés observables distinctes, onze liaisons étant redondantes du fait
+      des libellés génériques partagés entre onglets. Propriétés observables string
       exposées par
       VM_Page11, miroirs des libellés associés aux clés homonymes du dictionnaire de
       langue actif. Rechargées automatiquement à tout changement de langue dynamique
@@ -145,16 +178,19 @@ Bindings principaux :
       le point d'extension OnLoadedAsync du code-behind. En cas d'enregistrement
       introuvable, elles conservent leurs valeurs d'initialisation et la fiche
       s'affiche vide.
-    - 3 bindings de collection : SeriesCustomerOrders sur l'ItemsSource de la ListView
+    - 4 bindings de collection : SeriesCustomerOrders sur l'ItemsSource de la ListView
       OrdersListView, SeriesProductionChassis sur celui de la ListView
-      FramesListView, et SeriesProductionBars sur celui de la ListView BarsListView.
+      FramesListView, SeriesProductionBars sur celui de la ListView BarsListView, et
+      SeriesProductionCutPieces sur celui de la ListView CuttingsListView.
       La première est alimentée par l'override LoadAsync, après
       lecture filtrée sur la série retenue et tri en mémoire ; la deuxième par la
       méthode publique additionnelle LoadChassisAsync, invoquée non pas au montage de
       la page mais à l'activation de l'Onglet 3 ; la troisième par la méthode publique
-      additionnelle LoadBarsAsync, invoquée de même à l'activation de l'Onglet 4. Les
-      deux dernières sont rejouées à chaque activation
-      ultérieure. Aucune des trois n'est
+      additionnelle LoadBarsAsync, invoquée de même à l'activation de l'Onglet 4 ; la
+      quatrième par la méthode publique additionnelle LoadCutPiecesAsync, invoquée de
+      même à l'activation de l'Onglet 5. Les
+      trois dernières sont rejouées à chaque activation
+      ultérieure. Aucune des quatre n'est
       rechargée au changement de langue, leur contenu ne dépendant pas de la culture
       active. En cas de série introuvable ou de liste vide, le tableau concerné
       s'affiche vide — pour l'Onglet 4, le cas nominal d'une optimisation non encore
@@ -184,6 +220,22 @@ Bindings principaux :
       prioritairement sur PBIsUsed (vert). Les deux champs de service de l'objet de
       transport (PSId, PBId) ne sont pas bindés : le second porte le troisième critère
       d'ordonnancement appliqué en mémoire par le ViewModel et n'est jamais affiché.
+    - 28 bindings portés par l'élément courant du gabarit de l'Onglet 5 : 12 bindings
+      de contenu texte — PCPBarReference, PCPProfileName, PCPBarColorCodeInOut,
+      ACMDescription, PCPCutInclinationLeft, PCPCutPivotLeft, PCPCutDimension,
+      PCPCutPivotRight, PCPCutInclinationRight, PCPProfileHeight, PCPProfileWidth et
+      PCPCutPositionInBar —, 4 bindings de case à cocher — PCPIsBarSupplied,
+      PCPIsBarOutOfStock, PCPIsCut et PCPIsCutRefused — et 12 bindings de marquage
+      visuel portés par les douze TextBlocks seulement, à raison d'un chacun :
+      Foreground via CutPieceStateToBrush_P11. La liaison de couleur est sans chemin :
+      le convertisseur reçoit le DTO entier et arbitre lui-même PCPIsCut (vert)
+      prioritairement sur PCPIsCutRefused (rouge) — arbitrage inverse de celui rendu
+      pour l'Onglet 4, où le refus est terminal ; la divergence est fonctionnelle et
+      délibérée, et elle est portée par le convertisseur lui-même. Les quatre champs
+      de service de l'objet de transport (PSId, PCPId, ARSortOrder,
+      PCPIdProductionBar) ne sont pas bindés : les deux derniers portent les deuxième
+      et troisième critères d'ordonnancement appliqués en mémoire par le ViewModel et
+      ne sont jamais affichés.
 
 Remarques techniques :
     - Aucune chaîne UI en dur (I-4.11.1 du 0231) : tout texte affiché est issu d'un
@@ -191,27 +243,47 @@ Remarques techniques :
     - Aucune DynamicResource ni StaticResource pour les textes UI (I-4.11.10 du
       0231) : le chargement des libellés est porté exclusivement par le ViewModel via
       la mécanique multilingue héritée de VM_Generic. La seule StaticResource admise
-      dans le présent XAML est celle des quatre converters déclarés en ressources de
+      dans le présent XAML est celle des cinq converters déclarés en ressources de
       page, dont aucun ne porte de texte UI.
-    - Mode=OneWay explicite sur les deux liaisons de date de l'Onglet 1 et sur les
+    - Mode=OneWay explicite sur les deux liaisons de date de l'Onglet 1, sur les
       deux liaisons de dimension de profilé de l'Onglet 4 (ARBarHeightMm,
-      ARBarWidthMm) : UT_DateFormatConverter comme UT_DecimalFormatConverter
+      ARBarWidthMm) et sur les trois liaisons décimales de l'Onglet 5
+      (PCPCutDimension, PCPProfileHeight, PCPProfileWidth) :
+      UT_DateFormatConverter comme UT_DecimalFormatConverter
       lèvent NotSupportedException sur ConvertBack, par contrainte technique du
-      converter lui-même. Mode=OneWay explicite également sur les cinq CheckBox de
-      l'Onglet 4, la page étant strictement en lecture. Aucun Mode explicite n'est
+      converter lui-même. Le format produit par UT_DecimalFormatConverter avec le
+      paramètre 1 est "N1", qui porte intrinsèquement le séparateur de milliers ;
+      c'est le comportement attendu, identique entre les Onglets 4 et 5.
+      Mode=OneWay explicite également sur les cinq CheckBox de
+      l'Onglet 4 et sur les quatre CheckBox de l'Onglet 5, la page étant strictement
+      en lecture. Aucun Mode explicite n'est
       posé sur les onze liaisons du
       tableau des châssis de l'Onglet 3, à parité avec les quatre TextBlocks du
       gabarit d'éléments de l'Onglet 2 : la contrainte technique du converter est
       absente ici, et le mode par défaut suffit. Aucun Mode explicite n'est davantage
-      posé sur les vingt-deux liaisons de marquage de l'Onglet 4 :
-      UT_BarStateToBrush_P11 et UT_IsBarOutOfStockToFontStyle rendent
+      posé sur les vingt-deux liaisons de marquage de l'Onglet 4 ni sur les douze de
+      l'Onglet 5 :
+      UT_BarStateToBrush_P11, UT_IsBarOutOfStockToFontStyle et
+      UT_CutPieceStateToBrush_P11 rendent
       DependencyProperty.UnsetValue sur ConvertBack et n'imposent pas la contrainte.
-    - Les trois CheckBox de la colonne 1 de l'Onglet 1 et les cinq CheckBox du
-      gabarit d'éléments de l'Onglet 4 ne sont pas stylisées par le code-behind.
+    - Les cinq colonnes entières de l'Onglet 5 (PCPCutInclinationLeft,
+      PCPCutPivotLeft, PCPCutPivotRight, PCPCutInclinationRight,
+      PCPCutPositionInBar) portent une liaison nue, sans StringFormat. Les
+      inclinaisons, pivots et positions de découpe ne portent pas de valeurs se
+      comptant en milliers ; aucun séparateur n'est requis, à la différence des
+      colonnes entières de grande amplitude des onglets précédents. Écart délibéré et
+      arbitré.
+    - Aucune liaison FontStyle n'est posée sur l'Onglet 5, sur aucune colonne.
+      Contrairement à l'Onglet 4, aucun second marquage par l'italique n'est prévu
+      pour cet onglet, bien que l'objet de transport porte l'indicateur
+      PCPIsBarOutOfStock. Absence délibérée.
+    - Les trois CheckBox de la colonne 1 de l'Onglet 1, les cinq CheckBox du
+      gabarit d'éléments de l'Onglet 4 et les quatre CheckBox du gabarit d'éléments
+      de l'Onglet 5 ne sont pas stylisées par le code-behind.
       Le contrat IS_ControlStyler n'expose aucune méthode dédiée à ce type de
-      contrôle ; les huit cases conservent le rendu par défaut du framework WPF. Les
-      cinq de l'Onglet 4 vivent au surplus dans un gabarit d'éléments, donc hors de
-      portée de la résolution par nom.
+      contrôle ; les douze cases conservent le rendu par défaut du framework WPF. Les
+      neuf des Onglets 4 et 5 vivent au surplus dans un gabarit d'éléments, donc hors
+      de portée de la résolution par nom.
       Cette absence est délibérée et documentée, non un oubli ; aucune extension du
       contrat n'est produite par le fil qui livre la présente page. Elles portent
       toutes IsEnabled="False", la page étant strictement en lecture.
@@ -229,18 +301,29 @@ Remarques techniques :
       ARFamilyCategoryPrincipal, ARBarHeightMm, ARBarWidthMm, PBRejectionReason)
       suivent le même précédent : cellule vide en l'absence de valeur, sans
       TargetNullValue, FallbackValue ni convertisseur de repli.
+    - Les douze colonnes nullables du tableau des découpes (PCPBarReference,
+      PCPProfileName, PCPBarColorCodeInOut, ACMDescription, PCPCutInclinationLeft,
+      PCPCutPivotLeft, PCPCutDimension, PCPCutPivotRight, PCPCutInclinationRight,
+      PCPProfileHeight, PCPProfileWidth, PCPCutPositionInBar) suivent le même
+      précédent : cellule vide en l'absence de valeur, sans TargetNullValue,
+      FallbackValue ni convertisseur de repli.
     - Aucun convertisseur de troncature n'est posé, ni sur les onze colonnes de
-      l'Onglet 3, ni sur les seize colonnes de l'Onglet 4, malgré l'étroitesse des
-      colonnes au regard des libellés descriptifs de l'Onglet 3 et du motif de refus
-      comme de la désignation d'article de l'Onglet 4. Les largeurs portées sont des
-      valeurs de départ délibérées ;
+      l'Onglet 3, ni sur les seize colonnes de l'Onglet 4, ni sur les seize colonnes
+      de l'Onglet 5, malgré l'étroitesse des
+      colonnes au regard des libellés descriptifs de l'Onglet 3, du motif de refus
+      comme de la désignation d'article de l'Onglet 4, et de la désignation de profil
+      comme de la description de catégorie de l'Onglet 5. Les largeurs portées sont
+      des valeurs de départ délibérées ;
       l'ajustement fin est renvoyé au contrôle visuel et relèvera d'un fil ultérieur.
-    - Vocabulaire des identifiants : la présente vue nomme l'onglet et ses contrôles
-      Frames, en cohérence avec l'en-tête FramesTabItem déjà en place ; le ViewModel
+    - Vocabulaire des identifiants : la présente vue nomme l'onglet des châssis et ses
+      contrôles Frames, en cohérence avec l'en-tête FramesTabItem déjà en place ; le
+      ViewModel
       nomme la matière Chassis, en cohérence avec le type transporté et le contrat
-      consommé. Cette scission est délibérée, chaque côté restant cohérent avec son
-      propre référent ; elle ne constitue pas une divergence à corriger.
-    - Les TextBlocks et CheckBox des gabarits d'éléments des trois ListView ne sont
+      consommé. La même scission vaut pour l'Onglet 5, que la vue nomme Cuttings et
+      dont le ViewModel nomme la matière CutPieces. Ces scissions sont délibérées,
+      chaque côté restant cohérent avec son
+      propre référent ; elles ne constituent pas une divergence à corriger.
+    - Les TextBlocks et CheckBox des gabarits d'éléments des quatre ListView ne sont
       pas nommés : instanciés par le DataTemplate à chaque élément, ils ne sont pas
       résolubles par FindName et leur rendu relève de StyleListView appliqué à la
       ListView elle-même.
@@ -248,14 +331,16 @@ Remarques techniques :
       d'IS_ControlStyler (StylePage, StyleTabControl, StyleTabItem, StyleBorder,
       StyleBorderHeader, StyleTextBlockTitle, StyleTextBlockData, StyleScrollViewer,
       StyleListView) et par le calcul dimensionnel d'OnResized (MainTabControl, dont
-      la hauteur est ajustée directement, OrdersScrollViewer, FramesScrollViewer et
-      BarsScrollViewer, dont les hauteurs en sont dérivées) — toute modification
+      la hauteur est ajustée directement, OrdersScrollViewer, FramesScrollViewer,
+      BarsScrollViewer et CuttingsScrollViewer, dont les hauteurs en sont dérivées) —
+      toute modification
       casserait la
       stylisation ou le
       redimensionnement appliqués au Loaded et au SizeChanged par le code-behind.
       MainTabControl porte en outre l'abonnement programmatique à SelectionChanged
       posé au constructeur du code-behind.
-      Les Grids SeriesDetailsGrid, OrdersGrid, FramesGrid et BarsGrid sont nommés
+      Les Grids SeriesDetailsGrid, OrdersGrid, FramesGrid, BarsGrid et CuttingsGrid
+      sont nommés
       sans être stylisés : le contrat n'expose aucune méthode de stylisation de Grid
       interne.
     - La stylisation visuelle (couleurs, polices, dimensions, mise en forme) est
@@ -266,12 +351,15 @@ Remarques techniques :
       Padding vertical du Border de fiche, la géométrie de la Grid de l'Onglet 2 et
       les quatre largeurs de colonnes du tableau des commandes, la
       géométrie de la Grid de l'Onglet 3 et les onze largeurs de colonnes du tableau
-      des châssis, ainsi que la géométrie de la Grid de l'Onglet 4 et les seize
-      largeurs de colonnes du tableau des barres, portées en dur sur
+      des châssis, la géométrie de la Grid de l'Onglet 4 et les seize
+      largeurs de colonnes du tableau des barres, ainsi que la géométrie de la Grid de
+      l'Onglet 5 et les seize largeurs de colonnes du tableau des découpes, portées en
+      dur sur
       les en-têtes comme sur le gabarit d'éléments à parité avec l'étalon Page01.
       Aucune ressource sys:Double ni constante de centralisation n'est introduite.
       Les quatre colonnes de l'Onglet 2 totalisent 800 unités, les onze colonnes de
-      l'Onglet 3 totalisent 1760 unités et les seize colonnes de l'Onglet 4, de
+      l'Onglet 3 totalisent 1760 unités, les seize colonnes de l'Onglet 4, de largeurs
+      différenciées, totalisent 1790 unités, et les seize colonnes de l'Onglet 5, de
       largeur uniforme 50, totalisent 800 unités ; aucun défilement horizontal n'est
       prévu.
     - Aucun chargement de libellé depuis ce fichier ni depuis son code-behind
@@ -295,6 +383,7 @@ Remarques techniques :
         <converters:UT_BarStateToBrush_P11         x:Key="BarStateToBrush_P11" />
         <converters:UT_IsBarOutOfStockToFontStyle  x:Key="IsBarOutOfStockToFontStyle" />
         <converters:UT_DecimalFormatConverter      x:Key="DecimalFormatConverter" />
+        <converters:UT_CutPieceStateToBrush_P11    x:Key="CutPieceStateToBrush_P11" />
     </generic:Page_Generic.Resources>
 
     <Grid x:Name="PageGrid">
@@ -330,9 +419,9 @@ Remarques techniques :
                         <TextBlock x:Name="DescriptionTitle"         Grid.Row="1" Grid.Column="0" Text="{Binding Label_P11_07}"/>
                         <TextBlock x:Name="ProductionStartDateTitle" Grid.Row="2" Grid.Column="0" Text="{Binding Label_P11_08}"/>
                         <TextBlock x:Name="ProductionEndDateTitle"   Grid.Row="3" Grid.Column="0" Text="{Binding Label_P11_09}"/>
-                        <TextBlock x:Name="CuttingStartedTitle"      Grid.Row="4" Grid.Column="0" Text="{Binding Label_P11_46}"/>
-                        <TextBlock x:Name="CuttingCompletedTitle"    Grid.Row="5" Grid.Column="0" Text="{Binding Label_P11_47}"/>
-                        <TextBlock x:Name="BarOutOfStockTitle"       Grid.Row="6" Grid.Column="0" Text="{Binding Label_P11_48}"/>
+                        <TextBlock x:Name="CuttingStartedTitle"      Grid.Row="4" Grid.Column="0" Text="{Binding Label_P11_44}"/>
+                        <TextBlock x:Name="CuttingCompletedTitle"    Grid.Row="5" Grid.Column="0" Text="{Binding Label_P11_45}"/>
+                        <TextBlock x:Name="BarOutOfStockTitle"       Grid.Row="6" Grid.Column="0" Text="{Binding Label_P11_46}"/>
 
                         <!-- Colonne 1 — Données -->
                         <TextBlock x:Name="SerialNumberData"         Grid.Row="0" Grid.Column="1" Text="{Binding IdSerialNumber}"/>
@@ -550,12 +639,86 @@ Remarques techniques :
             </TabItem>
 
             <!-- ============================================================ -->
-            <!-- Onglet 5 — Découpes (corps à produire)                       -->
+            <!-- Onglet 5 — Découpes de la série                              -->
             <!-- ============================================================ -->
             <TabItem x:Name="CuttingsTabItem">
                 <TabItem.Header>
                     <TextBlock x:Name="CuttingsTabHeader" Text="{Binding Label_P11_05}"/>
                 </TabItem.Header>
+
+                <Grid x:Name="CuttingsGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- En-têtes de colonnes -->
+                        <Border x:Name="CuttingsHeaderBorder">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="CuttingsHeader01" Text="{Binding Label_P11_25}" Width="120"/>
+                                <TextBlock x:Name="CuttingsHeader02" Text="{Binding Label_P11_11}" Width="300"/>
+                                <TextBlock x:Name="CuttingsHeader03" Text="{Binding Label_P11_21}" Width="150"/>
+                                <TextBlock x:Name="CuttingsHeader04" Text="{Binding Label_P11_26}" Width="150"/>
+                                <TextBlock x:Name="CuttingsHeader05" Text="{Binding Label_P11_37}" Width="50"/>
+                                <TextBlock x:Name="CuttingsHeader06" Text="{Binding Label_P11_38}" Width="50"/>
+                                <TextBlock x:Name="CuttingsHeader07" Text="{Binding Label_P11_39}" Width="100"/>
+                                <TextBlock x:Name="CuttingsHeader08" Text="{Binding Label_P11_40}" Width="50"/>
+                                <TextBlock x:Name="CuttingsHeader09" Text="{Binding Label_P11_41}" Width="50"/>
+                                <TextBlock x:Name="CuttingsHeader10" Text="{Binding Label_P11_19}" Width="80"/>
+                                <TextBlock x:Name="CuttingsHeader11" Text="{Binding Label_P11_20}" Width="80"/>
+                                <TextBlock x:Name="CuttingsHeader12" Text="{Binding Label_P11_14}" Width="80"/>
+                                <TextBlock x:Name="CuttingsHeader13" Text="{Binding Label_P11_42}" Width="80"/>
+                                <TextBlock x:Name="CuttingsHeader14" Text="{Binding Label_P11_34}" Width="80"/>
+                                <TextBlock x:Name="CuttingsHeader15" Text="{Binding Label_P11_43}" Width="80"/>
+                                <TextBlock x:Name="CuttingsHeader16" Text="{Binding Label_P11_35}" Width="80"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Liste des découpes à réaliser pour la série -->
+                        <ScrollViewer x:Name="CuttingsScrollViewer">
+                            <ListView x:Name="CuttingsListView" ItemsSource="{Binding SeriesProductionCutPieces}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding PCPBarReference}"                                                                                        Width="120"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPProfileName}"                                                                                         Width="300"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPBarColorCodeInOut}"                                                                                   Width="150"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding ACMDescription}"                                                                                         Width="150"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPCutInclinationLeft}"                                                                                  Width="50"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPCutPivotLeft}"                                                                                        Width="50"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPCutDimension, Converter={StaticResource DecimalFormatConverter}, ConverterParameter=1, Mode=OneWay}"  Width="100"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPCutPivotRight}"                                                                                       Width="50"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPCutInclinationRight}"                                                                                 Width="50"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPProfileHeight, Converter={StaticResource DecimalFormatConverter}, ConverterParameter=1, Mode=OneWay}" Width="80"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPProfileWidth, Converter={StaticResource DecimalFormatConverter}, ConverterParameter=1, Mode=OneWay}"  Width="80"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <TextBlock Text="{Binding PCPCutPositionInBar}"                                                                                    Width="80"
+                                                       Foreground="{Binding Converter={StaticResource CutPieceStateToBrush_P11}}"/>
+                                            <CheckBox  IsChecked="{Binding PCPIsBarSupplied, Mode=OneWay}"   IsEnabled="False"                                                 Width="80"/>
+                                            <CheckBox  IsChecked="{Binding PCPIsBarOutOfStock, Mode=OneWay}" IsEnabled="False"                                                 Width="80"/>
+                                            <CheckBox  IsChecked="{Binding PCPIsCut, Mode=OneWay}"           IsEnabled="False"                                                 Width="80"/>
+                                            <CheckBox  IsChecked="{Binding PCPIsCutRefused, Mode=OneWay}"    IsEnabled="False"                                                 Width="80"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
             </TabItem>
 
         </TabControl>

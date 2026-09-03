@@ -65,13 +65,13 @@
         /// <summary>Position de la découpe au sein de la barre, ordre de coupe - colonne P11_42 « Pos. découpe ». Également quatrième critère d'ordonnancement du tableau. Une découpe encore au vivier, non affectée à une barre, porte cette valeur à l'état absent : état nominal, non anomalie.</summary>
         public int? PCPCutPositionInBar { get; set; }
 
-        /// <summary>Barre nécessaire à la découpe approvisionnée - colonne P11_43 « Barre appro. ».</summary>
+        /// <summary>Barre nécessaire à la découpe approvisionnée - colonne P11_42 « Barre appro. ».</summary>
         public bool PCPIsBarSupplied { get; set; }
 
         /// <summary>Barre nécessaire à la découpe en rupture de stock - colonne P11_34 « Barre en rupture ».</summary>
         public bool PCPIsBarOutOfStock { get; set; }
 
-        /// <summary>Découpe réalisée - colonne P11_44 « Découpe faite ».</summary>
+        /// <summary>Découpe réalisée - colonne P11_43 « Découpe faite ».</summary>
         public bool PCPIsCut { get; set; }
 
         /// <summary>Découpe refusée - colonne P11_45 « Découpe refusée ».</summary>
