@@ -3,14 +3,14 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using DG244Cutting.A_Domain.DTOs.Business;
+using DG244Cutting.D_Presentation.Settings;
 
 namespace DG244Cutting.D_Presentation.Utilities.Converters
 {
     /// <summary>
     /// Convertisseur WPF à sens unique projetant l'état d'une découpe de production
     /// (<c>DTO_VwProductionCutPieceFull_P11</c>) sur un <see cref="Brush"/> de couleur
-    /// de police, afin de marquer visuellement les découpes réalisées et les découpes
-    /// refusées du tableau des découpes de la Page11.
+    /// de police, marquant les découpes réalisées et refusées du tableau de la Page11.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -29,7 +29,16 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// affectation à une barre est défaite, sa position effacée, et l'indicateur de
     /// refus est positionné. Cet indicateur est remis à zéro dès qu'une nouvelle
     /// affectation lui est donnée par une optimisation ultérieure : il traduit l'état
-    /// courant de la pièce et non son historique.
+    /// courant de la pièce et non son historique. Les deux pinceaux rendus sont
+    /// résolus auprès de <c>RS_Colors</c>, référentiel statique de la même couche
+    /// constituant le point unique de résolution des teintes de l'application : la
+    /// relation est une référence directe à une classe statique, sans injection et
+    /// sans médiation contractuelle, de sorte qu'un ajustement de teinte arbitré en
+    /// amont soit répercuté sans intervention sur le présent composant. Ces deux
+    /// teintes sont celles que rend <c>UT_BarStateToBrush_P11</c> sur l'onglet des
+    /// barres ; leur cohérence visuelle entre les deux onglets, jusqu'ici assurée
+    /// par recopie de valeurs entre deux fichiers, devient structurelle, les deux
+    /// composants résolvant les mêmes membres du même référentiel.
     /// </para>
     /// <para>
     /// Objectif : rendre le pinceau de couleur de police traduisant l'état d'une
@@ -48,10 +57,12 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <para>
     /// Mapping état vers couleur, dans l'ordre d'évaluation strict :
     /// <list type="number">
-    /// <item><c>PCPIsCut</c> à <see langword="true"/> : vert (code d'origine
-    /// #59C64A), <c>PCPIsCutRefused</c> n'étant pas examiné.</item>
+    /// <item><c>PCPIsCut</c> à <see langword="true"/> : vert, résolu par
+    /// <see cref="RS_Colors.Green_Brush"/>, <c>PCPIsCutRefused</c> n'étant pas
+    /// examiné.</item>
     /// <item><c>PCPIsCut</c> à <see langword="false"/> et <c>PCPIsCutRefused</c> à
-    /// <see langword="true"/> : rouge (code d'origine #FF3E3E).</item>
+    /// <see langword="true"/> : rouge, résolu par
+    /// <see cref="RS_Colors.Red_Brush"/>.</item>
     /// <item>les deux indicateurs à <see langword="false"/> :
     /// <see cref="DependencyProperty.UnsetValue"/>, l'élément conservant la couleur
     /// appliquée au chargement par le service de stylisation.</item>
@@ -91,6 +102,8 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <item>Aucune logique métier (la projection état vers couleur est une
     /// mécanique de présentation pure, non une règle métier).</item>
     /// <item>Aucun stockage d'état entre deux appels.</item>
+    /// <item>Aucune déclaration de matière chromatique : la résolution des
+    /// teintes relève de <c>RS_Colors</c>.</item>
     /// <item>Aucune dépendance injectée et aucun enregistrement dans
     /// <c>SR_ConteneurDI</c>.</item>
     /// <item>Aucune participation aux chaînes d'appel applicatives de §4.14.9.</item>
@@ -133,13 +146,10 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <para>
     /// Nature « UT_ » : composant utilitaire de la Famille 6 du référentiel
     /// (§2.7.2 du 0230), sans état ni dépendance injectée (R-2.7.10), sans interface
-    /// contractuelle en <c>A_Domain</c> (hors parité, R-2.7.6, R-4.14.5), ne
-    /// participant à aucune des chaînes d'appel applicatives de §4.14.9. Les deux
-    /// champs <c>static readonly</c> portant les pinceaux figés sont des constantes
-    /// immuables et ne constituent pas un état au sens de R-2.7.10. L'implémentation
-    /// directe de <see cref="IValueConverter"/> est une dépendance technique au
-    /// framework WPF constitutive du composant, distincte de la règle de parité du
-    /// référentiel.
+    /// contractuelle en <c>A_Domain</c> (hors parité, R-2.7.6, R-4.14.5).
+    /// L'implémentation directe de <see cref="IValueConverter"/> est une dépendance
+    /// technique au framework WPF constitutive du composant, distincte de la règle
+    /// de parité du référentiel.
     /// </para>
     /// </remarks>
     [ValueConversion(typeof(DTO_VwProductionCutPieceFull_P11), typeof(Brush))]
@@ -147,20 +157,7 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     {
         #region === Propriétés privées ===
 
-        // Brushes figés (Freeze) et pré-instanciés une fois pour toutes, afin
-        // d'éviter toute allocation par appel de Convert et d'autoriser un partage
-        // cross-thread par le pipeline WPF, sur le tableau qui compte le plus de
-        // lignes de la page. Constantes immuables, sans caractère d'état au sens de
-        // R-2.7.10. Les teintes sont exprimées en hexadécimal pour conserver la trace
-        // directe des codes couleur arbitrés en amont. Elles sont identiques à celles
-        // de UT_BarStateToBrush_P11, par cohérence visuelle entre les deux onglets.
-        // Les champs sont déclarés dans l'ordre d'évaluation de Convert.
-
-        /// <summary>Couleur de police d'une découpe réalisée (vert, code d'origine #59C64A).</summary>
-        private static readonly Brush _brushGreen = CreateFrozen(Color.FromRgb(0x59, 0xC6, 0x4A));
-
-        /// <summary>Couleur de police d'une découpe refusée (rouge, code d'origine #FF3E3E).</summary>
-        private static readonly Brush _brushRed = CreateFrozen(Color.FromRgb(0xFF, 0x3E, 0x3E));
+        // A compléter
 
         #endregion
 
@@ -264,12 +261,12 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
             // succès relève de cette branche.
             if (cutPiece.PCPIsCut)
             {
-                return _brushGreen;
+                return RS_Colors.Green_Brush;
             }
 
             if (cutPiece.PCPIsCutRefused)
             {
-                return _brushRed;
+                return RS_Colors.Red_Brush;
             }
 
             // Cas neutre : découpe encore au vivier, ou affectée à une barre mais pas
@@ -313,28 +310,7 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
 
         #region === Méthodes privées ===
 
-        /// <summary>
-        /// Construit un <see cref="SolidColorBrush"/> figé (<see cref="Freezable.Freeze"/>)
-        /// pour la couleur fournie.
-        /// </summary>
-        /// <remarks>
-        /// Le gel autorise le partage cross-thread entre toutes les lignes du tableau
-        /// et évite toute réévaluation par le pipeline WPF. Utilisé à l'initialisation
-        /// des champs <c>static readonly</c>. La méthode est dupliquée depuis
-        /// <c>UT_ProductionEndDayToBrush</c> et <c>UT_BarStateToBrush_P11</c>, dont
-        /// elle constitue la troisième occurrence au projet, et n'est pas factorisée :
-        /// une factorisation supposerait un composant partagé qui n'existe pas au
-        /// projet, dont la création sortirait du périmètre du fil au sens de §1.4.4
-        /// du 0230.
-        /// </remarks>
-        /// <param name="color">Couleur du pinceau à construire.</param>
-        /// <returns>Un <see cref="SolidColorBrush"/> figé.</returns>
-        private static Brush CreateFrozen(Color color)
-        {
-            SolidColorBrush brush = new SolidColorBrush(color);
-            brush.Freeze();
-            return brush;
-        }
+        // A compléter
 
         #endregion
     }
