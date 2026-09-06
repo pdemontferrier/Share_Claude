@@ -29,16 +29,22 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// affectation à une barre est défaite, sa position effacée, et l'indicateur de
     /// refus est positionné. Cet indicateur est remis à zéro dès qu'une nouvelle
     /// affectation lui est donnée par une optimisation ultérieure : il traduit l'état
-    /// courant de la pièce et non son historique. Les deux pinceaux rendus sont
+    /// courant de la pièce et non son historique. Les trois pinceaux rendus sont
     /// résolus auprès de <c>RS_Colors</c>, référentiel statique de la même couche
     /// constituant le point unique de résolution des teintes de l'application : la
     /// relation est une référence directe à une classe statique, sans injection et
     /// sans médiation contractuelle, de sorte qu'un ajustement de teinte arbitré en
-    /// amont soit répercuté sans intervention sur le présent composant. Ces deux
-    /// teintes sont celles que rend <c>UT_BarStateToBrush_P11</c> sur l'onglet des
-    /// barres ; leur cohérence visuelle entre les deux onglets, jusqu'ici assurée
+    /// amont soit répercuté sans intervention sur le présent composant. Le vert et
+    /// le rouge sont les teintes que rend <c>UT_BarStateToBrush_P11</c> sur l'onglet
+    /// des barres ; leur cohérence visuelle entre les deux onglets, jusqu'ici assurée
     /// par recopie de valeurs entre deux fichiers, devient structurelle, les deux
-    /// composants résolvant les mêmes membres du même référentiel.
+    /// composants résolvant les mêmes membres du même référentiel. Le blanc est le
+    /// repli des convertisseurs de couleur de police du projet : toute entrée qu'un
+    /// tel convertisseur ne sait pas départager doit rendre
+    /// <see cref="RS_Colors.White_Brush"/>, l'affichage ne dépendant alors d'aucun
+    /// mécanisme extérieur au convertisseur. Cette politique ne s'étend pas aux
+    /// convertisseurs alimentant <c>Background</c>, dont le repli neutre est la
+    /// transparence.
     /// </para>
     /// <para>
     /// Objectif : rendre le pinceau de couleur de police traduisant l'état d'une
@@ -63,12 +69,10 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <item><c>PCPIsCut</c> à <see langword="false"/> et <c>PCPIsCutRefused</c> à
     /// <see langword="true"/> : rouge, résolu par
     /// <see cref="RS_Colors.Red_Brush"/>.</item>
-    /// <item>les deux indicateurs à <see langword="false"/> :
-    /// <see cref="DependencyProperty.UnsetValue"/>, l'élément conservant la couleur
-    /// appliquée au chargement par le service de stylisation.</item>
-    /// <item>entrée <see langword="null"/> ou d'un type inattendu :
-    /// <see cref="DependencyProperty.UnsetValue"/>, strictement identique au cas
-    /// précédent.</item>
+    /// <item>tout autre cas, à savoir les deux indicateurs à
+    /// <see langword="false"/>, l'entrée <see langword="null"/> et l'entrée d'un
+    /// type inattendu : blanc, résolu par
+    /// <see cref="RS_Colors.White_Brush"/>.</item>
     /// </list>
     /// </para>
     /// <para>
@@ -91,7 +95,7 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <item>Départager <c>PCPIsCut</c> et <c>PCPIsCutRefused</c> selon la priorité
     /// absolue de la réalisation, et rendre le pinceau correspondant.</item>
     /// <item>Replier le cas neutre, l'entrée <see langword="null"/> et l'entrée
-    /// d'un type inattendu sur <see cref="DependencyProperty.UnsetValue"/>.</item>
+    /// d'un type inattendu sur <see cref="RS_Colors.White_Brush"/>.</item>
     /// <item>Répondre <see cref="DependencyProperty.UnsetValue"/> sur
     /// <see cref="ConvertBack"/>, le composant étant à sens unique.</item>
     /// </list>
@@ -190,12 +194,8 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
         /// Objectif : départager <c>PCPIsCut</c> et <c>PCPIsCutRefused</c> selon la
         /// priorité absolue de la réalisation et rendre le pinceau figé correspondant ;
         /// replier le cas neutre, l'entrée <see langword="null"/> et l'entrée d'un type
-        /// inattendu sur <see cref="DependencyProperty.UnsetValue"/>, de sorte que
-        /// l'élément conserve la couleur appliquée au chargement par le service de
-        /// stylisation. Un repli sur une couleur explicite l'écraserait ; un repli sur
-        /// un pinceau transparent rendrait le texte invisible en cas de liaison mal
-        /// formée, transformant une erreur de câblage silencieuse en perte de données
-        /// à l'écran.
+        /// inattendu sur <see cref="RS_Colors.White_Brush"/>, de sorte que la projection
+        /// soit totale et que toute entrée reçoive une couleur explicite.
         /// </para>
         /// <para>
         /// La priorité de la réalisation est un départage fonctionnel réel : les deux
@@ -222,7 +222,7 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
         /// Valeur source du binding, attendue de type
         /// <c>DTO_VwProductionCutPieceFull_P11</c> et transmise par liaison sans
         /// chemin. Toute autre valeur, y compris <see langword="null"/>, est admise
-        /// sans erreur et repliée sur <see cref="DependencyProperty.UnsetValue"/>.
+        /// sans erreur et repliée sur <see cref="RS_Colors.White_Brush"/>.
         /// </param>
         /// <param name="targetType">
         /// Type cible attendu par la propriété de destination du binding (typiquement
@@ -239,40 +239,40 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
         /// <returns>
         /// Le pinceau vert figé si la découpe est réalisée, indépendamment de son
         /// indicateur de refus ; le pinceau rouge figé si elle est refusée sans être
-        /// réalisée ; <see cref="DependencyProperty.UnsetValue"/> si aucun des deux
-        /// indicateurs n'est positionné, ainsi que pour toute entrée
-        /// <see langword="null"/> ou d'un type inattendu. Aucun autre retour n'est
-        /// possible et aucune exception n'est levée.
+        /// réalisée ; le pinceau blanc figé <see cref="RS_Colors.White_Brush"/> si
+        /// aucun des deux indicateurs n'est positionné, ainsi que pour toute entrée
+        /// <see langword="null"/> ou d'un type inattendu. La méthode rend toujours un
+        /// <see cref="Brush"/>, ne rend jamais <see langword="null"/> et ne lève
+        /// aucune exception.
         /// </returns>
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             // Filtrage de motif direct : PCPIsCut et PCPIsCutRefused étant des bool
-            // non-nullables du DTO, aucun helper de lecture robuste n'est requis.
-            // Entrée null ou d'un type inattendu : cas nominal replié sur UnsetValue,
-            // au même titre que le cas neutre ci-dessous.
-            if (value is not DTO_VwProductionCutPieceFull_P11 cutPiece)
+            // non-nullables du DTO, aucun helper de lecture robuste n'est requis. Les
+            // deux branches colorées sont imbriquées sous ce filtrage, de sorte que le
+            // repli blanc constitue le point de sortie unique de la méthode : le cas
+            // neutre, l'entrée null et l'entrée d'un type inattendu le rejoignent par
+            // la même instruction de retour.
+            if (value is DTO_VwProductionCutPieceFull_P11 cutPiece)
             {
-                return DependencyProperty.UnsetValue;
-            }
+                // Priorité absolue de la réalisation, évaluée en premier : départage
+                // fonctionnel réel, l'indicateur de refus traduisant un état courant
+                // réversible et non un historique. Une découpe refusée puis recoupée avec
+                // succès relève de cette branche.
+                if (cutPiece.PCPIsCut)
+                {
+                    return RS_Colors.Green_Brush;
+                }
 
-            // Priorité absolue de la réalisation, évaluée en premier : départage
-            // fonctionnel réel, l'indicateur de refus traduisant un état courant
-            // réversible et non un historique. Une découpe refusée puis recoupée avec
-            // succès relève de cette branche.
-            if (cutPiece.PCPIsCut)
-            {
-                return RS_Colors.Green_Brush;
-            }
-
-            if (cutPiece.PCPIsCutRefused)
-            {
-                return RS_Colors.Red_Brush;
+                if (cutPiece.PCPIsCutRefused)
+                {
+                    return RS_Colors.Red_Brush;
+                }
             }
 
             // Cas neutre : découpe encore au vivier, ou affectée à une barre mais pas
-            // encore coupée. L'élément conserve la couleur appliquée au chargement
-            // par le service de stylisation.
-            return DependencyProperty.UnsetValue;
+            // encore coupée.
+            return RS_Colors.White_Brush;
         }
 
         /// <summary>
