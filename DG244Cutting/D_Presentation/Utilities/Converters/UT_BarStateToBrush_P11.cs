@@ -10,8 +10,7 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <summary>
     /// Convertisseur WPF à sens unique projetant l'état d'une barre de production
     /// (<c>DTO_VwProductionBarFull_P11</c>) sur un <see cref="Brush"/> de couleur de
-    /// police, afin de marquer visuellement les barres refusées et les barres
-    /// utilisées du tableau des barres de la Page11.
+    /// police, marquant les barres refusées et utilisées du tableau de la Page11.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -26,12 +25,15 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// bien refusée si l'opérateur constate un défaut à la présentation. Le refus
     /// est terminal : il marque l'enregistrement comme logiquement supprimé,
     /// renseigne un motif et détache les découpes qui y avaient été provisoirement
-    /// placées. Les deux pinceaux rendus sont résolus auprès de
+    /// placées. Les trois pinceaux rendus sont résolus auprès de
     /// <c>RS_Colors</c>, référentiel statique de la même couche constituant le
     /// point unique de résolution des teintes de l'application : la relation est
     /// une référence directe à une classe statique, sans injection et sans
     /// médiation contractuelle, de sorte qu'un ajustement de teinte arbitré en
-    /// amont soit répercuté sans intervention sur le présent composant.
+    /// amont soit répercuté sans intervention sur le présent composant. L'énoncé
+    /// de la politique de repli des convertisseurs de couleur de police du projet,
+    /// dont relève le blanc rendu ici, est porté par
+    /// <c>UT_CutPieceStateToBrush_P11</c>.
     /// </para>
     /// <para>
     /// Objectif : rendre le pinceau de couleur de police traduisant l'état d'une
@@ -54,12 +56,10 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <item><c>PBIsDeleted</c> à <see langword="false"/> et <c>PBIsUsed</c> à
     /// <see langword="true"/> : vert, résolu par
     /// <see cref="RS_Colors.Green_Brush"/>.</item>
-    /// <item>les deux indicateurs à <see langword="false"/> :
-    /// <see cref="DependencyProperty.UnsetValue"/>, l'élément conservant la couleur
-    /// appliquée au chargement par le service de stylisation.</item>
-    /// <item>entrée <see langword="null"/> ou d'un type inattendu :
-    /// <see cref="DependencyProperty.UnsetValue"/>, strictement identique au cas
-    /// précédent.</item>
+    /// <item>tout autre cas, à savoir les deux indicateurs à
+    /// <see langword="false"/>, l'entrée <see langword="null"/> et l'entrée d'un
+    /// type inattendu : blanc, résolu par
+    /// <see cref="RS_Colors.White_Brush"/>.</item>
     /// </list>
     /// </para>
     /// <para>
@@ -68,7 +68,12 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// refusée ne pouvant structurellement pas être utilisée : cette priorité est
     /// donc une garde défensive plutôt qu'un départage attendu, mais elle est
     /// explicite pour que le comportement reste déterminé si les deux indicateurs
-    /// se trouvaient simultanément positionnés.
+    /// se trouvaient simultanément positionnés. Ce point marque une divergence
+    /// délibérée avec le composant homologue de l'onglet des découpes,
+    /// <c>UT_CutPieceStateToBrush_P11</c>, qui évalue la réalisation en premier :
+    /// le refus d'une barre est terminal - il marque l'enregistrement comme
+    /// logiquement supprimé -, celui d'une découpe est réversible. La lecture
+    /// conjointe des deux composants ne doit donc pas conclure à une incohérence.
     /// </para>
     /// <para>
     /// Responsabilités :
@@ -77,7 +82,7 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
     /// <item>Départager <c>PBIsDeleted</c> et <c>PBIsUsed</c> selon la priorité
     /// absolue du refus, et rendre le pinceau correspondant.</item>
     /// <item>Replier le cas neutre, l'entrée <see langword="null"/> et l'entrée
-    /// d'un type inattendu sur <see cref="DependencyProperty.UnsetValue"/>.</item>
+    /// d'un type inattendu sur <see cref="RS_Colors.White_Brush"/>.</item>
     /// <item>Répondre <see cref="DependencyProperty.UnsetValue"/> sur
     /// <see cref="ConvertBack"/>, le composant étant à sens unique.</item>
     /// </list>
@@ -170,11 +175,8 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
         /// Objectif : départager <c>PBIsDeleted</c> et <c>PBIsUsed</c> selon la
         /// priorité absolue du refus et rendre le pinceau figé correspondant ; replier
         /// le cas neutre, l'entrée <see langword="null"/> et l'entrée d'un type
-        /// inattendu sur <see cref="DependencyProperty.UnsetValue"/>, de sorte que
-        /// l'élément conserve la couleur appliquée au chargement par le service de
-        /// stylisation. Un repli sur un pinceau transparent rendrait le texte
-        /// invisible en cas de liaison mal formée, transformant une erreur de câblage
-        /// silencieuse en perte de données à l'écran.
+        /// inattendu sur <see cref="RS_Colors.White_Brush"/>, de sorte que la projection
+        /// soit totale et que toute entrée reçoive une couleur explicite.
         /// </para>
         /// <para>
         /// L'entrée est filtrée par motif direct, sans helper de lecture robuste.
@@ -196,7 +198,7 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
         /// Valeur source du binding, attendue de type
         /// <c>DTO_VwProductionBarFull_P11</c> et transmise par liaison sans chemin.
         /// Toute autre valeur, y compris <see langword="null"/>, est admise sans
-        /// erreur et repliée sur <see cref="DependencyProperty.UnsetValue"/>.
+        /// erreur et repliée sur <see cref="RS_Colors.White_Brush"/>.
         /// </param>
         /// <param name="targetType">
         /// Type cible attendu par la propriété de destination du binding (typiquement
@@ -213,39 +215,39 @@ namespace DG244Cutting.D_Presentation.Utilities.Converters
         /// <returns>
         /// Le pinceau rouge figé si la barre est refusée, indépendamment de son
         /// indicateur d'utilisation ; le pinceau vert figé si elle est utilisée sans
-        /// être refusée ; <see cref="DependencyProperty.UnsetValue"/> si aucun des
-        /// deux indicateurs n'est positionné, ainsi que pour toute entrée
-        /// <see langword="null"/> ou d'un type inattendu. Aucun autre retour n'est
-        /// possible et aucune exception n'est levée.
+        /// être refusée ; le pinceau blanc figé <see cref="RS_Colors.White_Brush"/> si
+        /// aucun des deux indicateurs n'est positionné, ainsi que pour toute entrée
+        /// <see langword="null"/> ou d'un type inattendu. La méthode rend toujours un
+        /// <see cref="Brush"/>, ne rend jamais <see langword="null"/> et ne lève
+        /// aucune exception.
         /// </returns>
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             // Filtrage de motif direct : PBIsDeleted et PBIsUsed étant des bool
-            // non-nullables du DTO, aucun helper de lecture robuste n'est requis.
-            // Entrée null ou d'un type inattendu : cas nominal replié sur UnsetValue,
-            // au même titre que le cas neutre ci-dessous.
-            if (value is not DTO_VwProductionBarFull_P11 bar)
+            // non-nullables du DTO, aucun helper de lecture robuste n'est requis. Les
+            // deux branches colorées sont imbriquées sous ce filtrage, de sorte que le
+            // repli blanc constitue le point de sortie unique de la méthode : le cas
+            // neutre, l'entrée null et l'entrée d'un type inattendu le rejoignent par
+            // la même instruction de retour.
+            if (value is DTO_VwProductionBarFull_P11 bar)
             {
-                return DependencyProperty.UnsetValue;
-            }
+                // Priorité absolue du refus, évaluée en premier : garde défensive
+                // rendant le comportement déterminé si les deux indicateurs se
+                // trouvaient simultanément positionnés.
+                if (bar.PBIsDeleted)
+                {
+                    return RS_Colors.Red_Brush;
+                }
 
-            // Priorité absolue du refus, évaluée en premier : garde défensive rendant
-            // le comportement déterminé si les deux indicateurs se trouvaient
-            // simultanément positionnés.
-            if (bar.PBIsDeleted)
-            {
-                return RS_Colors.Red_Brush;
-            }
-
-            if (bar.PBIsUsed)
-            {
-                return RS_Colors.Green_Brush;
+                if (bar.PBIsUsed)
+                {
+                    return RS_Colors.Green_Brush;
+                }
             }
 
             // Cas neutre : barre optimisée non encore validée, ou validée mais pas
-            // encore consommée. L'élément conserve la couleur appliquée au chargement
-            // par le service de stylisation.
-            return DependencyProperty.UnsetValue;
+            // encore consommée.
+            return RS_Colors.White_Brush;
         }
 
         /// <summary>
