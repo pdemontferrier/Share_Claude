@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using DG244Cutting.A_Domain.Common.Enums;
+using DG244Cutting.A_Domain.Common.Enums.App;
 using DG244Cutting.A_Domain.Interfaces.Services.Presentation;
 using DG244Cutting.A_Domain.Interfaces.Settings.App;
 using DG244Cutting.A_Domain.Interfaces.Settings.Presentation;

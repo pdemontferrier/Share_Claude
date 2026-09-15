@@ -1,4 +1,4 @@
-﻿namespace DG244Cutting.A_Domain.Common.Enums
+﻿namespace DG244Cutting.A_Domain.Common.Enums.Business
 {
     /// <summary>
     /// Issue d’une invocation du moteur d’optimisation de découpe, exprimée par un
@@ -14,12 +14,12 @@
     /// </para>
     /// <para>
     /// Le type est transporté par la propriété <c>Outcome</c> de
-    /// <see cref="DG244Cutting.A_Domain.DTOs.Business.DTO_CuttingOptimizationResult"/>.
+    /// <see cref="DTOs.Business.DTO_CuttingOptimizationResult"/>.
     /// Il est valorisé par les deux méthodes du moteur d’optimisation de découpe,
     /// dont le contrat est exposé par
-    /// <see cref="DG244Cutting.A_Domain.Interfaces.Services.Business.IS_CuttingOptimizer"/>
+    /// <see cref="Interfaces.Services.Business.IS_CuttingOptimizer"/>
     /// et l’implémentation portée par
-    /// <see cref="DG244Cutting.B_UseCases.Services.Business.SR_CuttingOptimizer"/>.
+    /// <see cref="B_UseCases.Services.Business.SR_CuttingOptimizer"/>.
     /// </para>
     /// <para>
     /// Invariant de cohérence : sur toute issue autre que <see cref="Success"/>, le

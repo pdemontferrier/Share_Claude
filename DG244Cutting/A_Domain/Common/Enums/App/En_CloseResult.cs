@@ -1,4 +1,4 @@
-﻿namespace DG244Cutting.A_Domain.Common.Enums
+﻿namespace DG244Cutting.A_Domain.Common.Enums.App
 {
     /// <summary>
     /// Résultat de la procédure de fermeture d’application.

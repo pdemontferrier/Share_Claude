@@ -1,4 +1,4 @@
-﻿namespace DG244Cutting.A_Domain.Common.Enums
+﻿namespace DG244Cutting.A_Domain.Common.Enums.User
 {
     /// <summary>
     /// Issue fonctionnelle d’un scénario de mutation, restituée à la couche de

@@ -1,4 +1,4 @@
-﻿using DG244Cutting.A_Domain.Common.Enums;
+﻿using DG244Cutting.A_Domain.Common.Enums.Business;
 
 namespace DG244Cutting.A_Domain.DTOs.Business
 {

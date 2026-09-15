@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using DG244Cutting.A_Domain.Common.Enums;
+using DG244Cutting.A_Domain.Common.Enums.App;
 using DG244Cutting.A_Domain.Common.Exceptions;
 
 namespace DG244Cutting.A_Domain.Interfaces.Services.Infrastructure

@@ -1,4 +1,4 @@
-﻿using DG244Cutting.A_Domain.Common.Enums;
+﻿using DG244Cutting.A_Domain.Common.Enums.User;
 using DG244Cutting.A_Domain.Common.Exceptions;
 using DG244Cutting.A_Domain.Entities.DIGIT_TRY;
 

@@ -1,4 +1,4 @@
-﻿using DG244Cutting.A_Domain.Common.Enums;
+﻿using DG244Cutting.A_Domain.Common.Enums.App;
 using DG244Cutting.A_Domain.Common.Exceptions;
 using DG244Cutting.A_Domain.Interfaces.Services.Infrastructure;
 using DG244Cutting.A_Domain.Interfaces.Services.Presentation;

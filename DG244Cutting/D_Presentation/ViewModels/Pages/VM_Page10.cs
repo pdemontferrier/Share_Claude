@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
-using DG244Cutting.A_Domain.Common.Enums;
+using DG244Cutting.A_Domain.Common.Enums.Business;
 using DG244Cutting.A_Domain.DTOs.Business;
 using DG244Cutting.A_Domain.Interfaces.Services.Business;
 using DG244Cutting.A_Domain.Interfaces.Services.Presentation;

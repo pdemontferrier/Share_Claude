@@ -1,4 +1,4 @@
-﻿using DG244Cutting.A_Domain.Common.Enums;
+﻿using DG244Cutting.A_Domain.Common.Enums.App;
 
 namespace DG244Cutting.A_Domain.Interfaces.UseCases.App
 {

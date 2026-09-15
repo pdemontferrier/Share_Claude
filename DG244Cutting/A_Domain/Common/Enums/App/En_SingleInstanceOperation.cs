@@ -1,4 +1,4 @@
-﻿namespace DG244Cutting.A_Domain.Common.Enums
+﻿namespace DG244Cutting.A_Domain.Common.Enums.App
 {
     /// <summary>
     /// Opération multiplexée exposée par le service de garde d’unicité d’instance

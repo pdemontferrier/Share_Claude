@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using DG244Cutting.A_Domain.Common.Enums;
+using DG244Cutting.A_Domain.Common.Enums.User;
 using DG244Cutting.A_Domain.Entities.DIGIT_TRY;
 using DG244Cutting.A_Domain.Interfaces.Handlers.Generic;
 using DG244Cutting.A_Domain.Interfaces.Services.Presentation;

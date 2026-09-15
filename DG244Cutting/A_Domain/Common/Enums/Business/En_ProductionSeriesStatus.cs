@@ -1,4 +1,4 @@
-﻿namespace DG244Cutting.A_Domain.Common.Enums
+﻿namespace DG244Cutting.A_Domain.Common.Enums.Business
 {
     /// <summary>
     /// Statut d’une série de production au regard de son avancement et de son
