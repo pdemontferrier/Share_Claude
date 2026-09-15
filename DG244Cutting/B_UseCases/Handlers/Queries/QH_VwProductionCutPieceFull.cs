@@ -19,30 +19,40 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
     /// <see cref="IQ_VwProductionCutPieceFull"/>. Elle applique le patron principal d'extension
     /// par dérivation défini en §4.15.4 du 0230 : elle hérite du socle de lecture sans redéclarer
     /// ni masquer aucune de ses treize lectures, appelle <c>base(repository, classifier)</c> en
-    /// première instruction de son constructeur, et ajoute la seule lecture projetée propre au
-    /// besoin couvert.
+    /// première instruction de son constructeur, et ajoute les trois lectures projetées propres
+    /// aux besoins couverts.
     /// </para>
     /// <para>
     /// Objectif : exposer aux couches supérieures le détail des découpes rattachées à une série de
-    /// production, à raison d'une ligne par découpe, réduit aux vingt champs utiles au cinquième
-    /// onglet de la Page11. La découpe est l'unité élémentaire du travail d'atelier : chaque
+    /// production, à raison d'une ligne par découpe, selon trois lectures. La première rend
+    /// l'ensemble des découpes de la série, réduit aux vingt champs utiles au cinquième onglet de
+    /// la Page11. Les deux autres servent le moteur d'optimisation des barres de la Page20 et
+    /// sont réduites à treize champs : la recherche de la prochaine découpe à réaliser dans la
+    /// série, tous articles confondus, et la lecture du vivier des découpes disponibles d'un
+    /// article interne de la série. La découpe est l'unité élémentaire du travail d'atelier : chaque
     /// châssis d'une commande se décompose en ouvrants, eux-mêmes en pièces de profilé à découper.
     /// Chaque découpe porte l'identification du profilé dont elle est issue, sa géométrie de coupe
     /// - une longueur encadrée à gauche et à droite d'une inclinaison et d'un pivot -, les
     /// dimensions du profilé, sa position sur la barre affectée, et quatre indicateurs d'état qui
     /// jalonnent son parcours : barre approvisionnée, barre en rupture de stock, découpe réalisée,
-    /// découpe refusée. Le consommateur prévu est un viewModel <c>VM_Page11</c>, qui applique le
-    /// tri et la mise en forme et qui atteint la présente classe par son seul contrat.
+    /// découpe refusée. Les consommateurs prévus sont au nombre de deux et atteignent la présente
+    /// classe par son seul contrat : un viewModel <c>VM_Page11</c>, qui applique le tri et la
+    /// mise en forme de la lecture de consultation, et le service de lecture du vivier
+    /// <c>IS_ProductionCutPiece_GetPool</c>, qui exploite les lectures d'optimisation dans
+    /// l'ordre où elles sont rendues.
     /// </para>
     /// <para>
-    /// Sous-cas de lecture spécialisée : la lecture relève du second sous-cas du critère de
-    /// §4.14.5 du 0230. Elle mobilise la projection SQL traduite côté base de données, API EF Core
-    /// absente du contrat <c>IR_Generic&lt;T&gt;</c> ; elle est donc servie par délégation au
-    /// repository spécialisé <see cref="IR_VwProductionCutPieceFull"/> (Patron 2 de §4.15.2),
-    /// injecté au constructeur de la présente classe, le repository du socle demeurant privé et
-    /// inaccessible au dérivé. Le rapport de réduction - vingt colonnes sur deux cent trente-trois
-    /// - est le plus marqué du périmètre de la Page11, et le nombre de lignes attendu le plus
-    /// élevé, chaque châssis d'une série produisant plusieurs découpes.
+    /// Sous-cas de lecture spécialisée : les trois lectures relèvent du second sous-cas du critère
+    /// de §4.14.5 du 0230. Elles mobilisent la projection SQL traduite côté base de données, API
+    /// EF Core absente du contrat <c>IR_Generic&lt;T&gt;</c> ; elles sont donc servies par
+    /// délégation au repository spécialisé <see cref="IR_VwProductionCutPieceFull"/> (Patron 2
+    /// de §4.15.2), injecté au constructeur de la présente classe, le repository du socle
+    /// demeurant privé et inaccessible au dérivé. Pour la lecture Page11, le rapport de réduction
+    /// - vingt colonnes sur deux cent trente-trois - est le plus marqué du périmètre de la
+    /// Page11, et le nombre de lignes attendu le plus élevé, chaque châssis d'une série produisant
+    /// plusieurs découpes. Les lectures Page20 réduisent le flux à treize colonnes sur deux cent
+    /// trente-trois ; la recherche de la prochaine découpe requiert en outre un tri sur deux
+    /// colonnes, que le socle n'expose pas.
     /// </para>
     /// <para>
     /// Modèle transactionnel : néant. La classe n'ouvre, ne valide ni n'annule aucune transaction,
@@ -53,12 +63,13 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
     ///   <item><description>
-    ///     Valider la précondition structurelle portant sur l'identifiant de série avant toute
-    ///     délégation.
+    ///     Valider les préconditions structurelles portant sur les identifiants reçus -
+    ///     identifiant de série pour chaque lecture, identifiant d'article interne pour la lecture
+    ///     du vivier - avant toute délégation.
     ///   </description></item>
     ///   <item><description>
-    ///     Déléguer la lecture projetée au repository spécialisé consommé via son contrat, et
-    ///     rendre son résultat sans transformation aucune.
+    ///     Déléguer chaque lecture projetée au repository spécialisé consommé via son contrat, et
+    ///     rendre son résultat sans transformation aucune, ordre compris.
     ///   </description></item>
     ///   <item><description>
     ///     Enrichir et propager la CallChain reçue au format
@@ -78,10 +89,12 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
     ///   </description></item>
     ///   <item><description>
     ///     N'applique aucun filtrage sur l'indicateur de suppression logique <c>PCPIsDeleted</c>.
-    ///     À la différence du Query Handler des barres, où le refus est précisément porté par cet
-    ///     indicateur, le refus d'une découpe est porté par la colonne distincte
-    ///     <c>PCPIsCutRefused</c>, projetée au titre des champs d'affichage : la formulation
-    ///     retenue pour les barres n'est pas transposable ici.
+    ///     Pour la lecture Page11, à la différence du Query Handler des barres, où le refus est
+    ///     précisément porté par cet indicateur, le refus d'une découpe est porté par la colonne
+    ///     distincte <c>PCPIsCutRefused</c>, projetée au titre des champs d'affichage : la
+    ///     formulation retenue pour les barres n'est pas transposable ici. Pour les lectures
+    ///     Page20, l'exclusion des découpes supprimées fait partie du critère de disponibilité
+    ///     porté par le repository délégué ; la présente classe n'y ajoute rien.
     ///   </description></item>
     ///   <item><description>
     ///     Ne redéfinit et ne masque aucune méthode du socle : les treize lectures sont héritées
@@ -125,7 +138,7 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <summary>
         /// Service de classification des exceptions non contrôlées en types applicatifs normalisés
         /// (<see cref="Ex_Infrastructure"/> ou <see cref="Ex_Unclassified"/>), conservé localement
-        /// pour l'usage de la cascade de rattrapage de la lecture spécialisée.
+        /// pour l'usage des cascades de rattrapage des lectures spécialisées.
         /// </summary>
         /// <remarks>
         /// Ce champ double, sans le remplacer, le champ homonyme de <see cref="QH_Generic{T}"/> :
@@ -137,8 +150,8 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         private readonly IS_ExClassifier _classifier;
 
         /// <summary>
-        /// Repository spécialisé de la vue <see cref="vw_ProductionCutPiece_Full"/>, délégué de la
-        /// lecture projetée propre à la présente classe.
+        /// Repository spécialisé de la vue <see cref="vw_ProductionCutPiece_Full"/>, délégué des
+        /// lectures projetées propres à la présente classe.
         /// </summary>
         /// <remarks>
         /// Ce champ double, sans le remplacer, le champ <c>_repository</c> de
@@ -146,7 +159,7 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <c>IR_Generic&lt;vw_ProductionCutPiece_Full&gt;</c>, et n'est donc accessible ni depuis
         /// une classe dérivée ni sous le type spécialisé. La même instance est reçue une seule
         /// fois au constructeur : elle est transmise à <c>base</c> pour l'initialisation du socle,
-        /// et conservée ici sous son type spécialisé pour l'appel de la lecture projetée. Aucune
+        /// et conservée ici sous son type spécialisé pour l'appel des lectures projetées. Aucune
         /// seconde injection du contrat générique n'est introduite - elle produirait deux
         /// résolutions distinctes du conteneur pour un même rôle.
         /// </remarks>
@@ -177,7 +190,7 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// </para>
         /// </remarks>
         /// <param name="repository">
-        /// Repository spécialisé de la vue, délégué de la lecture projetée et du socle de lecture.
+        /// Repository spécialisé de la vue, délégué des lectures projetées et du socle de lecture.
         /// Ne doit pas être <see langword="null"/>.
         /// </param>
         /// <param name="classifier">
@@ -324,6 +337,273 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
                 return await _repository.GetByProductionSeriesIdForP11AsNoTrackingAsync(
                     callChain,
                     productionSeriesId,
+                    ct);
+            }
+            catch (Ex_Business) { throw; }
+            catch (Ex_Infrastructure) { throw; }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
+        }
+
+        /// <summary>
+        /// Désigne la prochaine découpe à réaliser dans une série de production, tous articles
+        /// confondus, réduite aux treize champs utiles au moteur d'optimisation de la Page20.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Contexte : lecture stricte, sans écriture, sans transformation et sans règle métier. La
+        /// sélection, l'ordonnancement, la réduction au premier enregistrement et la réduction de
+        /// deux cent trente-trois à treize colonnes sont appliqués sur la requête et traduits en
+        /// SQL côté serveur de base de données par le repository spécialisé délégué ; ils ne sont
+        /// jamais réalisés en mémoire. La présente classe n'y prend aucune part et n'ajoute aucun
+        /// coût à cette lecture.
+        /// </para>
+        /// <para>
+        /// Objectif : répondre à la question « que reste-t-il à faire dans la série ». La découpe
+        /// retournée est la première des découpes disponibles de la série, dans l'ordre du couple
+        /// référence et couleur <c>PCPReferenceColor</c> croissant, puis de la clé technique
+        /// <c>PCPId</c> croissante. Son article interne détermine la matière sur laquelle porte
+        /// l'optimisation et constitue la clé de compatibilité avec le stock de chutes.
+        /// </para>
+        /// <para>
+        /// Une découpe est disponible lorsqu'elle n'est pas coupée, n'est engagée dans aucune
+        /// optimisation, ni provisoire ni définitive, n'est pas supprimée et n'est pas bloquée par
+        /// une rupture de stock de sa barre. Le refus d'une découpe n'est pas un critère
+        /// d'exclusion : une découpe refusée et non coupée reste à réaliser.
+        /// </para>
+        /// <para>
+        /// La sélection et l'ordonnancement - départage par <c>PCPId</c> compris, qui garantit
+        /// qu'une même série présente toujours la même référence en premier - sont portés par le
+        /// repository délégué ; la présente classe ne retrie pas. L'article interne de la découpe
+        /// retournée est renseigné en vertu d'un invariant de données garanti par l'import des
+        /// séries ; la présente classe ne le contrôle pas.
+        /// </para>
+        /// <para>
+        /// La référence produite par le repository est retournée telle quelle, valeur absente
+        /// comprise : ni filtrage, ni recopie, ni projection complémentaire ne sont appliqués en
+        /// sortie.
+        /// </para>
+        /// <para>Tâches / Actions :</para>
+        /// <list type="bullet">
+        ///   <item><description>
+        ///     Valider la précondition structurelle portant sur <paramref name="productionSeriesId"/>,
+        ///     à l'intérieur du bloc de capture.
+        ///   </description></item>
+        ///   <item><description>
+        ///     Contrôler le jeton d'annulation immédiatement après la validation.
+        ///   </description></item>
+        ///   <item><description>
+        ///     Déléguer la recherche au repository spécialisé, en lui transmettant la CallChain
+        ///     enrichie et le jeton.
+        ///   </description></item>
+        /// </list>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="productionSeriesId">
+        /// Identifiant technique de la série de production, correspondant à la colonne <c>PSId</c>
+        /// de la vue. Doit être strictement positif. Il s'agit d'un identifiant fonctionnel
+        /// étranger, hérité de la table d'origine de la série, et non de la clé de la vue : la vue
+        /// n'en a pas.
+        /// </param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
+        /// <returns>
+        /// La prochaine découpe disponible de la série, projetée, ou <see langword="null"/> si la
+        /// série ne compte plus aucune découpe optimisable. Ce retour absent est nominal et ne
+        /// constitue pas une erreur.
+        /// </returns>
+        /// <exception cref="Ex_Business">
+        /// Levée si <paramref name="productionSeriesId"/> est inférieur ou égal à zéro
+        /// (code <c>BU_ER_02</c>).
+        /// </exception>
+        /// <exception cref="Ex_Infrastructure">
+        /// Levée si une défaillance technique EF Core survient lors de l'exécution de la requête
+        /// projetée (code <c>IN_ER_06</c>), ou si une exception non contrôlée est requalifiée par
+        /// le classificateur.
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
+        /// </exception>
+        public async Task<DTO_VwProductionCutPieceFull_P20?> HandleGetNextReferenceToCutForP20AsNoTrackingAsync(
+            string caller,
+            int productionSeriesId,
+            CancellationToken ct = default)
+        {
+            string callChain = $"{caller} > {_callee} > {nameof(HandleGetNextReferenceToCutForP20AsNoTrackingAsync)}";
+
+            try
+            {
+                // Précondition structurelle validée DANS le bloc try (patron standard §4.7 ;
+                // R-4.7.25), puis contrôle du jeton, dans l'ordre validation -> ct. L'Ex_Business
+                // typée remonte intacte au composant appelant via catch (Ex_Business) { throw; },
+                // sans requalification. Le contrôle duplique délibérément celui que porte le
+                // repository délégué : le modèle du projet porte la validation aux deux étages, et
+                // l'échec au plus près de l'appelant produit une chaîne d'appel plus courte et plus
+                // lisible. Le message est repris à l'identique de celui du repository, de sorte que
+                // les deux étages soient indiscernables du point de vue du consommateur, seule la
+                // CallChain les différenciant dans un journal.
+                if (productionSeriesId <= 0)
+                    throw new Ex_Business(
+                        callChain,
+                        Ex_Business.ErrorCodes.BU_ER_02,
+                        $"L'identifiant de série de production fourni pour la recherche de la prochaine découpe à réaliser dans {typeof(vw_ProductionCutPiece_Full).Name} est invalide : '{productionSeriesId}'. Doit être strictement positif.");
+
+                ct.ThrowIfCancellationRequested();
+
+                // Délégation au repository spécialisé (sous-cas (ii) du critère de lecture
+                // spécialisée de §4.14.5) : la projection SQL traduite côté base de données et le
+                // tri sur deux colonnes sont des API EF Core absentes d'IR_Generic<T>, et aucune des
+                // treize lectures du socle ne rend un type DTO_. Aucun appel EF Core ni
+                // AsNoTracking() n'est porté ici : le suffixe figure au nom de la méthode déléguée
+                // et l'appel relève du repository (R-4.14.11, R-4.15.12). La délégation étant
+                // INTER-CLASSES, la CallChain propagée ne comporte aucun redoublement du segment
+                // de composant.
+                //
+                // Le résultat est retourné SANS TRANSFORMATION AUCUNE : la référence produite par
+                // le repository est rendue telle quelle, null compris. Le null est nominal (série
+                // sans plus aucune découpe optimisable). L'ordre de sélection est porté par le
+                // repository et n'est pas repris ici.
+                return await _repository.GetNextReferenceToCutForP20AsNoTrackingAsync(
+                    callChain,
+                    productionSeriesId,
+                    ct);
+            }
+            catch (Ex_Business) { throw; }
+            catch (Ex_Infrastructure) { throw; }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
+        }
+
+        /// <summary>
+        /// Rend l'ensemble des découpes disponibles pour un article interne d'une série de
+        /// production, réduites aux treize champs utiles au moteur d'optimisation de la Page20.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Contexte : lecture stricte, sans écriture, sans transformation et sans règle métier. La
+        /// sélection, l'ordonnancement et la réduction de deux cent trente-trois à treize colonnes
+        /// sont appliqués sur la requête et traduits en SQL côté serveur de base de données par le
+        /// repository spécialisé délégué ; ils ne sont jamais réalisés en mémoire. La présente
+        /// classe n'y prend aucune part et n'ajoute aucun coût à cette lecture.
+        /// </para>
+        /// <para>
+        /// Objectif : répondre à la question « que peut-on placer sur une barre de cet article ».
+        /// Le résultat constitue le vivier d'optimisation : la matière sur laquelle le moteur
+        /// calcule le remplissage d'une barre - chute du stock ou barre neuve - de l'article
+        /// interne demandé. Toutes les découpes disponibles de la série pour cet article sont
+        /// rendues, sans limite de nombre.
+        /// </para>
+        /// <para>
+        /// Une découpe est disponible lorsqu'elle n'est pas coupée, n'est engagée dans aucune
+        /// optimisation, ni provisoire ni définitive, n'est pas supprimée et n'est pas bloquée par
+        /// une rupture de stock de sa barre. Le refus d'une découpe n'est pas un critère
+        /// d'exclusion : une découpe refusée et non coupée reste à réaliser.
+        /// </para>
+        /// <para>
+        /// L'ordre <c>PCPId</c> croissant est porté par le repository délégué et fonde le
+        /// déterminisme du moteur : une même situation d'atelier conduit toujours à la même barre
+        /// proposée. La présente classe le conserve intact et ne retrie pas.
+        /// </para>
+        /// <para>
+        /// La référence produite par le repository est retournée telle quelle, liste vide
+        /// comprise : ni tri, ni filtrage, ni recopie, ni projection complémentaire ne sont
+        /// appliqués en sortie.
+        /// </para>
+        /// <para>Tâches / Actions :</para>
+        /// <list type="bullet">
+        ///   <item><description>
+        ///     Valider, à l'intérieur du bloc de capture et dans cet ordre, les préconditions
+        ///     structurelles portant sur <paramref name="productionSeriesId"/> puis sur
+        ///     <paramref name="idArticleInternal"/>, ordre aligné sur celui du repository.
+        ///   </description></item>
+        ///   <item><description>
+        ///     Contrôler le jeton d'annulation immédiatement après la validation.
+        ///   </description></item>
+        ///   <item><description>
+        ///     Déléguer la lecture du vivier au repository spécialisé, en lui transmettant la
+        ///     CallChain enrichie et le jeton.
+        ///   </description></item>
+        /// </list>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="productionSeriesId">
+        /// Identifiant technique de la série de production, correspondant à la colonne <c>PSId</c>
+        /// de la vue. Doit être strictement positif. Il s'agit d'un identifiant fonctionnel
+        /// étranger, hérité de la table d'origine de la série, et non de la clé de la vue : la vue
+        /// n'en a pas.
+        /// </param>
+        /// <param name="idArticleInternal">
+        /// Identifiant de l'article interne dont le vivier est demandé, correspondant à la colonne
+        /// <c>PCPIdArticleInternal</c> de la vue. Doit être strictement positif.
+        /// </param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
+        /// <returns>
+        /// Liste des découpes disponibles de l'article interne dans la série, projetées et
+        /// ordonnées par <c>PCPId</c> croissant. Ne retourne jamais <see langword="null"/>. Une
+        /// liste vide est un résultat nominal et ne constitue pas une erreur.
+        /// </returns>
+        /// <exception cref="Ex_Business">
+        /// Levée, dans cet ordre de contrôle, si <paramref name="productionSeriesId"/> est
+        /// inférieur ou égal à zéro, puis si <paramref name="idArticleInternal"/> est inférieur ou
+        /// égal à zéro (code <c>BU_ER_02</c> dans les deux cas).
+        /// </exception>
+        /// <exception cref="Ex_Infrastructure">
+        /// Levée si une défaillance technique EF Core survient lors de l'exécution de la requête
+        /// projetée (code <c>IN_ER_06</c>), ou si une exception non contrôlée est requalifiée par
+        /// le classificateur.
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
+        /// </exception>
+        public async Task<List<DTO_VwProductionCutPieceFull_P20>> HandleGetOptimizationPoolForP20AsNoTrackingAsync(
+            string caller,
+            int productionSeriesId,
+            int idArticleInternal,
+            CancellationToken ct = default)
+        {
+            string callChain = $"{caller} > {_callee} > {nameof(HandleGetOptimizationPoolForP20AsNoTrackingAsync)}";
+
+            try
+            {
+                // Préconditions structurelles validées DANS le bloc try (patron standard §4.7 ;
+                // R-4.7.25), dans l'ordre série -> article interne aligné sur le repository, puis
+                // contrôle du jeton, dans l'ordre validation -> ct. L'Ex_Business typée remonte
+                // intacte au composant appelant via catch (Ex_Business) { throw; }, sans
+                // requalification. Les contrôles dupliquent délibérément ceux que porte le
+                // repository délégué : le modèle du projet porte la validation aux deux étages, et
+                // l'échec au plus près de l'appelant produit une chaîne d'appel plus courte et plus
+                // lisible. Les messages sont repris à l'identique de ceux du repository, de sorte
+                // que les deux étages soient indiscernables du point de vue du consommateur, seule
+                // la CallChain les différenciant dans un journal.
+                if (productionSeriesId <= 0)
+                    throw new Ex_Business(
+                        callChain,
+                        Ex_Business.ErrorCodes.BU_ER_02,
+                        $"L'identifiant de série de production fourni pour la lecture du vivier d'optimisation de {typeof(vw_ProductionCutPiece_Full).Name} est invalide : '{productionSeriesId}'. Doit être strictement positif.");
+
+                if (idArticleInternal <= 0)
+                    throw new Ex_Business(
+                        callChain,
+                        Ex_Business.ErrorCodes.BU_ER_02,
+                        $"L'identifiant d'article interne fourni pour la lecture du vivier d'optimisation de {typeof(vw_ProductionCutPiece_Full).Name} est invalide : '{idArticleInternal}'. Doit être strictement positif.");
+
+                ct.ThrowIfCancellationRequested();
+
+                // Délégation au repository spécialisé (sous-cas (ii) du critère de lecture
+                // spécialisée de §4.14.5) : la projection SQL traduite côté base de données est une
+                // API EF Core absente d'IR_Generic<T>, et aucune des treize lectures du socle ne
+                // rend un type DTO_. Aucun appel EF Core ni AsNoTracking() n'est porté ici : le
+                // suffixe figure au nom de la méthode déléguée et l'appel relève du repository
+                // (R-4.14.11, R-4.15.12). La délégation étant INTER-CLASSES, la CallChain propagée
+                // ne comporte aucun redoublement du segment de composant.
+                //
+                // Le résultat est retourné SANS TRANSFORMATION AUCUNE : la référence produite par
+                // le repository est rendue telle quelle, liste vide comprise. L'ordre PCPId
+                // croissant, porté par le repository, fonde le déterminisme du moteur
+                // d'optimisation : il n'est ni repris ni altéré ici.
+                return await _repository.GetOptimizationPoolForP20AsNoTrackingAsync(
+                    callChain,
+                    productionSeriesId,
+                    idArticleInternal,
                     ct);
             }
             catch (Ex_Business) { throw; }
