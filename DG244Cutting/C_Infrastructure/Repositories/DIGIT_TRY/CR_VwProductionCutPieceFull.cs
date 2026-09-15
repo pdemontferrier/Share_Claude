@@ -5,6 +5,7 @@ using DG244Cutting.A_Domain.Interfaces.Repositories.DIGIT_TRY;
 using DG244Cutting.A_Domain.Interfaces.Services.App;
 using DG244Cutting.C_Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
 {
@@ -21,39 +22,55 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     /// <c>CR_VwProductionBarFull</c>. Elle applique le
     /// Patron 2 « Extension par dérivation » défini en §4.15.2 du 0230 : elle hérite de
     /// <see cref="CR_Generic{T}"/> sans redéfinir aucune des dix-huit méthodes du socle (R-4.15.3
-    /// et I-4.15.1 du 0231), et ajoute la seule lecture projetée propre au besoin couvert.
+    /// et I-4.15.1 du 0231), et ajoute les trois lectures projetées propres aux besoins couverts.
     /// </para>
     /// <para>
-    /// Objectif : servir au cinquième onglet de la Page11 le détail des découpes composant une
-    /// série de production, à raison d'une ligne par découpe. La découpe est l'unité élémentaire
-    /// du travail d'atelier et l'objet même de l'application : chaque châssis d'une commande se
-    /// décompose en ouvrants, eux-mêmes en pièces de profilé à découper. Chaque découpe porte
-    /// l'identification du profilé dont elle est issue, sa géométrie de coupe, les dimensions du
-    /// profilé, sa position sur la barre affectée et quatre indicateurs d'état jalonnant son
-    /// parcours. La vue expose deux cent trente-trois colonnes ; l'écran en affiche seize. La
-    /// lecture rapatrie vingt champs - les seize champs d'affichage, plus quatre champs de service
-    /// non affichés dédiés à l'identification des lignes et à la vérification de cohérence du lot,
-    /// et concourant aux critères d'ordonnancement mis à la disposition de l'appelant.
+    /// Objectif : servir, à raison d'une ligne par découpe, les découpes composant une série de
+    /// production à deux destinations : le cinquième onglet de la Page11, qui en présente le
+    /// détail, et le moteur d'optimisation de la Page20, qui y recherche la prochaine découpe à
+    /// traiter puis le vivier des découpes à placer pour un article interne. La découpe est
+    /// l'unité élémentaire du travail d'atelier et l'objet même de l'application : chaque châssis
+    /// d'une commande se décompose en ouvrants, eux-mêmes en pièces de profilé à découper. Chaque
+    /// découpe porte l'identification du profilé dont elle est issue, sa géométrie de coupe, les
+    /// dimensions du profilé, sa position sur la barre affectée et quatre indicateurs d'état
+    /// jalonnant son parcours. La vue expose deux cent trente-trois colonnes.
     /// </para>
     /// <para>
-    /// Portée du résultat : la lecture n'applique aucun filtrage. Chez les découpes, à la
-    /// différence des barres, le refus n'est pas porté par l'indicateur de suppression logique
-    /// mais par la colonne distincte et projetée <c>PCPIsCutRefused</c> : le refus relève de
-    /// l'affichage et non de l'exclusion. Une découpe non encore affectée à une barre - dite au
-    /// vivier - porte une position et un identifiant de barre absents ; cet état est nominal. Une
-    /// série dont l'optimisation n'a pas encore été lancée, ou qui ne comporte aucune découpe,
-    /// produit une liste vide, résultat nominal.
+    /// La lecture Page11 rapatrie vingt champs - les seize champs d'affichage de l'onglet, plus
+    /// quatre champs de service non affichés dédiés à l'identification des lignes et à la
+    /// vérification de cohérence du lot, et concourant aux critères d'ordonnancement mis à la
+    /// disposition de l'appelant. Les deux lectures Page20 rapatrient treize champs - données de
+    /// découpe, paramètres de coupe, caractéristiques d'article, identification et affichage.
     /// </para>
     /// <para>
-    /// Justification du Patron 2 (Cas 3 du critère taxonomique de §4.14.6 du 0230) : la méthode
-    /// <see cref="GetByProductionSeriesIdForP11AsNoTrackingAsync"/> mobilise la projection SQL
-    /// traduite côté base de données, soit un <c>Select</c> retournant un type <c>DTO_</c> par
-    /// expression LINQ-to-Entities. Cette API ne figure pas au contrat
+    /// Portée du résultat - lecture Page11 : la lecture n'applique aucun filtrage au-delà de la
+    /// série. Chez les découpes, à la différence des barres, le refus n'est pas porté par
+    /// l'indicateur de suppression logique mais par la colonne distincte et projetée
+    /// <c>PCPIsCutRefused</c> : le refus relève de l'affichage et non de l'exclusion. Une découpe
+    /// non encore affectée à une barre - dite au vivier - porte une position et un identifiant de
+    /// barre absents ; cet état est nominal. Une série dont l'optimisation n'a pas encore été
+    /// lancée, ou qui ne comporte aucune découpe, produit une liste vide, résultat nominal.
+    /// </para>
+    /// <para>
+    /// Portée du résultat - lectures Page20 : les deux lectures filtrent sur le prédicat commun
+    /// de disponibilité pour l'optimisation, déclaré une seule fois par la classe, et ordonnent
+    /// leur résultat côté SQL, le tri faisant partie de leur contrat. Le refus n'est pas non plus,
+    /// pour ces lectures, un critère d'exclusion. L'absence de découpe disponible y est nominale.
+    /// </para>
+    /// <para>
+    /// Justification du Patron 2 (Cas 3 du critère taxonomique de §4.14.6 du 0230) : les méthodes
+    /// <see cref="GetByProductionSeriesIdForP11AsNoTrackingAsync"/>,
+    /// <see cref="GetNextReferenceToCutForP20AsNoTrackingAsync"/> et
+    /// <see cref="GetOptimizationPoolForP20AsNoTrackingAsync"/> mobilisent toutes trois la
+    /// projection SQL traduite côté base de données, soit un <c>Select</c> retournant un type
+    /// <c>DTO_</c> par expression LINQ-to-Entities. Cette API ne figure pas au contrat
     /// <c>IR_Generic&lt;T&gt;</c> et ne peut pas y figurer : le contrat exposerait alors une
-    /// dépendance à EF Core, incompatible avec sa résidence en A_Domain. Servir le besoin par les
-    /// dix-huit méthodes du socle imposerait de matérialiser les deux cent trente-trois colonnes
-    /// puis d'en écarter deux cent treize en mémoire, ce qui ferait perdre la réduction côté base
-    /// - laquelle est la finalité même de la classe.
+    /// dépendance à EF Core, incompatible avec sa résidence en A_Domain. Servir ces besoins par
+    /// les dix-huit méthodes du socle imposerait de matérialiser les deux cent trente-trois
+    /// colonnes puis d'en écarter en mémoire deux cent treize pour la lecture Page11 et deux cent
+    /// vingt pour les lectures Page20, ce qui ferait perdre la réduction côté base - laquelle est
+    /// la finalité même de la classe. La recherche de la prochaine découpe requiert en outre un
+    /// tri sur deux colonnes, que le socle n'expose pas.
     /// </para>
     /// <para>
     /// Modèle transactionnel : la classe reçoit le <see cref="DbContext"/> partagé sous son type
@@ -66,8 +83,15 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
     ///   <item><description>
-    ///     Implémenter la lecture projetée déclarée par <see cref="IR_VwProductionCutPieceFull"/>,
-    ///     en appliquant la réduction de colonnes sur la requête et non après matérialisation.
+    ///     Implémenter les trois lectures projetées déclarées par
+    ///     <see cref="IR_VwProductionCutPieceFull"/> - lecture de consultation de la Page11,
+    ///     recherche de la prochaine découpe et lecture du vivier pour la Page20 -, en appliquant
+    ///     la sélection, le tri et la réduction de colonnes sur la requête et non après
+    ///     matérialisation.
+    ///   </description></item>
+    ///   <item><description>
+    ///     Porter, en un point unique, le prédicat de disponibilité pour l'optimisation commun aux
+    ///     deux lectures Page20, afin que celles-ci appliquent strictement le même critère.
     ///   </description></item>
     ///   <item><description>
     ///     Respecter le pattern d'enrichissement de CallChain (§4.5 du 0230) et le pattern de
@@ -91,15 +115,18 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     ///     conformément à R-4.15.4 du 0231.
     ///   </description></item>
     ///   <item><description>
-    ///     Ne porte aucune règle métier, aucun calcul, aucun ordonnancement et aucun renommage de
-    ///     champ : la projection est une recopie terme à terme, types et nullabilité inclus.
+    ///     Ne porte aucune règle métier, aucun calcul et aucun renommage de champ : chaque
+    ///     projection est une recopie terme à terme, types et nullabilité inclus. La lecture
+    ///     Page11 n'applique aucun ordonnancement ; les lectures Page20 ordonnent côté SQL, l'ordre
+    ///     faisant partie de leur contrat.
     ///   </description></item>
     ///   <item><description>
-    ///     N'écarte aucun enregistrement, n'applique aucun filtrage sur l'indicateur de
-    ///     suppression logique <c>PCPIsDeleted</c> et ne recourt pas à <c>IgnoreQueryFilters</c> :
-    ///     aucun filtre global n'est configuré sur le contexte de données. Le refus d'une découpe
-    ///     est porté par la colonne distincte <c>PCPIsCutRefused</c>, projetée au même titre que
-    ///     les autres champs d'affichage.
+    ///     Pour la lecture Page11, n'écarte aucun enregistrement de la série et n'applique aucun
+    ///     filtrage sur l'indicateur de suppression logique <c>PCPIsDeleted</c>. Aucune lecture ne
+    ///     recourt à <c>IgnoreQueryFilters</c> : aucun filtre global n'est configuré sur le
+    ///     contexte de données. Le refus d'une découpe est porté par la colonne distincte
+    ///     <c>PCPIsCutRefused</c>, projetée au même titre que les autres champs d'affichage de la
+    ///     Page11 ; il n'est pas non plus un critère d'exclusion pour les lectures Page20.
     ///   </description></item>
     ///   <item><description>
     ///     Ne journalise pas et ne notifie pas : ces responsabilités appartiennent aux couches
@@ -133,6 +160,39 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// <c>_classifier</c> pour son propre bloc de capture.
         /// </remarks>
         private readonly string _callee;
+
+        /// <summary>
+        /// Prédicat de disponibilité pour l'optimisation, commun aux deux lectures destinées au
+        /// moteur d'optimisation de la Page20.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Une découpe est disponible lorsqu'elle n'est pas coupée (<c>PCPIsCut</c>), n'est
+        /// engagée dans aucune optimisation, ni définitive (<c>PCPIsOptimized</c>) ni provisoire
+        /// (<c>PCPIsOptimizedTemp</c>), n'est pas supprimée (<c>PCPIsDeleted</c>) et n'est pas
+        /// bloquée par une rupture de stock de sa barre (<c>PCPIsBarOutOfStock</c>). Une découpe en
+        /// rupture reste à réaliser, mais demeure hors du vivier tant que la matière n'est pas
+        /// libérée.
+        /// </para>
+        /// <para>
+        /// Le prédicat ne porte ni la restriction à la série ni la restriction à l'article
+        /// interne, appliquées par chaque méthode consommatrice. Il n'inclut pas davantage
+        /// <c>PCPIsCutRefused</c> : le refus d'une découpe n'est pas un critère d'exclusion, une
+        /// découpe refusée et non coupée restant à réaliser.
+        /// </para>
+        /// <para>
+        /// Sa déclaration sous forme d'arbre d'expression, et non de délégué, est requise pour
+        /// qu'EF Core le traduise en clause <c>WHERE</c> côté serveur de base de données. Sa
+        /// déclaration unique garantit que les deux lectures appliquent strictement le même
+        /// critère. Le champ est statique : le prédicat ne dépend d'aucun état d'instance.
+        /// </para>
+        /// </remarks>
+        private static readonly Expression<Func<vw_ProductionCutPiece_Full, bool>> _isAvailableForOptimization =
+            v => !v.PCPIsCut
+                && !v.PCPIsOptimized
+                && !v.PCPIsOptimizedTemp
+                && !v.PCPIsDeleted
+                && !v.PCPIsBarOutOfStock;
 
         #endregion
 
@@ -329,6 +389,258 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                         PCPId = v.PCPId,
                         ARSortOrder = v.ARSortOrder,
                         PCPIdProductionBar = v.PCPIdProductionBar
+                    })
+                    .ToListAsync(ct);
+            }
+            catch (Ex_Business) { throw; }
+            catch (Ex_Infrastructure) { throw; }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
+        }
+
+        /// <summary>
+        /// Désigne la prochaine découpe à réaliser dans une série de production, tous articles
+        /// confondus, réduite aux treize champs utiles au moteur d'optimisation de la Page20, la
+        /// sélection, le tri et la réduction étant traduits en SQL.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Le filtrage applique la restriction à la série puis le prédicat commun
+        /// <see cref="_isAvailableForOptimization"/> : sont écartées les découpes coupées,
+        /// engagées dans une optimisation provisoire ou définitive, supprimées ou bloquées par une
+        /// rupture de stock. Le refus d'une découpe n'est pas un critère d'exclusion. Aucun recours
+        /// n'est fait à <c>IgnoreQueryFilters</c> : aucun filtre global n'est configuré sur le
+        /// contexte de données.
+        /// </para>
+        /// <para>
+        /// Le tri par <c>PCPReferenceColor</c> croissant, puis par <c>PCPId</c> croissant, est
+        /// appliqué sur les colonnes de la vue avant la projection, et la matérialisation se
+        /// limite au premier enregistrement. Le tri est constitutif du contrat et non décoratif :
+        /// il fixe l'ordre dans lequel l'atelier traite les références. Le départage par
+        /// <c>PCPId</c> garantit qu'une même série présente toujours la même référence en premier.
+        /// </para>
+        /// <para>
+        /// L'article interne de la découpe retournée est renseigné, en vertu d'un invariant de
+        /// données garanti par l'import des séries ; la requête ne le contrôle pas.
+        /// </para>
+        /// <para>
+        /// Justification du Cas 3 (§4.14.6 du 0230) : la projection <c>Select</c> vers un type
+        /// <c>DTO_</c> est traduite côté serveur et réduit le flux à treize colonnes sur deux cent
+        /// trente-trois ; le tri porte en outre sur deux colonnes, ce que le socle n'expose pas.
+        /// <c>GetFirstOrDefaultAsNoTrackingAsync</c> avec prédicat ne trie pas et matérialise
+        /// l'entité complète ; <c>GetPagedAsNoTrackingAsync</c>, appelée pour une fenêtre d'un
+        /// seul enregistrement, ne trie que sur une colonne et matérialise elle aussi l'entité
+        /// complète.
+        /// </para>
+        /// <para>
+        /// L'appel à <c>AsNoTracking</c> est sans effet sur un type déclaré sans clé et sur une
+        /// requête projetée vers un type non entité. Il est néanmoins conservé : il documente
+        /// l'intention de lecture pure et aligne le corps sur les autres lectures de la classe.
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="productionSeriesId">
+        /// Identifiant technique de la série de production, correspondant à la colonne <c>PSId</c>
+        /// de la vue. Doit être strictement positif.
+        /// </param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
+        /// <returns>
+        /// La prochaine découpe disponible de la série, projetée, ou <see langword="null"/> si la
+        /// série ne compte plus aucune découpe optimisable. Ce retour absent est nominal et ne
+        /// constitue pas une erreur.
+        /// </returns>
+        /// <exception cref="Ex_Business">
+        /// Levée si l'identifiant de série fourni est inférieur ou égal à zéro
+        /// (code <c>BU_ER_02</c>).
+        /// </exception>
+        /// <exception cref="Ex_Infrastructure">
+        /// Levée si une défaillance technique EF Core survient lors de l'exécution de la requête
+        /// projetée (code <c>IN_ER_06</c>).
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
+        /// </exception>
+        public async Task<DTO_VwProductionCutPieceFull_P20?> GetNextReferenceToCutForP20AsNoTrackingAsync(
+            string caller,
+            int productionSeriesId,
+            CancellationToken ct = default)
+        {
+            string callChain = $"{caller} > {_callee} > {nameof(GetNextReferenceToCutForP20AsNoTrackingAsync)}";
+
+            try
+            {
+                if (productionSeriesId <= 0)
+                    throw new Ex_Business(
+                        callChain,
+                        Ex_Business.ErrorCodes.BU_ER_02,
+                        $"L'identifiant de série de production fourni pour la recherche de la prochaine découpe à réaliser dans {typeof(vw_ProductionCutPiece_Full).Name} est invalide : '{productionSeriesId}'. Doit être strictement positif.");
+
+                ct.ThrowIfCancellationRequested();
+
+                // Mobilise la projection SQL d'EF Core : le Select est traduit en clause SELECT
+                // côté base de données et restreint le flux à treize colonnes sur deux cent
+                // trente-trois. Le tri sur deux colonnes, appliqué avant la projection, et la
+                // réduction au premier enregistrement sont traduits en ORDER BY et TOP(1). Ces
+                // API ne sont pas exposées par IR_Generic<T> (Cas 3 de §4.14.6 du 0230).
+                return await _context.Set<vw_ProductionCutPiece_Full>()
+                    .AsNoTracking()
+                    .Where(v => v.PSId == productionSeriesId)
+                    .Where(_isAvailableForOptimization)
+                    .OrderBy(v => v.PCPReferenceColor)
+                    .ThenBy(v => v.PCPId)
+                    .Select(v => new DTO_VwProductionCutPieceFull_P20
+                    {
+                        // Données de découpe.
+                        PCPId = v.PCPId,
+                        PCPCutDimension = v.PCPCutDimension,
+
+                        // Paramètres de coupe.
+                        PCPSawCutLength = v.PCPSawCutLength,
+                        PCPFinishingCutLength = v.PCPFinishingCutLength,
+
+                        // Caractéristiques d'article.
+                        PCPIdArticleInternal = v.PCPIdArticleInternal,
+                        AIStandardBarLengthMm = v.AIStandardBarLengthMm,
+                        ARMinScrapLength = v.ARMinScrapLength,
+                        AIManageScraps = v.AIManageScraps,
+                        ARSortOrder = v.ARSortOrder,
+
+                        // Identification et affichage.
+                        PCPReferenceColor = v.PCPReferenceColor,
+                        PCPBarReference = v.PCPBarReference,
+                        PCPBarColorCodeInOut = v.PCPBarColorCodeInOut,
+                        PCPProfileName = v.PCPProfileName
+                    })
+                    .FirstOrDefaultAsync(ct);
+            }
+            catch (Ex_Business) { throw; }
+            catch (Ex_Infrastructure) { throw; }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex) { throw _classifier.Execute(callChain, ex); }
+        }
+
+        /// <summary>
+        /// Rend l'ensemble des découpes restant à réaliser pour un article interne d'une série de
+        /// production, réduites aux treize champs utiles au moteur d'optimisation de la Page20, la
+        /// sélection, le tri et la réduction étant traduits en SQL.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Le résultat constitue le vivier d'optimisation : la matière sur laquelle le moteur
+        /// calcule le remplissage d'une barre de l'article interne demandé. Toutes les découpes
+        /// disponibles de la série pour cet article sont rendues, sans limite de nombre.
+        /// </para>
+        /// <para>
+        /// Le filtrage applique la restriction à la série puis le prédicat commun
+        /// <see cref="_isAvailableForOptimization"/> : sont écartées les découpes coupées,
+        /// engagées dans une optimisation provisoire ou définitive, supprimées ou bloquées par une
+        /// rupture de stock. Le refus d'une découpe n'est pas un critère d'exclusion. Aucun recours
+        /// n'est fait à <c>IgnoreQueryFilters</c> : aucun filtre global n'est configuré sur le
+        /// contexte de données.
+        /// La restriction à l'article interne est appliquée en dernier.
+        /// </para>
+        /// <para>
+        /// Le résultat est ordonné par <c>PCPId</c> croissant, tri appliqué sur la colonne de la
+        /// vue avant la projection. Cet ordre porte le déterminisme du moteur d'optimisation : il
+        /// départage les combinaisons de remplissage équivalentes, de sorte qu'une même situation
+        /// d'atelier conduit toujours à la même barre proposée.
+        /// </para>
+        /// <para>
+        /// Justification du Cas 3 (§4.14.6 du 0230) : la projection <c>Select</c> vers un type
+        /// <c>DTO_</c> est traduite côté serveur et réduit le flux à treize colonnes sur deux cent
+        /// trente-trois. <c>GetFilteredAsNoTrackingAsync</c> servirait la sélection, mais ne trie
+        /// pas et matérialise l'entité complète.
+        /// </para>
+        /// <para>
+        /// L'appel à <c>AsNoTracking</c> est sans effet sur un type déclaré sans clé et sur une
+        /// requête projetée vers un type non entité. Il est néanmoins conservé : il documente
+        /// l'intention de lecture pure et aligne le corps sur les autres lectures de la classe.
+        /// </para>
+        /// </remarks>
+        /// <param name="caller">CallChain construite par le composant appelant.</param>
+        /// <param name="productionSeriesId">
+        /// Identifiant technique de la série de production, correspondant à la colonne <c>PSId</c>
+        /// de la vue. Doit être strictement positif.
+        /// </param>
+        /// <param name="idArticleInternal">
+        /// Identifiant de l'article interne dont le vivier est demandé, correspondant à la
+        /// colonne <c>PCPIdArticleInternal</c> de la vue. Doit être strictement positif.
+        /// </param>
+        /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
+        /// <returns>
+        /// Liste des découpes disponibles de l'article interne dans la série, projetées et
+        /// ordonnées, jamais <see langword="null"/>. Une liste vide est un résultat nominal et ne
+        /// constitue pas une erreur.
+        /// </returns>
+        /// <exception cref="Ex_Business">
+        /// Levée, dans cet ordre de contrôle, si l'identifiant de série fourni est inférieur ou
+        /// égal à zéro, puis si l'identifiant d'article interne fourni est inférieur ou égal à zéro
+        /// (code <c>BU_ER_02</c> dans les deux cas).
+        /// </exception>
+        /// <exception cref="Ex_Infrastructure">
+        /// Levée si une défaillance technique EF Core survient lors de l'exécution de la requête
+        /// projetée (code <c>IN_ER_06</c>).
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
+        /// </exception>
+        public async Task<List<DTO_VwProductionCutPieceFull_P20>> GetOptimizationPoolForP20AsNoTrackingAsync(
+            string caller,
+            int productionSeriesId,
+            int idArticleInternal,
+            CancellationToken ct = default)
+        {
+            string callChain = $"{caller} > {_callee} > {nameof(GetOptimizationPoolForP20AsNoTrackingAsync)}";
+
+            try
+            {
+                if (productionSeriesId <= 0)
+                    throw new Ex_Business(
+                        callChain,
+                        Ex_Business.ErrorCodes.BU_ER_02,
+                        $"L'identifiant de série de production fourni pour la lecture du vivier d'optimisation de {typeof(vw_ProductionCutPiece_Full).Name} est invalide : '{productionSeriesId}'. Doit être strictement positif.");
+
+                if (idArticleInternal <= 0)
+                    throw new Ex_Business(
+                        callChain,
+                        Ex_Business.ErrorCodes.BU_ER_02,
+                        $"L'identifiant d'article interne fourni pour la lecture du vivier d'optimisation de {typeof(vw_ProductionCutPiece_Full).Name} est invalide : '{idArticleInternal}'. Doit être strictement positif.");
+
+                ct.ThrowIfCancellationRequested();
+
+                // Mobilise la projection SQL d'EF Core : le Select est traduit en clause SELECT
+                // côté base de données et restreint le flux à treize colonnes sur deux cent
+                // trente-trois. Cette API n'est pas exposée par IR_Generic<T> (Cas 3 de §4.14.6
+                // du 0230). Le tri par PCPId, appliqué avant la projection, est traduit en
+                // ORDER BY et porte le déterminisme du moteur d'optimisation.
+                return await _context.Set<vw_ProductionCutPiece_Full>()
+                    .AsNoTracking()
+                    .Where(v => v.PSId == productionSeriesId)
+                    .Where(_isAvailableForOptimization)
+                    .Where(v => v.PCPIdArticleInternal == idArticleInternal)
+                    .OrderBy(v => v.PCPId)
+                    .Select(v => new DTO_VwProductionCutPieceFull_P20
+                    {
+                        // Données de découpe.
+                        PCPId = v.PCPId,
+                        PCPCutDimension = v.PCPCutDimension,
+
+                        // Paramètres de coupe.
+                        PCPSawCutLength = v.PCPSawCutLength,
+                        PCPFinishingCutLength = v.PCPFinishingCutLength,
+
+                        // Caractéristiques d'article.
+                        PCPIdArticleInternal = v.PCPIdArticleInternal,
+                        AIStandardBarLengthMm = v.AIStandardBarLengthMm,
+                        ARMinScrapLength = v.ARMinScrapLength,
+                        AIManageScraps = v.AIManageScraps,
+                        ARSortOrder = v.ARSortOrder,
+
+                        // Identification et affichage.
+                        PCPReferenceColor = v.PCPReferenceColor,
+                        PCPBarReference = v.PCPBarReference,
+                        PCPBarColorCodeInOut = v.PCPBarColorCodeInOut,
+                        PCPProfileName = v.PCPProfileName
                     })
                     .ToListAsync(ct);
             }
