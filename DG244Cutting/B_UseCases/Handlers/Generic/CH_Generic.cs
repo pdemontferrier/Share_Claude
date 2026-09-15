@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using DG244Cutting.A_Domain.Common.Exceptions;
 using DG244Cutting.A_Domain.Interfaces.Handlers.Commands;
 using DG244Cutting.A_Domain.Interfaces.Handlers.Generic;
@@ -30,6 +31,14 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
     /// la convention de nommage des propriétés. Le positionnement s'effectue avant tout appel
     /// au repository, garantissant que les valeurs sont en place dans le change tracker EF Core
     /// au moment du <c>SaveChangesAsync</c> du UseCase.
+    /// </para>
+    /// <para>
+    /// Snapshot Event Store : l'image JSON transmise à l'Event Store est restreinte aux propriétés
+    /// scalaires de l'entité (colonnes mappées, clés étrangères comprises). Les propriétés de
+    /// navigation EF Core en sont exclues : leur contenu dépend de l'état du change tracker et la
+    /// correction automatique des relations bidirectionnelles y forme des cycles qui rendraient la
+    /// sérialisation impossible. Cette restriction n'affecte que la chaîne JSON produite ; l'entité
+    /// et ses navigations en mémoire restent inchangées.
     /// </para>
     /// <list type="bullet">
     ///   <item><description>
@@ -78,6 +87,23 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
 
         /// <summary>Nom du composant courant, résolu dynamiquement pour la construction de la CallChain.</summary>
         private readonly string _callee;
+
+        /// <summary>
+        /// Options de sérialisation du snapshot Event Store, restreignant l'image JSON aux propriétés
+        /// scalaires de l'entité <typeparamref name="T"/> par le modificateur
+        /// <see cref="ExcludeNonScalarProperties"/>.
+        /// </summary>
+        /// <remarks>
+        /// Instance unique mise en cache par type fermé : System.Text.Json conserve les métadonnées
+        /// résolues au niveau de l'instance d'options, qui ne doit donc pas être recréée à chaque appel.
+        /// </remarks>
+        private static readonly JsonSerializerOptions _snapshotJsonOptions = new()
+        {
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver
+            {
+                Modifiers = { ExcludeNonScalarProperties }
+            }
+        };
 
         #endregion
 
@@ -455,6 +481,12 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
         /// aux spécifications du projet. La chaîne locale de cette méthode privée n'est utilisée
         /// qu'à des fins de diagnostic interne.
         /// </para>
+        /// <para>
+        /// Le champ <c>Data</c> reçoit le snapshot intégral de l'entité, entendu comme l'ensemble de
+        /// ses propriétés scalaires, sérialisé avec <see cref="_snapshotJsonOptions"/>. Les propriétés
+        /// de navigation sont exclues, ce qui garantit un snapshot autoporté et indépendant des entités
+        /// liées chargées dans le contexte ; cette exclusion ne constitue pas une approche partielle.
+        /// </para>
         /// </remarks>
         /// <param name="caller">
         /// CallChain complète construite au niveau de la méthode publique appelante.
@@ -471,7 +503,9 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
             var idProperty = typeof(T).GetProperty("Id");
             int tableId = idProperty?.GetValue(entity) is int value ? value : 0;
 
-            string data = JsonSerializer.Serialize(entity);
+            // Snapshot limité aux propriétés scalaires : les navigations EF Core sont exclues
+            // (cycles possibles via la correction automatique des relations).
+            string data = JsonSerializer.Serialize(entity, _snapshotJsonOptions);
 
             await _eventStore.HandleAddAsync(
                 caller,           // callChain jusqu'à la méthode publique appelante
@@ -584,6 +618,61 @@ namespace DG244Cutting.B_UseCases.Handlers.Generic
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Modificateur de résolution des métadonnées JSON : retire du contrat de sérialisation
+        /// toute propriété dont le type n'est pas scalaire.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Enregistré dans <see cref="_snapshotJsonOptions"/>, ce modificateur est invoqué une fois
+        /// par type résolu. Il n'agit que sur les types de forme objet ; les propriétés de navigation
+        /// de référence et les collections de navigation sont ainsi exclues du snapshot.
+        /// </para>
+        /// </remarks>
+        /// <param name="typeInfo">Métadonnées de sérialisation du type en cours de résolution.</param>
+        private static void ExcludeNonScalarProperties(JsonTypeInfo typeInfo)
+        {
+            if (typeInfo.Kind != JsonTypeInfoKind.Object) return;
+
+            for (int i = typeInfo.Properties.Count - 1; i >= 0; i--)
+            {
+                if (!IsScalarType(typeInfo.Properties[i].PropertyType))
+                    typeInfo.Properties.RemoveAt(i);
+            }
+        }
+
+        /// <summary>
+        /// Indique si un type correspond à une valeur de colonne, sous sa forme simple ou nullable.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Types retenus : types primitifs, énumérations, <see cref="string"/>, <see cref="decimal"/>,
+        /// <see cref="DateTime"/>, <see cref="DateTimeOffset"/>, <see cref="TimeSpan"/>,
+        /// <see cref="Guid"/>, <see cref="DateOnly"/>, <see cref="TimeOnly"/> et tableau d'octets.
+        /// Tout autre type est considéré comme une propriété de navigation.
+        /// </para>
+        /// </remarks>
+        /// <param name="type">Type de la propriété à qualifier.</param>
+        /// <returns>
+        /// <see langword="true"/> si le type est scalaire ; <see langword="false"/> sinon.
+        /// </returns>
+        private static bool IsScalarType(Type type)
+        {
+            Type t = Nullable.GetUnderlyingType(type) ?? type;
+
+            return t.IsPrimitive
+                || t.IsEnum
+                || t == typeof(string)
+                || t == typeof(decimal)
+                || t == typeof(DateTime)
+                || t == typeof(DateTimeOffset)
+                || t == typeof(TimeSpan)
+                || t == typeof(Guid)
+                || t == typeof(DateOnly)
+                || t == typeof(TimeOnly)
+                || t == typeof(byte[]);
         }
 
         #endregion
