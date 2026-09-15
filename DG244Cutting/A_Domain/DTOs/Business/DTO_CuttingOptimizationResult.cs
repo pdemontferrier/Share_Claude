@@ -58,7 +58,7 @@ namespace DG244Cutting.A_Domain.DTOs.Business
         /// <summary>Longueur physique du résidu de la barre après découpe, en millimètres, la valeur zéro étant admise sur un succès ; hors succès, sans objet et valant 0.</summary>
         public int ResidueLength { get; set; }
 
-        /// <summary>Qualification du résidu : true = déchet, false = chute réutilisable ; hors succès, sans objet et valant false.</summary>
+        /// <summary>Qualification du résidu : true = chute réutilisable, false = déchet ; hors succès, sans objet et valant false.</summary>
         public bool ResidueIsScrap { get; set; }
     }
 }

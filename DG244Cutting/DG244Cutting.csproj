@@ -52,6 +52,9 @@
 	
 	<!-- Folders -->
 	<ItemGroup>
+        <Folder Include="A_Domain\Common\Enums\App\" />
+        <Folder Include="A_Domain\Common\Enums\Business\" />
+        <Folder Include="A_Domain\Common\Enums\User\" />
         <Folder Include="A_Domain\DTOs\User\" />
         <Folder Include="A_Domain\Interfaces\UseCases\Business\" />
         <Folder Include="B_UseCases\DataProviders\App\" />
