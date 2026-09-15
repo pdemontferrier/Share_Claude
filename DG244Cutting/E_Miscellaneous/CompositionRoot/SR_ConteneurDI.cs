@@ -197,6 +197,7 @@ namespace DG244Cutting.E_Miscellaneous.CompositionRoot
             services.AddSingleton<IS_Hashing, SR_Hashing>();            // aucune dépendance.
 
             // Business
+            services.AddSingleton<IS_CuttingOptimizer, SR_CuttingOptimizer>(); // calcul pur ; seule dépendance IS_ExClassifier (Singleton).
             services.AddScoped<IS_ProductionSeries_Get, SR_ProductionSeries_Get>();
 
             // Infrastructure
