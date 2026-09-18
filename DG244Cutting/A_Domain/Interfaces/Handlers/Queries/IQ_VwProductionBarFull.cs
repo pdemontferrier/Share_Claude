@@ -21,45 +21,57 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
     /// </para>
     /// <para>
     /// Objectif : servir trois questions fermées portant sur les barres retenues par
-    /// l'optimisation pour les séries de production. La première relève de la consultation :
-    /// « quelles barres ont été retenues pour telle série de production, avec les seules
-    /// caractéristiques que l'écran de consultation affiche ». Les deux autres relèvent de la
-    /// validation des barres par l'opérateur conduite en Page20 : « quelle est la barre qui
-    /// m'est présentée », afin de vérifier que la matière prise est la bonne avant de l'accepter,
-    /// et « quelles barres bloquent la série pour rupture de stock », afin de voir ce qui empêche
-    /// la progression et de libérer une barre dont la matière est revenue. Ces barres
-    /// proviennent soit du stock de chutes issues de séries antérieures, soit du stock de barres
-    /// neuves ; chacune porte, outre ses caractéristiques d'article et de profilé, cinq
-    /// indicateurs d'état qui jalonnent son parcours - barre neuve ou chute, barre validée par
-    /// l'opérateur, barre effectivement utilisée, barre en rupture de stock, barre refusée, ce
-    /// dernier cas s'accompagnant d'un motif conservé sur l'enregistrement.
+    /// l'optimisation pour les séries de production. La lecture par série répond à « quelles
+    /// barres ont été retenues pour telle série de production » : elle sert le suivi d'une série
+    /// dont la production est achevée, où se lit ce qui a été produit, refusé ou bloqué. La
+    /// lecture par barre répond à « quelle est la barre désignée par tel identifiant » : elle sert
+    /// le poste de décision, où l'opérateur compare la matière proposée à celle qu'il a sous les
+    /// yeux avant de l'accepter ou de l'écarter. La lecture des barres en rupture répond à
+    /// « quelles barres de la série sont mises en attente pour rupture de stock » : elle sert la
+    /// libération d'une barre dont la matière est revenue, dans le seul régime où plus rien n'est
+    /// optimisable. Ces barres proviennent soit du stock de chutes issues de séries antérieures,
+    /// soit du stock de barres neuves ; chacune porte, outre ses caractéristiques d'article et de
+    /// profilé, cinq indicateurs d'état qui jalonnent son parcours - barre neuve ou chute, barre
+    /// validée par l'opérateur, barre effectivement utilisée, barre en rupture de stock, barre
+    /// refusée, ce dernier cas s'accompagnant d'un motif conservé sur l'enregistrement. La vue
+    /// source expose quatre-vingt-dix-sept colonnes.
     /// </para>
     /// <para>
-    /// La vue source expose quatre-vingt-deux colonnes ; le quatrième onglet de la Page11 en
-    /// affiche seize. Les trois lectures partagent le même type de projection et rapatrient les
-    /// mêmes dix-huit champs - les seize champs d'affichage, plus deux champs de service non
-    /// affichés servant à l'identification des lignes, à la vérification de cohérence du lot
-    /// reçu et, pour la lecture de consultation, à l'ordonnancement laissé à la charge de
-    /// l'appelant. Ces dix-huit champs couvrent les caractéristiques que l'opérateur vérifie en
-    /// Page20 : référence, désignation, couleur, longueur, origine neuve ou chute et nombre de
-    /// découpes placées.
+    /// Les trois lectures rapatrient les mêmes vingt et un champs, sous le même type de
+    /// projection : dix-neuf champs d'affichage et deux champs de service non affichés, ces
+    /// derniers servant à l'identification des lignes, à la vérification de cohérence du lot reçu
+    /// et, pour la lecture par série, à l'ordonnancement laissé à la charge de l'appelant. Le type
+    /// est commun aux trois lectures : trois de ses champs ne servent nominalement que la fiche de
+    /// la barre désignée, mais transitent néanmoins par les deux lectures de liste, un type
+    /// partiellement alimenté ne permettant pas de distinguer un champ non projeté d'un champ nul
+    /// en base.
     /// </para>
     /// <para>
-    /// Portée du résultat - lecture Page11 : la lecture n'écarte aucun enregistrement au motif
+    /// Deux identifiants de série sont projetés et ne sont jamais interchangeables. <c>PSId</c>
+    /// est la clé technique de la série et le paramètre de deux des trois lectures ;
+    /// <c>PSIdSerialNumber</c> est le numéro métier sous lequel l'atelier désigne la série, sur
+    /// les documents comme dans les échanges entre postes, et aucune lecture ne se paramètre par
+    /// lui. <c>PSDescription</c> complète ce numéro du libellé de chantier ou de commande que le
+    /// numéro seul ne porte pas. <c>CSLScrapLocationSource</c>, pour sa part, porte l'emplacement
+    /// réel d'où la matière est à prendre : renseigné sur une barre de chute, absent sur une barre
+    /// neuve, la vue ne joignant alors aucune chute.
+    /// </para>
+    /// <para>
+    /// Portée du résultat - lecture par série : la lecture n'écarte aucun enregistrement au motif
     /// qu'il serait marqué comme logiquement supprimé. Le refus d'une barre par l'opérateur marque
-    /// précisément l'enregistrement de cette façon, et l'écran doit afficher ces barres refusées
-    /// avec leur motif : elles font partie intégrante du résultat attendu. Une série dont
-    /// l'optimisation n'a pas encore été lancée ne porte aucune barre ; une liste vide est alors
-    /// un résultat nominal et non une erreur.
+    /// précisément l'enregistrement de cette façon, et les barres refusées font partie intégrante
+    /// du résultat attendu : elles sont rendues avec leur motif. Une série dont l'optimisation n'a
+    /// pas encore été lancée ne porte aucune barre ; une liste vide est alors un résultat nominal
+    /// et non une erreur.
     /// </para>
     /// <para>
-    /// Portée du résultat - lectures Page20 : la lecture de la barre présentée rend la barre
-    /// désignée quel que soit son état - validée, utilisée, en rupture de stock ou refusée - et
-    /// au plus une barre. Son absence n'est pas une erreur à ce niveau : la barre ayant été
-    /// désignée en amont, une valeur absente traduit une incohérence dont le traitement
-    /// appartient à l'appelant. La lecture des barres en rupture ne retient que les barres de la
-    /// série marquées en rupture de stock et non refusées, la validation n'étant pas un critère
-    /// d'exclusion. Ce critère est strictement aligné sur celui du service
+    /// Portée du résultat - lecture par barre et lecture des barres en rupture : la lecture par
+    /// barre rend la barre désignée quel que soit son état - validée, utilisée, en rupture de
+    /// stock ou refusée - et au plus une barre. Son absence n'est pas une erreur à ce niveau : la
+    /// barre ayant été désignée en amont, une valeur absente traduit une incohérence dont le
+    /// traitement appartient à l'appelant. La lecture des barres en rupture ne retient que les
+    /// barres de la série marquées en rupture de stock et non refusées, la validation n'étant pas
+    /// un critère d'exclusion. Ce critère est strictement aligné sur celui du service
     /// <c>SR_ProductionSeries_SetBarOutOfStockFlag</c>, qui calcule l'indicateur de rupture de la
     /// série : une série signalée en attente présente toujours au moins une barre libérable, et
     /// une barre refusée, sortie du circuit, n'y figure pas. Son résultat est ordonné par ordre
@@ -82,7 +94,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
     /// hérité. Aucune de ces treize lectures ne rend un type <c>DTO_</c> : toutes rendent l'entité
     /// paramétrée, une liste de cette entité, un booléen ou un entier. La lecture des barres en
     /// rupture requiert en outre un tri sur deux colonnes, que le socle n'expose pas ; la lecture
-    /// de la barre présentée ne peut davantage être servie par
+    /// par barre ne peut davantage être servie par
     /// <c>HandleGetByIdAsNoTrackingAsync</c>, inopérante sur ce type sans clé (cf. avertissement
     /// de surface héritée ci-dessous).
     /// </para>
@@ -94,11 +106,10 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
     ///     lectures du socle en même temps que les trois lectures projetées propres à la vue.
     ///   </description></item>
     ///   <item><description>
-    ///     Déclarer les trois lectures projetées - la lecture de consultation par identifiant de
-    ///     série, la lecture de la barre présentée par identifiant de barre et la lecture des
-    ///     barres en rupture par identifiant de série -, chacune avec sa signature de
-    ///     traçabilité, sa frontière de retour <c>DTO_</c> de A_Domain et les retours signalables
-    ///     qu'elle laisse remonter.
+    ///     Déclarer les trois lectures projetées - la lecture par série, la lecture par barre et
+    ///     la lecture des barres en rupture -, chacune avec sa signature de traçabilité, sa
+    ///     frontière de retour <c>DTO_</c> de A_Domain et les retours signalables qu'elle laisse
+    ///     remonter.
     ///   </description></item>
     /// </list>
     /// <para>Non-responsabilités :</para>
@@ -109,20 +120,19 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
     ///   </description></item>
     ///   <item><description>
     ///     Ne porte aucune règle métier, aucun calcul et aucune mise en forme. Pour la lecture
-    ///     Page11, aucun ordonnancement n'est appliqué : le tri du tableau relève de l'appelant,
-    ///     qui l'applique en mémoire après extraction. La lecture des barres en rupture de la
-    ///     Page20 est en revanche ordonnée en aval, côté base de données, et rendue dans cet
-    ///     ordre, qui est constitutif de son contrat ; la lecture de la barre présentée, qui rend
-    ///     au plus une barre, n'appelle aucun ordonnancement.
+    ///     par série, aucun ordonnancement n'est appliqué : le tri du tableau relève de
+    ///     l'appelant, qui l'applique en mémoire après extraction. La lecture des barres en
+    ///     rupture est en revanche ordonnée en aval, côté base de données, et rendue dans cet
+    ///     ordre, qui est constitutif de son contrat ; la lecture par barre, qui rend au plus une
+    ///     barre, n'appelle aucun ordonnancement.
     ///   </description></item>
     ///   <item><description>
-    ///     Pour la lecture Page11, n'écarte aucun enregistrement au motif qu'il serait marqué
-    ///     comme logiquement supprimé : la qualification d'une barre refusée relève de
-    ///     l'affichage et non de l'exclusion. Pour la lecture de la barre présentée en Page20,
-    ///     n'applique aucun filtrage d'état : la barre désignée est rendue quel que soit son
-    ///     état, refus compris. Pour la lecture des barres en rupture en Page20, l'exclusion des
-    ///     barres refusées fait partie du critère de sélection porté en aval ; le contrat n'y
-    ///     ajoute rien.
+    ///     Pour la lecture par série, n'écarte aucun enregistrement au motif qu'il serait marqué
+    ///     comme logiquement supprimé : la qualification d'une barre refusée relève de l'affichage
+    ///     et non de l'exclusion. Pour la lecture par barre, n'applique aucun filtrage d'état : la
+    ///     barre désignée est rendue quel que soit son état, refus compris. Pour la lecture des
+    ///     barres en rupture, l'exclusion des barres refusées fait partie du critère de sélection
+    ///     porté en aval ; le contrat n'y ajoute rien.
     ///   </description></item>
     ///   <item><description>
     ///     N'expose aucune dépendance à EF Core ni à C_Infrastructure : la pureté contractuelle
@@ -169,21 +179,24 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
 
         /// <summary>
         /// Rend la liste des barres retenues par l'optimisation pour une série de production,
-        /// réduites aux dix-huit champs utiles au quatrième onglet de la Page11.
+        /// réduites au type projeté, sans filtrage d'état et sans ordonnancement.
         /// </summary>
         /// <remarks>
         /// <para>
         /// Contexte : lecture stricte, sans écriture, sans transformation et sans règle métier. La
-        /// réduction de quatre-vingt-deux à dix-huit colonnes est appliquée sur la requête et
-        /// traduite en clause <c>SELECT</c> côté serveur de base de données par le repository
+        /// réduction de quatre-vingt-dix-sept à vingt et une colonnes est appliquée sur la requête
+        /// et traduite en clause <c>SELECT</c> côté serveur de base de données par le repository
         /// spécialisé délégué ; elle n'est jamais réalisée en mémoire.
         /// </para>
         /// <para>
-        /// Objectif : offrir au consommateur un lot de lignes brut, qu'il lui appartient de trier
-        /// et de mettre en forme. Aucun ordonnancement n'est appliqué : les trois critères de tri
-        /// du tableau (<c>ARSortOrder</c>, <c>PBIsNewBar</c>, <c>PBId</c>) figurent parmi les
-        /// champs projetés - les deux premiers au titre des champs d'affichage, le troisième au
-        /// titre des champs de service - et sont mis à la disposition de l'appelant.
+        /// Objectif : rendre toutes les barres retenues pour la série demandée et offrir au
+        /// consommateur un lot de lignes brut, qu'il lui appartient de trier et de mettre en
+        /// forme. La lecture sert le suivi d'une série dont la production est achevée, où se lit
+        /// ce qui a été produit, refusé ou bloqué. Aucun ordonnancement n'est appliqué : les trois
+        /// critères de tri du tableau (<c>ARSortOrder</c>, <c>PBIsNewBar</c>, <c>PBId</c>)
+        /// figurent parmi les champs projetés - les deux premiers au titre des champs d'affichage,
+        /// le troisième au titre des champs de service - et sont mis à la disposition de
+        /// l'appelant.
         /// </para>
         /// <para>
         /// Aucun filtrage n'est appliqué sur l'indicateur de suppression logique : les barres
@@ -201,7 +214,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
         /// Identifiant technique de la série de production, correspondant à la colonne <c>PSId</c>
         /// de la vue. Doit être strictement positif. Il s'agit d'un identifiant fonctionnel
         /// étranger, hérité de la table d'origine de la série, et non de la clé de la vue : la vue
-        /// n'en a pas.
+        /// n'en a pas. À distinguer de <c>PSIdSerialNumber</c>, numéro métier de la série, qui est
+        /// projeté mais n'est jamais un paramètre de sélection.
         /// </param>
         /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <returns>
@@ -229,22 +243,22 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
             CancellationToken ct = default);
 
         /// <summary>
-        /// Rend la barre de production désignée par son identifiant, telle que l'écran de
-        /// validation des barres de la Page20 la présente à l'opérateur, réduite aux dix-huit
-        /// champs du type de projection.
+        /// Rend la barre de production désignée par son identifiant, réduite au type projeté, quel
+        /// que soit son état.
         /// </summary>
         /// <remarks>
         /// <para>
         /// Contexte : lecture stricte, sans écriture, sans transformation et sans règle métier. La
-        /// sélection et la réduction de quatre-vingt-deux à dix-huit colonnes sont appliquées sur
-        /// la requête et traduites en SQL côté serveur de base de données par le repository
-        /// spécialisé délégué ; elles ne sont jamais réalisées en mémoire.
+        /// sélection et la réduction de quatre-vingt-dix-sept à vingt et une colonnes sont
+        /// appliquées sur la requête et traduites en SQL côté serveur de base de données par le
+        /// repository spécialisé délégué ; elles ne sont jamais réalisées en mémoire.
         /// </para>
         /// <para>
-        /// Objectif : répondre à la question « quelle est la barre qui m'est présentée ». La
-        /// lecture sert l'onglet de détail de la barre présentée : l'opérateur y vérifie la
-        /// matière - référence, désignation, couleur, longueur, origine neuve ou chute, nombre de
-        /// découpes placées - avant d'accepter la barre.
+        /// Objectif : répondre à la question « quelle est la barre désignée par tel
+        /// identifiant ». La lecture sert le poste de décision de l'opérateur, où celui-ci compare
+        /// la matière proposée à celle qu'il a sous les yeux - référence, désignation, couleur,
+        /// longueur, origine neuve ou chute, emplacement d'où la prendre, nombre de découpes
+        /// placées - avant de l'accepter ou de l'écarter.
         /// </para>
         /// <para>
         /// Aucun filtrage n'est appliqué sur les indicateurs d'état : la barre désignée est rendue
@@ -293,22 +307,21 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
 
         /// <summary>
         /// Rend les barres d'une série de production mises en attente pour rupture de stock et non
-        /// refusées, réduites aux dix-huit champs du type de projection, à destination de l'écran
-        /// de validation des barres de la Page20.
+        /// refusées, réduites au type projeté, ordonnées côté base de données.
         /// </summary>
         /// <remarks>
         /// <para>
         /// Contexte : lecture stricte, sans écriture, sans transformation et sans règle métier. La
-        /// sélection, l'ordonnancement et la réduction de quatre-vingt-deux à dix-huit colonnes
-        /// sont appliqués sur la requête et traduits en SQL côté serveur de base de données par le
-        /// repository spécialisé délégué ; ils ne sont jamais réalisés en mémoire.
+        /// sélection, l'ordonnancement et la réduction de quatre-vingt-dix-sept à vingt et une
+        /// colonnes sont appliqués sur la requête et traduits en SQL côté serveur de base de
+        /// données par le repository spécialisé délégué ; ils ne sont jamais réalisés en mémoire.
         /// </para>
         /// <para>
-        /// Objectif : répondre à la question « quelles barres bloquent la série pour rupture de
-        /// stock ». La lecture sert l'onglet des barres en rupture de la série, accessible dans le
-        /// seul régime où plus aucune découpe n'est optimisable mais où il en subsiste, toutes
-        /// bloquées par une rupture de stock : l'opérateur y voit ce qui empêche la progression et
-        /// peut libérer une barre dont la matière est revenue.
+        /// Objectif : répondre à la question « quelles barres de la série sont mises en attente
+        /// pour rupture de stock ». La lecture sert la libération d'une barre dont la matière est
+        /// revenue, dans le seul régime où plus aucune découpe n'est optimisable mais où il en
+        /// subsiste, toutes bloquées par une rupture de stock : l'opérateur y voit ce qui empêche
+        /// la progression.
         /// </para>
         /// <para>
         /// Une barre est retenue lorsqu'elle appartient à la série demandée, qu'elle est marquée
@@ -337,7 +350,8 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
         /// Identifiant technique de la série de production, correspondant à la colonne <c>PSId</c>
         /// de la vue. Doit être strictement positif. Il s'agit d'un identifiant fonctionnel
         /// étranger, hérité de la table d'origine de la série, et non de la clé de la vue : la vue
-        /// n'en a pas.
+        /// n'en a pas. À distinguer de <c>PSIdSerialNumber</c>, numéro métier de la série, qui est
+        /// projeté mais n'est jamais un paramètre de sélection.
         /// </param>
         /// <param name="ct">Jeton d'annulation permettant d'interrompre l'opération de manière coopérative.</param>
         /// <returns>

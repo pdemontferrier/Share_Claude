@@ -696,15 +696,13 @@
     <sys:String x:Key="P20_18">Début du second défaut :</sys:String>
     <sys:String x:Key="P20_19">Fin du second défaut :</sys:String>
     
-    <!-- P20_20 à P20_21 → onglet 1, libellés ajoutés -->
+    <!-- P20_20 à P20_23 → onglet 1, libellés ajoutés -->
     <sys:String x:Key="P20_20">Numéro de série :</sys:String>
     <sys:String x:Key="P20_21">Emplacement :</sys:String>
-
-    <!-- P20_22 → onglet 1, emplacement d'une barre neuve -->
     <sys:String x:Key="P20_22">TECAUMA</sys:String>
-    
+    <sys:String x:Key="P20_23">Désignation série :</sys:String>
+
     <!-- P20_23 à P20_29 → réserve -->
-    <sys:String x:Key="P20_23">Non défini</sys:String>
     <sys:String x:Key="P20_24">Non défini</sys:String>
     <sys:String x:Key="P20_25">Non défini</sys:String>
     <sys:String x:Key="P20_26">Non défini</sys:String>
