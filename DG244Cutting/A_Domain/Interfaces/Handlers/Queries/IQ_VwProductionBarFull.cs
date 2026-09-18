@@ -223,7 +223,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
         /// <exception cref="OperationCanceledException">
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
-        Task<List<DTO_VwProductionBarFull>> HandleGetByProductionSeriesIdForP11AsNoTrackingAsync(
+        Task<List<DTO_VwProductionBarFull>> HandleGetByProductionSeriesIdAsNoTrackingAsync(
             string caller,
             int productionSeriesId,
             CancellationToken ct = default);
@@ -286,7 +286,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
         /// <exception cref="OperationCanceledException">
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
-        Task<DTO_VwProductionBarFull?> HandleGetByProductionBarIdForP20AsNoTrackingAsync(
+        Task<DTO_VwProductionBarFull?> HandleGetByProductionBarIdAsNoTrackingAsync(
             string caller,
             int idProductionBar,
             CancellationToken ct = default);
@@ -360,7 +360,7 @@ namespace DG244Cutting.A_Domain.Interfaces.Handlers.Queries
         /// <exception cref="OperationCanceledException">
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
-        Task<List<DTO_VwProductionBarFull>> HandleGetOutOfStockByProductionSeriesIdForP20AsNoTrackingAsync(
+        Task<List<DTO_VwProductionBarFull>> HandleGetOutOfStockByProductionSeriesIdAsNoTrackingAsync(
             string caller,
             int productionSeriesId,
             CancellationToken ct = default);

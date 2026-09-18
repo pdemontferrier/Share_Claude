@@ -24,33 +24,48 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     /// lectures projetées propres aux besoins couverts.
     /// </para>
     /// <para>
-    /// Objectif : servir, à raison d'une ligne par barre, les barres retenues par l'optimisation à
-    /// deux destinations : l'onglet de consultation des barres de la Page11, qui présente la
-    /// composition en barres d'une série de production, et l'écran de validation des barres de la
-    /// Page20, qui présente à l'opérateur la barre désignée puis les barres de la série mises en
-    /// attente pour rupture de stock. Ces barres proviennent soit du stock de chutes issues de
-    /// séries antérieures, soit du stock de barres neuves, et portent cinq indicateurs d'état
-    /// jalonnant leur parcours. La vue expose quatre-vingt-deux colonnes. Les trois lectures
-    /// rapatrient les mêmes dix-huit champs - les seize champs d'affichage du tableau de
-    /// consultation, plus deux champs de service non affichés dédiés à l'identification des lignes
-    /// et à la vérification de cohérence du lot, et concourant aux critères d'ordonnancement.
+    /// Objectif : servir, à raison d'une ligne par barre, les barres retenues par l'optimisation,
+    /// selon trois lectures de nature distincte - la lecture par série, qui rend toutes les barres
+    /// d'une série de production ; la lecture par barre, qui rend une barre unique désignée par
+    /// son identifiant ; la lecture des barres en rupture, qui rend les barres d'une série mises
+    /// en attente pour rupture de stock et non refusées. Ces barres proviennent soit du stock de
+    /// chutes issues de séries antérieures, soit du stock de barres neuves, et portent cinq
+    /// indicateurs d'état jalonnant leur parcours. La vue expose quatre-vingt-dix-sept colonnes.
+    /// Les trois lectures rapatrient les mêmes vingt et un champs - dix-neuf champs d'affichage et
+    /// deux champs de service non affichés, dédiés à l'identification des lignes et à la
+    /// vérification de cohérence du lot, et concourant aux critères d'ordonnancement. Les deux
+    /// natures ne forment pas deux blocs contigus : l'ordre retenu est celui du type projeté, où
+    /// <c>CSLScrapLocationSource</c> s'intercale parmi les champs d'affichage et où
+    /// <c>PSIdSerialNumber</c> et <c>PSDescription</c> s'intercalent entre les deux champs de
+    /// service.
     /// </para>
     /// <para>
-    /// Portée du résultat - lecture Page11 : la lecture ne filtre pas les enregistrements marqués
-    /// comme logiquement supprimés, à la différence des autres lectures du projet. Le refus d'une
-    /// barre par l'opérateur marque l'enregistrement de cette façon, et l'écran doit afficher ces
-    /// barres refusées avec leur motif : elles font partie intégrante du résultat attendu. Une
-    /// série dont l'optimisation n'a pas encore été lancée ne porte aucune barre ; une liste vide
-    /// est alors un résultat nominal.
+    /// INVARIANT D'IDENTITÉ DES TROIS CLAUSES DE PROJECTION. Les trois méthodes publiques portent
+    /// la même clause <c>Select</c> : mêmes champs, dans le même ordre, à correspondance directe
+    /// colonne à propriété, sans transformation ni renommage. Toute évolution de l'une vaut pour
+    /// les trois. Cette identité n'est pas garantie structurellement - les clauses restent écrites
+    /// inline, conformément au patron uniforme du projet, où <c>CR_VwProductionCutPieceFull</c>
+    /// factorise le prédicat mais jamais la projection -, et sa rupture ne produit ni erreur de
+    /// compilation ni exception : elle produit un type de transport partiellement alimenté, dont
+    /// rien ne distingue un champ non projeté d'un champ nul en base. La vérification est donc
+    /// documentaire et relève de la relecture croisée entre le type projeté et ses trois clauses.
     /// </para>
     /// <para>
-    /// Portée du résultat - lectures Page20 : la lecture de la barre présentée ne filtre aucun
-    /// indicateur d'état et rend au plus une barre ; l'absence de ligne produit une valeur absente,
-    /// sans exception, dont le traitement appartient à l'appelant. La lecture des barres en rupture
-    /// retient les barres de la série marquées en rupture de stock et exclut les barres refusées,
-    /// par alignement strict sur le critère du service qui calcule l'indicateur de rupture de la
-    /// série ; elle ordonne son résultat côté SQL, le tri faisant partie de son contrat, et une
-    /// liste vide y est un résultat nominal.
+    /// Portée du résultat - lecture par série : la lecture ne filtre pas les enregistrements
+    /// marqués comme logiquement supprimés, à la différence des autres lectures du projet. Le
+    /// refus d'une barre par l'opérateur marque l'enregistrement de cette façon, et les barres
+    /// refusées font partie intégrante du résultat attendu : elles sont rendues avec leur motif.
+    /// Une série dont l'optimisation n'a pas encore été lancée ne porte aucune barre ; une liste
+    /// vide est alors un résultat nominal.
+    /// </para>
+    /// <para>
+    /// Portée du résultat - lecture par barre et lecture des barres en rupture : la lecture par
+    /// barre ne filtre aucun indicateur d'état et rend au plus une barre ; l'absence de ligne
+    /// produit une valeur absente, sans exception, dont le traitement appartient à l'appelant. La
+    /// lecture des barres en rupture retient les barres de la série marquées en rupture de stock
+    /// et exclut les barres refusées, par alignement strict sur le critère du service qui calcule
+    /// l'indicateur de rupture de la série ; elle ordonne son résultat côté SQL, le tri faisant
+    /// partie de son contrat, et une liste vide y est un résultat nominal.
     /// </para>
     /// <para>
     /// Justification du Patron 2 (Cas 3 du critère taxonomique de §4.14.6 du 0230) : les méthodes
@@ -61,10 +76,10 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     /// type <c>DTO_</c> par expression LINQ-to-Entities. Cette API ne figure pas au contrat
     /// <c>IR_Generic&lt;T&gt;</c> et ne peut pas y figurer : le contrat exposerait alors une
     /// dépendance à EF Core, incompatible avec sa résidence en A_Domain. Servir ces besoins par
-    /// les dix-huit méthodes du socle imposerait de matérialiser les quatre-vingt-deux colonnes
-    /// puis d'en écarter soixante-quatre en mémoire, ce qui ferait perdre la réduction côté base -
-    /// laquelle est la finalité même de la classe. La lecture des barres en rupture requiert en
-    /// outre un tri sur deux colonnes, que le socle n'expose pas.
+    /// les dix-huit méthodes du socle imposerait de matérialiser les quatre-vingt-dix-sept
+    /// colonnes puis d'en écarter soixante-seize en mémoire, ce qui ferait perdre la réduction
+    /// côté base - laquelle est la finalité même de la classe. La lecture des barres en rupture
+    /// requiert en outre un tri sur deux colonnes, que le socle n'expose pas.
     /// </para>
     /// <para>
     /// Modèle transactionnel : la classe reçoit le <see cref="DbContext"/> partagé sous son type
@@ -78,10 +93,9 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     /// <list type="bullet">
     ///   <item><description>
     ///     Implémenter les trois lectures projetées déclarées par
-    ///     <see cref="IR_VwProductionBarFull"/> - lecture de consultation de la Page11, lecture de
-    ///     la barre présentée et lecture des barres en rupture de la série pour la Page20 -, en
-    ///     appliquant la sélection, le tri et la réduction de colonnes sur la requête et non après
-    ///     matérialisation.
+    ///     <see cref="IR_VwProductionBarFull"/> - lecture par série, lecture par barre et lecture
+    ///     des barres en rupture -, en appliquant la sélection, le tri et la réduction de colonnes
+    ///     sur la requête et non après matérialisation.
     ///   </description></item>
     ///   <item><description>
     ///     Respecter le pattern d'enrichissement de CallChain (§4.5 du 0230) et le pattern de
@@ -107,12 +121,12 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
     ///   <item><description>
     ///     Ne porte aucune règle métier, aucun calcul et aucun renommage de champ : chaque
     ///     projection est une recopie terme à terme, types et nullabilité inclus. La lecture
-    ///     Page11 n'applique aucun ordonnancement ; la lecture des barres en rupture ordonne côté
-    ///     SQL, l'ordre faisant partie de son contrat ; la question est sans objet pour la lecture
-    ///     de la barre présentée, qui rend au plus une barre.
+    ///     par série n'applique aucun ordonnancement ; la lecture des barres en rupture ordonne
+    ///     côté SQL, l'ordre faisant partie de son contrat ; la question est sans objet pour la
+    ///     lecture par barre, qui rend au plus une barre.
     ///   </description></item>
     ///   <item><description>
-    ///     Pour la lecture Page11 et pour la lecture de la barre présentée, n'écarte aucun
+    ///     Pour la lecture par série et pour la lecture par barre, n'écarte aucun
     ///     enregistrement au motif qu'il serait marqué comme logiquement supprimé. Aucune lecture
     ///     ne recourt à <c>IgnoreQueryFilters</c> : aucun filtre global n'est configuré sur le
     ///     contexte de données, et la vue ne filtre pas l'indicateur de suppression de sa table
@@ -233,14 +247,15 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
 
         /// <summary>
         /// Rend la liste des barres retenues par l'optimisation pour une série de production,
-        /// réduites aux dix-huit champs utiles au quatrième onglet de la Page11, la réduction
-        /// étant appliquée sur la requête et traduite en SQL.
+        /// réduites au type projeté, la réduction étant appliquée sur la requête et traduite
+        /// en SQL.
         /// </summary>
         /// <remarks>
         /// <para>
         /// La projection est appliquée sur la requête et non après matérialisation : seules
-        /// dix-huit des quatre-vingt-deux colonnes de la vue transitent depuis le serveur de base
-        /// de données. C'est la raison d'être de la méthode et la justification du Patron 2.
+        /// vingt et une des quatre-vingt-dix-sept colonnes de la vue transitent depuis le serveur
+        /// de base de données. C'est la raison d'être de la méthode et la justification du
+        /// Patron 2.
         /// </para>
         /// <para>
         /// Aucun ordonnancement n'est appliqué. Les trois critères de tri du tableau
@@ -306,10 +321,10 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                 ct.ThrowIfCancellationRequested();
 
                 // Mobilise la projection SQL d'EF Core : le Select est traduit en clause SELECT
-                // côté base de données et restreint le flux à dix-huit colonnes sur
-                // quatre-vingt-deux. Cette API n'est pas exposée par IR_Generic<T> et ne peut pas
-                // l'être (dépendance EF Core interdite en A_Domain). C'est la justification
-                // doctrinale du Patron 2 selon §4.14.6 du 0230 (Cas 3).
+                // côté base de données et restreint le flux aux seules colonnes du type projeté.
+                // Cette API n'est pas exposée par IR_Generic<T> et ne peut pas l'être (dépendance
+                // EF Core interdite en A_Domain). C'est la justification doctrinale du Patron 2
+                // selon §4.14.6 du 0230 (Cas 3).
                 // Aucun filtrage sur PBIsDeleted et aucun IgnoreQueryFilters : les barres refusées
                 // font partie du résultat attendu.
                 return await _context.Set<vw_ProductionBar_Full>()
@@ -317,7 +332,13 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                     .Where(v => v.PSId == productionSeriesId)
                     .Select(v => new DTO_VwProductionBarFull
                     {
-                        // Seize champs d'affichage, dans l'ordre des colonnes du tableau.
+                        // Dix-neuf champs d'affichage et deux champs de service non affichés, dans
+                        // l'ordre strict du type projeté. Les deux natures ne sont pas contiguës :
+                        // CSLScrapLocationSource s'intercale parmi les champs d'affichage, tandis
+                        // que PSIdSerialNumber et PSDescription s'intercalent entre les deux champs
+                        // de service PSId et PBId. L'ordre du type prime sur tout regroupement par
+                        // nature, afin que la relecture croisée entre le type et ses trois clauses
+                        // de projection reste possible ligne à ligne.
                         ARReference = v.ARReference,
                         ARDesignation = v.ARDesignation,
                         AIIdColorRalFinish = v.AIIdColorRalFinish,
@@ -329,16 +350,15 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                         PBCutPieceCount = v.PBCutPieceCount,
                         PBResidueLength = v.PBResidueLength,
                         PBIsNewBar = v.PBIsNewBar,
+                        CSLScrapLocationSource = v.CSLScrapLocationSource,
                         PBIsValidated = v.PBIsValidated,
                         PBIsUsed = v.PBIsUsed,
                         PBIsOutOfStock = v.PBIsOutOfStock,
                         PBIsDeleted = v.PBIsDeleted,
                         PBRejectionReason = v.PBRejectionReason,
-
-                        // Deux champs de service non affichés : cohérence du lot reçu et
-                        // identification des lignes, ce dernier concourant par ailleurs à
-                        // l'ordonnancement laissé à la charge de l'appelant.
                         PSId = v.PSId,
+                        PSIdSerialNumber = v.PSIdSerialNumber,
+                        PSDescription = v.PSDescription,
                         PBId = v.PBId
                     })
                     .ToListAsync(ct);
@@ -350,14 +370,13 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         }
 
         /// <summary>
-        /// Rend la barre désignée par son identifiant, telle que l'écran de validation des barres
-        /// de la Page20 la présente à l'opérateur, réduite aux dix-huit champs du type de
-        /// projection, la sélection et la réduction étant traduites en SQL.
+        /// Rend la barre désignée par son identifiant, réduite au type projeté, la sélection et la
+        /// réduction étant traduites en SQL.
         /// </summary>
         /// <remarks>
         /// <para>
-        /// La lecture sert l'onglet de détail de la barre présentée, où l'opérateur vérifie la
-        /// matière avant d'accepter la barre. Le type rendu est
+        /// La lecture sert le poste de décision de l'opérateur, où celui-ci vérifie la matière
+        /// avant d'accepter la barre. Le type rendu est
         /// <see cref="DTO_VwProductionBarFull"/>.
         /// </para>
         /// <para>
@@ -373,9 +392,9 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// </para>
         /// <para>
         /// Justification du Cas 3 (§4.14.6 du 0230) : la projection <c>Select</c> vers un type
-        /// <c>DTO_</c> est traduite côté serveur et réduit le flux à dix-huit colonnes sur
-        /// quatre-vingt-deux. <c>GetFirstOrDefaultAsNoTrackingAsync</c> avec prédicat servirait la
-        /// sélection, mais matérialise l'entité complète ; <c>GetByIdAsNoTrackingAsync</c> est
+        /// <c>DTO_</c> est traduite côté serveur et réduit le flux à vingt et une colonnes sur
+        /// quatre-vingt-dix-sept. <c>GetFirstOrDefaultAsNoTrackingAsync</c> avec prédicat servirait
+        /// la sélection, mais matérialise l'entité complète ; <c>GetByIdAsNoTrackingAsync</c> est
         /// inopérante sur ce type sans clé.
         /// </para>
         /// <para>
@@ -426,8 +445,8 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                 ct.ThrowIfCancellationRequested();
 
                 // Mobilise la projection SQL d'EF Core : le Select est traduit en clause SELECT
-                // côté base de données et restreint le flux à dix-huit colonnes sur
-                // quatre-vingt-deux ; la réduction au premier enregistrement est traduite en TOP(1).
+                // côté base de données et restreint le flux aux seules colonnes du type projeté ;
+                // la réduction au premier enregistrement est traduite en TOP(1).
                 // Cette API n'est pas exposée par IR_Generic<T> et ne peut pas l'être (dépendance
                 // EF Core interdite en A_Domain). C'est la justification doctrinale du Patron 2
                 // selon §4.14.6 du 0230 (Cas 3).
@@ -438,7 +457,13 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                     .Where(v => v.PBId == idProductionBar)
                     .Select(v => new DTO_VwProductionBarFull
                     {
-                        // Seize champs d'affichage, dans l'ordre des colonnes du tableau.
+                        // Dix-neuf champs d'affichage et deux champs de service non affichés, dans
+                        // l'ordre strict du type projeté. Les deux natures ne sont pas contiguës :
+                        // CSLScrapLocationSource s'intercale parmi les champs d'affichage, tandis
+                        // que PSIdSerialNumber et PSDescription s'intercalent entre les deux champs
+                        // de service PSId et PBId. Clause strictement identique à celle des deux
+                        // autres lectures de la classe (cf. invariant porté par le commentaire de
+                        // classe).
                         ARReference = v.ARReference,
                         ARDesignation = v.ARDesignation,
                         AIIdColorRalFinish = v.AIIdColorRalFinish,
@@ -450,15 +475,15 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                         PBCutPieceCount = v.PBCutPieceCount,
                         PBResidueLength = v.PBResidueLength,
                         PBIsNewBar = v.PBIsNewBar,
+                        CSLScrapLocationSource = v.CSLScrapLocationSource,
                         PBIsValidated = v.PBIsValidated,
                         PBIsUsed = v.PBIsUsed,
                         PBIsOutOfStock = v.PBIsOutOfStock,
                         PBIsDeleted = v.PBIsDeleted,
                         PBRejectionReason = v.PBRejectionReason,
-
-                        // Deux champs de service non affichés : cohérence de l'enregistrement reçu
-                        // et identification de la barre.
                         PSId = v.PSId,
+                        PSIdSerialNumber = v.PSIdSerialNumber,
+                        PSDescription = v.PSDescription,
                         PBId = v.PBId
                     })
                     .FirstOrDefaultAsync(ct);
@@ -471,15 +496,14 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
 
         /// <summary>
         /// Rend les barres d'une série de production mises en attente pour rupture de stock et non
-        /// refusées, réduites aux dix-huit champs du type de projection, à destination de l'écran
-        /// de validation des barres de la Page20, la sélection, le tri et la réduction étant
-        /// traduits en SQL.
+        /// refusées, réduites au type projeté, la sélection, le tri et la réduction étant traduits
+        /// en SQL.
         /// </summary>
         /// <remarks>
         /// <para>
-        /// La lecture sert l'onglet des barres en rupture de la série, où l'opérateur voit ce qui
-        /// bloque la série et peut libérer une barre dont la matière est revenue. Le type rendu est
-        /// <see cref="DTO_VwProductionBarFull"/>.
+        /// La lecture sert la libération des barres bloquées : elle donne à voir ce qui maintient
+        /// la série en attente et permet de libérer une barre dont la matière est revenue. Le type
+        /// rendu est <see cref="DTO_VwProductionBarFull"/>.
         /// </para>
         /// <para>
         /// Le filtrage retient les barres de la série marquées en rupture de stock
@@ -498,11 +522,11 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
         /// </para>
         /// <para>
         /// Justification du Cas 3 (§4.14.6 du 0230) : la projection <c>Select</c> vers un type
-        /// <c>DTO_</c> est traduite côté serveur et réduit le flux à dix-huit colonnes sur
-        /// quatre-vingt-deux ; le tri porte en outre sur deux colonnes, ce que le socle n'expose
-        /// pas. <c>GetFilteredAsNoTrackingAsync</c> servirait la sélection, mais ne trie pas et
-        /// matérialise l'entité complète ; <c>GetPagedAsNoTrackingAsync</c> ne trie que sur une
-        /// colonne, impose une fenêtre bornée et matérialise elle aussi l'entité complète.
+        /// <c>DTO_</c> est traduite côté serveur et réduit le flux à vingt et une colonnes sur
+        /// quatre-vingt-dix-sept ; le tri porte en outre sur deux colonnes, ce que le socle
+        /// n'expose pas. <c>GetFilteredAsNoTrackingAsync</c> servirait la sélection, mais ne trie
+        /// pas et matérialise l'entité complète ; <c>GetPagedAsNoTrackingAsync</c> ne trie que sur
+        /// une colonne, impose une fenêtre bornée et matérialise elle aussi l'entité complète.
         /// </para>
         /// <para>
         /// L'appel à <c>AsNoTracking</c> est sans effet sur un type déclaré sans clé et sur une
@@ -551,10 +575,9 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                 ct.ThrowIfCancellationRequested();
 
                 // Mobilise la projection SQL d'EF Core : le Select est traduit en clause SELECT
-                // côté base de données et restreint le flux à dix-huit colonnes sur
-                // quatre-vingt-deux. Le tri sur deux colonnes, appliqué avant la projection, est
-                // traduit en ORDER BY. Ces API ne sont pas exposées par IR_Generic<T> (Cas 3 de
-                // §4.14.6 du 0230).
+                // côté base de données et restreint le flux aux seules colonnes du type projeté.
+                // Le tri sur deux colonnes, appliqué avant la projection, est traduit en ORDER BY.
+                // Ces API ne sont pas exposées par IR_Generic<T> (Cas 3 de §4.14.6 du 0230).
                 // Prédicat strictement aligné sur celui de SR_ProductionSeries_SetBarOutOfStockFlag
                 // (IsOutOfStock && !IsDeleted) : une barre refusée est exclue, la validation n'est
                 // pas un critère d'exclusion.
@@ -567,7 +590,13 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                     .ThenBy(v => v.PBId)
                     .Select(v => new DTO_VwProductionBarFull
                     {
-                        // Seize champs d'affichage, dans l'ordre des colonnes du tableau.
+                        // Dix-neuf champs d'affichage et deux champs de service non affichés, dans
+                        // l'ordre strict du type projeté. Les deux natures ne sont pas contiguës :
+                        // CSLScrapLocationSource s'intercale parmi les champs d'affichage, tandis
+                        // que PSIdSerialNumber et PSDescription s'intercalent entre les deux champs
+                        // de service PSId et PBId. Clause strictement identique à celle des deux
+                        // autres lectures de la classe (cf. invariant porté par le commentaire de
+                        // classe).
                         ARReference = v.ARReference,
                         ARDesignation = v.ARDesignation,
                         AIIdColorRalFinish = v.AIIdColorRalFinish,
@@ -579,16 +608,15 @@ namespace DG244Cutting.C_Infrastructure.Repositories.DIGIT_TRY
                         PBCutPieceCount = v.PBCutPieceCount,
                         PBResidueLength = v.PBResidueLength,
                         PBIsNewBar = v.PBIsNewBar,
+                        CSLScrapLocationSource = v.CSLScrapLocationSource,
                         PBIsValidated = v.PBIsValidated,
                         PBIsUsed = v.PBIsUsed,
                         PBIsOutOfStock = v.PBIsOutOfStock,
                         PBIsDeleted = v.PBIsDeleted,
                         PBRejectionReason = v.PBRejectionReason,
-
-                        // Deux champs de service non affichés : cohérence du lot reçu et
-                        // identification des lignes, ce dernier départageant par ailleurs le tri
-                        // appliqué côté serveur.
                         PSId = v.PSId,
+                        PSIdSerialNumber = v.PSIdSerialNumber,
+                        PSDescription = v.PSDescription,
                         PBId = v.PBId
                     })
                     .ToListAsync(ct);

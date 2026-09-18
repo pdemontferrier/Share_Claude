@@ -1903,7 +1903,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
 
             DTO_VwProductionBarFull? presentedBar = await _useCaseInvoker
                 .InvokeAsync<IQ_VwProductionBarFull, DTO_VwProductionBarFull?>(
-                    (handler, innerCt) => handler.HandleGetByProductionBarIdForP20AsNoTrackingAsync(
+                    (handler, innerCt) => handler.HandleGetByProductionBarIdAsNoTrackingAsync(
                         callChain,
                         idBar,
                         innerCt),
@@ -1956,7 +1956,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
 
             List<DTO_VwProductionBarFull> bars = await _useCaseInvoker
                 .InvokeAsync<IQ_VwProductionBarFull, List<DTO_VwProductionBarFull>>(
-                    (handler, innerCt) => handler.HandleGetOutOfStockByProductionSeriesIdForP20AsNoTrackingAsync(
+                    (handler, innerCt) => handler.HandleGetOutOfStockByProductionSeriesIdAsNoTrackingAsync(
                         callChain,
                         idSeries,
                         innerCt),

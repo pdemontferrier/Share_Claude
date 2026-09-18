@@ -298,12 +298,12 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <exception cref="OperationCanceledException">
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
-        public async Task<List<DTO_VwProductionBarFull>> HandleGetByProductionSeriesIdForP11AsNoTrackingAsync(
+        public async Task<List<DTO_VwProductionBarFull>> HandleGetByProductionSeriesIdAsNoTrackingAsync(
             string caller,
             int productionSeriesId,
             CancellationToken ct = default)
         {
-            string callChain = $"{caller} > {_callee} > {nameof(HandleGetByProductionSeriesIdForP11AsNoTrackingAsync)}";
+            string callChain = $"{caller} > {_callee} > {nameof(HandleGetByProductionSeriesIdAsNoTrackingAsync)}";
 
             try
             {
@@ -418,12 +418,12 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <exception cref="OperationCanceledException">
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
-        public async Task<DTO_VwProductionBarFull?> HandleGetByProductionBarIdForP20AsNoTrackingAsync(
+        public async Task<DTO_VwProductionBarFull?> HandleGetByProductionBarIdAsNoTrackingAsync(
             string caller,
             int idProductionBar,
             CancellationToken ct = default)
         {
-            string callChain = $"{caller} > {_callee} > {nameof(HandleGetByProductionBarIdForP20AsNoTrackingAsync)}";
+            string callChain = $"{caller} > {_callee} > {nameof(HandleGetByProductionBarIdAsNoTrackingAsync)}";
 
             try
             {
@@ -547,12 +547,12 @@ namespace DG244Cutting.B_UseCases.Handlers.Queries
         /// <exception cref="OperationCanceledException">
         /// Levée si l'annulation est signalée via <paramref name="ct"/> avant ou pendant l'exécution.
         /// </exception>
-        public async Task<List<DTO_VwProductionBarFull>> HandleGetOutOfStockByProductionSeriesIdForP20AsNoTrackingAsync(
+        public async Task<List<DTO_VwProductionBarFull>> HandleGetOutOfStockByProductionSeriesIdAsNoTrackingAsync(
             string caller,
             int productionSeriesId,
             CancellationToken ct = default)
         {
-            string callChain = $"{caller} > {_callee} > {nameof(HandleGetOutOfStockByProductionSeriesIdForP20AsNoTrackingAsync)}";
+            string callChain = $"{caller} > {_callee} > {nameof(HandleGetOutOfStockByProductionSeriesIdAsNoTrackingAsync)}";
 
             try
             {

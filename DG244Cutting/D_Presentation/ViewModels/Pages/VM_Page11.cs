@@ -2273,7 +2273,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="VM_Generic.ExecuteSafeAsync"/>, à
         /// <see cref="IS_UseCaseInvoker.InvokeAsync{TUseCase, TResult}(System.Func{TUseCase, System.Threading.CancellationToken, System.Threading.Tasks.Task{TResult}}, System.Threading.CancellationToken)"/>
         /// et, par le délégué, au Query Handler
-        /// <see cref="IQ_VwProductionBarFull.HandleGetByProductionSeriesIdForP11AsNoTrackingAsync"/>.
+        /// <see cref="IQ_VwProductionBarFull.HandleGetByProductionSeriesIdAsNoTrackingAsync"/>.
         /// Valeur par défaut : <see langword="default"/>.</param>
         /// <returns>Une tâche représentant l'exécution asynchrone du
         /// chargement de la collection des barres de la série.</returns>
@@ -2421,7 +2421,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
 
                 var bars = await _useCaseInvoker
                     .InvokeAsync<IQ_VwProductionBarFull, List<DTO_VwProductionBarFull>>(
-                        (handler, innerCt) => handler.HandleGetByProductionSeriesIdForP11AsNoTrackingAsync(
+                        (handler, innerCt) => handler.HandleGetByProductionSeriesIdAsNoTrackingAsync(
                             innerCallChain,
                             idSeries,
                             innerCt),
