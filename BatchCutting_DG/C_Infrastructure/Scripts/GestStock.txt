@@ -1,0 +1,16 @@
+***********************************************************
+* Scripts pour le mappage de la base de données GestStock *
+***********************************************************
+
+Scaffold-DbContext "Server=localhost;Database=geststock;User=root;Password=root;Port=3306;" Pomelo.EntityFrameworkCore.MySql -OutputDir A_Domain/EntitiesGestStock/ -Context GestStockContext -ContextDir C_Infrastructure/Persistence/GestStock -Tables article_interne, chutes_magasin, commande_client, commande_client_action, commande_client_action_type, commande_client_modification, commande_client_statut, couleurs_finition, couleurs_ral, couleurs_ral_finition, decoupe_barre, decoupe_detail, decoupe_lot, decoupe_machine, user, user_app_event_store, user_app_message, user_app_page, user_app_page_droit, user_droit, user_session,  user_session_command, vie_application, vie_chute_magasin_reference -Force
+
+
+
+**********************************
+* Mettre à jour GestStockContext *
+**********************************
+
+using BatchCutting_DG.C_Infrastructure.Settings;
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    => optionsBuilder.UseMySql(SE_GestStock.Credential, Microsoft.EntityFrameworkCore.ServerVersion.Parse("11.3.2-mariadb"));

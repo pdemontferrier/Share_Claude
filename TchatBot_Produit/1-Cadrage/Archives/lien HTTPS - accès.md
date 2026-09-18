@@ -1,0 +1,1 @@
+https://semantics-chat.wikit.ai/tryba-test/apps

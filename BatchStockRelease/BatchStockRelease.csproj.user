@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_LastSelectedProfileId>D:\3_Dev_Projects\Dev_103\01_Code_Files_Dev_103\ERP_LeVerandier_WPF\BatchStockRelease\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="D_Presentation\Views\Components\Banner\BA_MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="D_Presentation\Views\Components\Banner\BA_MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page23.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page32.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page33.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page41.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Pages\Page23.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Pages\Page32.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Pages\Page33.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="D_Presentation\Views\Pages\Page41.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

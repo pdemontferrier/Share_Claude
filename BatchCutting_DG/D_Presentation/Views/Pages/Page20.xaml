@@ -1,0 +1,54 @@
+﻿<Page x:Class="BatchCutting_DG.D_Presentation.Views.Pages.Page20"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BatchCutting_DG.D_Presentation.Views.Pages"
+      mc:Ignorable="d" 
+      Title="Page20">
+
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="Col_0" Width="300"/>
+            <ColumnDefinition x:Name="Col_1" MinWidth="300" MaxWidth="600"/>
+            <ColumnDefinition x:Name="Col_2" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="Row_0" MinHeight="40"/>
+            <RowDefinition x:Name="Row_1" MinHeight="40"/>
+            <RowDefinition x:Name="Row_2" MinHeight="40"/>
+            <RowDefinition x:Name="Row_3" MinHeight="40"/>
+            <RowDefinition x:Name="Row_4" MinHeight="40"/>
+            <RowDefinition x:Name="Row_5" MinHeight="40"/>
+            <RowDefinition x:Name="Row_6" MinHeight="40"/>
+            <RowDefinition x:Name="Row_7" MinHeight="40"/>
+            <RowDefinition x:Name="Row_8" MinHeight="40"/>
+        </Grid.RowDefinitions>
+
+        <!-- First Column for Titles -->
+        <TextBlock x:Name="PageTitle" Grid.Row="0" Grid.Column="1" Text="{DynamicResource P20_00}"/>
+        <TextBlock x:Name="DesignationLotTitle" Grid.Row="1" Grid.Column="0" Text="{DynamicResource P20_01}"/>
+        <TextBlock x:Name="ChariotTitle" Grid.Row="2" Grid.Column="0" Text="{DynamicResource P20_02}"/>
+        <TextBlock x:Name="StockOrigineTitle" Grid.Row="3" Grid.Column="0" Text="{DynamicResource P20_03}"/>
+        <TextBlock x:Name="ReferenceTitle" Grid.Row="4" Grid.Column="0" Text="{DynamicResource P20_04}"/>
+        <TextBlock x:Name="DesignationTitle" Grid.Row="5" Grid.Column="0" Text="{DynamicResource P20_05}"/>
+        <TextBlock x:Name="CouleurTitle" Grid.Row="6" Grid.Column="0" Text="{DynamicResource P20_06}"/>
+        <TextBlock x:Name="LongueurTitle" Grid.Row="7" Grid.Column="0" Text="{DynamicResource P20_07}"/>
+        <TextBlock x:Name="NombreCoupeTitle" Grid.Row="8" Grid.Column="0" Text="{DynamicResource P20_08}"/>
+
+        <!-- Second Column for Input Controls -->
+        <!-- Empty -->
+        <TextBlock x:Name="DesignationLotData" Grid.Row="1" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.DesignationLot}"/>
+        <TextBlock x:Name="ChariotData" Grid.Row="2" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.ChariotDesignation}"/>
+        <TextBlock x:Name="StockOrigineData" Grid.Row="3" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.ApproOrigine}"/>
+        <TextBlock x:Name="ReferenceData" Grid.Row="4" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.ReferenceArticle}"/>
+        <TextBlock x:Name="DesignationData" Grid.Row="5" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.DesignationArticle}"/>
+        <TextBlock x:Name="CouleurData" Grid.Row="6" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.CouleurArticle}"/>
+        <TextBlock x:Name="LongueurData" Grid.Row="7" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.LongueurBarre, StringFormat={}{0:N0}}"/>
+        <TextBlock x:Name="NombreCoupeData" Grid.Row="8" Grid.Column="1" Text="{Binding DecoupeBarreWithCut.DecoupeNombre}"/>
+        <Border x:Name="ReferenceVueBorder" Grid.Row="1" Grid.Column="2" Grid.RowSpan="7" Background="LightGray" Padding="10">
+            <Image x:Name="ReferenceVueImage" Source="{Binding ReferenceVueUri}" Stretch="Uniform"/>
+        </Border>
+
+    </Grid>
+</Page>

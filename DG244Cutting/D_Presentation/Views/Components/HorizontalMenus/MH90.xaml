@@ -1,0 +1,66 @@
+﻿<!-- ============================================================
+     MH90 — MENU HORIZONTAL ASSOCIÉ À Page90
+     ============================================================
+     Contexte : Composant non finalisé. Objet, description et
+     contenu fonctionnel seront complétés lors du prochain fil
+     d'Extension de la class.
+
+     Objectif : Composant non finalisé. Objet, description et
+     contenu fonctionnel seront complétés lors du prochain fil
+     d'Extension de la class.
+
+     Comportement : MH90 hérite de MH_Generic (§4.15.9 du 0230)
+     et binde son DataContext sur VM_MH90 (§4.15.8 du 0230). La
+     visibilité des boutons est gouvernée intégralement par les
+     implémentations par défaut d'ApplyNavigationRules et
+     d'ApplySecurityRules du socle, sans aucun override propre.
+     ============================================================ -->
+
+<generic:MH_Generic x:Class="DG244Cutting.D_Presentation.Views.Components.HorizontalMenus.MH90"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:generic="clr-namespace:DG244Cutting.D_Presentation.Views.Generic"
+                    mc:Ignorable="d">
+
+    <Grid x:Name="MH_Grid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MH_Grid_C1"/>
+            <ColumnDefinition x:Name="MH_Grid_C2"/>
+        </Grid.ColumnDefinitions>
+
+        <Border x:Name="MH_Border" Grid.Column="1">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Button x:Name="MH_Home" Command="{Binding HomeCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Home_Icon"/>
+                            <TextBlock x:Name="MH_Home_Text" Text="{Binding Label_MH_Home}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="MH_Previous" Command="{Binding PreviousCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Previous_Icon"/>
+                            <TextBlock x:Name="MH_Previous_Text" Text="{Binding Label_MH_Previous}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="MH_Refresh" Command="{Binding RefreshCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Refresh_Icon"/>
+                            <TextBlock x:Name="MH_Refresh_Text" Text="{Binding Label_MH_Refresh}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="MH_Menu" Command="{Binding ReduceCommand}" Background="Transparent" BorderBrush="Transparent">
+                        <StackPanel Orientation="Vertical">
+                            <Image x:Name="MH_Menu_Icon"/>
+                            <TextBlock x:Name="MH_Menu_Text" Text="{Binding Label_MH_Menu}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</generic:MH_Generic>

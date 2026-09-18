@@ -1,0 +1,71 @@
+﻿<!-- ============================================================
+     PAGE 22 — INTÉGRATION EN STOCK DES CHUTES GÉNÉRÉES
+     ============================================================
+     <Contexte> Cette page permet de scanner les barres de chutes
+     générées à la découpe afin de les réintégrer dans le stock. </Contexte>
+
+     <Objectif> Lorsqu’un QR Code est scanné, l’application vérifie
+     si la chute est déjà enregistrée. Si oui, elle est marquée comme
+     disponible dans son emplacement d’origine. </Objectif>
+
+     <Utilisateurs cibles> Opérateurs de découpe et magasiniers. </Utilisateurs>
+
+     <Composants principaux>
+       - TextBox : saisie automatique du QR Code via scanner.
+       - Indicateurs visuels (Image) : état de traitement (OK, non trouvé, déjà traité).
+       - TextBlocks : messages de retour.
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page22"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page22">
+
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="Col_0" Width="300"/>
+            <ColumnDefinition x:Name="Col_1" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="Row_0" MinHeight="40" MaxHeight="80"/>
+            <RowDefinition x:Name="Row_1" MinHeight="40" MaxHeight="80"/>
+            <RowDefinition x:Name="Row_2" MinHeight="40" MaxHeight="80"/>
+        </Grid.RowDefinitions>
+
+
+
+        <!-- First Column for Titles -->
+        <TextBlock x:Name="PageTitleMain" Grid.Row="0" Grid.Column="0" Text="{DynamicResource P22_00}" Grid.ColumnSpan="3"/>
+        <TextBlock x:Name="DestinationTitle" Grid.Row="1" Grid.Column="0" Text="{DynamicResource P22_01}"/>
+        <TextBlock x:Name="EmplacementTitle" Grid.Row="2" Grid.Column="0" Text="{DynamicResource P22_02}"/>
+
+        <!-- Second Column for Input Controls -->
+        <!-- Empty -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+            <TextBox x:Name="QrCodeInput"
+                     Grid.Row="1" Grid.Column="1"
+                     Width="300"
+                     Height="30"
+                     VerticalAlignment="Top"
+                     KeyDown="QrCodeInput_KeyDown"/>
+            <TextBlock x:Name="QrCodeData" Text="{Binding QrCode}"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+            <Image x:Name="NotFoundImage" Height="22" Width="22" VerticalAlignment="Top" Margin="0,0,25,0"
+                   Visibility="{Binding NotFoundVisibility}"/>
+            <Image x:Name="DoneImage" Height="22" Width="22" VerticalAlignment="Top" Margin="0,0,25,0"
+                   Visibility="{Binding DoneVisibility}"/>
+            <Image x:Name="NotDoneImage" Height="22" Width="22" VerticalAlignment="Top" Margin="0,0,25,0"
+                   Visibility="{Binding NotDoneVisibility}"/>
+            <TextBlock x:Name="CommentData"
+                       Text="{Binding Commentaire}"
+                       Visibility="{Binding CommentVisibility}"/>
+        </StackPanel>
+
+    </Grid>
+</generic:Page_Generic>

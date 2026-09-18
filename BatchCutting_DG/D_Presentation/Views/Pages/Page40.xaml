@@ -1,0 +1,193 @@
+﻿<Page x:Class="BatchCutting_DG.D_Presentation.Views.Pages.Page40"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BatchCutting_DG.D_Presentation.Views.Pages"
+      mc:Ignorable="d" 
+      Title="Page40">
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Première ligne -->
+        <TabControl x:Name="MainTabControl" Grid.Row="0" Grid.Column="0">
+            
+            <!-- Premier onglet -->
+            <TabItem x:Name="DecoupeDetailTabItem">
+                <Grid x:Name="DecoupeDetailGrid" Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- First lines for Titles -->
+                        <Border x:Name="DecoupeDetailBorder" Grid.Row="0" Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="DecoupeDetailHeader01" Text="{DynamicResource P40_04}" Width="300"/>
+                                <TextBlock x:Name="DecoupeDetailHeader02" Text="{DynamicResource P40_05}" Width="200"/>
+                                <TextBlock x:Name="DecoupeDetailHeader03" Text="{DynamicResource P40_06}" Width="100"/>
+                                <TextBlock x:Name="DecoupeDetailHeader04" Text="{DynamicResource P40_07}" Width="100"/>
+                                <TextBlock x:Name="DecoupeDetailHeader05" Text="{DynamicResource P40_08}" Width="80"/>
+                                <TextBlock x:Name="DecoupeDetailHeader06" Text="{DynamicResource P40_09}" Width="50"/>
+                                <TextBlock x:Name="DecoupeDetailHeader07" Text="{DynamicResource P40_10}" Width="70"/>
+                                <TextBlock x:Name="DecoupeDetailHeader08" Text="{DynamicResource P40_11}" Width="70"/>
+                                <TextBlock x:Name="DecoupeDetailHeader09" Text="{DynamicResource P40_12}" Width="100"/>
+                                <TextBlock x:Name="DecoupeDetailHeader10" Text="{DynamicResource P40_13}" Width="70"/>
+                                <TextBlock x:Name="DecoupeDetailHeader11" Text="{DynamicResource P40_14}" Width="70"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- List for datas -->
+                        <ScrollViewer x:Name="DecoupeDetailScrollViewer" Grid.Row="1" Grid.Column="0">
+                            <ListView x:Name="DecoupeDetailListView" ItemsSource="{Binding CuttingDetails}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel.Resources>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Decoupe}" Value="True">
+                                                            <Setter Property="Foreground" Value="#59C64A"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Resources>
+                                            
+                                            <TextBlock Text="{Binding Designation}" Width="300"/>
+                                            <TextBlock Text="{Binding Reference}" Width="200"/>
+                                            <TextBlock Text="{Binding Couleur}" Width="100"/>
+                                            <TextBlock Text="{Binding NumProjet}" Width="100"/>
+                                            <TextBlock Text="{Binding Position}" Width="80"/>
+                                            <TextBlock Text="{Binding IndiceDecoupe}" Width="50"/>
+                                            <TextBlock Text="{Binding Inclinaison1}" Width="70"/>
+                                            <TextBlock Text="{Binding Pivot1}" Width="70"/>
+                                            <TextBlock Text="{Binding LongueurDecoupe}" Width="100"/>
+                                            <TextBlock Text="{Binding Pivot2}" Width="70"/>
+                                            <TextBlock Text="{Binding Inclinaison2}" Width="70"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Deuxième onglet -->
+            <TabItem x:Name="DecoupeBarreTabItem">
+                <Grid x:Name="DecoupeBarreGrid" Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- First lines for Titles -->
+                        <Border x:Name="DecoupeBarreBorder" Grid.Row="0" Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="DecoupeBarreHeader01" Text="{DynamicResource P40_04}" Width="300"/>
+                                <TextBlock x:Name="DecoupeBarreHeader02" Text="{DynamicResource P40_05}" Width="200"/>
+                                <TextBlock x:Name="DecoupeBarreHeader03" Text="{DynamicResource P40_06}" Width="200"/>
+                                <TextBlock x:Name="DecoupeBarreHeader04" Text="{DynamicResource P40_15}" Width="200"/>
+                                <TextBlock x:Name="DecoupeBarreHeader05" Text="{DynamicResource P40_16}" Width="200"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- List for datas -->
+                        <ScrollViewer x:Name="DecoupeBarreScrollViewer" Grid.Row="1" Grid.Column="0">
+                            <ListView x:Name="DecoupeBarreListView" ItemsSource="{Binding CuttingBarres}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel.Resources>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Decoupe}" Value="True">
+                                                            <Setter Property="Foreground" Value="#59C64A"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Resources>
+
+                                            <TextBlock Text="{Binding DesignationArticle}" Width="300"/>
+                                            <TextBlock Text="{Binding ReferenceArticle}" Width="200"/>
+                                            <TextBlock Text="{Binding CouleurArticle}" Width="200"/>
+                                            <TextBlock Text="{Binding LongueurBarre}" Width="200"/>
+                                            <TextBlock Text="{Binding ApproOrigine}" Width="200"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+
+            <!-- Troisième onglet -->
+            <TabItem x:Name="DropBarTabItem">
+                <Grid x:Name="DropBarGrid" Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="40"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <!-- First lines for Titles -->
+                        <Border x:Name="DropBarBorder" Grid.Row="0" Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="DropBarHeader01" Text="{DynamicResource P40_04}" Width="300"/>
+                                <TextBlock x:Name="DropBarHeader02" Text="{DynamicResource P40_05}" Width="200"/>
+                                <TextBlock x:Name="DropBarHeader03" Text="{DynamicResource P40_06}" Width="200"/>
+                                <TextBlock x:Name="DropBarHeader04" Text="{DynamicResource P40_15}" Width="200"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- List for datas -->
+                        <ScrollViewer x:Name="DropBarScrollViewer" Grid.Row="1" Grid.Column="0">
+                            <ListView x:Name="DropBarListView" ItemsSource="{Binding DropBarres}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel.Resources>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Decoupe}" Value="True">
+                                                            <Setter Property="Foreground" Value="#59C64A"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Resources>
+
+                                            <TextBlock Text="{Binding DesignationArticle}" Width="300"/>
+                                            <TextBlock Text="{Binding ReferenceArticle}" Width="200"/>
+                                            <TextBlock Text="{Binding CouleurArticle}" Width="200"/>
+                                            <TextBlock Text="{Binding LongueurChuteFinale}" Width="200"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Page>

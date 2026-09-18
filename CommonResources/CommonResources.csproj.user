@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_LastSelectedProfileId>D:\3_Dev_Projects\Dev_103\01_Code_Files_Dev_103\ERP_LeVerandier_WPF\CommonResources\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="Views\Backgrounds\CommonBackground.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Components\DialogWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Components\MenuHorizontalReduce.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Backgrounds\CommonBackgroundPad.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Backgrounds\CommonBackground.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Components\DialogWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Components\MenuHorizontalReduce.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

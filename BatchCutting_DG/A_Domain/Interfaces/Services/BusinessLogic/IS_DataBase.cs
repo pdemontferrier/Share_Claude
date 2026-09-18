@@ -1,0 +1,10 @@
+﻿
+namespace BatchCutting_DG.A_Domain.Interfaces.Services.BusinessLogic
+{
+    public interface IS_DataBase
+    {
+        Task SprApplicationAccessUpdateAsync(int appID);
+        Task SprDecoupeBarreUpdateEmpSCAsync(int appID);
+        Task SprCommandeClientProductionUpdateAsync();
+    }
+}

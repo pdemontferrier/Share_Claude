@@ -1,0 +1,89 @@
+﻿<Page x:Class="BatchCutting_DG.D_Presentation.Views.Pages.Page30"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BatchCutting_DG.D_Presentation.Views.Pages"
+      mc:Ignorable="d" 
+      Title="Page30">
+       
+    <Grid x:Name="PageGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="Col_0" Width="250"/>
+            <ColumnDefinition x:Name="Col_1" Width="250"/>
+            <ColumnDefinition x:Name="Col_2" Width="250"/>
+            <ColumnDefinition x:Name="Col_3" Width="250"/>
+            <ColumnDefinition x:Name="Col_4" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="Row_0" MinHeight="40"/>
+            <RowDefinition x:Name="Row_1" MinHeight="40"/>
+            <RowDefinition x:Name="Row_2" MinHeight="40"/>
+            <RowDefinition x:Name="Row_3" MinHeight="40"/>
+            <RowDefinition x:Name="Row_4" MinHeight="40"/>
+            <RowDefinition x:Name="Row_5" MinHeight="40"/>
+            <RowDefinition x:Name="Row_6" MinHeight="40"/>
+            <RowDefinition x:Name="Row_7" MinHeight="40"/>
+            <RowDefinition x:Name="Row_8" MinHeight="40"/>
+            <RowDefinition x:Name="Row_9" MinHeight="40"/>
+            <RowDefinition x:Name="Row_10" MinHeight="40"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titles -->
+        <TextBlock x:Name="PageTitle" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{DynamicResource P30_00}"/>
+        <TextBlock x:Name="ProjetIntituleTitle" Grid.Row="1" Grid.Column="0" Text="{DynamicResource P30_01}"/>
+        <TextBlock x:Name="ProjetReferenceTitle" Grid.Row="2" Grid.Column="0" Text="{DynamicResource P30_02}"/>
+        <TextBlock x:Name="IndiceCoupeTitle" Grid.Row="3" Grid.Column="0" Text="{DynamicResource P30_03}"/>
+        <TextBlock x:Name="ReferenceTitle" Grid.Row="4" Grid.Column="0" Text="{DynamicResource P30_04}"/>
+        <TextBlock x:Name="DesignationTitle" Grid.Row="5" Grid.Column="0" Text="{DynamicResource P30_05}"/>
+        <TextBlock x:Name="CouleurTitle" Grid.Row="6" Grid.Column="0" Text="{DynamicResource P30_06}"/>
+        <TextBlock x:Name="Incli1Title" Grid.Row="7" Grid.Column="0" Text="{DynamicResource P30_07}"/>
+        <TextBlock x:Name="Pivot1Title" Grid.Row="7" Grid.Column="1" Text="{DynamicResource P30_08}"/>
+        <TextBlock x:Name="LongueurDecoupeTitle" Grid.Row="7" Grid.Column="2" Text="{DynamicResource P30_09}"/>
+        <TextBlock x:Name="Pivot2Title" Grid.Row="7" Grid.Column="3" Text="{DynamicResource P30_10}"/>
+        <TextBlock x:Name="Incli2Title" Grid.Row="7" Grid.Column="4" Text="{DynamicResource P30_11}"/>
+        <TextBlock x:Name="ComentTitle" Grid.Row="9" Grid.Column="0" Text="{DynamicResource P30_12}"/>
+
+        <!-- Input Controls -->
+        <!-- Empty -->
+        <TextBlock x:Name="ProjetIntituleData" Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="2" Text="{Binding DecoupeDetailWithCut.NomProjet}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="ProjetReferenceData" Text="{Binding DecoupeDetailWithCut.NumProjet}"/>
+            <TextBlock x:Name="StructureSeperatorData" Text=" - "/>
+            <TextBlock x:Name="StructureData" Text="{Binding DecoupeDetailWithCut.Structure}"/>
+            <TextBlock x:Name="PositionSeperatorData" Text=" - "/>
+            <TextBlock x:Name="PositionData" Text="{Binding DecoupeDetailWithCut.Position}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="IndiceCoupeData" Text="{Binding DecoupeDetailWithCut.IndiceDecoupe}"/>
+            <TextBlock x:Name="NbreDecoupeSeperatorData" Text="  -  "/>
+            <TextBlock x:Name="DecoupeBarreIndexData" Text="{Binding DecoupeDetailWithCut.DecoupeBarreIndex}"/>
+            <TextBlock x:Name="DecoupeNombreSeperatorData" Text=" / "/>
+            <TextBlock x:Name="DecoupeNombreData" Text="{Binding DecoupeDetailWithCut.DecoupeBarreDecoupeNombre}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock x:Name="ReferenceData" Text="{Binding DecoupeDetailWithCut.Reference}"/>
+            <TextBlock x:Name="ReferenceSeperatorData" Text="  -  "/>
+            <TextBlock x:Name="ReferenceVueData" Text="{Binding DecoupeDetailWithCut.ReferenceVue}"/>
+        </StackPanel>
+        <TextBlock x:Name="DesignationData" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding DecoupeDetailWithCut.Designation}"/>
+        <TextBlock x:Name="CouleurData" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding DecoupeDetailWithCut.Couleur}"/>
+        <TextBlock x:Name="Incli1Data" Grid.Row="8" Grid.Column="0" Text="{Binding DecoupeDetailWithCut.Inclinaison1}"/>
+        <TextBlock x:Name="Pivot1Data" Grid.Row="8" Grid.Column="1" Text="{Binding DecoupeDetailWithCut.Pivot1}"/>
+        <TextBlock x:Name="LongueurDecoupeData" Grid.Row="8" Grid.Column="2" Text="{Binding DecoupeDetailWithCut.LongueurDecoupe, StringFormat={}{0:N2}}"/>
+        <TextBlock x:Name="Pivot21Data" Grid.Row="8" Grid.Column="3" Text="{Binding DecoupeDetailWithCut.Pivot2}"/>
+        <TextBlock x:Name="Incli2Data" Grid.Row="8" Grid.Column="4" Text="{Binding DecoupeDetailWithCut.Inclinaison2}"/>
+        <Border x:Name="ReferenceVueBorder" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="6" Background="LightGray" Padding="10" Margin="0,0,0,10">
+            <Image x:Name="ReferenceVueImage" Source="{Binding ReferenceVueUri}" Stretch="Uniform"/>
+        </Border>
+        <StackPanel Orientation="Horizontal" Grid.Row="9" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="4">
+            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" 
+                          VerticalAlignment="Top" HorizontalAlignment="Left" Height="100" Width="970">
+                <TextBlock x:Name="ComentData"
+                   Text="{Binding DecoupeDetailWithCut.Commentaires}"
+                   TextWrapping="Wrap"
+                   TextTrimming="None" />
+            </ScrollViewer>
+        </StackPanel>
+    </Grid>
+</Page> 

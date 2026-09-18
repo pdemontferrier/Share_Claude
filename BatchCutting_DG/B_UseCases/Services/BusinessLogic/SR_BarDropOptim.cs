@@ -1,0 +1,279 @@
+﻿using BatchCutting_DG.A_Domain.Entities.GestStock;
+using BatchCutting_DG.A_Domain.Interfaces.Handlers.Queries;
+using BatchCutting_DG.A_Domain.Interfaces.Handlers.Commands;
+using BatchCutting_DG.A_Domain.Interfaces.Services.App;
+using BatchCutting_DG.A_Domain.Interfaces.Services.BusinessLogic;
+
+namespace BatchCutting_DG.B_UseCases.Services.BusinessLogic
+{
+    public class SR_BarDropOptim : IS_BarDropOptim
+    {
+        private readonly string ServiceName; 
+        private readonly IQ_VieChuteMagasinReference _qhVieChuteMagasinReference;
+        private readonly IC_ChutesMagasin _chChutesMagasin;
+        private readonly IQ_ChutesMagasin _qhChutesMagasin;
+        private readonly IC_DecoupeBarre _chDecoupeBarre;
+        private readonly IQ_DecoupeBarre _qhDecoupeBarre;
+        private readonly IC_DecoupeDetail _chDecoupeDetail;
+        private readonly IQ_DecoupeDetail _qhDecoupeDetail;
+        private readonly IS_Settings _settings;
+
+        public SR_BarDropOptim(IQ_VieChuteMagasinReference qhVieChuteMagasinReference,
+                                    IC_ChutesMagasin chChutesMagasin, IQ_ChutesMagasin qhChutesMagasin,
+                                    IC_DecoupeBarre chDecoupeBarre, IQ_DecoupeBarre qhDecoupeBarre,
+                                    IC_DecoupeDetail chDecoupeDetail, IQ_DecoupeDetail qhDecoupeDetail,
+                                    IS_Settings settings)
+        {
+            ServiceName = GetType().Name;
+            _qhVieChuteMagasinReference = qhVieChuteMagasinReference;
+            _chChutesMagasin = chChutesMagasin;
+            _qhChutesMagasin = qhChutesMagasin;
+            _chDecoupeBarre = chDecoupeBarre;
+            _qhDecoupeBarre = qhDecoupeBarre;
+            _chDecoupeDetail = chDecoupeDetail;
+            _qhDecoupeDetail = qhDecoupeDetail;
+            _settings = settings;
+        }
+
+
+        public async Task ExecuteAsync(int decoupeLotId)
+        {
+            // Étape 1 : Récupérer la liste des IdDecoupeMacine à traiter
+            var idDecoupeMachineList = await _qhDecoupeDetail.HandleGetCuttingMachineListToBeSuppliedAsync(decoupeLotId);
+
+            // Tester si la liste est vide et si oui sortir, sinon continuer
+            if (idDecoupeMachineList == null || !idDecoupeMachineList.Any())
+            {
+                return;
+            }
+            else
+            {
+                // Étape 2 : Parcourir la liste des IdDecoupeMachine
+                foreach (var decoupeMachineId in idDecoupeMachineList)
+                {
+                    if (decoupeMachineId != null)
+                    {
+                        // Étape 2.1 : Récupérer la liste des IdArticleInterne à traiter
+                        var idArticleInterneList = await _qhDecoupeDetail.HandleGetArticleInterneIdListToBeSuppliedAsync(decoupeLotId, decoupeMachineId);
+
+                        // Tester si la liste est vide et si oui sortir, sinon continuer
+                        if (idArticleInterneList == null || !idArticleInterneList.Any())
+                        {
+                            return;
+                        }
+                        else
+                        {
+
+                            // Étape 2.2 : Parcourir la liste des IdArticleInterne
+                            foreach (var articleInterneId in idArticleInterneList)
+                            {
+                                // Récupérer les barres de chutes disponibles pour l'articleInterneId et trier par LongueurBarre (ordre croissant)
+                                var chutesDisponible = await _qhVieChuteMagasinReference.HandleGetByArticleInterneIdAsync(articleInterneId);
+
+                                // Tester si la liste est vide et si oui sortir, sinon continuer
+                                if (chutesDisponible == null || !chutesDisponible.Any())
+                                {
+                                    return;
+                                }
+                                else
+                                {
+                                    // Appeler ProcessArticleGroup avec seulement l'IdArticleInterne à traiter
+                                    await ProcessArticleGroup(decoupeLotId, decoupeMachineId, articleInterneId, chutesDisponible);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Étape 3 : Mettre à jour les lignes avec IndiceDecoupe == 2
+                await UpdateDecoupeDetailsForIndice2(decoupeLotId);
+            }
+        }
+
+        private async Task ProcessArticleGroup(int decoupeLotId, string decoupeMachineId, int articleInterneId, List<VieChuteMagasinReference> chutesDisponible)
+        {
+            // Récupérer les découpes non optimisées pour cet IdArticleInterne
+            var decoupesNonOptimisees = await _qhDecoupeDetail.HandleGetToBeSuppliedAsync(decoupeLotId, decoupeMachineId, articleInterneId);
+
+            // Tant qu'il reste des découpes à optimiser
+            while (decoupesNonOptimisees.Any())
+            {
+                foreach (var decoupe in decoupesNonOptimisees)
+                {
+                    // Mettre à jour le champs OptimBarreChute
+                    decoupe.ApproOptimBarreChute = true;
+                    await _chDecoupeDetail.HandleUpdateAsync(decoupe, ServiceName, nameof(ProcessArticleGroup));
+
+                    // Initialiser chuteUtilisee
+                    var chuteUtilisee = false;
+
+                    foreach (var chute in chutesDisponible)
+                    {
+                        if (chute.LongueurBarre.HasValue && decoupe.LongueurOptim.HasValue &&
+                            chute.LongueurBarre > (decoupe.LongueurOptim + _settings.GetSpaceBetweenCuts()))
+                        {
+                            // Mettre à jour chuteUtilisee
+                            chuteUtilisee = true;
+
+                            // Ajouter une nouvelle barre de chute
+                            await AddNewBarre(decoupe, chute);
+
+                            // Mettre à jour la liste des découpes non optimisées
+                            decoupesNonOptimisees = await _qhDecoupeDetail.HandleGetToBeSuppliedAsync(decoupeLotId, decoupeMachineId, articleInterneId);
+
+                            // Metre à jour la table pour le champs Reserve
+                            var chuteMagasin = await _qhChutesMagasin.HandleGetByIdAsync(chute.IdChuteMagasin);
+
+                            if (chuteMagasin != null)
+                            {
+                                chuteMagasin.Reserve = decoupeLotId.ToString();
+                                await _chChutesMagasin.HandleUpdateAsync(chuteMagasin, ServiceName, nameof(ProcessArticleGroup));
+                            }
+
+                            // Utiliser le reste pour tenter une autre découpe
+                            foreach (var autreDecoupe in decoupesNonOptimisees)
+                            {
+                                // Vérifier si la découpe peut être réalisée avec la barre actuelle
+                                if (((autreDecoupe.LongueurOptim ?? 0) + _settings.GetSpaceBetweenCuts()) <= _settings.GetRemainingBarLength())
+                                {
+                                    // Remplir la barre avec la découpe actuelle
+                                    await TryFillBarWithDecoupe(autreDecoupe);
+
+                                    // Mettre à jour la liste des découpes non optimisées
+                                    decoupesNonOptimisees = await _qhDecoupeDetail.HandleGetToBeSuppliedAsync(decoupeLotId, decoupeMachineId, articleInterneId);
+                                }
+                            }
+
+                            // Finaliser la barre après avoir traité toutes les découpes possible
+                            var currentBarre = await _qhDecoupeBarre.HandleGetByIdAsync(_settings.GetNewBarId());
+
+                            if (currentBarre != null && chuteUtilisee)
+                            {
+                                await FinalizeBarre(currentBarre);
+                            }
+
+                            // On sort après utilisation d'une seule chute pour cette découpe
+                            break;
+                        }
+                    }
+
+                    if (!chuteUtilisee) continue; // Aucune chute disponible n'a pu être utilisée pour cette découpe
+                }
+
+                // Mettre à jour la liste des découpes non optimisées
+                decoupesNonOptimisees = await _qhDecoupeDetail.HandleGetToBeSuppliedAsync(decoupeLotId, decoupeMachineId, articleInterneId);
+            }
+        }
+
+        private async Task AddNewBarre(DecoupeDetail firstDecoupe, VieChuteMagasinReference chute)
+        {
+            // Initialiser newBarIndex
+            _settings.SetNewBarIndex(1);
+
+            // Initialiser RemainingBarLength
+            _settings.SetRemainingBarLength(0);
+
+            // Récupérer les informations relative au chariot de destination
+            var (chariotId, chariotName) = await _qhDecoupeBarre.HandleGetChariotInfoForLotAsync(_settings.GetDecoupeLotId());
+
+            // Ajouter une nouvelle ligne à DecoupeBarre
+            var newBarre = new DecoupeBarre
+            {
+                IdDecoupeLot = firstDecoupe.IdDecoupeLot,
+                IdArticleInterne = firstDecoupe.IdArticleInterne,
+                IdStock = chute.IdChuteMagasin,
+                LongueurBarre = chute.LongueurBarre,
+                LongueurChuteMini = firstDecoupe.LongueurChuteMini,
+                Categorie1 = firstDecoupe.Categorie1,
+                Categorie2 = firstDecoupe.Categorie2,
+                Categorie3 = firstDecoupe.Categorie3,
+                Categorie4 = firstDecoupe.Categorie4,
+                OrdreTri = firstDecoupe.OrdreTri ?? 0,
+                ApproOrigine = "chute",
+                ApproCodeBarre = chute.CodeBarre,
+                ApproIdChariot = chariotId,
+                ApproAllocation = true,
+                ApproRupture = false,
+                ApproEmplacement = chute.Emplacement ?? 0,
+                ApproEmplacementDesignation = chute.EmplacementDesignation,
+                ApproChariotDesignation = chariotName,
+                ApproSortieSupp = true,
+                DecoupeLongueurReste = chute.LongueurBarre - firstDecoupe.LongueurOptim - _settings.GetSpaceBetweenCuts(),
+                DecoupeNombre = 1
+            };
+            await _chDecoupeBarre.HandleAddAsync(newBarre, ServiceName, nameof(AddNewBarre));
+
+            // Garder en mémoire l'ID de la barre en cours de calcul
+            _settings.SetNewBarId(newBarre.Id);
+
+            // Calculer la longueur restante
+            _settings.SetRemainingBarLength((chute.LongueurBarre ?? 0) - (firstDecoupe.LongueurOptim ?? 0) - _settings.GetSpaceBetweenCuts());
+
+            // Mise à jour de DecoupeDetail
+            firstDecoupe.ApproOptimBarreChute = true;
+            firstDecoupe.IdDecoupeBarre = _settings.GetNewBarId();
+            firstDecoupe.DecoupeBarreIndex = _settings.GetNewBarIndex();
+            firstDecoupe.DecoupeLongueurReste = _settings.GetRemainingBarLength();
+
+            await _chDecoupeDetail.HandleUpdateAsync(firstDecoupe, ServiceName, nameof(AddNewBarre));
+        }
+
+        private async Task TryFillBarWithDecoupe(DecoupeDetail decoupe)
+        {
+            // Incrémenter le compteur du nombre de découpes
+            var newIndex = _settings.GetNewBarIndex();
+            _settings.SetNewBarIndex(newIndex + 1);
+
+            // Mise à jour de la longueur restante
+            _settings.SetRemainingBarLength(_settings.GetRemainingBarLength() - (decoupe.LongueurOptim ?? 0) - _settings.GetSpaceBetweenCuts());
+
+            // Mise à jour avec la barre existante
+            decoupe.ApproOptimBarreChute = true;
+            decoupe.IdDecoupeBarre = _settings.GetNewBarId();
+            decoupe.DecoupeBarreIndex = _settings.GetNewBarIndex();
+            decoupe.DecoupeLongueurReste = _settings.GetRemainingBarLength();
+
+            await _chDecoupeDetail.HandleUpdateAsync(decoupe, ServiceName, nameof(TryFillBarWithDecoupe));
+        }
+
+        private async Task FinalizeBarre(DecoupeBarre barre)
+        {
+            barre.DecoupeNombre = _settings.GetNewBarIndex();
+            barre.DecoupeLongueurReste = _settings.GetRemainingBarLength();
+            barre.DecoupeTypeReste = _settings.GetRemainingBarLength() <= barre.LongueurChuteMini ? "dechet" : "chute";
+
+            await _chDecoupeBarre.HandleUpdateAsync(barre, ServiceName, nameof(FinalizeBarre));
+        }
+
+        private async Task UpdateDecoupeDetailsForIndice2(int decoupeLotId)
+        {
+            // Étape 1 : Récupérer les lignes avec IndiceDecoupe == 1
+            var decoupesIndice1 = await _qhDecoupeDetail.HandleGetIndice1ByLotAsyncAsync(decoupeLotId);
+
+            // Étape 2 : Récupérer les lignes avec IndiceDecoupe == 2
+            var decoupesIndice2 = await _qhDecoupeDetail.HandleGetIndice2ByLotAsyncAsync(decoupeLotId);
+
+            // Étape 3 : Parcourir les lignes avec IndiceDecoupe == 2 et les mettre à jour
+            foreach (var decoupe2 in decoupesIndice2)
+            {
+                // Récupérer les 13 premiers chiffres de NumLigne pour la ligne avec IndiceDecoupe == 2
+                var numLignePartie = decoupe2.NumLigne.ToString().Substring(0, 13);
+
+                // Trouver la ligne correspondante avec IndiceDecoupe == 1 et le même NumLignePartie
+                var correspondanceDecoupe1 = decoupesIndice1
+                    .FirstOrDefault(d => d.NumLigne.ToString().StartsWith(numLignePartie));
+
+                if (correspondanceDecoupe1 != null)
+                {
+                    decoupe2.ApproOptimBarreChute = correspondanceDecoupe1.ApproOptimBarreChute;
+                    decoupe2.IdDecoupeBarre = correspondanceDecoupe1.IdDecoupeBarre;
+                    decoupe2.DecoupeBarreIndex = correspondanceDecoupe1.DecoupeBarreIndex;
+                    decoupe2.DecoupeLongueurReste = correspondanceDecoupe1.DecoupeLongueurReste;
+                }
+
+                // Enregistrer les changements dans la base de données
+                await _chDecoupeDetail.HandleUpdateAsync(decoupe2, ServiceName, nameof(UpdateDecoupeDetailsForIndice2));
+            }
+        }
+    }
+}

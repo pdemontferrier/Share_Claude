@@ -1,0 +1,270 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+	    <StartupObject>BatchStockRelease.App</StartupObject>
+        <ApplicationIcon>launch_exe.ico</ApplicationIcon>
+		<PublishDir>D:\3_Dev_Projects\Dev_103\09_Deployment\02_BatchStockRelease\</PublishDir>
+
+		<!-- Mettre à jour les informations de version -->
+		<Version>1.3.1</Version>
+		<AssemblyVersion>1.3.1.3</AssemblyVersion>
+		<FileVersion>1.3.1.3</FileVersion>
+
+		<!-- Génération du fichier XML de documentation -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile>bin\Debug\net8.0\BatchStockRelease.xml</DocumentationFile>
+
+		<!-- Supprime l'avertissement CS1591 lié aux commentaires manquants -->
+		<NoWarn>1591</NoWarn>
+		
+	</PropertyGroup>
+	
+	
+	<!-- Projets liés -->
+	<ItemGroup>
+		<ProjectReference Include="..\CommonResources\CommonResources.csproj"><Private>false</Private></ProjectReference>
+		<ProjectReference Include="..\WindowPlacementHelper\WindowPlacementHelper.csproj"><Private>false</Private></ProjectReference>
+	</ItemGroup>
+
+
+	<!-- Icone -->
+	<ItemGroup>
+		<Content Include="launch_exe.ico" />
+	</ItemGroup>
+
+	
+	<!-- Packages -->
+	<ItemGroup>
+		<PackageReference Include="EPPlus" Version="7.4.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10"><PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10"><PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.6" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+		<PackageReference Include="QRCoder" Version="1.6.0" />
+		<PackageReference Include="System.IO.Ports" Version="9.0.3" />
+	</ItemGroup>
+	
+
+	<!-- editorconfig -->
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+	
+	
+	<!-- App & MainWindow -->
+	<ItemGroup>
+		<Page Update="App.xaml"><SubType>Designer</SubType></Page>
+		<Compile Update="App.xaml.cs"><SubType>Code</SubType></Compile>
+		<Page Update="MainWindow.xaml"><SubType>Designer</SubType></Page>
+		<Compile Update="MainWindow.xaml.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+
+	
+	<!-- Pages View -->
+	<ItemGroup>
+		<Page Update="D_Presentation\Views\Pages\Page00.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page10.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page20.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page21.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page22.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page23.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page30.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page31.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page32.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page33.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page40.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page41.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page50.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page60.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page70.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page90.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page91.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page96.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page97.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page98.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Pages\Page99.xaml"><SubType>Designer</SubType></Page>
+	</ItemGroup>
+
+	
+	<!-- Pages Codebehind -->
+	<ItemGroup>
+		<Compile Update="D_Presentation\Views\Generic\Page_Generic.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page00.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page10.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page20.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page21.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page22.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page23.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page30.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page31.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page32.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page33.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page40.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page41.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page50.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page60.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page70.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page90.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page91.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page96.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page97.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page98.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Pages\Page99.xaml.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+	
+	<!-- Pages ViewModels-->
+	<ItemGroup>
+		<Compile Update="D_Presentation\ViewModels\Generic\VM_Page_Generic.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page00.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page10.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page20.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page21.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page22.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page23.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page30.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page31.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page32.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page33.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page31.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page40.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page41.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page50.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page60.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page70.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page90.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page91.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page96.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page97.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page98.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Pages\VM_Page99.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+
+	<!-- Components View -->
+	<ItemGroup>
+		<Page Update="D_Presentation\Views\Components\Banner\BA_MainWindow.xaml"><SubType>Designer</SubType></Page>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page10.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page20.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page21.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page22.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page23.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page30.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page31.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page32.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page33.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page40.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page41.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page50.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page60.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page70.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page90.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page91.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page96.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page97.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page98.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page99.xaml"><SubType>Designer</SubType></Page>
+		<Page Update="D_Presentation\Views\Components\MenuHorizontal\MH_Reduce.xaml"><SubType>Designer</SubType></Page>
+	</ItemGroup>
+
+
+	<!-- Components Codebehind -->
+	<ItemGroup>
+		<Compile Update="D_Presentation\Views\Components\Banner\BA_MainWindow.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="D_Presentation\Views\Generic\MH_Page_Generic.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page10.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page20.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page21.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page22.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page23.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page30.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page31.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page32.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page33.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page40.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page41.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page50.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page60.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page70.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page90.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page91.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page96.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page97.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page98.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Page99.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\Views\Components\MenuHorizontal\MH_Reduce.xaml.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+	
+	<!-- Components ViewModels -->
+	<ItemGroup>
+		<Compile Update="D_Presentation\ViewModels\Components\Banner\VM_BA_MainWindow.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="D_Presentation\ViewModels\Generic\VM_MH_Page_Generic.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page10.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page20.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page21.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page22.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page23.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page30.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page31.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page32.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page33.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page40.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page41.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page50.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page60.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page70.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page90.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page91.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page96.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page97.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page98.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Page99.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="D_Presentation\ViewModels\Components\MenuHorizontal\VM_MH_Reduce.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+	
+	<!-- Ressources Logo -->
+	<ItemGroup>
+	  <Resource Include="B_UseCases\Ressources\Flags\united_kingdom.png"> <CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+	  <Resource Include="B_UseCases\Ressources\Logo\RE_Logo.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+	  <Resource Include="B_UseCases\Ressources\Logo\RE_Logo_BW.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+	  <Resource Include="B_UseCases\Ressources\Logo\RE_Logo_WB.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+	</ItemGroup>
+	
+	
+	<ItemGroup>
+	  <Folder Include="A_Domain\Interfaces\Repositories\App\" />
+	  <Folder Include="B_UseCases\UseCases\UserLogic\" />
+	  <Folder Include="E_Miscellaneous\Documentation\I_API_Reference\" />
+	</ItemGroup>
+
+
+	<!-- Folders empty -->
+
+</Project>
+
+<!--
+	<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	<EnableDefaultPageItems>false</EnableDefaultPageItems>
+-->

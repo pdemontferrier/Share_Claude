@@ -1,0 +1,44 @@
+﻿<Window x:Class="BatchCutting_DG.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BatchCutting_DG"
+        xmlns:views="clr-namespace:CommonResources.Views.Backgrounds;assembly=CommonResources"
+        xmlns:localViews="clr-namespace:BatchCutting_DG.D_Presentation.Views.Components.MenuHorizontal"
+        x:Name="MainWindowWindow"
+        mc:Ignorable="d"
+        Title="ERP Le Vérandier">
+    
+    <Grid >
+        <views:CommonBackgroundPad x:Name="CommonBackgroundPad" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
+        <StackPanel Orientation="Horizontal" Height="40" VerticalAlignment="Top">
+            <Button x:Name="LanguageButton" Visibility="Collapsed" Click="On_Language_Click" Background="Transparent" BorderBrush="Transparent">
+                <Image x:Name="LanguageIcon" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            </Button>
+            <Button x:Name="UserFullNameButton" Visibility="Collapsed" Click="On_UserFullName_Click" Background="Transparent" BorderBrush="Transparent">
+                <TextBlock x:Name="UserFullName" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Padding="0,0,10,0"/>
+            </Button>
+            <Button x:Name="AppInfo" Visibility="Collapsed" Click="On_AppInfo_Click" Background="Transparent" BorderBrush="Transparent">
+                <TextBlock x:Name="AppInfoSign"/>
+            </Button>
+            <Button x:Name="MessageButton" Visibility="Collapsed" Click="On_Message_Click" Background="Transparent" BorderBrush="Transparent">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="MessageButtonIcon" Visibility="Collapsed"/>
+                    <Image x:Name="MessageNotReadButtonIcon" Visibility="Collapsed"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="AppCloseButton" Visibility="Collapsed" Click="On_AppClose_Click" Background="Transparent" BorderBrush="Transparent">
+                <Image x:Name="AppCloseButtonIcon" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            </Button>
+        </StackPanel>
+
+        <Frame x:Name="ActiveHorizontalMenu" NavigationUIVisibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+
+        <Frame x:Name="ActivePage" NavigationUIVisibility="Hidden"/>
+
+    </Grid>
+
+</Window>

@@ -1,0 +1,198 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\LeitTemporImport.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\leittemporimport.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\LeitTemporImport.csproj|solutionrelative:feld10processor\\leittemporimport.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\b_usecases\\usecases\\businesslogic\\uc_temporimport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|solutionrelative:feld10processor\\b_usecases\\usecases\\businesslogic\\uc_temporimport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|solutionrelative:feld10processor\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\e_miscellaneous\\compositionroot\\sr_conteneurdi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|solutionrelative:feld10processor\\e_miscellaneous\\compositionroot\\sr_conteneurdi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\b_usecases\\handlers\\commands\\ch_temporimport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|solutionrelative:feld10processor\\b_usecases\\handlers\\commands\\ch_temporimport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\c_infrastructure\\persistence\\digit_try\\digittrydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|solutionrelative:feld10processor\\c_infrastructure\\persistence\\digit_try\\digittrydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\c_infrastructure\\scripts\\digit_try.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|solutionrelative:feld10processor\\c_infrastructure\\scripts\\digit_try.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|d:\\3_dev_projects\\dev_104\\01_code_files_dev_104\\feld10processor\\feld10processor\\b_usecases\\usecases\\businesslogic\\uc_temporimport_processfile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3DD8FCA6-F7FA-4C70-A085-E2CB27427B00}|Feld10Processor\\Feld10Processor.csproj|solutionrelative:feld10processor\\b_usecases\\usecases\\businesslogic\\uc_temporimport_processfile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 253,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 284,
+          "SelectedChildIndex": 12,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SR_ConteneurDI.cs",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\E_Miscellaneous\\CompositionRoot\\SR_ConteneurDI.cs",
+              "RelativeDocumentMoniker": "Feld10Processor\\E_Miscellaneous\\CompositionRoot\\SR_ConteneurDI.cs",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\E_Miscellaneous\\CompositionRoot\\SR_ConteneurDI.cs",
+              "RelativeToolTip": "Feld10Processor\\E_Miscellaneous\\CompositionRoot\\SR_ConteneurDI.cs",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAUwJIAAABcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-21T13:35:28.613Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\Program.cs",
+              "RelativeDocumentMoniker": "Feld10Processor\\Program.cs",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\Program.cs",
+              "RelativeToolTip": "Feld10Processor\\Program.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAkwD0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-17T14:27:46.412Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DigitTryDbContext.cs",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\C_Infrastructure\\Persistence\\DIGIT_TRY\\DigitTryDbContext.cs",
+              "RelativeDocumentMoniker": "Feld10Processor\\C_Infrastructure\\Persistence\\DIGIT_TRY\\DigitTryDbContext.cs",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\C_Infrastructure\\Persistence\\DIGIT_TRY\\DigitTryDbContext.cs",
+              "RelativeToolTip": "Feld10Processor\\C_Infrastructure\\Persistence\\DIGIT_TRY\\DigitTryDbContext.cs",
+              "ViewState": "AgIAAMwEAAAAAAAAAAAIwOcEAAB/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-21T13:44:20.218Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DIGIT_TRY.txt",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\C_Infrastructure\\Scripts\\DIGIT_TRY.txt",
+              "RelativeDocumentMoniker": "Feld10Processor\\C_Infrastructure\\Scripts\\DIGIT_TRY.txt",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\C_Infrastructure\\Scripts\\DIGIT_TRY.txt",
+              "RelativeToolTip": "Feld10Processor\\C_Infrastructure\\Scripts\\DIGIT_TRY.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-12-21T20:15:46.222Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CH_TemporImport.cs",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\B_UseCases\\Handlers\\Commands\\CH_TemporImport.cs",
+              "RelativeDocumentMoniker": "Feld10Processor\\B_UseCases\\Handlers\\Commands\\CH_TemporImport.cs",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\B_UseCases\\Handlers\\Commands\\CH_TemporImport.cs",
+              "RelativeToolTip": "Feld10Processor\\B_UseCases\\Handlers\\Commands\\CH_TemporImport.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-25T08:38:36.304Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Feld10Processor.csproj",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\LeitTemporImport.csproj",
+              "RelativeDocumentMoniker": "Feld10Processor\\LeitTemporImport.csproj",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\LeitTemporImport.csproj",
+              "RelativeToolTip": "Feld10Processor\\LeitTemporImport.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-25T14:33:04.037Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UC_TemporImport_ProcessFile.cs",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport_ProcessFile.cs",
+              "RelativeDocumentMoniker": "Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport_ProcessFile.cs",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport_ProcessFile.cs",
+              "RelativeToolTip": "Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport_ProcessFile.cs",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAkwKEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T07:55:24.199Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UC_TemporImport.cs",
+              "DocumentMoniker": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport.cs",
+              "RelativeDocumentMoniker": "Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport.cs",
+              "ToolTip": "D:\\3_Dev_Projects\\Dev_104\\01_Code_Files_Dev_104\\Feld10Processor\\Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport.cs",
+              "RelativeToolTip": "Feld10Processor\\B_UseCases\\UseCases\\BusinessLogic\\UC_TemporImport.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T07:53:49.291Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 161,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,427 @@
+Structure du dossier pour le projet BatchCutting_DG
+Se positionner sur le répertoire du projet : CD D:\3_Dev_Projects\Dev_103\01_Code_Files_Dev_103\ERP_LeVerandier_WPF\BatchCutting_DG
+Construire le fichier de l'arborescence : tree /f /a > arborescence.txt
+Renommer le ficher en Project_Tree.txt après élimination des dossiers superflus.
+ 
+BatchCutting_DG:
+|   App.xaml
+|   App.xaml.cs
+|   AssemblyInfo.cs
+|   BatchCutting_DG.csproj
+|   BatchCutting_DG.csproj.user
+|   launch_exe.ico
+|   MainWindow.xaml
+|   MainWindow.xaml.cs
+|   Project_Tree.txt
+|   
++---A_Domain
+|   +---AppEntities
+|   |       PageRights.cs
+|   |       
+|   +---GestStock
+|   |   +---DTOs
+|   |   |       DTO_DecoupeBarreWithCut.cs
+|   |   |       DTO_DecoupeDetailWithCut.cs
+|   |   |       DTO_DecoupeLotWithCut.cs
+|   |   |       DTO_UserSessionDetails.cs
+|   |   |       
+|   |   \---Entities
+|   |           ArticleInterne.cs
+|   |           ChutesMagasin.cs
+|   |           CommandeClient.cs
+|   |           CommandeClientAction.cs
+|   |           CommandeClientActionType.cs
+|   |           CouleursFinition.cs
+|   |           CouleursRal.cs
+|   |           CouleursRalFinition.cs
+|   |           DecoupeBarre.cs
+|   |           DecoupeDetail.cs
+|   |           DecoupeLot.cs
+|   |           DecoupeMachine.cs
+|   |           User.cs
+|   |           UserAppEventStore.cs
+|   |           UserAppMessage.cs
+|   |           UserAppPage.cs
+|   |           UserAppPageDroit.cs
+|   |           UserDroit.cs
+|   |           UserSession.cs
+|   |           UserSessionCommand.cs
+|   |           VieApplication.cs
+|   |           VieChuteMagasinReference.cs
+|   |           
+|   \---Interfaces
+|       +---Handlers
+|       |   +---Commands
+|       |   |       IC_ChutesMagasin.cs
+|       |   |       IC_CommandeClient.cs
+|       |   |       IC_CommandeClientAction.cs
+|       |   |       IC_DecoupeBarre.cs
+|       |   |       IC_DecoupeDetail.cs
+|       |   |       IC_DecoupeLot.cs
+|       |   |       IC_UserAppEventStore.cs
+|       |   |       IC_UserAppMessage.cs
+|       |   |       IC_UserSession.cs
+|       |   |       IC_UserSessionCommand.cs
+|       |   |       
+|       |   +---Generic
+|       |   |       IC_Generic.cs
+|       |   |       IQ_Generic.cs
+|       |   |       
+|       |   \---Queries
+|       |           IQ_ArticleInterne.cs
+|       |           IQ_ChutesMagasin.cs
+|       |           IQ_CommandeClient.cs
+|       |           IQ_CommandeClientAction.cs
+|       |           IQ_CommandeClientActionType.cs
+|       |           IQ_DecoupeBarre.cs
+|       |           IQ_DecoupeBarreWithCut.cs
+|       |           IQ_DecoupeDetail.cs
+|       |           IQ_DecoupeDetailWithCut.cs
+|       |           IQ_DecoupeLot.cs
+|       |           IQ_DecoupeLotWithCut.cs
+|       |           IQ_DecoupeMachine.cs
+|       |           IQ_User.cs
+|       |           IQ_UserAppMessage.cs
+|       |           IQ_UserAppPageDroit.cs
+|       |           IQ_UserDroit.cs
+|       |           IQ_UserSession.cs
+|       |           IQ_UserSessionCommand.cs
+|       |           IQ_UserSessionDetails.cs
+|       |           IQ_VieApplication.cs
+|       |           IQ_VieChuteMagasinReference.cs
+|       |           
+|       +---Repositories
+|       |   +---Generic
+|       |   |       IR_Generic.cs
+|       |   |       
+|       |   \---GestStock
+|       |           IR_ChutesMagasin.cs
+|       |           IR_CommandeClient.cs
+|       |           IR_DecoupeBarre.cs
+|       |           IR_DecoupeBarreWithCut.cs
+|       |           IR_DecoupeDetail.cs
+|       |           IR_DecoupeDetailWithCut.cs
+|       |           IR_DecoupeLotWithCut.cs
+|       |           IR_DecoupeMachine.cs
+|       |           IR_User.cs
+|       |           IR_UserAppMessage.cs
+|       |           IR_UserAppPageDroit.cs
+|       |           IR_UserDroit.cs
+|       |           IR_UserSession.cs
+|       |           IR_UserSessionCommand.cs
+|       |           IR_UserSessionDetails.cs
+|       |           IR_VieApplication.cs
+|       |           IR_VieChuteMagasinReference.cs
+|       |           
+|       \---Services
+|           +---App
+|           |       IS_Application.cs
+|           |       IS_ControlStyler.cs
+|           |       IS_Dictionary.cs
+|           |       IS_Flag.cs
+|           |       IS_Icons.cs
+|           |       IS_Language.cs
+|           |       IS_Messages.cs
+|           |       IS_Navigation.cs
+|           |       IS_Notification.cs
+|           |       IS_OnStart.cs
+|           |       IS_ReferenceVue.cs
+|           |       IS_Settings.cs
+|           |       IS_Utilities.cs
+|           |       IS_Window.cs
+|           |       
+|           +---BusinessLogic
+|           |       IS_BarDropOptim.cs
+|           |       IS_BarNewOptim.cs
+|           |       IS_CommandeClientAction.cs
+|           |       IS_CuttingMachineIdentification.cs
+|           |       IS_DataBase.cs
+|           |       IS_Decoupe.cs
+|           |       IS_LabelPrinter.cs
+|           |       IS_SerialSender.cs
+|           |       
+|           \---UserLogic
+|                   IS_UserAuthentification.cs
+|                   IS_UserSession.cs
+|                   IS_UserSessionsAdmin.cs
+|                   IS_UserSettings.cs
+|                   
++---B_UseCases
+|   +---Handlers
+|   |   +---Commands
+|   |   |       CH_ChutesMagasin.cs
+|   |   |       CH_CommandeClient.cs
+|   |   |       CH_CommandeClientAction.cs
+|   |   |       CH_DecoupeBarre.cs
+|   |   |       CH_DecoupeDetail.cs
+|   |   |       CH_DecoupeLot.cs
+|   |   |       CH_UserAppEventStore.cs
+|   |   |       CH_UserAppMessage.cs
+|   |   |       CH_UserSession.cs
+|   |   |       CH_UserSessionCommand.cs
+|   |   |       
+|   |   +---Generic
+|   |   |       CH_Generic.cs
+|   |   |       QH_Generic.cs
+|   |   |       
+|   |   \---Queries
+|   |           QH_ArticleInterne.cs
+|   |           QH_ChutesMagasin.cs
+|   |           QH_CommandeClient.cs
+|   |           QH_CommandeClientAction.cs
+|   |           QH_CommandeClientActionType.cs
+|   |           QH_DecoupeBarre.cs
+|   |           QH_DecoupeBarreWithCut.cs
+|   |           QH_DecoupeDetail.cs
+|   |           QH_DecoupeDetailWithCut.cs
+|   |           QH_DecoupeLot.cs
+|   |           QH_DecoupeLotWithCut.cs
+|   |           QH_DecoupeMachine.cs
+|   |           QH_User.cs
+|   |           QH_UserAppMessage.cs
+|   |           QH_UserAppPageDroit.cs
+|   |           QH_UserDroit.cs
+|   |           QH_UserSession.cs
+|   |           QH_UserSessionCommand.cs
+|   |           QH_UserSessionDetails.cs
+|   |           QH_VieApplication.cs
+|   |           QH_VieChuteMagasinReference.cs
+|   |           
+|   +---Services
+|   |   +---App
+|   |   |       SR_Messages.cs
+|   |   |       SR_ReferenceVue.cs
+|   |   |       SR_Settings.cs
+|   |   |       
+|   |   +---BusinessLogic
+|   |   |       SR_BarDropOptim.cs
+|   |   |       SR_BarNewOptim.cs
+|   |   |       SR_CommandeClientAction.cs
+|   |   |       SR_Decoupe.cs
+|   |   |       SR_DecoupeMachineIdentification.cs
+|   |   |       SR_LabelPrinter.cs
+|   |   |       SR_SerialSender.cs
+|   |   |       
+|   |   \---UserLogic
+|   |           SR_UserAccess.cs
+|   |           SR_UserAuthentification.cs
+|   |           SR_UserSession.cs
+|   |           SR_UserSessionsAdmin.cs
+|   |           
+|   \---Settings
+|           SE_App.cs
+|           SE_UseCases.cs
+|           SE_User.cs
+|           
++---C_Infrastructure
+|   +---Persistence
+|   |   \---GestStock
+|   |           GestStockContext.cs
+|   |           GestStockContextFactory.cs
+|   |           
+|   +---QueryDataProviders
+|   |   \---GestStock
+|   |           DP_DecoupeBarreWithCut.cs
+|   |           DP_DecoupeDetailWithCut.cs
+|   |           DP_DecoupeLotWithCut.cs
+|   |           DP_UserSessionDetail.cs
+|   |           
+|   +---Repositories
+|   |   +---Generic
+|   |   |       CR_Generic.cs
+|   |   |       
+|   |   \---GestStock
+|   |           CR_ArticleInterne.cs
+|   |           CR_ChutesMagasin.cs
+|   |           CR_CommandeClient.cs
+|   |           CR_CommandeClientAction.cs
+|   |           CR_CommandeClientActionType.cs
+|   |           CR_DecoupeBarre.cs
+|   |           CR_DecoupeDetail.cs
+|   |           CR_DecoupeLot.cs
+|   |           CR_DecoupeMachine.cs
+|   |           CR_User.cs
+|   |           CR_UserAppEventStore.cs
+|   |           CR_UserAppMessage.cs
+|   |           CR_UserAppPageDroit.cs
+|   |           CR_UserDroit.cs
+|   |           CR_UserSession.cs
+|   |           CR_UserSessionCommand.cs
+|   |           CR_VieApplication.cs
+|   |           CR_VieChuteMagasinReference.cs
+|   |           
+|   +---Scripts
+|   |       GestStock.txt
+|   |       
+|   +---Services
+|   |   \---GestStock
+|   |           SR_DataBase.cs
+|   |           
+|   \---Settings
+|           SE_GestStock.cs
+|           
++---D_Presentation
+|   +---Ressources
+|   |   +---Languages
+|   |   |       RE_Language.de.xaml
+|   |   |       RE_Language.en.xaml
+|   |   |       RE_Language.es.xaml
+|   |   |       RE_Language.fr.xaml
+|   |   |       RE_Language.it.xaml
+|   |   |       RE_Language.pt.xaml
+|   |   |       
+|   |   \---Logo
+|   |           RE_Logo.png
+|   |           RE_Logo_BW.png
+|   |           RE_Logo_WB.png
+|   |           
+|   +---Services
+|   |       SR_Application.cs
+|   |       SR_ControlStyler.cs
+|   |       SR_Dictionary.cs
+|   |       SR_Flag.cs
+|   |       SR_Icons.cs
+|   |       SR_Language.cs
+|   |       SR_Navigation.cs
+|   |       SR_Notification.cs
+|   |       SR_OnStart.cs
+|   |       SR_Utilities.cs
+|   |       SR_Window.cs
+|   |       
+|   +---Settings
+|   |       SE_Dictionary.cs
+|   |       SE_Flags.cs
+|   |       SE_Icons.cs
+|   |       SE_Navigation.cs
+|   |       SE_Window.cs
+|   |       
+|   +---Utilities
+|   |   |   UT_Converter.cs
+|   |   |   UT_Dictionary.cs
+|   |   |   
+|   |   \---RelayCommands
+|   |           UT_RelayCommandArg0.cs
+|   |           UT_RelayCommandArg0Async.cs
+|   |           UT_RelayCommandArg1.cs
+|   |           
+|   +---ViewModels
+|   |   +---Components
+|   |   |   \---MenuHorizontal
+|   |   |           VM_MH_Page10.cs
+|   |   |           VM_MH_Page20.cs
+|   |   |           VM_MH_Page21.cs
+|   |   |           VM_MH_Page22.cs
+|   |   |           VM_MH_Page30.cs
+|   |   |           VM_MH_Page31.cs
+|   |   |           VM_MH_Page40.cs
+|   |   |           VM_MH_Page50.cs
+|   |   |           VM_MH_Page60.cs
+|   |   |           VM_MH_Page70.cs
+|   |   |           VM_MH_Page90.cs
+|   |   |           VM_MH_Page91.cs
+|   |   |           VM_MH_Page96.cs
+|   |   |           VM_MH_Page97.cs
+|   |   |           VM_MH_Page98.cs
+|   |   |           VM_MH_Page99.cs
+|   |   |           VM_MH_Reduce.cs
+|   |   |           
+|   |   +---Generic
+|   |   |       VM_MH_Generic.cs
+|   |   |       VM_Page_Generic.cs
+|   |   |       
+|   |   \---Pages
+|   |           VM_Page00.cs
+|   |           VM_Page10.cs
+|   |           VM_Page20.cs
+|   |           VM_Page21.cs
+|   |           VM_Page22.cs
+|   |           VM_Page30.cs
+|   |           VM_Page31.cs
+|   |           VM_Page40.cs
+|   |           VM_Page50.cs
+|   |           VM_Page60.cs
+|   |           VM_Page70.cs
+|   |           VM_Page90.cs
+|   |           VM_Page91.cs
+|   |           VM_Page96.cs
+|   |           VM_Page97.cs
+|   |           VM_Page98.cs
+|   |           VM_Page99.cs
+|   |           
+|   \---Views
+|       +---Components
+|       |   \---MenuHorizontal
+|       |           MH_Page10.xaml
+|       |           MH_Page10.xaml.cs
+|       |           MH_Page20.xaml
+|       |           MH_Page20.xaml.cs
+|       |           MH_Page21.xaml
+|       |           MH_Page21.xaml.cs
+|       |           MH_Page22.xaml
+|       |           MH_Page22.xaml.cs
+|       |           MH_Page30.xaml
+|       |           MH_Page30.xaml.cs
+|       |           MH_Page31.xaml
+|       |           MH_Page31.xaml.cs
+|       |           MH_Page40.xaml
+|       |           MH_Page40.xaml.cs
+|       |           MH_Page50.xaml
+|       |           MH_Page50.xaml.cs
+|       |           MH_Page60.xaml
+|       |           MH_Page60.xaml.cs
+|       |           MH_Page70.xaml
+|       |           MH_Page70.xaml.cs
+|       |           MH_Page90.xaml
+|       |           MH_Page90.xaml.cs
+|       |           MH_Page91.xaml
+|       |           MH_Page91.xaml.cs
+|       |           MH_Page96.xaml
+|       |           MH_Page96.xaml.cs
+|       |           MH_Page97.xaml
+|       |           MH_Page97.xaml.cs
+|       |           MH_Page98.xaml
+|       |           MH_Page98.xaml.cs
+|       |           MH_Page99.xaml
+|       |           MH_Page99.xaml.cs
+|       |           MH_Reduce.xaml
+|       |           MH_Reduce.xaml.cs
+|       |           
+|       \---Pages
+|               Page00.xaml
+|               Page00.xaml.cs
+|               Page10.xaml
+|               Page10.xaml.cs
+|               Page20.xaml
+|               Page20.xaml.cs
+|               Page21.xaml
+|               Page21.xaml.cs
+|               Page22.xaml
+|               Page22.xaml.cs
+|               Page30.xaml
+|               Page30.xaml.cs
+|               Page31.xaml
+|               Page31.xaml.cs
+|               Page40.xaml
+|               Page40.xaml.cs
+|               Page50.xaml
+|               Page50.xaml.cs
+|               Page60.xaml
+|               Page60.xaml.cs
+|               Page70.xaml
+|               Page70.xaml.cs
+|               Page90.xaml
+|               Page90.xaml.cs
+|               Page91.xaml
+|               Page91.xaml.cs
+|               Page96.xaml
+|               Page96.xaml.cs
+|               Page97.xaml
+|               Page97.xaml.cs
+|               Page98.xaml
+|               Page98.xaml.cs
+|               Page99.xaml
+|               Page99.xaml.cs
+|               
++---E_CompositionRoot
+    \---Services
+            SR_ConteneurDI.cs

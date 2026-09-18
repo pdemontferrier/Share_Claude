@@ -1,0 +1,393 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PublishDir>D:\3_Dev_Projects\Dev_104\09_Deployment\00_Shared\</PublishDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Vues\**" />
+    <EmbeddedResource Remove="Vues\**" />
+    <None Remove="Vues\**" />
+    <Page Remove="Vues\**" />
+  </ItemGroup>
+
+
+<!-- Folder -->
+    <ItemGroup>
+	    <Folder Include="Fonts\" />
+		<Folder Include="Flags\" />
+		<Folder Include="Images\" />
+	    <Folder Include="Logo\" />
+		<Folder Include="Views\Components\" />
+    </ItemGroup>
+
+<!-- Packages -->
+
+
+<!-- Views -->
+	<ItemGroup>
+		<Compile Update="Views\Backgrounds\CommonBackground.xaml.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Views\Backgrounds\CommonBackgroundPad.xaml.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+	<!-- Settings -->
+	<ItemGroup>
+		<Compile Update="Settings\CR_CommonSettings.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Settings\CR_FlagsSettings.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Settings\CR_IconsSettings.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+
+<!-- Utilities -->
+	<ItemGroup>
+		<Compile Update="Utilities\ButtonMouseEventHandler.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Utilities\ControlStyler.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Utilities\DeviceInfo.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Utilities\EncryptionHelper.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Utilities\Hyperlink.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Utilities\MouseClickService.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Utilities\RelayCommand.cs"><SubType>Code</SubType></Compile>
+		<Compile Update="Utilities\ScrollViewerEventHandler.cs"><SubType>Code</SubType></Compile>
+	</ItemGroup>
+
+	
+<!-- Fonts -->
+    <ItemGroup>
+        <Resource Include="Fonts\Suisse Int'l.ttf"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+        <Resource Include="Fonts\Suisse Intl Bold.ttf"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+        <Resource Include="Fonts\aida-garmo.ttf"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+  </ItemGroup>
+	
+<!-- Logo -->
+    <ItemGroup>
+        <Resource Include="Logo\RE_Logo.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Logo\RE_Logo_BW.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Logo\RE_Logo_WB.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+	</ItemGroup>
+	
+<!-- Icons -->
+    <ItemGroup>
+		<Resource Include="Icons\assign.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\boxChecked.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\boxEmpty.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\cancelCircle.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\checked.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\checkedCircle.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\dashboard.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\documentEdit.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\documentPrint.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\dollarRound.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\editCopy.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\editDelete.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\editFind.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\editPaste.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\email.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\email_received.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\find.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\folderDownload.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\goHome.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\history.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\homeFull.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\import.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\info.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\infoCircleFull.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\launch.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\launch_exe.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\listAdd.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\menu.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\pagePrevious.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\parameters.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\pinLying.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\pinStanding.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\plusCircle.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\plusCircleFull.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\preferencesSystemDetails.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\refresh.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\returnBack.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\save.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\saveData.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\saveUpdate.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\seekBackward.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\seekForward.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\softwareUpdateAvailable.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\softwareUpdateUrgent.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\systemShutdownBlue.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\systemShutdownGreen.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\systemShutdownRed.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\textEditor.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\user.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\warningTriangleOrange.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\warningTriangleRed.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\windowClose.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\windowMaximize.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\windowMinimize.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\windowRestore.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Icons\zoomIn.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+	</ItemGroup>
+
+	<!-- Drapeaux -->
+	<ItemGroup>
+		<Resource Include="Flags\afghanistan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\aland_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\albania.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\algeria.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\american_samoa.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\andorra.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\angola.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\anguilla.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\antarctica.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\antigua_and_barbuda.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\argentina.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\armenia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\aruba.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\ascension_island.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\australia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\austria.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\azerbaijan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bahamas.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bahrain.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bangladesh.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\barbados.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\belarus.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\belgium.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\belize.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\benin.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bermuda.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bhutan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bolivia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bosnia_and_herzegovina.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\botswana.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bouvet_island.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\brazil.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\british_indian_ocean_territory.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\british_virgin_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\brunei.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\bulgaria.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\burkina_faso.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\burundi.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cambodia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cameroon.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\canada.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\canary_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cape_verde.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\caribbean_netherlands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cayman_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\central_african_republic.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\ceuta_and_melilla.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\chad.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\chile.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\china.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\christmas_island.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\clipperton_island.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cocos_keeling_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\colombia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\comoros.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\congo_brazzaville.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\congo_kinshasa.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cook_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\costa_rica.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cote_divoire.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\croatia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cuba.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\curacao.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\cyprus.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\czechia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\denmark.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\diego_garcia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\djibouti.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\dominica.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\dominican_republic.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\ecuador.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\egypt.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\el_salvador.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\equatorial_guinea.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\eritrea.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\estonia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\eswatini.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\ethiopia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\european_union.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\falkland_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\faroe_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\fiji.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\finland.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\france.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\french_guiana.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\french_polynesia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\french_southern_territories.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\gabon.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\gambia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\georgia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\germany.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\ghana.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\gibraltar.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\greece.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\greenland.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\grenada.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\guadeloupe.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\guam.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\guatemala.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\guernsey.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\guinea.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\guinea_bissau.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\guyana.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\haiti.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\heard_and_mcdonald_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\honduras.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\hong_kong_sar_china.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\hungary.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\iceland.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\india.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\indonesia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\iran.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\iraq.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\ireland.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\isle_of_man.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\israel.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\italy.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\jamaica.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\japan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\jersey.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\jordan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\kazakhstan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\kenya.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\kiribati.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\kosovo.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\kuwait.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\kyrgyzstan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\laos.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\latvia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\lebanon.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\lesotho.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\liberia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\libya.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\liechtenstein.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\lithuania.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\luxembourg.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\macao_sar_china.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\madagascar.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\malawi.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\malaysia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\maldives.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\mali.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\malta.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\marshall_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\martinique.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\mauritania.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\mauritius.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\mayotte.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\mexico.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\micronesia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\moldova.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\monaco.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\mongolia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\montenegro.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\montserrat.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\morocco.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\mozambique.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\myanmar_burma.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\namibia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\nauru.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\netherlands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\new_caledonia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\new_zealand.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\nicaragua.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\niger.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\nigeria.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\niue.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\norfolk_island.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\northern_mariana_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\north_korea.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\north_macedonia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\norway.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\oman.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\pakistan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\palau.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\palestinian_territories.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\panama.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\papua_new_guinea.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\paraguay.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\peru.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\philippines.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\pitcairn_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\poland.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\portugal.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\puerto_rico.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\qatar.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\reunion.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\romania.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\russia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\rwanda.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\samoa.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\san_marino.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\sao_tome_and_principe.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\saudi_arabia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\senegal.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\serbia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\seychelles.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\sierra_leone.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\singapore.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\sint_maarten.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\slovakia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\slovenia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\solomon_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\somalia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\south_africa.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\south_georgia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\south_korea.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\south_sandwich_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\south_sudan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\spain.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\sri_lanka.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\st_barthelemy.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\st_helena.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\st_kitts_and_nevis.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\st_lucia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\st_martin.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\st_pierre_and_miquelon.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\st_vincent_and_grenadines.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\sudan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\suriname.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\svalbard_and_jan_mayen.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\sweden.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\switzerland.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\syria.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\taiwan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\tajikistan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\tanzania.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\thailand.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\timor_leste.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\togo.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\tokelau.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\tonga.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\trinidad_and_tobago.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\tristan_da_cunha.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\tunisia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\turkey.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\turkmenistan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\turks_and_caicos_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\tuvalu.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\uganda.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\ukraine.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\united_arab_emirates.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\united_kingdom.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\united_nations.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\united_states.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\uruguay.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\us_outlying_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\us_virgin_islands.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\uzbekistan.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\vanuatu.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\venezuela.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\vietnam.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\wallis_and_futuna.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\western.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\yemen.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\zambia.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+		<Resource Include="Flags\zimbabwe.png"><CopyToOutputDirectory>Never</CopyToOutputDirectory></Resource>
+	</ItemGroup>
+
+</Project>

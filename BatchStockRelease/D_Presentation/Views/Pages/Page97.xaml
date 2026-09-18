@@ -1,0 +1,89 @@
+﻿<!-- ============================================================
+     PAGE 97 — ADMINISTRATION ET SUPERVISION DES SESSIONS UTILISATEURS
+     ============================================================
+     <Contexte> Cette page est réservée aux administrateurs.
+     Elle permet de superviser les sessions actives et de gérer
+     la disponibilité de l’application. </Contexte>
+
+     <Objectif> Offrir trois fonctions principales :
+       - Rendre l’application temporairement inaccessible.
+       - Forcer la déconnexion d’un utilisateur sélectionné.
+       - Forcer la déconnexion de tous les utilisateurs. </Objectif>
+
+     <Utilisateurs cibles> Administrateurs et responsables système. </Utilisateurs>
+
+     <Composants principaux>
+       - Trois boutons d’action (désactivation, déconnexion ciblée, déconnexion globale).
+       - Une liste des sessions utilisateurs avec leur statut (connecté / déconnecté).
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page97"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      xmlns:localUtilities="clr-namespace:BatchStockRelease.D_Presentation.Utilities"
+                      mc:Ignorable="d"
+                      Title="Page97">
+
+    <Grid x:Name="PageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="43"/>
+            <RowDefinition Height="43"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Première ligne -->
+        <TextBlock x:Name="UserSessionTitle" Grid.Row="0" Grid.Column="0" Text="{DynamicResource P97_01}"/>
+
+        <!-- Deuxième ligne Boutons -->
+        <StackPanel Orientation="Horizontal"  Grid.Row="1" Grid.Column="0">
+            <Button x:Name="AppAccessButton" 
+                Content="{Binding AppAccess}" 
+                Command="{Binding UpdateAppAccessCommand}" 
+                Margin="5" 
+                Width="280"/>
+            <Button x:Name="DiconectUserButton" 
+                Content="{DynamicResource P97_03}" 
+                Command="{Binding DisconnectUserCommand}" 
+                Margin="52,5,5,5" 
+                Width="280"/>
+            <Button x:Name="DiconectAllUserButton"
+                Content="{DynamicResource P97_04}" 
+                Command="{Binding DisconnectAllUsersCommand}" 
+                Margin="52,5,5,5" 
+                Width="280"/>
+        </StackPanel>
+
+        <!-- Troisième ligne -->
+        <Border x:Name="UserSessionBorder" Grid.Row="2" Grid.Column="0">
+            <TextBlock x:Name="UserSessionHeader" Text="{DynamicResource P97_02}"/>
+        </Border>
+
+        <!-- Quatrième ligne -->
+        <!-- Colonne 1 -->
+        <ScrollViewer x:Name="UserSessionScrollViewer" Grid.Row="3" Grid.Column="0">
+            <ListView x:Name="UserSessionListView" 
+                      ItemsSource="{Binding UserSession}" 
+                      SelectedItem="{Binding SelectedUserSession, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding FullnameUser}" Width="250"/>
+                            <TextBlock Text="{Binding Connected}" Width="50"/>
+                            <TextBlock Text="{Binding ConnectionDate}" Width="180"/>
+                            <TextBlock Text="{Binding DisconnectionDate}" Width="180"/>
+                            <TextBlock Text="{Binding DeviceId}" Width="140"/>
+                            <TextBlock Text="{Binding DeviceIp}" Width="120"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</generic:Page_Generic>

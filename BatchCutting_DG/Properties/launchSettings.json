@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "BatchCutting_DG_Debug": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\3_Dev_Projects\\Dev_103\\09_Deployment\\03_BatchCutting_DG",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "BatchCutting_DG_Release": {
+      "commandName": "Project",
+      "workingDirectory": "\\\\gunder07\\chronos\\App\\03_BatchCutting_DG",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "hotReloadEnabled": false
+    }
+  }
+}

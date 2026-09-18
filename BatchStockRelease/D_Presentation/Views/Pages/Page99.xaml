@@ -1,0 +1,32 @@
+﻿<!-- ============================================================
+     PAGE 99 — PAGE NON ACCESSIBLE
+     ============================================================
+     <Contexte> Cette page s’affiche lorsqu’un utilisateur tente
+     d’accéder à une page pour laquelle il ne dispose pas des droits
+     nécessaires. </Contexte>
+
+     <Objectif> Fournir un retour visuel clair indiquant que
+     l’accès est refusé, dans le cadre d’un mécanisme de
+     double sécurité. </Objectif>
+
+     <Utilisateurs cibles> Tous les utilisateurs de l’application,
+     principalement en cas d’erreur de navigation ou d’accès non autorisé. </Utilisateurs>
+
+     <Composants principaux>
+       - Titre principal : message d’avertissement.
+       - Texte explicatif : contexte et consignes éventuelles.
+     ============================================================ -->
+
+<generic:Page_Generic x:Class="BatchStockRelease.D_Presentation.Views.Pages.Page99"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:generic="clr-namespace:BatchStockRelease.D_Presentation.Views.Generic"
+                      mc:Ignorable="d"
+                      Title="Page99">
+
+    <Grid x:Name="PageGrid">
+        <TextBlock x:Name="PageTitleMain" Text="{DynamicResource P99_01}"/>
+    </Grid>
+</generic:Page_Generic>
