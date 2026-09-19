@@ -286,13 +286,17 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///   texte est alimenté par le binding sur
         ///   <see cref="VM_Page20.PageName"/> et la largeur conserve
         ///   la valeur par défaut du contrôle.</description></item>
+        /// </list>
         /// <para>Extension au contenu des onglets : la stylisation
         /// s'applique ensuite, selon le même patron, au <c>TabControl</c>
         /// (<c>StyleTabControl</c>), aux quatre onglets et à leurs en-têtes
         /// (<c>StyleTabItem</c>), aux <c>Border</c> des fiches des onglets
-        /// 1 et 2 et de l'image de section (<c>StyleBorder</c>), aux
-        /// intitulés (<c>StyleTextBlockTitle</c>) et aux données
-        /// (<c>StyleTextBlockData</c>) de la fiche de barre, au sélecteur de
+        /// 1 et 2 et de l'image de section (<c>StyleBorder</c>), aux onze
+        /// intitulés (<c>StyleTextBlockTitle</c>) et aux onze données
+        /// (<c>StyleTextBlockData</c>) de la fiche de barre — numéro et
+        /// désignation de la série, origine et emplacement d'origine de la
+        /// barre, puis référence, désignation, couleur, catégorie, longueur,
+        /// nombre de découpes et longueur du reste —, au sélecteur de
         /// motif (<c>StyleComboBox</c>), aux intitulés et aux quatre zones
         /// de saisie des défauts (<c>StyleTextBlockTitle</c>,
         /// <c>StyleTextBoxInput</c>), puis, pour chacun des deux tableaux,
@@ -304,7 +308,6 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// ensemble, l'invocation étant conditionnée à la résolution du
         /// contrôle principal. L'image de section et les cases à cocher ne
         /// sont pas stylisées, faute de méthode dédiée.</para>
-        /// </list>
         /// <para>Résolution typée par le helper
         /// <see cref="Page_Generic.Find{T}(string)"/> : Les deux
         /// contrôles XAML stylisables sont résolus par le helper
@@ -384,7 +387,10 @@ namespace DG244Cutting.D_Presentation.Views.Pages
 
             // Onglet 1 — fiche de la barre
             if (Find<Border>("BarDetailsBorder") is Border barDetailsBorder) _controlStyler.StyleBorder(barDetailsBorder);
+            if (Find<TextBlock>("SerialNumberTitle") is TextBlock serialNumberTitle) _controlStyler.StyleTextBlockTitle(serialNumberTitle, FormColumnWidth);
+            if (Find<TextBlock>("SeriesDescriptionTitle") is TextBlock seriesDescriptionTitle) _controlStyler.StyleTextBlockTitle(seriesDescriptionTitle, FormColumnWidth);
             if (Find<TextBlock>("OriginTitle") is TextBlock originTitle) _controlStyler.StyleTextBlockTitle(originTitle, FormColumnWidth);
+            if (Find<TextBlock>("SourceLocationTitle") is TextBlock sourceLocationTitle) _controlStyler.StyleTextBlockTitle(sourceLocationTitle, FormColumnWidth);
             if (Find<TextBlock>("ReferenceTitle") is TextBlock referenceTitle) _controlStyler.StyleTextBlockTitle(referenceTitle, FormColumnWidth);
             if (Find<TextBlock>("DesignationTitle") is TextBlock designationTitle) _controlStyler.StyleTextBlockTitle(designationTitle, FormColumnWidth);
             if (Find<TextBlock>("ColorTitle") is TextBlock colorTitle) _controlStyler.StyleTextBlockTitle(colorTitle, FormColumnWidth);
@@ -393,7 +399,10 @@ namespace DG244Cutting.D_Presentation.Views.Pages
             if (Find<TextBlock>("CutPieceCountTitle") is TextBlock cutPieceCountTitle) _controlStyler.StyleTextBlockTitle(cutPieceCountTitle, FormColumnWidth);
             if (Find<TextBlock>("ResidueLengthTitle") is TextBlock residueLengthTitle) _controlStyler.StyleTextBlockTitle(residueLengthTitle, FormColumnWidth);
             if (Find<TextBlock>("RejectionReasonTitle") is TextBlock rejectionReasonTitle) _controlStyler.StyleTextBlockTitle(rejectionReasonTitle, FormColumnWidth);
+            if (Find<TextBlock>("SerialNumberData") is TextBlock serialNumberData) _controlStyler.StyleTextBlockData(serialNumberData);
+            if (Find<TextBlock>("SeriesDescriptionData") is TextBlock seriesDescriptionData) _controlStyler.StyleTextBlockData(seriesDescriptionData);
             if (Find<TextBlock>("OriginData") is TextBlock originData) _controlStyler.StyleTextBlockData(originData);
+            if (Find<TextBlock>("SourceLocationData") is TextBlock sourceLocationData) _controlStyler.StyleTextBlockData(sourceLocationData);
             if (Find<TextBlock>("ReferenceData") is TextBlock referenceData) _controlStyler.StyleTextBlockData(referenceData);
             if (Find<TextBlock>("DesignationData") is TextBlock designationData) _controlStyler.StyleTextBlockData(designationData);
             if (Find<TextBlock>("ColorData") is TextBlock colorData) _controlStyler.StyleTextBlockData(colorData);

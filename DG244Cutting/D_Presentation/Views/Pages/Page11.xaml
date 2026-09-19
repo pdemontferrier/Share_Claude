@@ -54,7 +54,7 @@ Structure visuelle :
           Col 0 : 7 TextBlocks intitulés (SerialNumberTitle, DescriptionTitle,
           ProductionStartDateTitle, ProductionEndDateTitle, CuttingStartedTitle,
           CuttingCompletedTitle, BarOutOfStockTitle) bindés sur Label_P11_06..09 et
-          Label_P11_44..48. Col 1 : 4 TextBlocks data (SerialNumberData,
+          Label_P11_44..46. Col 1 : 4 TextBlocks data (SerialNumberData,
           DescriptionData, ProductionStartDateData, ProductionEndDateData) bindés sur
           IdSerialNumber, Description, ProductionStartDate, ProductionEndDate, puis
           3 CheckBox en lecture seule (CuttingStartedCheckBox,
@@ -77,15 +77,22 @@ Structure visuelle :
           (MinHeight=40 ; Height=auto), dont l'unique enfant est un StackPanel
           empilant un Border d'en-têtes FramesHeaderBorder et un ScrollViewer
           FramesScrollViewer. Le Border englobe un StackPanel horizontal de
-          11 TextBlocks d'en-tête (FramesHeader01..11) bindés sur Label_P11_14..24, de
-          largeurs 40, 200, 100, 40, 120, 80, 80, 300, 400, 200 et 200. Le ScrollViewer
+          9 TextBlocks d'en-tête (FramesHeader01..09) bindés sur Label_P11_14..22, de
+          largeurs 40, 200, 100, 40, 120, 80, 80, 300 et 400. Le ScrollViewer
           porte la ListView FramesListView, dont
           l'ItemsSource est bindé sur SeriesProductionChassis et dont l'ItemTemplate
           rend chaque DTO_VwProductionChassisFull_P11 en un StackPanel horizontal de
-          11 TextBlocks non nommés bindés sur PCSeriesPosition, PCCustomerPosition,
+          9 TextBlocks non nommés bindés sur PCSeriesPosition, PCCustomerPosition,
           PCBarcodeId, PCQuantity, PCWindowSystemCode, PCElementHeight,
-          PCElementWidth, PCColorNameIntExt, PCWindowText, PCSlidingTypeDetailed et
-          PCOpeningTypeText, aux mêmes largeurs. L'onglet est purement descriptif :
+          PCElementWidth, PCColorNameIntExt et PCWindowText, aux mêmes largeurs. Les
+          deux colonnes descriptives qui suivaient — type de coulissant détaillé et
+          texte de type d'ouverture — ont été retirées de l'affichage ; l'objet de
+          transport DTO_VwProductionChassisFull_P11 et la projection qui l'alimente
+          continuent de porter les deux champs correspondants jusqu'à une unité de
+          production subséquente. Cet état est transitoire et assumé : la solution
+          demeure compilable, et aucun des deux champs n'intervenait dans
+          l'ordonnancement de l'onglet, de sorte que le retrait est sans effet de bord
+          fonctionnel. L'onglet est purement descriptif :
           aucun indicateur d'avancement, la notion de progression n'existant pas au
           niveau du châssis. Aucune sélection n'est exploitée ; aucun SelectedItem
           n'est lié.
@@ -122,10 +129,12 @@ Structure visuelle :
           CuttingsScrollViewer. Le Border englobe un StackPanel horizontal de
           16 TextBlocks d'en-tête (CuttingsHeader01..16) bindés sur Label_P11_25,
           Label_P11_11, Label_P11_21, Label_P11_26, Label_P11_37..41, Label_P11_19,
-          Label_P11_20, Label_P11_42, Label_P11_42, Label_P11_34, Label_P11_43 et
-          Label_P11_45, de largeur uniforme 50 — sept de ces intitulés réutilisent des
+          Label_P11_20, Label_P11_14, Label_P11_42, Label_P11_34, Label_P11_43 et
+          Label_P11_35, de largeurs 120, 400, 150, 150, 50, 50, 100, 50, 50, 80, 80,
+          80, 80, 80, 80 et 80 — neuf de ces intitulés réutilisent des
           libellés génériques déjà exposés pour les onglets précédents (référence de
-          barre, désignation, couleur, catégorie, hauteur, largeur, rupture de stock).
+          barre, désignation, couleur, catégorie, hauteur, largeur, position, rupture
+          de stock, refus).
           Le ScrollViewer porte la ListView CuttingsListView, dont l'ItemsSource est
           bindé sur SeriesProductionCutPieces et dont l'ItemTemplate rend chaque
           DTO_VwProductionCutPieceFull_P11 en un StackPanel horizontal de
@@ -145,27 +154,27 @@ Structure visuelle :
           découpes. Aucune sélection n'est exploitée ; aucun SelectedItem n'est lié.
 
 Bindings principaux :
-    70 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
-    81 bindings par l'élément courant des gabarits d'éléments des quatre ListView —
-    4 par l'élément CustomerOrder de l'Onglet 2, 11 par l'élément
+    68 bindings sont portés par le DataContext de page (l'instance de VM_Page11), et
+    79 bindings par l'élément courant des gabarits d'éléments des quatre ListView —
+    4 par l'élément CustomerOrder de l'Onglet 2, 9 par l'élément
     DTO_VwProductionChassisFull_P11 de l'Onglet 3, 38 par l'élément
     DTO_VwProductionBarFull_P11 de l'Onglet 4 et 28 par l'élément
-    DTO_VwProductionCutPieceFull_P11 de l'Onglet 5 — soit 151 bindings au total.
+    DTO_VwProductionCutPieceFull_P11 de l'Onglet 5 — soit 147 bindings au total.
 
     Portés par le DataContext de page :
-    - 59 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
-      TabItem), Label_P11_06..09 et Label_P11_44..48 (sept intitulés de la fiche de
+    - 57 bindings de libellés multilingues : Label_P11_01..05 (Headers des cinq
+      TabItem), Label_P11_06..09 et Label_P11_44..46 (sept intitulés de la fiche de
       synthèse de l'Onglet 1), Label_P11_10..13 (quatre intitulés de colonnes du
-      tableau des commandes de l'Onglet 2), Label_P11_14..24 (onze intitulés de
+      tableau des commandes de l'Onglet 2), Label_P11_14..22 (neuf intitulés de
       colonnes du tableau des châssis de l'Onglet 3), Label_P11_25, Label_P11_11,
       Label_P11_21, Label_P11_26, Label_P11_27, Label_P11_19, Label_P11_20,
       Label_P11_28, Label_P11_29, Label_P11_30 et Label_P11_31..36 (seize intitulés
       de colonnes du tableau des barres de l'Onglet 4), Label_P11_25, Label_P11_11,
       Label_P11_21, Label_P11_26, Label_P11_37..41, Label_P11_19, Label_P11_20,
-      Label_P11_42, Label_P11_42, Label_P11_34, Label_P11_43 et Label_P11_45 (seize
+      Label_P11_14, Label_P11_42, Label_P11_34, Label_P11_43 et Label_P11_35 (seize
       intitulés de colonnes du tableau des découpes de l'Onglet 5). Le nombre de
-      liaisons excède celui des propriétés liées : 59 liaisons portent sur
-      48 propriétés observables distinctes, onze liaisons étant redondantes du fait
+      liaisons excède celui des propriétés liées : 57 liaisons portent sur
+      44 propriétés observables distinctes, treize liaisons étant redondantes du fait
       des libellés génériques partagés entre onglets. Propriétés observables string
       exposées par
       VM_Page11, miroirs des libellés associés aux clés homonymes du dictionnaire de
@@ -200,14 +209,17 @@ Bindings principaux :
     - 4 bindings de données de commande (Onglet 2) : IdOrder, ProjectDesignation,
       PartialSeriesIndex et MainSalesPointName, résolus sur l'élément courant de la
       collection et non sur le DataContext de page.
-    - 11 bindings de données de châssis (Onglet 3) : PCSeriesPosition,
+    - 9 bindings de données de châssis (Onglet 3) : PCSeriesPosition,
       PCCustomerPosition, PCBarcodeId, PCQuantity, PCWindowSystemCode,
-      PCElementHeight, PCElementWidth, PCColorNameIntExt, PCWindowText,
-      PCSlidingTypeDetailed et PCOpeningTypeText, résolus de même sur l'élément
-      courant de la collection. Les cinq champs de service de l'objet de transport
-      (PSId, PCId, COIdOrder, COPartialSeriesIndex, PCOrderPosition) ne sont pas
-      bindés : les trois derniers portent les critères d'ordonnancement appliqués en
-      mémoire par le ViewModel et ne sont jamais affichés.
+      PCElementHeight, PCElementWidth, PCColorNameIntExt et PCWindowText, résolus de
+      même sur l'élément courant de la collection. L'objet de transport porte seize
+      champs, dont sept ne sont pas bindés : cinq champs de service
+      (PSId, PCId, COIdOrder, COPartialSeriesIndex, PCOrderPosition), dont les trois
+      derniers portent les critères d'ordonnancement appliqués en mémoire par le
+      ViewModel et ne sont jamais affichés, et deux champs temporairement sans
+      consommateur (PCSlidingTypeDetailed, PCOpeningTypeText), dont l'affichage a été
+      retiré et dont le retrait de l'objet de transport et de la projection relève
+      d'une unité de production subséquente.
     - 38 bindings portés par l'élément courant du gabarit de l'Onglet 4 : 16 bindings
       de contenu — ARReference, ARDesignation, AIIdColorRalFinish,
       ARFamilyCategoryPrincipal, PBBarLength, ARBarHeightMm, ARBarWidthMm,
@@ -257,7 +269,7 @@ Remarques techniques :
       Mode=OneWay explicite également sur les cinq CheckBox de
       l'Onglet 4 et sur les quatre CheckBox de l'Onglet 5, la page étant strictement
       en lecture. Aucun Mode explicite n'est
-      posé sur les onze liaisons du
+      posé sur les neuf liaisons du
       tableau des châssis de l'Onglet 3, à parité avec les quatre TextBlocks du
       gabarit d'éléments de l'Onglet 2 : la contrainte technique du converter est
       absente ici, et le mode par défaut suffit. Aucun Mode explicite n'est davantage
@@ -292,9 +304,9 @@ Remarques techniques :
       aucune TargetNullValue, aucune FallbackValue, aucun convertisseur n'est posé.
       Un marqueur littéral constituerait une chaîne UI en dur, prohibée par I-4.11.1
       du 0231.
-    - Les huit colonnes nullables du tableau des châssis (PCCustomerPosition,
+    - Les six colonnes nullables du tableau des châssis (PCCustomerPosition,
       PCWindowSystemCode, PCElementHeight, PCElementWidth, PCColorNameIntExt,
-      PCWindowText, PCSlidingTypeDetailed, PCOpeningTypeText) suivent le même
+      PCWindowText) suivent le même
       précédent : cellule vide en l'absence de valeur, sans TargetNullValue,
       FallbackValue ni convertisseur.
     - Les cinq colonnes nullables du tableau des barres (AIIdColorRalFinish,
@@ -307,7 +319,7 @@ Remarques techniques :
       PCPProfileHeight, PCPProfileWidth, PCPCutPositionInBar) suivent le même
       précédent : cellule vide en l'absence de valeur, sans TargetNullValue,
       FallbackValue ni convertisseur de repli.
-    - Aucun convertisseur de troncature n'est posé, ni sur les onze colonnes de
+    - Aucun convertisseur de troncature n'est posé, ni sur les neuf colonnes de
       l'Onglet 3, ni sur les seize colonnes de l'Onglet 4, ni sur les seize colonnes
       de l'Onglet 5, malgré l'étroitesse des
       colonnes au regard des libellés descriptifs de l'Onglet 3, du motif de refus
@@ -350,18 +362,18 @@ Remarques techniques :
       fiche de l'Onglet 1 (largeurs de colonnes, hauteurs minimales de lignes), le
       Padding vertical du Border de fiche, la géométrie de la Grid de l'Onglet 2 et
       les quatre largeurs de colonnes du tableau des commandes, la
-      géométrie de la Grid de l'Onglet 3 et les onze largeurs de colonnes du tableau
+      géométrie de la Grid de l'Onglet 3 et les neuf largeurs de colonnes du tableau
       des châssis, la géométrie de la Grid de l'Onglet 4 et les seize
       largeurs de colonnes du tableau des barres, ainsi que la géométrie de la Grid de
       l'Onglet 5 et les seize largeurs de colonnes du tableau des découpes, portées en
       dur sur
       les en-têtes comme sur le gabarit d'éléments à parité avec l'étalon Page01.
       Aucune ressource sys:Double ni constante de centralisation n'est introduite.
-      Les quatre colonnes de l'Onglet 2 totalisent 800 unités, les onze colonnes de
-      l'Onglet 3 totalisent 1760 unités, les seize colonnes de l'Onglet 4, de largeurs
+      Les quatre colonnes de l'Onglet 2 totalisent 800 unités, les neuf colonnes de
+      l'Onglet 3 totalisent 1360 unités, les seize colonnes de l'Onglet 4, de largeurs
       différenciées, totalisent 1790 unités, et les seize colonnes de l'Onglet 5, de
-      largeur uniforme 50, totalisent 800 unités ; aucun défilement horizontal n'est
-      prévu.
+      largeurs différenciées elles aussi, totalisent 1680 unités ; aucun défilement
+      horizontal n'est prévu.
     - Aucun chargement de libellé depuis ce fichier ni depuis son code-behind
       (I-4.11.10 du 0231) ; les libellés sont chargés exclusivement par l'override
       LoadLabels de VM_Page11.
@@ -513,9 +525,7 @@ Remarques techniques :
                                 <TextBlock x:Name="FramesHeader06" Text="{Binding Label_P11_19}" Width="80"/>
                                 <TextBlock x:Name="FramesHeader07" Text="{Binding Label_P11_20}" Width="80"/>
                                 <TextBlock x:Name="FramesHeader08" Text="{Binding Label_P11_21}" Width="300"/>
-                                <TextBlock x:Name="FramesHeader09" Text="{Binding Label_P11_22}" Width="400"/>
-                                <TextBlock x:Name="FramesHeader10" Text="{Binding Label_P11_23}" Width="200"/>
-                                <TextBlock x:Name="FramesHeader11" Text="{Binding Label_P11_24}" Width="200"/>
+                                <TextBlock x:Name="FramesHeader09" Text="{Binding Label_P11_22}" Width="800"/>
                             </StackPanel>
                         </Border>
 
@@ -533,9 +543,7 @@ Remarques techniques :
                                             <TextBlock Text="{Binding PCElementHeight, StringFormat={}{0:N0}}"       Width="80"/>
                                             <TextBlock Text="{Binding PCElementWidth, StringFormat={}{0:N0}}"        Width="80"/>
                                             <TextBlock Text="{Binding PCColorNameIntExt}"                            Width="300"/>
-                                            <TextBlock Text="{Binding PCWindowText}"                                 Width="400"/>
-                                            <TextBlock Text="{Binding PCSlidingTypeDetailed}"                        Width="200"/>
-                                            <TextBlock Text="{Binding PCOpeningTypeText}"                            Width="200"/>
+                                            <TextBlock Text="{Binding PCWindowText}"                                 Width="800"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>

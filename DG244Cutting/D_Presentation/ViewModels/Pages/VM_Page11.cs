@@ -17,9 +17,9 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// la vue les libellés multilingues des cinq onglets de la page, les
     /// sept intitulés de la fiche de synthèse du premier onglet, les
     /// quatre intitulés de colonnes du tableau des commandes du deuxième
-    /// onglet, les onze intitulés de colonnes du tableau des châssis du
+    /// onglet, les neuf intitulés de colonnes du tableau des châssis du
     /// troisième onglet, les douze intitulés de colonnes propres au
-    /// tableau des barres du quatrième onglet, les neuf intitulés de
+    /// tableau des barres du quatrième onglet, les sept intitulés de
     /// colonnes propres au tableau des découpes du cinquième onglet, les
     /// sept caractéristiques de la série désignée
     /// par le contexte de sélection applicatif, la collection des
@@ -50,7 +50,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>Objectif : Exposer à la vue
     /// <see cref="DG244Cutting.D_Presentation.Views.Pages.Page11"/> :</para>
     /// <list type="bullet">
-    ///   <item><description>48 propriétés observables
+    ///   <item><description>44 propriétés observables
     ///   <c>Label_P11_NN</c> liées aux clés homonymes du dictionnaire
     ///   actif : <see cref="Label_P11_01"/> à <see cref="Label_P11_05"/>
     ///   pour les cinq en-têtes d'onglets (série, commandes, châssis,
@@ -62,11 +62,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   du tableau des commandes du deuxième onglet (numéro de commande,
     ///   désignation de projet, indice de sous-série, point de vente
     ///   client principal), <see cref="Label_P11_14"/> à
-    ///   <see cref="Label_P11_24"/> pour les onze intitulés de colonnes
+    ///   <see cref="Label_P11_22"/> pour les neuf intitulés de colonnes
     ///   du tableau des châssis du troisième onglet (position en série,
     ///   position en commande, code-barre, quantité, famille produit,
-    ///   hauteur, largeur, couleur et trois libellés descriptifs du type
-    ///   d'ouvrant), <see cref="Label_P11_25"/> à
+    ///   hauteur, largeur, couleur et libellé descriptif de menuiserie),
+    ///   <see cref="Label_P11_25"/> à
     ///   <see cref="Label_P11_36"/> pour les douze intitulés de colonnes
     ///   propres au tableau des barres du quatrième onglet (référence
     ///   d'article, catégorie, longueur de barre, ordre de tri, nombre de
@@ -77,19 +77,19 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   <see cref="Label_P11_19"/>, <see cref="Label_P11_20"/> et
     ///   <see cref="Label_P11_21"/> — de sorte que seize colonnes ne
     ///   mobilisent que douze propriétés nouvelles. Enfin,
-    ///   <see cref="Label_P11_37"/> à <see cref="Label_P11_45"/> pour les
-    ///   neuf intitulés de colonnes propres au tableau des découpes du
+    ///   <see cref="Label_P11_37"/> à <see cref="Label_P11_43"/> pour les
+    ///   sept intitulés de colonnes propres au tableau des découpes du
     ///   cinquième onglet (les cinq valeurs de géométrie de coupe —
     ///   inclinaison gauche, pivot gauche, longueur de découpe, pivot
-    ///   droit, inclinaison droite —, la position de la découpe sur la
-    ///   barre et les trois intitulés des indicateurs de barre
-    ///   approvisionnée, de découpe réalisée et de découpe refusée). Les
-    ///   sept autres intitulés de ce tableau réutilisent eux aussi des
+    ///   droit, inclinaison droite — et les deux intitulés des
+    ///   indicateurs de barre approvisionnée et de découpe réalisée). Les
+    ///   neuf autres intitulés de ce tableau réutilisent eux aussi des
     ///   clés génériques déjà exposées — <see cref="Label_P11_11"/>,
-    ///   <see cref="Label_P11_19"/>, <see cref="Label_P11_20"/>,
-    ///   <see cref="Label_P11_21"/>, <see cref="Label_P11_25"/>,
-    ///   <see cref="Label_P11_26"/> et <see cref="Label_P11_34"/> — de
-    ///   sorte que ses seize colonnes ne mobilisent que neuf propriétés
+    ///   <see cref="Label_P11_14"/>, <see cref="Label_P11_19"/>,
+    ///   <see cref="Label_P11_20"/>, <see cref="Label_P11_21"/>,
+    ///   <see cref="Label_P11_25"/>, <see cref="Label_P11_26"/>,
+    ///   <see cref="Label_P11_34"/> et <see cref="Label_P11_35"/> — de
+    ///   sorte que ses seize colonnes ne mobilisent que sept propriétés
     ///   nouvelles. Toutes ces propriétés sont
     ///   alimentées par la mécanique multilingue factorisée par
     ///   <see cref="VM_Generic"/> : premier chargement au constructeur
@@ -161,9 +161,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   <see cref="SeriesProductionCutPieces"/> portant les découpes de
     ///   la série consultée, triées selon la logique d'atelier —
     ///   catégorie d'article, puis ordre d'affichage du profil, puis
-    ///   barre d'affectation, puis position de coupe sur la barre, ce
-    ///   dernier critère restituant l'ordre dans lequel la machine les
-    ///   exécute. Elle est la source du tableau du cinquième onglet, le
+    ///   référence de barre, puis longueur de découpe décroissante, puis
+    ///   barre d'affectation, puis position de coupe sur la barre, les
+    ///   deux derniers critères restituant l'ordre dans lequel la machine
+    ///   les exécute. Elle est la source du tableau du cinquième onglet, le
     ///   plus fin de la page et celui qui compte le plus de lignes,
     ///   chaque châssis produisant plusieurs découpes : l'opérateur y
     ///   vérifie l'avancement pièce à pièce ou y retrouve la géométrie
@@ -177,7 +178,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///
     /// <para>Responsabilités :</para>
     /// <list type="bullet">
-    ///   <item><description>Exposer les 48 propriétés observables
+    ///   <item><description>Exposer les 44 propriétés observables
     ///   <c>Label_P11_NN</c> et les 7 propriétés observables de données
     ///   en accès public en lecture, écriture privée via le helper
     ///   hérité <c>SetProperty&lt;T&gt;</c>, ainsi que les quatre
@@ -191,13 +192,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   <see cref="LoadBarsAsync"/> et par
     ///   <see cref="LoadCutPiecesAsync"/>.</description></item>
     ///   <item><description>Redéfinir
-    ///   <see cref="VM_Generic.LoadLabels"/> pour résoudre les 48 clés
+    ///   <see cref="VM_Generic.LoadLabels"/> pour résoudre les 44 clés
     ///   <c>P11_01</c> à <c>P11_05</c>, <c>P11_06</c> à <c>P11_09</c>,
-    ///   <c>P11_10</c> à <c>P11_13</c>, <c>P11_14</c> à <c>P11_24</c>,
-    ///   <c>P11_25</c> à <c>P11_36</c>, <c>P11_37</c> à <c>P11_45</c> et
+    ///   <c>P11_10</c> à <c>P11_13</c>, <c>P11_14</c> à <c>P11_22</c>,
+    ///   <c>P11_25</c> à <c>P11_36</c>, <c>P11_37</c> à <c>P11_43</c> et
     ///   <c>P11_44</c> à <c>P11_46</c>
     ///   via <see cref="VM_Generic._dictionary"/> hérité et affecter les
-    ///   valeurs résolues aux 48 propriétés <c>Label_P11_NN</c>,
+    ///   valeurs résolues aux 44 propriétés <c>Label_P11_NN</c>,
     ///   conformément à R-4.11.8 du 0231.</description></item>
     ///   <item><description>Redéfinir
     ///   <see cref="VM_Page_Generic.LoadAsync"/> pour lire l'identifiant
@@ -248,7 +249,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   invocation du Query Handler spécialisé
     ///   <see cref="IQ_VwProductionCutPieceFull"/> via
     ///   <see cref="IS_UseCaseInvoker"/>, l'ordonner en mémoire selon la
-    ///   logique d'atelier à quatre critères et alimenter la collection
+    ///   logique d'atelier à six critères et alimenter la collection
     ///   <see cref="SeriesProductionCutPieces"/>, le tout en
     ///   encapsulation par le même filet hérité
     ///   <see cref="VM_Generic.ExecuteSafeAsync"/>. À parité stricte avec
@@ -408,14 +409,14 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     /// <para>La classe applique la structure normative à cinq régions
     /// standard (§4.4.2) complétée par deux extensions (R-4.4.10 du
     /// 0231) : l'extension <c>=== Propriétés publiques ===</c> au titre
-    /// des 55 propriétés observables à champ support et des quatre
+    /// des 51 propriétés observables à champ support et des quatre
     /// collections observables exposées, et l'extension
     /// <c>=== Méthodes protégées ===</c> au titre de l'override
     /// <see cref="LoadLabels"/>. Soit sept régions au total :</para>
     ///
     /// <list type="number">
     ///   <item><description><c>=== Propriétés privées ===</c> :
-    ///   55 champs supports des propriétés observables (48 champs
+    ///   51 champs supports des propriétés observables (44 champs
     ///   supports de libellés <c>_label_p11_NN</c> et 7 champs supports
     ///   de données <c>_idSerialNumber</c>, <c>_description</c>,
     ///   <c>_productionStartDate</c>, <c>_productionEndDate</c>,
@@ -434,7 +435,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   (<see cref="IS_UseCaseInvoker"/>) et <c>_seUseCase</c>
     ///   (<see cref="ISE_UseCase"/>).</description></item>
     ///   <item><description><c>=== Propriétés publiques ===</c>
-    ///   (extension §4.4.3) : 55 propriétés observables exposées en accès
+    ///   (extension §4.4.3) : 51 propriétés observables exposées en accès
     ///   public en lecture, écriture privée via
     ///   <c>SetProperty&lt;T&gt;</c>, plus les quatre collections
     ///   observables <see cref="SeriesCustomerOrders"/>,
@@ -467,7 +468,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   socle.</description></item>
     ///   <item><description><c>=== Méthodes protégées ===</c>
     ///   (extension §4.4.3) : override <see cref="LoadLabels"/> peuplant
-    ///   les 48 propriétés <c>Label_P11_NN</c> via
+    ///   les 44 propriétés <c>Label_P11_NN</c> via
     ///   <see cref="VM_Generic._dictionary"/>, une affectation par ligne
     ///   dans l'ordre numérique croissant des clés, sans appel à
     ///   <c>base.LoadLabels(caller)</c>.</description></item>
@@ -551,12 +552,6 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <summary>Champ support de <see cref="Label_P11_22"/> (clé <c>P11_22</c>).</summary>
         private string _label_p11_22 = string.Empty;
 
-        /// <summary>Champ support de <see cref="Label_P11_23"/> (clé <c>P11_23</c>).</summary>
-        private string _label_p11_23 = string.Empty;
-
-        /// <summary>Champ support de <see cref="Label_P11_24"/> (clé <c>P11_24</c>).</summary>
-        private string _label_p11_24 = string.Empty;
-
         /// <summary>Champ support de <see cref="Label_P11_25"/> (clé <c>P11_25</c>).</summary>
         private string _label_p11_25 = string.Empty;
 
@@ -611,23 +606,17 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <summary>Champ support de <see cref="Label_P11_42"/> (clé <c>P11_42</c>).</summary>
         private string _label_p11_42 = string.Empty;
 
-        /// <summary>Champ support de <see cref="Label_P11_42"/> (clé <c>P11_42</c>).</summary>
-        private string _label_P11_42 = string.Empty;
-
         /// <summary>Champ support de <see cref="Label_P11_43"/> (clé <c>P11_43</c>).</summary>
-        private string _label_P11_43 = string.Empty;
+        private string _label_p11_43 = string.Empty;
+
+        /// <summary>Champ support de <see cref="Label_P11_44"/> (clé <c>P11_44</c>).</summary>
+        private string _label_p11_44 = string.Empty;
 
         /// <summary>Champ support de <see cref="Label_P11_45"/> (clé <c>P11_45</c>).</summary>
         private string _label_p11_45 = string.Empty;
 
-        /// <summary>Champ support de <see cref="Label_P11_44"/> (clé <c>P11_44</c>).</summary>
-        private string _label_P11_44 = string.Empty;
-
-        /// <summary>Champ support de <see cref="Label_P11_45"/> (clé <c>P11_45</c>).</summary>
-        private string _label_P11_45 = string.Empty;
-
         /// <summary>Champ support de <see cref="Label_P11_46"/> (clé <c>P11_46</c>).</summary>
-        private string _label_P11_46 = string.Empty;
+        private string _label_p11_46 = string.Empty;
 
         /// <summary>
         /// Champ support de <see cref="IdSerialNumber"/>, initialisé à
@@ -904,25 +893,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             private set => SetProperty(ref _label_p11_21, value);
         }
 
-        /// <summary>Libellé multilingue associé à la clé <c>P11_22</c>, intitulé de la colonne du premier libellé descriptif du châssis dans le tableau des châssis du troisième onglet.</summary>
+        /// <summary>Libellé multilingue associé à la clé <c>P11_22</c>, intitulé de la colonne du libellé descriptif de menuiserie dans le tableau des châssis du troisième onglet.</summary>
         public string Label_P11_22
         {
             get => _label_p11_22;
             private set => SetProperty(ref _label_p11_22, value);
-        }
-
-        /// <summary>Libellé multilingue associé à la clé <c>P11_23</c>, intitulé de la colonne du deuxième libellé descriptif du châssis dans le tableau des châssis du troisième onglet.</summary>
-        public string Label_P11_23
-        {
-            get => _label_p11_23;
-            private set => SetProperty(ref _label_p11_23, value);
-        }
-
-        /// <summary>Libellé multilingue associé à la clé <c>P11_24</c>, intitulé de la colonne du troisième libellé descriptif du châssis dans le tableau des châssis du troisième onglet.</summary>
-        public string Label_P11_24
-        {
-            get => _label_p11_24;
-            private set => SetProperty(ref _label_p11_24, value);
         }
 
         /// <summary>Libellé multilingue associé à la clé <c>P11_25</c>, intitulé de la colonne de la référence d'article de la barre dans le tableau des barres du quatrième onglet.</summary>
@@ -1054,29 +1029,29 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <summary>Libellé multilingue associé à la clé <c>P11_43</c>, intitulé de l'indicateur de découpe réalisée dans le tableau des découpes du cinquième onglet.</summary>
         public string Label_P11_43
         {
-            get => _label_P11_43;
-            private set => SetProperty(ref _label_P11_43, value);
+            get => _label_p11_43;
+            private set => SetProperty(ref _label_p11_43, value);
         }
 
         /// <summary>Libellé multilingue associé à la clé <c>P11_44</c>, intitulé de l'indicateur de découpe commencée dans la fiche de synthèse du premier onglet.</summary>
         public string Label_P11_44
         {
-            get => _label_P11_44;
-            private set => SetProperty(ref _label_P11_44, value);
+            get => _label_p11_44;
+            private set => SetProperty(ref _label_p11_44, value);
         }
 
         /// <summary>Libellé multilingue associé à la clé <c>P11_45</c>, intitulé de l'indicateur de découpe terminée dans la fiche de synthèse du premier onglet.</summary>
         public string Label_P11_45
         {
-            get => _label_P11_45;
-            private set => SetProperty(ref _label_P11_45, value);
+            get => _label_p11_45;
+            private set => SetProperty(ref _label_p11_45, value);
         }
 
         /// <summary>Libellé multilingue associé à la clé <c>P11_46</c>, intitulé de l'indicateur de rupture de stock dans la fiche de synthèse du premier onglet.</summary>
         public string Label_P11_46
         {
-            get => _label_P11_46;
-            private set => SetProperty(ref _label_P11_46, value);
+            get => _label_p11_46;
+            private set => SetProperty(ref _label_p11_46, value);
         }
 
         /// <summary>
@@ -1385,10 +1360,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// (troisième onglet, <c>ListView</c> <c>FramesListView</c>,
         /// attribut <c>ItemsSource="{Binding SeriesProductionChassis}"</c>).
         /// L'<c>ItemTemplate</c> de la <c>ListView</c> consomme par
-        /// binding les onze champs d'affichage de l'objet de transport,
+        /// binding les neuf champs d'affichage de l'objet de transport,
         /// dont les intitulés de colonnes sont portés par
         /// <see cref="Label_P11_14"/> à
-        /// <see cref="Label_P11_24"/>.</para>
+        /// <see cref="Label_P11_22"/>.</para>
         ///
         /// <para>Composition physique de la série : Une série de
         /// production regroupe des commandes clients, chacune composée de
@@ -1401,9 +1376,20 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// progression n'existant pas au niveau du châssis, aucun
         /// indicateur d'avancement n'y figure.</para>
         ///
-        /// <para>Champs de service non affichés : L'objet de transport
-        /// porte, outre ses onze champs d'affichage, cinq champs de
-        /// service qui ne sont jamais rendus à l'écran. Trois d'entre eux
+        /// <para>Champs non liés : L'objet de transport
+        /// <see cref="DTO_VwProductionChassisFull_P11"/> porte seize
+        /// champs, dont neuf seulement sont liés par le gabarit
+        /// d'éléments. Les sept autres ne sont jamais rendus à l'écran :
+        /// cinq champs de service et deux champs temporairement sans
+        /// consommateur — <c>PCSlidingTypeDetailed</c> et
+        /// <c>PCOpeningTypeText</c>, dont l'affichage a été retiré du
+        /// troisième onglet tandis que l'objet de transport et la
+        /// projection qui l'alimente continuent de les porter. Cet état
+        /// est transitoire et assumé : leur retrait de l'objet de
+        /// transport et des deux affectations de la projection relève
+        /// d'une unité de production distincte et subséquente ; la
+        /// solution demeure compilable dans l'intervalle. Parmi les cinq
+        /// champs de service, trois d'entre eux
         /// — <c>COIdOrder</c>, <c>COPartialSeriesIndex</c> et
         /// <c>PCOrderPosition</c> — portent les trois critères successifs
         /// d'ordonnancement appliqués en mémoire par
@@ -1545,6 +1531,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// Collection observable des découpes de la série de production
         /// consultée, triée selon la logique d'atelier : ordre ascendant
         /// de <c>ACMDescription</c>, puis de <c>ARSortOrder</c>, puis de
+        /// <c>PCPBarReference</c>, puis ordre descendant de
+        /// <c>PCPCutDimension</c>, puis ordre ascendant de
         /// <c>PCPIdProductionBar</c>, puis de
         /// <c>PCPCutPositionInBar</c>.
         /// </summary>
@@ -1567,12 +1555,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// L'<c>ItemTemplate</c> de la <c>ListView</c> consomme par
         /// binding les seize champs d'affichage de l'objet de transport,
         /// dont les intitulés de colonnes sont portés par
-        /// <see cref="Label_P11_37"/> à <see cref="Label_P11_45"/> pour
-        /// les neuf colonnes propres à cet onglet, et par
-        /// <see cref="Label_P11_11"/>, <see cref="Label_P11_19"/>,
-        /// <see cref="Label_P11_20"/>, <see cref="Label_P11_21"/>,
-        /// <see cref="Label_P11_25"/>, <see cref="Label_P11_26"/> et
-        /// <see cref="Label_P11_34"/> pour les sept colonnes dont
+        /// <see cref="Label_P11_37"/> à <see cref="Label_P11_43"/> pour
+        /// les sept colonnes propres à cet onglet, et par
+        /// <see cref="Label_P11_11"/>, <see cref="Label_P11_14"/>,
+        /// <see cref="Label_P11_19"/>, <see cref="Label_P11_20"/>,
+        /// <see cref="Label_P11_21"/>, <see cref="Label_P11_25"/>,
+        /// <see cref="Label_P11_26"/>, <see cref="Label_P11_34"/> et
+        /// <see cref="Label_P11_35"/> pour les neuf colonnes dont
         /// l'intitulé est partagé avec les onglets précédents.</para>
         ///
         /// <para>Détail de fabrication de la série : La découpe est
@@ -1613,8 +1602,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// service qui ne sont jamais rendus à l'écran — <c>PSId</c>,
         /// <c>PCPId</c>, <c>ARSortOrder</c> et
         /// <c>PCPIdProductionBar</c>, les deux derniers portant les
-        /// deuxième et troisième critères d'ordonnancement appliqués en
-        /// mémoire par <see cref="LoadCutPiecesAsync"/>.</para>
+        /// deuxième et cinquième critères d'ordonnancement appliqués en
+        /// mémoire par <see cref="LoadCutPiecesAsync"/>. Les troisième et
+        /// quatrième critères — <c>PCPBarReference</c> et
+        /// <c>PCPCutDimension</c> — sont en revanche affichés, en
+        /// première et septième colonnes du tableau.</para>
         ///
         /// <para>Dérogation au patron <c>SetProperty&lt;T&gt;</c> de
         /// l'item VM-P9 : La propriété est exposée <c>{ get; }</c> en
@@ -1702,7 +1694,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   CallChain initiale via
         ///   <see cref="VM_Generic.BuildFirstCallChain"/>, premier appel
         ///   synchrone à l'override <see cref="LoadLabels"/> peuplant les
-        ///   48 propriétés <c>Label_P11_NN</c> avant le premier binding
+        ///   44 propriétés <c>Label_P11_NN</c> avant le premier binding
         ///   WPF de la vue, et branchement de l'abonnement INPC interne à
         ///   <see cref="ISE_App"/> pour la prise en compte du changement
         ///   de langue dynamique (R-4.11.8 et R-4.11.9 du
@@ -1736,7 +1728,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <param name="dictionary">Service d'accès au dictionnaire
         /// multilingue, transmis à <see cref="VM_Page_Generic"/> via
         /// <c>base(...)</c>. Mobilisé par <see cref="LoadLabels"/> pour
-        /// la résolution des 48 clés de la page. Injecté en Singleton par
+        /// la résolution des 44 clés de la page. Injecté en Singleton par
         /// le conteneur DI.</param>
         /// <param name="logAndNotify">Orchestrateur du traitement
         /// terminal des erreurs, transmis à
@@ -2492,20 +2484,40 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// tableau.</para>
         ///
         /// <para>Ordonnancement : Le tri est appliqué en mémoire, après
-        /// extraction, selon quatre critères ascendants successifs —
-        /// <c>ACMDescription</c>, qui groupe les découpes par catégorie
-        /// d'article ; <c>ARSortOrder</c>, qui les groupe ensuite par
+        /// extraction, selon six critères successifs — cinq ascendants et
+        /// un descendant. <c>ACMDescription</c> groupe les découpes par
+        /// catégorie d'article ; <c>ARSortOrder</c> les groupe ensuite par
         /// profil selon l'ordre d'affichage propre à chaque référence
-        /// d'article ; <c>PCPIdProductionBar</c>, qui les regroupe par
-        /// barre d'affectation ; <c>PCPCutPositionInBar</c>, qui restitue
-        /// enfin l'ordre dans lequel la machine les exécute sur la barre.
-        /// Les quatre critères sont nullables et aucun traitement
-        /// explicite n'est posé sur les valeurs absentes : l'ordre naturel
-        /// d'<c>OrderBy</c> les place en tête, de sorte que les découpes
-        /// non encore affectées à une barre se regroupent avant celles
-        /// déjà placées à l'intérieur de leur groupe de profil. C'est le
-        /// comportement attendu — les pièces en attente d'optimisation
-        /// apparaissent avant celles déjà positionnées.</para>
+        /// d'article ; <c>PCPBarReference</c> les regroupe, au sein de
+        /// chaque groupe de profil, par référence de barre ;
+        /// <c>PCPCutDimension</c>, seul critère descendant de la page,
+        /// classe ensuite les longueurs de la plus grande à la plus
+        /// petite, restituant la lecture que l'atelier fait d'un plan de
+        /// coupe — les grandes pièces d'abord ;
+        /// <c>PCPIdProductionBar</c> les regroupe enfin par barre
+        /// d'affectation et <c>PCPCutPositionInBar</c> restitue l'ordre
+        /// dans lequel la machine les exécute sur la barre.</para>
+        ///
+        /// <para>Rang des deux critères de regroupement et de longueur :
+        /// Leur insertion en troisième et quatrième positions, avant les
+        /// deux critères d'exécution machine, est déterminante. Placés
+        /// après ceux-ci, ils n'auraient produit aucun effet observable,
+        /// la position de coupe sur la barre étant déjà quasi
+        /// discriminante au sein d'une barre donnée.</para>
+        ///
+        /// <para>Valeurs absentes : Les six critères sont nullables et
+        /// aucun traitement explicite n'est posé sur les valeurs
+        /// absentes — ni <c>TargetNullValue</c>, ni <c>FallbackValue</c>,
+        /// ni convertisseur, ni garde.
+        /// <see cref="System.Collections.Generic.Comparer{T}.Default"/>
+        /// ordonnant <see langword="null"/> avant toute valeur, les cinq
+        /// critères ascendants placent les valeurs absentes en tête de
+        /// leur groupe — comportement conservé du tri antérieur, les
+        /// découpes non encore affectées à une barre se regroupant avant
+        /// celles déjà placées —, tandis que le critère descendant les
+        /// place au contraire en fin de son groupe. Ce placement inversé
+        /// est attendu et découle mécaniquement de l'inversion du
+        /// comparateur ; il ne fait l'objet d'aucune correction.</para>
         ///
         /// <para>Identifiant de série : Il n'est pas passé en paramètre
         /// mais lu sur <see cref="ISE_UseCase.IdSeriesSelected"/> à
@@ -2581,7 +2593,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// jeton d'annulation propagé de bout en chaîne sans
         /// réinitialisation locale. Aucune autre propriété observable
         /// n'est touchée : les sept caractéristiques de la série, les
-        /// quarante-huit libellés et les trois autres collections restent
+        /// quarante-quatre libellés et les trois autres collections restent
         /// intacts.</para>
         ///
         /// <para>Retours signalables : Aucun.
@@ -2618,6 +2630,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
                 var sortedCutPieces = cutPieces
                     .OrderBy(c => c.ACMDescription)
                     .ThenBy(c => c.ARSortOrder)
+                    .ThenBy(c => c.PCPBarReference)
+                    .ThenByDescending(c => c.PCPCutDimension)
                     .ThenBy(c => c.PCPIdProductionBar)
                     .ThenBy(c => c.PCPCutPositionInBar)
                     .ToList();
@@ -2634,11 +2648,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <summary>
         /// Redéfinit le point d'extension
         /// <see cref="VM_Generic.LoadLabels"/> pour charger les
-        /// quarante-huit libellés multilingues affichés par la page
+        /// quarante-quatre libellés multilingues affichés par la page
         /// <c>Page11</c> — cinq en-têtes d'onglets, sept intitulés de la
         /// fiche de synthèse, quatre intitulés de colonnes du tableau des
-        /// commandes, onze intitulés de colonnes du tableau des châssis,
-        /// douze intitulés de colonnes du tableau des barres et neuf
+        /// commandes, neuf intitulés de colonnes du tableau des châssis,
+        /// douze intitulés de colonnes du tableau des barres et sept
         /// intitulés de colonnes du tableau des découpes — depuis
         /// le dictionnaire de langue actif et les
         /// affecter aux propriétés observables
@@ -2655,33 +2669,41 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="ISE_App.AppCultureCode"/>, avec marshalling
         /// Dispatcher défensif vers le thread UI.</para>
         ///
-        /// <para>Objectif : Garantir que les quarante-huit propriétés
+        /// <para>Objectif : Garantir que les quarante-quatre propriétés
         /// <c>Label_P11_NN</c> sont synchronisées avec la langue active
         /// du dictionnaire, tant au moment de l'instanciation du
         /// ViewModel que lors de tout changement ultérieur de langue
-        /// dynamique au cours de la session. Les quarante-huit clés sont
-        /// résolues par une affectation par ligne, dans l'ordre
-        /// numérique croissant — <c>P11_01</c> à <c>P11_05</c> pour les
+        /// dynamique au cours de la session. Les quarante-quatre clés
+        /// sont résolues par une affectation par ligne, une seule par
+        /// propriété, dans l'ordre numérique strictement croissant —
+        /// <c>P11_01</c> à <c>P11_05</c> pour les
         /// en-têtes d'onglets, <c>P11_06</c> à <c>P11_09</c> pour les
         /// quatre premiers intitulés de la fiche, <c>P11_10</c> à
         /// <c>P11_13</c> pour les quatre intitulés de colonnes du tableau
-        /// des commandes, <c>P11_14</c> à <c>P11_24</c> pour les onze
+        /// des commandes, <c>P11_14</c> à <c>P11_22</c> pour les neuf
         /// intitulés de colonnes du tableau des châssis, <c>P11_25</c> à
         /// <c>P11_36</c> pour les douze intitulés de colonnes propres au
-        /// tableau des barres, <c>P11_37</c> à <c>P11_45</c> pour les
-        /// neuf intitulés de colonnes propres au tableau des découpes,
+        /// tableau des barres, <c>P11_37</c> à <c>P11_43</c> pour les
+        /// sept intitulés de colonnes propres au tableau des découpes,
         /// <c>P11_44</c> à
-        /// <c>P11_46</c> pour les trois
-        /// intitulés d'indicateurs — sans boucle dynamique. Le tableau
+        /// <c>P11_46</c> pour les trois derniers
+        /// intitulés de la fiche — sans boucle dynamique. La séquence
+        /// présente une discontinuité entre <c>P11_22</c> et
+        /// <c>P11_25</c> : les clés <c>P11_23</c> et <c>P11_24</c> ne
+        /// sont plus résolues, les deux colonnes descriptives du tableau
+        /// des châssis qu'elles intitulaient ayant été retirées.
+        /// L'ordre numérique croissant exigé par la doctrine multilingue
+        /// est satisfait, la contiguïté n'étant pas requise. Le tableau
         /// des barres compte seize colonnes mais ne mobilise que douze
         /// clés propres : quatre de ses intitulés réutilisent des clés
         /// génériques déjà résolues pour les onglets précédents
         /// (<c>P11_11</c>, <c>P11_19</c>, <c>P11_20</c> et
         /// <c>P11_21</c>). Le tableau des découpes compte de même seize
-        /// colonnes pour neuf clés propres : sept de ses intitulés
+        /// colonnes pour sept clés propres : neuf de ses intitulés
         /// réutilisent des clés génériques déjà résolues (<c>P11_11</c>,
-        /// <c>P11_19</c>, <c>P11_20</c>, <c>P11_21</c>, <c>P11_25</c>,
-        /// <c>P11_26</c> et <c>P11_34</c>).</para>
+        /// <c>P11_14</c>, <c>P11_19</c>, <c>P11_20</c>, <c>P11_21</c>,
+        /// <c>P11_25</c>, <c>P11_26</c>, <c>P11_34</c> et
+        /// <c>P11_35</c>).</para>
         ///
         /// <para>Absence d'appel à <c>base.LoadLabels(caller)</c> :
         /// L'implémentation par défaut de
@@ -2738,8 +2760,6 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             Label_P11_20 = _dictionary.GetText(callChain, "P11_20");
             Label_P11_21 = _dictionary.GetText(callChain, "P11_21");
             Label_P11_22 = _dictionary.GetText(callChain, "P11_22");
-            Label_P11_23 = _dictionary.GetText(callChain, "P11_23");
-            Label_P11_24 = _dictionary.GetText(callChain, "P11_24");
             Label_P11_25 = _dictionary.GetText(callChain, "P11_25");
             Label_P11_26 = _dictionary.GetText(callChain, "P11_26");
             Label_P11_27 = _dictionary.GetText(callChain, "P11_27");
@@ -2757,10 +2777,8 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             Label_P11_39 = _dictionary.GetText(callChain, "P11_39");
             Label_P11_40 = _dictionary.GetText(callChain, "P11_40");
             Label_P11_41 = _dictionary.GetText(callChain, "P11_41");
-            Label_P11_42 = _dictionary.GetText(callChain, "P11_14");
             Label_P11_42 = _dictionary.GetText(callChain, "P11_42");
             Label_P11_43 = _dictionary.GetText(callChain, "P11_43");
-            Label_P11_45 = _dictionary.GetText(callChain, "P11_35");
             Label_P11_44 = _dictionary.GetText(callChain, "P11_44");
             Label_P11_45 = _dictionary.GetText(callChain, "P11_45");
             Label_P11_46 = _dictionary.GetText(callChain, "P11_46");

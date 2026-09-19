@@ -36,10 +36,10 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   <item><description>Résoudre <see cref="VM_Page11"/> au
     ///   constructeur et l'affecter au
     ///   <see cref="System.Windows.FrameworkElement.DataContext"/> pour
-    ///   activer les cent cinquante-et-un bindings déclarés par
+    ///   activer les cent quarante-sept bindings déclarés par
     ///   <c>Page11.xaml</c>.</description></item>
     ///   <item><description>Appliquer au <c>Loaded</c> la stylisation
-    ///   invariante des quatre-vingt-trois contrôles XAML nommés stylisables via
+    ///   invariante des quatre-vingt-un contrôles XAML nommés stylisables via
     ///   le service <c>IS_ControlStyler</c> hérité de
     ///   <see cref="Page_Generic"/>.</description></item>
     ///   <item><description>Ajuster au <c>Loaded</c> puis à chaque
@@ -94,7 +94,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
     ///   ressource de page, non du code-behind.</description></item>
     ///   <item><description>Aucun chargement de libellé multilingue
     ///   depuis la présente vue ni depuis son XAML, conformément à
-    ///   I-4.11.10 du 0231 : les quarante-huit libellés sont chargés
+    ///   I-4.11.10 du 0231 : les quarante-quatre libellés sont chargés
     ///   exclusivement
     ///   par l'override de <c>LoadLabels</c> de
     ///   <see cref="VM_Page11"/>.</description></item>
@@ -357,21 +357,21 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///   <item><description>Affectation de
         ///   <see cref="System.Windows.FrameworkElement.DataContext"/> à
         ///   <see cref="_viewModel"/> pour activer les cent
-        ///   cinquante-et-un
-        ///   bindings déclarés par <c>Page11.xaml</c> : cinquante-neuf
+        ///   quarante-sept
+        ///   bindings déclarés par <c>Page11.xaml</c> : cinquante-sept
         ///   liaisons de libellé
         ///   multilingue, sept caractéristiques de la série et les quatre
         ///   collections portées par le
-        ///   <c>DataContext</c> de page — soit soixante-dix — plus
+        ///   <c>DataContext</c> de page — soit soixante-huit — plus
         ///   quatre bindings de données
         ///   de commande portés par l'élément courant du gabarit
-        ///   d'éléments de la <c>ListView</c> du deuxième onglet, onze
+        ///   d'éléments de la <c>ListView</c> du deuxième onglet, neuf
         ///   bindings de données de châssis portés par celui du troisième
         ///   onglet, trente-huit bindings portés par celui du quatrième
         ///   onglet, dont seize de contenu et vingt-deux de marquage
         ///   visuel, et vingt-huit bindings portés par celui du cinquième
         ///   onglet, dont douze de contenu texte, douze de marquage et
-        ///   quatre de case à cocher — soit quatre-vingt-un
+        ///   quatre de case à cocher — soit soixante-dix-neuf
         ///   au total.</description></item>
         ///   <item><description>Branchement du handler d'événement propre
         ///   <see cref="OnTabSelectionChanged"/> sur l'événement
@@ -446,7 +446,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// onglet, le <c>Border</c> d'en-têtes, le <c>ScrollViewer</c>,
         /// les quatre <c>TextBlock</c> d'en-tête et la <c>ListView</c> du
         /// deuxième onglet, le <c>Border</c> d'en-têtes, le
-        /// <c>ScrollViewer</c>, les onze <c>TextBlock</c> d'en-tête et la
+        /// <c>ScrollViewer</c>, les neuf <c>TextBlock</c> d'en-tête et la
         /// <c>ListView</c> du troisième onglet, le <c>Border</c>
         /// d'en-têtes, le <c>ScrollViewer</c>, les seize <c>TextBlock</c>
         /// d'en-tête et la <c>ListView</c> du quatrième onglet, puis le
@@ -518,12 +518,12 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         ///   <item><description><c>StyleScrollViewer</c> sur le
         ///   <c>ScrollViewer</c> <c>FramesScrollViewer</c>, en invocation
         ///   variadique unique portant en outre le <c>Border</c>
-        ///   d'en-têtes et les onze <c>TextBlock</c> d'en-tête
+        ///   d'en-têtes et les neuf <c>TextBlock</c> d'en-tête
         ///   <c>FramesHeader01</c> à
-        ///   <c>FramesHeader11</c>.</description></item>
+        ///   <c>FramesHeader09</c>.</description></item>
         ///   <item><description><c>StyleListView</c> sur la
         ///   <c>ListView</c> <c>FramesListView</c>, qui porte le rendu
-        ///   des onze <c>TextBlock</c> non nommés de son gabarit
+        ///   des neuf <c>TextBlock</c> non nommés de son gabarit
         ///   d'éléments.</description></item>
         ///   <item><description><c>StyleBorderHeader</c> sur le
         ///   <c>Border</c> d'en-têtes du tableau des barres
@@ -574,7 +574,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
         /// tableaux ne portant de titre
         /// propre ; les paramètres d'en-tête non consommés restent à leur
         /// valeur par défaut, le tableau des commandes ne comptant que
-        /// quatre colonnes, celui des châssis onze, celui des barres
+        /// quatre colonnes, celui des châssis neuf, celui des barres
         /// seize et celui des découpes seize. Les
         /// <c>Border</c> d'en-têtes, par ailleurs stylisés hors de ces
         /// blocs par <c>StyleBorderHeader</c>, y sont résolus une seconde
@@ -728,7 +728,7 @@ namespace DG244Cutting.D_Presentation.Views.Pages
             // Tableau des châssis de l'onglet 3 — Border d'en-têtes
             if (Find<Border>("FramesHeaderBorder") is Border framesHeaderBorder) _controlStyler.StyleBorderHeader(framesHeaderBorder);
 
-            // Bloc StyleScrollViewer variadique : résolution typée des onze en-têtes en variables
+            // Bloc StyleScrollViewer variadique : résolution typée des neuf en-têtes en variables
             // locales optionnelles, invocation unique conditionnée à la résolution du ScrollViewer.
             if (Find<ScrollViewer>("FramesScrollViewer") is ScrollViewer framesScrollViewer)
             {
@@ -742,14 +742,12 @@ namespace DG244Cutting.D_Presentation.Views.Pages
                 TextBlock? f07 = Find<TextBlock>("FramesHeader07");
                 TextBlock? f08 = Find<TextBlock>("FramesHeader08");
                 TextBlock? f09 = Find<TextBlock>("FramesHeader09");
-                TextBlock? f10 = Find<TextBlock>("FramesHeader10");
-                TextBlock? f11 = Find<TextBlock>("FramesHeader11");
 
                 _controlStyler.StyleScrollViewer(
                     framesScrollViewer,
                     null,
                     framesHeaderBorderForScrollViewer,
-                    f01, f02, f03, f04, f05, f06, f07, f08, f09, f10, f11);
+                    f01, f02, f03, f04, f05, f06, f07, f08, f09);
             }
 
             if (Find<ListView>("FramesListView") is ListView framesListView) _controlStyler.StyleListView(framesListView);

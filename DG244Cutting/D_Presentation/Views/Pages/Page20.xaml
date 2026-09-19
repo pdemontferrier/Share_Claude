@@ -40,17 +40,21 @@ Structure visuelle :
           du code-behind.
     - BarTabItem (Header : BarTabHeader bindé sur Label_P20_01 ; IsEnabled lié à
       IsBarPresented) — Border BarDetailsBorder englobant un Grid BarDetailsGrid à
-      3 colonnes (300 ; 300 à 600 ; *) et 9 lignes (MinHeight=40). Colonne 0 : huit
-      intitulés (OriginTitle, ReferenceTitle, DesignationTitle, ColorTitle,
+      3 colonnes (300 ; 300 à 600 ; *) et 12 lignes (MinHeight=40). Colonne 0 : onze
+      intitulés (SerialNumberTitle, SeriesDescriptionTitle, OriginTitle,
+      SourceLocationTitle, ReferenceTitle, DesignationTitle, ColorTitle,
       CategoryTitle, BarLengthTitle, CutPieceCountTitle, ResidueLengthTitle) bindés
-      sur Label_P20_05..12, puis RejectionReasonTitle bindé sur Label_P20_13 en
-      ligne 8. Colonne 1 : huit données (OriginData, ReferenceData, DesignationData,
-      ColorData, CategoryData, BarLengthData, CutPieceCountData, ResidueLengthData)
-      bindées sur OriginLabel puis sur CurrentBar.ARReference, ARDesignation,
+      sur Label_P20_20, Label_P20_23, Label_P20_05, Label_P20_21 puis
+      Label_P20_06..12, puis RejectionReasonTitle bindé sur Label_P20_13 en
+      ligne 11. Colonne 1 : onze données (SerialNumberData, SeriesDescriptionData,
+      OriginData, SourceLocationData, ReferenceData, DesignationData, ColorData,
+      CategoryData, BarLengthData, CutPieceCountData, ResidueLengthData) bindées sur
+      CurrentBar.PSIdSerialNumber et CurrentBar.PSDescription, sur OriginLabel puis
+      SourceLocation, puis sur CurrentBar.ARReference, ARDesignation,
       AIIdColorRalFinish, ARFamilyCategoryPrincipal, PBBarLength, PBCutPieceCount et
-      PBResidueLength, et en ligne 8 la ComboBox RejectionReasonComboBox. Colonne 2 :
-      Border ProfilSectionBorder sur les lignes 0 à 7, contenant l'Image
-      ProfilSectionImage bindée sur ProfilSectionUri.
+      PBResidueLength, et en ligne 11 la ComboBox RejectionReasonComboBox.
+      Colonne 2 : Border ProfilSectionBorder sur les lignes 0 à 10, contenant
+      l'Image ProfilSectionImage bindée sur ProfilSectionUri.
     - DefectsTabItem (Header : DefectsTabHeader bindé sur Label_P20_02 ; IsEnabled
       lié à IsBarPresented) — Border DefectsFormBorder englobant un Grid
       DefectsFormGrid à 2 colonnes (300 ; *) et 4 lignes (MinHeight=40). Colonne 0 :
@@ -81,11 +85,13 @@ Structure visuelle :
 
 Bindings principaux :
     - Titre : PageTitleMain → PageName.
-    - Libellés : Label_P20_01..19 (onglets, fiche, saisie des défauts) et
+    - Libellés : Label_P20_01..23 (onglets, fiche, saisie des défauts) et
       Label_P20_39..56 (en-têtes des deux tableaux), rechargés à tout changement de
-      langue par la mécanique multilingue du ViewModel.
-    - État de la barre : OriginLabel, CurrentBar.* et ProfilSectionUri, en lecture
-      seule.
+      langue par la mécanique multilingue du ViewModel. Label_P20_22 n'est bindée
+      par aucun contrôle : elle porte le nom du magasin de profilés neufs, consommé
+      par la propriété résolue SourceLocation.
+    - État de la barre : OriginLabel, SourceLocation, CurrentBar.* et
+      ProfilSectionUri, en lecture seule.
     - Saisie : RejectionReasonComboBox (ItemsSource=RejectionReasons,
       DisplayMemberPath="Value", SelectedValuePath="Key", SelectedValue →
       SelectedRejectionReason en TwoWay) ; quatre TextBox → DefectStart1, DefectEnd1,
@@ -176,39 +182,48 @@ Remarques techniques :
                             <RowDefinition MinHeight="40"/>
                             <RowDefinition MinHeight="40"/>
                             <RowDefinition MinHeight="40"/>
+                            <RowDefinition MinHeight="40"/>
+                            <RowDefinition MinHeight="40"/>
+                            <RowDefinition MinHeight="40"/>
                         </Grid.RowDefinitions>
 
                         <!-- Colonne 0 — Intitulés -->
-                        <TextBlock x:Name="OriginTitle"          Grid.Row="0" Grid.Column="0" Text="{Binding Label_P20_05}"/>
-                        <TextBlock x:Name="ReferenceTitle"       Grid.Row="1" Grid.Column="0" Text="{Binding Label_P20_06}"/>
-                        <TextBlock x:Name="DesignationTitle"     Grid.Row="2" Grid.Column="0" Text="{Binding Label_P20_07}"/>
-                        <TextBlock x:Name="ColorTitle"           Grid.Row="3" Grid.Column="0" Text="{Binding Label_P20_08}"/>
-                        <TextBlock x:Name="CategoryTitle"        Grid.Row="4" Grid.Column="0" Text="{Binding Label_P20_09}"/>
-                        <TextBlock x:Name="BarLengthTitle"       Grid.Row="5" Grid.Column="0" Text="{Binding Label_P20_10}"/>
-                        <TextBlock x:Name="CutPieceCountTitle"   Grid.Row="6" Grid.Column="0" Text="{Binding Label_P20_11}"/>
-                        <TextBlock x:Name="ResidueLengthTitle"   Grid.Row="7" Grid.Column="0" Text="{Binding Label_P20_12}"/>
-                        <TextBlock x:Name="RejectionReasonTitle" Grid.Row="8" Grid.Column="0" Text="{Binding Label_P20_13}"/>
+                        <TextBlock x:Name="SerialNumberTitle"      Grid.Row="0"  Grid.Column="0" Text="{Binding Label_P20_20}"/>
+                        <TextBlock x:Name="SeriesDescriptionTitle" Grid.Row="1"  Grid.Column="0" Text="{Binding Label_P20_23}"/>
+                        <TextBlock x:Name="OriginTitle"            Grid.Row="2"  Grid.Column="0" Text="{Binding Label_P20_05}"/>
+                        <TextBlock x:Name="SourceLocationTitle"    Grid.Row="3"  Grid.Column="0" Text="{Binding Label_P20_21}"/>
+                        <TextBlock x:Name="ReferenceTitle"         Grid.Row="4"  Grid.Column="0" Text="{Binding Label_P20_06}"/>
+                        <TextBlock x:Name="DesignationTitle"       Grid.Row="5"  Grid.Column="0" Text="{Binding Label_P20_07}"/>
+                        <TextBlock x:Name="ColorTitle"             Grid.Row="6"  Grid.Column="0" Text="{Binding Label_P20_08}"/>
+                        <TextBlock x:Name="CategoryTitle"          Grid.Row="7"  Grid.Column="0" Text="{Binding Label_P20_09}"/>
+                        <TextBlock x:Name="BarLengthTitle"         Grid.Row="8"  Grid.Column="0" Text="{Binding Label_P20_10}"/>
+                        <TextBlock x:Name="CutPieceCountTitle"     Grid.Row="9"  Grid.Column="0" Text="{Binding Label_P20_11}"/>
+                        <TextBlock x:Name="ResidueLengthTitle"     Grid.Row="10" Grid.Column="0" Text="{Binding Label_P20_12}"/>
+                        <TextBlock x:Name="RejectionReasonTitle"   Grid.Row="11" Grid.Column="0" Text="{Binding Label_P20_13}"/>
 
                         <!-- Colonne 1 — Données de la barre présentée -->
-                        <TextBlock x:Name="OriginData"           Grid.Row="0" Grid.Column="1" Text="{Binding OriginLabel}"/>
-                        <TextBlock x:Name="ReferenceData"        Grid.Row="1" Grid.Column="1" Text="{Binding CurrentBar.ARReference}"/>
-                        <TextBlock x:Name="DesignationData"      Grid.Row="2" Grid.Column="1" Text="{Binding CurrentBar.ARDesignation}"/>
-                        <TextBlock x:Name="ColorData"            Grid.Row="3" Grid.Column="1" Text="{Binding CurrentBar.AIIdColorRalFinish}"/>
-                        <TextBlock x:Name="CategoryData"         Grid.Row="4" Grid.Column="1" Text="{Binding CurrentBar.ARFamilyCategoryPrincipal}"/>
-                        <TextBlock x:Name="BarLengthData"        Grid.Row="5" Grid.Column="1" Text="{Binding CurrentBar.PBBarLength, StringFormat={}{0:N0}}"/>
-                        <TextBlock x:Name="CutPieceCountData"    Grid.Row="6" Grid.Column="1" Text="{Binding CurrentBar.PBCutPieceCount, StringFormat={}{0:N0}}"/>
-                        <TextBlock x:Name="ResidueLengthData"    Grid.Row="7" Grid.Column="1" Text="{Binding CurrentBar.PBResidueLength, StringFormat={}{0:N0}}"/>
+                        <TextBlock x:Name="SerialNumberData"       Grid.Row="0"  Grid.Column="1" Text="{Binding CurrentBar.PSIdSerialNumber}"/>
+                        <TextBlock x:Name="SeriesDescriptionData"  Grid.Row="1"  Grid.Column="1" Text="{Binding CurrentBar.PSDescription}"/>
+                        <TextBlock x:Name="OriginData"             Grid.Row="2"  Grid.Column="1" Text="{Binding OriginLabel}"/>
+                        <TextBlock x:Name="SourceLocationData"     Grid.Row="3"  Grid.Column="1" Text="{Binding SourceLocation}"/>
+                        <TextBlock x:Name="ReferenceData"          Grid.Row="4"  Grid.Column="1" Text="{Binding CurrentBar.ARReference}"/>
+                        <TextBlock x:Name="DesignationData"        Grid.Row="5"  Grid.Column="1" Text="{Binding CurrentBar.ARDesignation}"/>
+                        <TextBlock x:Name="ColorData"              Grid.Row="6"  Grid.Column="1" Text="{Binding CurrentBar.AIIdColorRalFinish}"/>
+                        <TextBlock x:Name="CategoryData"           Grid.Row="7"  Grid.Column="1" Text="{Binding CurrentBar.ARFamilyCategoryPrincipal}"/>
+                        <TextBlock x:Name="BarLengthData"          Grid.Row="8"  Grid.Column="1" Text="{Binding CurrentBar.PBBarLength, StringFormat={}{0:N0}}"/>
+                        <TextBlock x:Name="CutPieceCountData"      Grid.Row="9"  Grid.Column="1" Text="{Binding CurrentBar.PBCutPieceCount, StringFormat={}{0:N0}}"/>
+                        <TextBlock x:Name="ResidueLengthData"      Grid.Row="10" Grid.Column="1" Text="{Binding CurrentBar.PBResidueLength, StringFormat={}{0:N0}}"/>
 
-                        <!-- Colonne 1, ligne 8 — Choix du motif de refus -->
+                        <!-- Colonne 1, ligne 11 — Choix du motif de refus -->
                         <ComboBox x:Name="RejectionReasonComboBox"
-                                  Grid.Row="8" Grid.Column="1"
+                                  Grid.Row="11" Grid.Column="1"
                                   ItemsSource="{Binding RejectionReasons}"
                                   DisplayMemberPath="Value"
                                   SelectedValuePath="Key"
                                   SelectedValue="{Binding SelectedRejectionReason, Mode=TwoWay}"/>
 
                         <!-- Colonne 2 — Image de section du profil -->
-                        <Border x:Name="ProfilSectionBorder" Grid.Row="0" Grid.Column="2" Grid.RowSpan="8" Padding="10">
+                        <Border x:Name="ProfilSectionBorder" Grid.Row="0" Grid.Column="2" Grid.RowSpan="11" Padding="10">
                             <Image x:Name="ProfilSectionImage" Source="{Binding ProfilSectionUri}" Stretch="Uniform"/>
                         </Border>
                     </Grid>

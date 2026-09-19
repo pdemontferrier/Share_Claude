@@ -583,9 +583,9 @@
     <sys:String x:Key="P11_19">Hauteur</sys:String>
     <sys:String x:Key="P11_20">Largeur</sys:String>
     <sys:String x:Key="P11_21">Couleur</sys:String>
-    <sys:String x:Key="P11_22">Description 1</sys:String>
-    <sys:String x:Key="P11_23">Description 2</sys:String>
-    <sys:String x:Key="P11_24">Description 3</sys:String>
+    <sys:String x:Key="P11_22">Description</sys:String>
+    <sys:String x:Key="P11_23">Non défini</sys:String>
+    <sys:String x:Key="P11_24">Non défini</sys:String>
     <sys:String x:Key="P11_25">Référence</sys:String>
     <sys:String x:Key="P11_26">Catégorie</sys:String>
     <sys:String x:Key="P11_27">Longueur</sys:String>

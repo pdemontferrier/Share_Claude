@@ -76,9 +76,12 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
     ///   (<see cref="ISE_UseCase.SelectBar"/> après reprise ou optimisation,
     ///   <see cref="ISE_UseCase.ClearBar"/> après refus, barre inutilisable
     ///   ou rupture).</description></item>
-    ///   <item><description>Exposer la fiche de la barre, son image de
-    ///   section, la liste des motifs de refus applicables à son origine, le
-    ///   plan de coupe et la liste des barres en rupture.</description></item>
+    ///   <item><description>Exposer la fiche de la barre — l'identification
+    ///   de la série de production à laquelle elle appartient, l'emplacement
+    ///   où en prendre la matière et les caractéristiques du profilé —, son
+    ///   image de section, la liste des motifs de refus applicables à son
+    ///   origine, le plan de coupe et la liste des barres en
+    ///   rupture.</description></item>
     ///   <item><description>Porter la saisie transitoire du motif de refus
     ///   et des deux zones défectueuses, sans aucune persistance avant
     ///   validation.</description></item>
@@ -289,6 +292,11 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         private string _originLabel = string.Empty;
 
         /// <summary>
+        /// Champ support de <see cref="SourceLocation"/>.
+        /// </summary>
+        private string _sourceLocation = string.Empty;
+
+        /// <summary>
         /// Champ support de <see cref="ProfilSectionUri"/>, initialisé au
         /// constructeur sur l'image de section par défaut.
         /// </summary>
@@ -453,6 +461,30 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         /// <see cref="string.Empty"/> et alimenté par <see cref="LoadLabels"/>.
         /// </summary>
         private string _label_p20_19 = string.Empty;
+
+        /// <summary>
+        /// Champ support de <see cref="Label_P20_20"/>, initialisé à
+        /// <see cref="string.Empty"/> et alimenté par <see cref="LoadLabels"/>.
+        /// </summary>
+        private string _label_p20_20 = string.Empty;
+
+        /// <summary>
+        /// Champ support de <see cref="Label_P20_21"/>, initialisé à
+        /// <see cref="string.Empty"/> et alimenté par <see cref="LoadLabels"/>.
+        /// </summary>
+        private string _label_p20_21 = string.Empty;
+
+        /// <summary>
+        /// Champ support de <see cref="Label_P20_22"/>, initialisé à
+        /// <see cref="string.Empty"/> et alimenté par <see cref="LoadLabels"/>.
+        /// </summary>
+        private string _label_p20_22 = string.Empty;
+
+        /// <summary>
+        /// Champ support de <see cref="Label_P20_23"/>, initialisé à
+        /// <see cref="string.Empty"/> et alimenté par <see cref="LoadLabels"/>.
+        /// </summary>
+        private string _label_p20_23 = string.Empty;
 
         /// <summary>
         /// Champ support de <see cref="Label_P20_39"/>, initialisé à
@@ -657,6 +689,71 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         {
             get => _originLabel;
             private set => SetProperty(ref _originLabel, value);
+        }
+
+        /// <summary>
+        /// Obtient l'emplacement où l'opérateur doit aller prendre la matière
+        /// de la barre présentée.
+        /// </summary>
+        /// <value>Pour une barre de chute, l'emplacement réel où cette chute a
+        /// été rangée. Pour une barre neuve, le nom du magasin de profilés
+        /// neufs, unique et localisé. Chaîne vide, jamais
+        /// <see langword="null"/>, lorsque aucune barre n'est présentée ou que
+        /// la chute présentée ne porte aucun emplacement enregistré.</value>
+        /// <remarks>
+        /// <para>Contexte : L'approvisionnement est conduit à la demande,
+        /// chaque barre étant prise juste avant d'être coupée. La fiche de
+        /// l'onglet « Barre » décrit la barre désignée ; elle doit aussi dire
+        /// où la trouver, faute de quoi l'opérateur ne dispose d'aucun moyen
+        /// de localiser la matière. La nature de l'emplacement diffère selon
+        /// l'origine de la barre : une chute a été rangée à un emplacement
+        /// précis lors de sa qualification ou de sa saisie manuelle, tandis
+        /// qu'une barre neuve provient toujours du même magasin de
+        /// profilés.</para>
+        /// <para>Objectif : Exposer une valeur unique, directement lisible,
+        /// couvrant les deux origines sans que la vue ait à les
+        /// distinguer.</para>
+        /// <para>Règle de résolution, appliquée à l'identique aux deux points
+        /// d'affectation — la présentation d'une barre et le rechargement des
+        /// libellés au changement de langue :</para>
+        /// <list type="bullet">
+        ///   <item><description>Barre neuve
+        ///   (<see cref="DTO_VwProductionBarFull.PBIsNewBar"/> vrai) : valeur
+        ///   de <see cref="Label_P20_22"/>, nom localisé du magasin de
+        ///   profilés neufs.</description></item>
+        ///   <item><description>Barre de chute : valeur de
+        ///   <see cref="DTO_VwProductionBarFull.CSLScrapLocationSource"/>,
+        ///   emplacement réel de rangement de la chute
+        ///   d'origine.</description></item>
+        ///   <item><description>Chute sans emplacement enregistré, la colonne
+        ///   étant nullable : chaîne vide. Aucun repli textuel n'est
+        ///   substitué — un libellé d'absence occuperait la place sans rien
+        ///   apprendre à l'opérateur.</description></item>
+        ///   <item><description>Aucune barre présentée : chaîne vide, posée
+        ///   par la réinitialisation de l'état en tête de séquence
+        ///   d'entrée.</description></item>
+        /// </list>
+        /// <para>Invariant — emplacement réel, jamais déduit : la valeur n'est
+        /// en aucun cas dérivée des colonnes d'emplacement candidat du futur
+        /// résidu portées par la même vue. Celles-ci désignent où ranger le
+        /// résidu à venir, non où prendre la barre ; les afficher ici
+        /// enverrait l'opérateur au mauvais endroit dès lors que la chute a
+        /// été rangée ailleurs.</para>
+        /// <para>Comportement au changement de langue : la valeur suit la
+        /// langue active pour une barre neuve, le nom du magasin étant un
+        /// libellé du dictionnaire, et en est indépendante pour une chute,
+        /// l'emplacement étant une donnée de stock. La recomposition est
+        /// portée par <see cref="LoadLabels"/> et intervient après
+        /// l'affectation de <see cref="Label_P20_22"/>.</para>
+        /// <para>L'accesseur en écriture est privé : la valeur est
+        /// exclusivement dérivée de la barre courante et des libellés, et
+        /// n'est jamais saisie — l'onglet est en lecture seule hors le
+        /// sélecteur de motif de refus.</para>
+        /// </remarks>
+        public string SourceLocation
+        {
+            get => _sourceLocation;
+            private set => SetProperty(ref _sourceLocation, value);
         }
 
         /// <summary>
@@ -1089,6 +1186,50 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         {
             get => _label_p20_19;
             private set => SetProperty(ref _label_p20_19, value);
+        }
+
+        /// <summary>
+        /// Obtient le libellé multilingue de la clé <c>P20_20</c> : l'intitulé du numéro de série de production dans la fiche de l'onglet 1.
+        /// </summary>
+        /// <value>Chaîne localisée résolue par <see cref="LoadLabels"/> ; valeur de
+        /// repli <c>[P20_20] not found</c> en cas de clé absente.</value>
+        public string Label_P20_20
+        {
+            get => _label_p20_20;
+            private set => SetProperty(ref _label_p20_20, value);
+        }
+
+        /// <summary>
+        /// Obtient le libellé multilingue de la clé <c>P20_21</c> : l'intitulé de l'emplacement d'origine de la barre dans la fiche de l'onglet 1.
+        /// </summary>
+        /// <value>Chaîne localisée résolue par <see cref="LoadLabels"/> ; valeur de
+        /// repli <c>[P20_21] not found</c> en cas de clé absente.</value>
+        public string Label_P20_21
+        {
+            get => _label_p20_21;
+            private set => SetProperty(ref _label_p20_21, value);
+        }
+
+        /// <summary>
+        /// Obtient le libellé multilingue de la clé <c>P20_22</c> : le nom du magasin de profilés neufs, repris par <see cref="SourceLocation"/>.
+        /// </summary>
+        /// <value>Chaîne localisée résolue par <see cref="LoadLabels"/> ; valeur de
+        /// repli <c>[P20_22] not found</c> en cas de clé absente.</value>
+        public string Label_P20_22
+        {
+            get => _label_p20_22;
+            private set => SetProperty(ref _label_p20_22, value);
+        }
+
+        /// <summary>
+        /// Obtient le libellé multilingue de la clé <c>P20_23</c> : l'intitulé de la désignation de la série de production dans la fiche de l'onglet 1.
+        /// </summary>
+        /// <value>Chaîne localisée résolue par <see cref="LoadLabels"/> ; valeur de
+        /// repli <c>[P20_23] not found</c> en cas de clé absente.</value>
+        public string Label_P20_23
+        {
+            get => _label_p20_23;
+            private set => SetProperty(ref _label_p20_23, value);
         }
 
         /// <summary>
@@ -1747,7 +1888,9 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   <c>P20_00</c> ;</description></item>
         ///   <item><description>les libellés des onglets, de la fiche et de
         ///   la saisie des défauts, clés <c>P20_01</c> à
-        ///   <c>P20_19</c> ;</description></item>
+        ///   <c>P20_23</c>, dont la clé <c>P20_22</c> qui porte non un
+        ///   intitulé mais le nom du magasin de profilés
+        ///   neufs ;</description></item>
         ///   <item><description>le cache privé des libellés des huit motifs
         ///   de refus sélectionnables, clés <c>P20_30</c> à
         ///   <c>P20_37</c> ;</description></item>
@@ -1755,9 +1898,13 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         ///   « Découpes » et « Ruptures », clés <c>P20_39</c> à
         ///   <c>P20_56</c>.</description></item>
         /// </list>
-        /// <para>Lorsqu'une barre est présentée, le libellé d'origine et la
-        /// liste des motifs sont recomposés dans la nouvelle langue ; le motif
-        /// déjà choisi est conservé.</para>
+        /// <para>Lorsqu'une barre est présentée, le libellé d'origine,
+        /// l'emplacement d'origine et la liste des motifs sont recomposés dans
+        /// la nouvelle langue ; le motif déjà choisi est conservé. La
+        /// recomposition de <see cref="SourceLocation"/> suit l'affectation de
+        /// <see cref="Label_P20_22"/>, dont elle dépend pour une barre
+        /// neuve ; sur une barre de chute, la valeur recomposée est
+        /// l'emplacement de stock, indépendant de la langue.</para>
         /// <para>Absence d'appel à <c>base.LoadLabels(callChain)</c> :
         /// L'implémentation par défaut de
         /// <see cref="VM_Generic.LoadLabels"/> ne porte aucun
@@ -1810,6 +1957,10 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             Label_P20_17 = _dictionary.GetText(callChain, "P20_17");
             Label_P20_18 = _dictionary.GetText(callChain, "P20_18");
             Label_P20_19 = _dictionary.GetText(callChain, "P20_19");
+            Label_P20_20 = _dictionary.GetText(callChain, "P20_20");
+            Label_P20_21 = _dictionary.GetText(callChain, "P20_21");
+            Label_P20_22 = _dictionary.GetText(callChain, "P20_22");
+            Label_P20_23 = _dictionary.GetText(callChain, "P20_23");
 
             _rejectionReasonLabels["P20_30"] = _dictionary.GetText(callChain, "P20_30");
             _rejectionReasonLabels["P20_31"] = _dictionary.GetText(callChain, "P20_31");
@@ -1842,6 +1993,9 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             if (CurrentBar is DTO_VwProductionBarFull bar)
             {
                 OriginLabel = bar.PBIsNewBar ? Label_P20_14 : Label_P20_15;
+                SourceLocation = bar.PBIsNewBar
+                    ? Label_P20_22
+                    : (bar.CSLScrapLocationSource ?? string.Empty);
 
                 En_BarRejectionReason? selectedReason = SelectedRejectionReason;
                 RejectionReasons = BuildRejectionReasons(bar.PBIsNewBar);
@@ -1867,6 +2021,7 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
         {
             CurrentBar = null;
             OriginLabel = string.Empty;
+            SourceLocation = string.Empty;
             ProfilSectionUri = _barProfilSection.DefaultBarProfilSectionUri;
             RejectionReasons = Array.Empty<KeyValuePair<En_BarRejectionReason, string>>();
             SelectedRejectionReason = null;
@@ -1920,6 +2075,9 @@ namespace DG244Cutting.D_Presentation.ViewModels.Pages
             CurrentBar = presentedBar;
             ProfilSectionUri = _barProfilSection.GetBarProfilSectionUriOrDefault(presentedBar.ARReference);
             OriginLabel = presentedBar.PBIsNewBar ? Label_P20_14 : Label_P20_15;
+            SourceLocation = presentedBar.PBIsNewBar
+                ? Label_P20_22
+                : (presentedBar.CSLScrapLocationSource ?? string.Empty);
             RejectionReasons = BuildRejectionReasons(presentedBar.PBIsNewBar);
 
             List<DTO_VwProductionCutPieceFull_P11> cutPieces = await _useCaseInvoker

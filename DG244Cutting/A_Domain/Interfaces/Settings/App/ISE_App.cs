@@ -77,10 +77,10 @@ namespace DG244Cutting.A_Domain.Interfaces.Settings.App
 
         // --- Groupe 3 : Dates (calculées à chaque accès) ---
 
-        /// <summary>Obtient la date du jour, sans composante horaire.</summary>
+        /// <summary>Date du jour, sans composante horaire (heure locale).</summary>
         DateTime AppDate { get; }
 
-        /// <summary>Obtient la date et l'heure système actuelles.</summary>
+        /// <summary>Date et heure courantes (heure locale).</summary>
         DateTime AppDateTime { get; }
 
         // --- Groupe 4 : Chemin ressources communes (calculé) ---
