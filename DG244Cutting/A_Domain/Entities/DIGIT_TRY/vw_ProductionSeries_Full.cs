@@ -123,22 +123,22 @@ public partial class vw_ProductionSeries_Full
     /// <summary>
     /// Calcul : [ProductionCutPiece] - Nombre de pièces de la série sur le périmètre de vw_ProductionCutPiece_Full.
     /// </summary>
-    public int? PCPPieceCount { get; set; }
+    public int PCPPieceCount { get; set; }
 
     /// <summary>
     /// Calcul : [ProductionCutPiece] - Nombre de pièces découpées (IsCut = 1) sur le périmètre de la vue.
     /// </summary>
-    public int? PCPPieceCutCount { get; set; }
+    public int PCPPieceCutCount { get; set; }
 
     /// <summary>
     /// Calcul : [ProductionCutPiece] - Nombre de pièces restant à découper (IsCut = 0) sur le périmètre de la vue.
     /// </summary>
-    public int? PCPPieceNotCutCount { get; set; }
+    public int PCPPieceNotCutCount { get; set; }
 
     /// <summary>
     /// Calcul : [ProductionCutPiece] - Nombre de pièces refusées (IsCutRefused = 1) sur le périmètre de la vue.
     /// </summary>
-    public int? PCPPieceRefusedCount { get; set; }
+    public int PCPPieceRefusedCount { get; set; }
 
     /// <summary>
     /// Calcul : [ProductionCutPiece] - Taux d’avancement en pourcentage, pièces découpées sur pièces totales.
